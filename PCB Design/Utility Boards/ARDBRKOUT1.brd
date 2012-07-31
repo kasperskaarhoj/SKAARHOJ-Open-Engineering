@@ -127,7 +127,7 @@
 <text x="31.115" y="52.705" size="1.778" layer="121" rot="R90">ENC3</text>
 <text x="16.51" y="25.4" size="1.778" layer="121">SKAARHOJ 2012</text>
 <text x="7.62" y="22.86" size="1.27" layer="121">C50/C100/Touch Breakout Shield</text>
-<text x="20.32" y="20.32" size="1.27" layer="121">v24-07-12</text>
+<text x="17.78" y="20.32" size="1.27" layer="121">v24-07-12</text>
 <wire x1="0" y1="2.54" x2="2.54" y2="0" width="0.4064" layer="20"/>
 <wire x1="2.54" y1="0" x2="5.58" y2="0" width="0.4064" layer="20"/>
 <wire x1="5.58" y1="0" x2="5.58" y2="9.97" width="0.4064" layer="20"/>
