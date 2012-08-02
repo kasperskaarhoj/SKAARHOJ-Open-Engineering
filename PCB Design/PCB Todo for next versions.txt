@@ -1,0 +1,32 @@
+Ændringer:
+********************
+
+Generelt:
+- Stop brugen af CAY16 res-networks til lysdioder!
+
+BI8 boards: 
+- Upgrade the address switch to a SWS003 (8 addresses)?
+
+ATEM GPI/TALLY Connector Break Out Board
+- Version?
+- Flyt test knap så man kan trykke på den.
+- Dreje GPI konnektorer 180 grader og rykke dem mod midten - plads til alle typer hunstik i dem…
+- Power connector: DC stik? (Ellers drejet 180 grader)
+- Opretstående kantkonnectorer. Vendes rigtigt, så kabler stikker ud ad/skrueterminaler udad
+- Label: "LED requires powerconnector…"
+- Monteringshul bagtil (fortil: Brug huller fra connector
+- Plastkasse der passer? Eller blot acryl underlag.
+- Tilføj jumper til komponentlisten.
+- Options: Connectortyper.
+
+
+
+2x8 GPIO:
+- Mere sikker arrangement af adskillelsen?
+
+Ethernet print: 
+- Solder jumpers
+
+ATEM Console:
+- Hardware interrupt til encoder?
+- Udskæring til Ethernet header?
