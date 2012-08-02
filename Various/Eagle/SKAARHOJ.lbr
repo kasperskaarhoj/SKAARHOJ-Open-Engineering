@@ -120,15 +120,15 @@
 <wire x1="7.5" y1="7.5" x2="7.5" y2="-7.5" width="0.127" layer="21"/>
 <wire x1="7.5" y1="-7.5" x2="-7.5" y2="-7.5" width="0.127" layer="21"/>
 <wire x1="-7.5" y1="-7.5" x2="-7.5" y2="7.5" width="0.127" layer="21"/>
-<pad name="COM" x="0" y="0" drill="1"/>
-<hole x="-6.35" y="6.35" drill="1.5"/>
-<hole x="6.35" y="6.35" drill="1.5"/>
-<hole x="6.35" y="-6.35" drill="1.5"/>
-<hole x="-6.35" y="-6.35" drill="1.5"/>
-<pad name="P$2" x="0" y="2.54" drill="1"/>
-<pad name="P$4" x="4.5" y="3.81" drill="1"/>
-<pad name="P$3" x="0" y="-2.54" drill="1"/>
-<pad name="P$5" x="4.5" y="-3.81" drill="1"/>
+<pad name="COM" x="0" y="0" drill="1.2"/>
+<hole x="-6.35" y="6.35" drill="1.3"/>
+<hole x="6.35" y="6.35" drill="1.3"/>
+<hole x="6.35" y="-6.35" drill="1.3"/>
+<hole x="-6.35" y="-6.35" drill="1.3"/>
+<pad name="P$2" x="0" y="2.54" drill="1.2"/>
+<pad name="P$4" x="4.5" y="3.81" drill="1.2"/>
+<pad name="P$3" x="0" y="-2.54" drill="1.2"/>
+<pad name="P$5" x="4.5" y="-3.81" drill="1.2"/>
 <text x="-3.81" y="5.08" size="1.27" layer="21">&gt;NAME</text>
 </package>
 <package name="RJ45-8_GND">
@@ -2811,14 +2811,14 @@ Source: PANASONIC .. aoc0000ce1.pdf</description>
 <hole x="8.001" y="7.5057" drill="1.3"/>
 <hole x="8.001" y="-7.5057" drill="1.3"/>
 <hole x="-8.001" y="-7.5057" drill="1.3"/>
-<pad name="2" x="6.35" y="-3.81" drill="1.1"/>
-<pad name="1" x="6.35" y="3.81" drill="1.1"/>
-<pad name="3" x="-8.1534" y="-3.4798" drill="0.9"/>
-<pad name="4" x="-6.1468" y="-2.413" drill="0.9"/>
-<pad name="5" x="-8.1534" y="-1.4224" drill="0.9"/>
-<pad name="6" x="-6.1468" y="-0.4826" drill="0.9"/>
-<pad name="7" x="-8.1534" y="0.508" drill="0.9"/>
-<pad name="8" x="-6.1468" y="1.4986" drill="0.9"/>
+<pad name="2" x="6.35" y="-3.81" drill="1.2"/>
+<pad name="1" x="6.35" y="3.81" drill="1.2"/>
+<pad name="3" x="-8.1534" y="-3.4798" drill="1"/>
+<pad name="4" x="-6.1468" y="-2.413" drill="1"/>
+<pad name="5" x="-8.1534" y="-1.4224" drill="1"/>
+<pad name="6" x="-6.1468" y="-0.4826" drill="1"/>
+<pad name="7" x="-8.1534" y="0.508" drill="1"/>
+<pad name="8" x="-6.1468" y="1.4986" drill="1"/>
 <text x="2.54" y="3.81" size="0.8128" layer="21">SW1</text>
 <text x="2.54" y="-3.81" size="0.8128" layer="21">SW2</text>
 <text x="-12.7" y="-3.81" size="0.8128" layer="21">GND</text>
