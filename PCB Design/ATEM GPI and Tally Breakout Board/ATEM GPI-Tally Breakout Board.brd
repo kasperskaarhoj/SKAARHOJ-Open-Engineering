@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.1">
+<eagle version="6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -122,6 +122,7 @@
 <text x="76.2" y="10.16" size="0.8128" layer="121" rot="R90">PWR/+</text>
 <text x="31.75" y="27.94" size="1.778" layer="121" font="vector">SKAARHOJ 2012</text>
 <text x="20.32" y="25.4" size="1.27" layer="121" font="vector">ATEM GPI/TALLY Connector Break Out Board</text>
+<text x="27.94" y="23.495" size="1.27" layer="121" font="vector">vxx-xx-xx</text>
 </plain>
 <libraries>
 <library name="con-subd">

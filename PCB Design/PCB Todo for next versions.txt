@@ -1,6 +1,14 @@
 Ændringer:
 ********************
 
+Production checklist:
+- Electrical rules check?
+- Design rules check? (Ignore stop mask errors?)
+- Version number (date)
+- Top silk: Appropriate name, "SKAARHOJ 2012", other useful labels?
+
+*********************************************************
+
 Generelt:
 - Stop brugen af CAY16 res-networks til lysdioder!
 
@@ -9,7 +17,6 @@ BI8 boards:
 
 
 ATEM GPI/TALLY Connector Break Out Board
-- Version?
 - Flyt test knap så man kan trykke på den.
 - Dreje GPI konnektorer 180 grader og rykke dem mod midten - plads til alle typer hunstik i dem…
 - Power connector: DC stik? (Ellers drejet 180 grader)
@@ -32,3 +39,4 @@ ATEM Console:
 - Hardware interrupt til encoder?
 - Udskæring til Ethernet header?
 - SDA/SCL på Mega er på 20/21 eller på R3: Nye pins.
+
