@@ -7,6 +7,7 @@ Generelt:
 BI8 boards: 
 - Upgrade the address switch to a SWS003 (8 addresses)?
 
+
 ATEM GPI/TALLY Connector Break Out Board
 - Version?
 - Flyt test knap så man kan trykke på den.
@@ -30,3 +31,4 @@ Ethernet print:
 ATEM Console:
 - Hardware interrupt til encoder?
 - Udskæring til Ethernet header?
+- SDA/SCL på Mega er på 20/21 eller på R3: Nye pins.
