@@ -1,0 +1,98 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww13220\viewh21100\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\b\fs24 \cf0 Schematic, text, (nyt layout, 16W):\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b0 \cf0 - Pin1: GND\
+- Pin2: +5V\
+- Pin3: I2C/SDA (..A4/SDA)\
+- Pin4: I2C/SCL (..A5/SCL)\
+- Pin5: SLIDER/T-bar IN (A0)\
+- Pin6: DISPLAY DATA (D7) 
+\b (Oprindeligt D2)
+\b0 \
+- Pin7: SDI/Clock (D5)\
+- Pin8: SDI/Data out (D6)\
+- Pin9: Enc8; SW2/Push (D9)\
+- Pin10: Enc7; SW2/1 (D8)\
+- Pin11: Enc6; SW2/2 (D2 int) 
+\b (oprindeligt D7)
+\b0 \
+- Pin12: Enc5; SW1/Push (D6)\
+- Pin13: Enc4; SW1/1 (D5)\
+- Pin14: Enc3; SW1/2 (D3 int)\
+- Pin15: +5V\
+- Pin16: GND\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0 Touch 4wire header 8 (10W) (fladkabel):\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b0 \cf0 - Pin1: (A0)\
+- Pin2: LED/red (D3 through RES)\
+- Pin3: (A1)\
+- Pin4: GND\
+- Pin5: (A2)\
+- Pin6: LED/green (D2 through RES)\
+- Pin7: (A3)\
+- Pin8: \
+- Pin9: Vin\
+- Pin10: GND\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0 Touch VCC jumper:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b0 \cf0 - Pin1: GND\
+- Pin2: Vin (7,5v+)\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0 \'c6NDRINGER:
+\b0 \
+- Stor GND pad\
+- Bevar strip-hullet\
+- Komponenter p\'e5 undersiden! (low profile\
+- Config (A1 + GND) og Reset switch til bagsiden\
+- PGM header til Ard.Ethernet f\'f8rt hen.\
+- Bi-color LED (egen header (3) + touch)\
+\
+
+\b Pin usage:
+\b0 \
+D0\
+D1\
+D2(int)				EncSW2/2		LED/green\
+D3(int)				EncSW1/2		LED/red\
+D4\
+D5		SDI/Clock		EncSW1/1\
+D6		SDI/Data out	EncSW1/Push\
+D7		DisplayData\
+D8					EncSW2/1\
+D9					EncSW2/Push\
+\
+A0		Slider/Tbar	Touch\
+A1		Config		Touch	\
+A2					Touch\
+A3					Touch\
+A4		I2C/SDA 		Slider/Tbar (@Touch)\
+A5		I2C/SCL		\
+------------------------------\
+
+\b Andre \'e6ndringer:
+\b0 \
+Dobbeltheadere p\'e5 2x4 (8W) p\'e5 alle print, for- eller bagside s\'e5 det passer! (Display og T-bar breakout boards? T-bar -> Pocket Controller / Big Controller)\
+- Capacitor p\'e5 t-bar?\
+\
+Enc.board: 10nF p\'e5 "Enc3; SW1/2" og "Enc6; SW2/2" til gnd\
+\
+Enc. + sliderboards: ogs\'e5 labels p\'e5 bagsiden ved connector!\
+\
+Tripple address p\'e5 BI8 etc.\
+}
