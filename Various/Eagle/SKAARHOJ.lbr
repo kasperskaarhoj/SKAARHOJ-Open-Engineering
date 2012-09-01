@@ -2856,6 +2856,46 @@ Source: PANASONIC .. aoc0000ce1.pdf</description>
 <pad name="9" x="-9.0678" y="2.9972" drill="1.1"/>
 <text x="-12.7" y="3.175" size="0.8128" layer="21">NC</text>
 </package>
+<package name="PLAYSTATION2_ANALOG_JOYSTICK">
+<wire x1="5.588" y1="13.97" x2="-5.588" y2="13.97" width="0.2032" layer="21"/>
+<wire x1="4.826" y1="-11.43" x2="-4.826" y2="-11.43" width="0.2032" layer="21"/>
+<wire x1="4.826" y1="-11.43" x2="4.826" y2="-8.89" width="0.2032" layer="21"/>
+<wire x1="-4.826" y1="-11.43" x2="-4.826" y2="-8.89" width="0.2032" layer="21"/>
+<wire x1="4.826" y1="-8.89" x2="7.62" y2="-8.89" width="0.2032" layer="21"/>
+<wire x1="-4.826" y1="-8.89" x2="-7.62" y2="-8.89" width="0.2032" layer="21"/>
+<wire x1="9.525" y1="4.064" x2="9.525" y2="-4.064" width="0.2032" layer="21"/>
+<wire x1="7.62" y1="4.064" x2="7.62" y2="6.985" width="0.2032" layer="21"/>
+<wire x1="7.62" y1="-4.064" x2="7.62" y2="-8.89" width="0.2032" layer="21"/>
+<wire x1="7.62" y1="4.064" x2="9.525" y2="4.064" width="0.2032" layer="21"/>
+<wire x1="7.62" y1="-4.064" x2="9.525" y2="-4.064" width="0.2032" layer="21"/>
+<wire x1="7.62" y1="6.985" x2="5.588" y2="6.985" width="0.2032" layer="21"/>
+<wire x1="-5.588" y1="6.985" x2="-7.62" y2="6.985" width="0.2032" layer="21"/>
+<wire x1="5.588" y1="13.97" x2="5.588" y2="6.985" width="0.2032" layer="21"/>
+<wire x1="-5.588" y1="13.97" x2="-5.588" y2="6.985" width="0.2032" layer="21"/>
+<wire x1="-7.62" y1="4.826" x2="-11.176" y2="4.826" width="0.2032" layer="21"/>
+<wire x1="-7.62" y1="-4.826" x2="-11.176" y2="-4.826" width="0.2032" layer="21"/>
+<wire x1="-11.176" y1="4.826" x2="-11.176" y2="-4.826" width="0.2032" layer="21"/>
+<wire x1="-7.62" y1="4.826" x2="-7.62" y2="6.985" width="0.2032" layer="21"/>
+<wire x1="-7.62" y1="-4.826" x2="-7.62" y2="-8.89" width="0.2032" layer="21"/>
+<circle x="0" y="0" radius="0.635" width="0.2032" layer="21"/>
+<circle x="0" y="0" radius="12.7" width="0.2032" layer="51"/>
+<pad name="MOUNT1" x="-7.62" y="6.6675" drill="1.397" diameter="2.286"/>
+<pad name="MOUNT4" x="7.62" y="6.6675" drill="1.397" diameter="2.286"/>
+<pad name="MOUNT3" x="7.62" y="-6.6675" drill="1.397" diameter="2.286"/>
+<pad name="MOUNT2" x="-7.62" y="-6.6675" drill="1.397" diameter="2.286"/>
+<pad name="H3" x="2.54" y="-10.16" drill="0.889" diameter="1.778"/>
+<pad name="H2" x="0" y="-10.16" drill="0.889" diameter="1.778"/>
+<pad name="H1" x="-2.54" y="-10.16" drill="0.889" diameter="1.778"/>
+<pad name="V2" x="-10.16" y="0" drill="0.889" diameter="1.778"/>
+<pad name="V3" x="-10.16" y="-2.54" drill="0.889" diameter="1.778"/>
+<pad name="V1" x="-10.16" y="2.54" drill="0.889" diameter="1.778"/>
+<pad name="B2B" x="3.175" y="7.62" drill="0.9" diameter="1.778" rot="R180"/>
+<pad name="B2A" x="-3.175" y="7.62" drill="0.9" diameter="1.778" rot="R53.2"/>
+<pad name="B1A" x="-3.175" y="12.7" drill="0.9" diameter="1.778"/>
+<pad name="B1B" x="3.175" y="12.7" drill="0.9" diameter="1.778"/>
+<text x="-5.08" y="-5.08" size="1.27" layer="25">&gt;Name</text>
+<text x="-5.08" y="-6.35" size="1.27" layer="27">&gt;Value</text>
+</package>
 </packages>
 <symbols>
 <symbol name="NCP1400">
@@ -3266,6 +3306,55 @@ Source: PANASONIC .. aoc0000ce1.pdf</description>
 <pin name="SDI" x="-12.7" y="2.54" length="middle"/>
 <pin name="SCK" x="-12.7" y="5.08" length="middle"/>
 <pin name="SS" x="-12.7" y="7.62" length="middle"/>
+</symbol>
+<symbol name="PLAYSTATION2_ANALOG_JOYSTICK">
+<wire x1="-7.62" y1="12.7" x2="10.16" y2="12.7" width="0.254" layer="94"/>
+<wire x1="10.16" y1="12.7" x2="10.16" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-15.24" x2="-7.62" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-15.24" x2="-7.62" y2="12.7" width="0.254" layer="94"/>
+<text x="-7.62" y="13.462" size="1.778" layer="95">&gt;Name</text>
+<text x="-7.62" y="-17.78" size="1.778" layer="96">&gt;Value</text>
+<text x="8.382" y="-4.826" size="1.778" layer="94" rot="R90">JOYSTICK</text>
+<pin name="V+" x="-10.16" y="10.16" visible="pin" length="short"/>
+<pin name="V" x="-10.16" y="7.62" visible="pin" length="short"/>
+<pin name="V-" x="-10.16" y="5.08" visible="pin" length="short"/>
+<pin name="H+" x="-10.16" y="0" visible="pin" length="short"/>
+<pin name="H" x="-10.16" y="-2.54" visible="pin" length="short"/>
+<pin name="H-" x="-10.16" y="-5.08" visible="pin" length="short"/>
+<pin name="SEL+" x="-10.16" y="-10.16" visible="pin" length="short"/>
+<pin name="SEL-" x="-10.16" y="-12.7" visible="pin" length="short"/>
+<wire x1="-7.62" y1="10.16" x2="5.08" y2="10.16" width="0.254" layer="121"/>
+<wire x1="-7.62" y1="5.08" x2="5.08" y2="5.08" width="0.254" layer="121"/>
+<wire x1="-7.62" y1="0" x2="5.08" y2="0" width="0.254" layer="121"/>
+<wire x1="-7.62" y1="-5.08" x2="5.08" y2="-5.08" width="0.254" layer="121"/>
+<wire x1="-7.62" y1="-10.16" x2="5.08" y2="-10.16" width="0.254" layer="121"/>
+<wire x1="-7.62" y1="-12.7" x2="5.08" y2="-12.7" width="0.254" layer="121"/>
+<wire x1="5.08" y1="-10.16" x2="5.08" y2="-10.922" width="0.254" layer="121"/>
+<wire x1="5.08" y1="-10.922" x2="5.842" y2="-11.43" width="0.254" layer="121"/>
+<wire x1="5.08" y1="-12.7" x2="5.08" y2="-11.938" width="0.254" layer="121"/>
+<wire x1="5.08" y1="0" x2="5.08" y2="-1.016" width="0.254" layer="121"/>
+<wire x1="5.08" y1="-5.08" x2="5.08" y2="-4.064" width="0.254" layer="121"/>
+<wire x1="5.08" y1="-4.064" x2="5.842" y2="-4.064" width="0.254" layer="121"/>
+<wire x1="5.842" y1="-4.064" x2="5.842" y2="-1.016" width="0.254" layer="121"/>
+<wire x1="5.842" y1="-1.016" x2="4.318" y2="-1.016" width="0.254" layer="121"/>
+<wire x1="4.318" y1="-1.016" x2="4.318" y2="-2.54" width="0.254" layer="121"/>
+<wire x1="4.318" y1="-2.54" x2="4.318" y2="-4.064" width="0.254" layer="121"/>
+<wire x1="4.318" y1="-4.064" x2="5.08" y2="-4.064" width="0.254" layer="121"/>
+<wire x1="-7.62" y1="-2.54" x2="4.318" y2="-2.54" width="0.254" layer="121"/>
+<wire x1="5.08" y1="10.16" x2="5.08" y2="9.144" width="0.254" layer="121"/>
+<wire x1="5.08" y1="5.08" x2="5.08" y2="6.35" width="0.254" layer="121"/>
+<wire x1="5.08" y1="6.35" x2="5.842" y2="6.35" width="0.254" layer="121"/>
+<wire x1="5.842" y1="6.35" x2="5.842" y2="9.144" width="0.254" layer="121"/>
+<wire x1="5.842" y1="9.144" x2="4.572" y2="9.144" width="0.254" layer="121"/>
+<wire x1="4.572" y1="9.144" x2="4.572" y2="7.62" width="0.254" layer="121"/>
+<wire x1="4.572" y1="7.62" x2="4.572" y2="6.35" width="0.254" layer="121"/>
+<wire x1="4.572" y1="6.35" x2="5.08" y2="6.35" width="0.254" layer="121"/>
+<wire x1="-7.62" y1="7.62" x2="4.318" y2="7.62" width="0.254" layer="121"/>
+<wire x1="4.318" y1="7.62" x2="4.572" y2="7.62" width="0.254" layer="121"/>
+<wire x1="4.572" y1="7.62" x2="4.064" y2="8.128" width="0.254" layer="121"/>
+<wire x1="4.318" y1="7.62" x2="4.064" y2="7.366" width="0.254" layer="121"/>
+<wire x1="4.318" y1="-2.54" x2="3.81" y2="-2.032" width="0.254" layer="121"/>
+<wire x1="4.318" y1="-2.54" x2="3.81" y2="-3.048" width="0.254" layer="121"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -4024,6 +4113,29 @@ Source: RS Component / Phycomp</description>
 <connect gate="G$1" pin="SW1" pad="1"/>
 <connect gate="G$1" pin="SW2" pad="2"/>
 <connect gate="G$1" pin="VDD" pad="4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PLAYSTATION2_ANALOG_JOYSTICK">
+<description>Playstation2 Analog Joystick with a Switch</description>
+<gates>
+<gate name="G$1" symbol="PLAYSTATION2_ANALOG_JOYSTICK" x="-2.54" y="0"/>
+</gates>
+<devices>
+<device name="" package="PLAYSTATION2_ANALOG_JOYSTICK">
+<connects>
+<connect gate="G$1" pin="H" pad="H2"/>
+<connect gate="G$1" pin="H+" pad="H1"/>
+<connect gate="G$1" pin="H-" pad="H3"/>
+<connect gate="G$1" pin="SEL+" pad="B1A"/>
+<connect gate="G$1" pin="SEL-" pad="B2A"/>
+<connect gate="G$1" pin="V" pad="V2"/>
+<connect gate="G$1" pin="V+" pad="V1"/>
+<connect gate="G$1" pin="V-" pad="V3"/>
 </connects>
 <technologies>
 <technology name=""/>
