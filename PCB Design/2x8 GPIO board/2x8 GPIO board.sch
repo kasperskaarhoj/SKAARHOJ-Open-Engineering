@@ -4764,8 +4764,8 @@ Source: LITEON, LTV816.pdf</description>
 <part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="GND" library="SKAARHOJ" deviceset="ARDUINO_SHIELD" device=""/>
 <part name="GND4" library="SparkFun" deviceset="GND" device=""/>
-<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
+<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="U$2" library="SparkFun" deviceset="5V" device=""/>
 <part name="X2" library="con-phoenix-508" deviceset="MSTBV2" device=""/>
 <part name="GND5" library="SparkFun" deviceset="GND" device=""/>
@@ -4916,8 +4916,14 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="C2" gate="G$1" x="200.66" y="48.26"/>
 <instance part="GND" gate="G$1" x="238.76" y="81.28"/>
 <instance part="GND4" gate="1" x="226.06" y="50.8"/>
-<instance part="R1" gate="G$1" x="215.9" y="109.22" rot="R90"/>
-<instance part="R2" gate="G$1" x="220.98" y="109.22" rot="R90"/>
+<instance part="R1" gate="G$1" x="215.9" y="109.22" smashed="yes" rot="R90">
+<attribute name="NAME" x="214.4014" y="105.41" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="214.122" y="110.49" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="R2" gate="G$1" x="220.98" y="109.22" smashed="yes" rot="R90">
+<attribute name="NAME" x="224.5614" y="105.41" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="224.282" y="110.49" size="1.778" layer="96" rot="R90"/>
+</instance>
 <instance part="U$2" gate="G$1" x="215.9" y="116.84"/>
 <instance part="X2" gate="-1" x="-182.88" y="0"/>
 <instance part="X2" gate="-2" x="-182.88" y="-5.08"/>
