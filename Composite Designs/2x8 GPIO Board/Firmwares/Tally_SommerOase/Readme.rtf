@@ -6,21 +6,29 @@
 
 \f0\fs24 \cf0 This is programmed to give program/preview tally out but also re-map inputs around. Thats the main feature of this sketch compared to the example sketch from the arduino library.\
 \
+Make sure to pay attention to the line looking like this in the sketch:\
+uint8_t reverseInputMapping[] = \{0,5,6,7,1,2,3,8,4\};\
+\
+Here you will have to set up a mapping matching your setup. Please just experiment a bit with it (only values 0-8, ok!)\
+\
 Furthermore it was used with a DATAvideo ITC-100 intercom:\
 \pard\pardeftab720
 {\field{\*\fldinst{HYPERLINK "http://www.datavideo.info/en/Intercom%20Systems/ITC-100"}}{\fldrslt \cf2 \ul \ulc2 http://www.datavideo.info/en/Intercom%20Systems/ITC-100}}\cf2 \ul \ulc2 \
+http://www.datavideo.info/manuals/Datavideo_ITC-100.pdf\
+\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-\cf0 \ulnone It was wired with one of the outputs there like this:\
+\cf0 \ulnone It was wired with one of the outputs there like this (see page 12 in the above PDF):\
 \
 DB25:	DB15:\
-16		15\
-17		5\
-18		13\
-19		11\
-20		8\
-21		6\
-22		3\
-23		1\
-24		4\
-}
+16		15		(Preview Tally, input 4)\
+17		5		(Program Tally, input 4)\
+18		13		(Preview Tally, input 3)\
+19		11		(Program Tally, input 3)\
+20		8		(Preview Tally, input 2)\
+21		6		(Program Tally, input 2)\
+22		3		(Preview Tally, input 1)\
+23		1		(Program Tally, input 1)\
+24		4		(GND)\
+\
+With this configuration you use program/preview tally and can therefore only create tally for 4 cameras. }
