@@ -119,6 +119,7 @@
 <text x="12.446" y="4.953" size="0.8128" layer="121">5V</text>
 <text x="0" y="11.557" size="0.8128" layer="121" rot="R270">v24-09-12</text>
 <text x="1.905" y="6.35" size="1.778" layer="121">1</text>
+<text x="20.955" y="11.43" size="0.8128" layer="122" rot="MR0">Fusion: 60199</text>
 </plain>
 <libraries>
 <library name="SparkFun">
