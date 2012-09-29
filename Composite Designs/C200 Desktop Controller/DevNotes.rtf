@@ -5,16 +5,13 @@
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
 \f0\b\fs24 \cf0 TODO:\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\b0 \cf0 \
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-
-\b \cf0 Changes for next version:
 \b0 \
-- Config switch?\
-- Arduino ud p\'e5 siden som p\'e5 C30\
-- Kassens st\'f8rrelse afpasses extra options (T-bar og extra buttons)\
-- Fixe: Encoder capacitors, capacitor p\'e5 slider, SDA/SCL, swap D2/D7\
-	- Fejl p\'e5 Console print og Slider: Capacitor til slider sidder forkert!!\
-}
+
+\b Issues with PCB:
+\b0 \
+For the C200 Console PCB to work, a number of changes must be done first:\
+- Add 10nF capacitors on encoder triggers (D2, D3) to gnd\
+- 10 nF capacitor for slider is placed wrong! (it's between GND and 5V, which doesn't harm though). Place a 10nF cap between the slider output and GND\
+- SDA/SCL connected to A4 and A5 must be cut and routed to the proper pins on an Arduino Mega (20/21 I think).\
+- Connections to D2 and D7 must be swapped}
