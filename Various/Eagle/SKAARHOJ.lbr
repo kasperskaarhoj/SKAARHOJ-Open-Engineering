@@ -1139,6 +1139,20 @@ Source: RS Component / BUORNS</description>
 <pad name="G(-)" x="-1.905" y="-2.286" drill="0.8"/>
 <pad name="COM(+)" x="1.905" y="-2.286" drill="0.8"/>
 </package>
+<package name="BEHRINGER_100K_POT">
+<wire x1="-6.75" y1="6" x2="6.75" y2="6" width="0.127" layer="21"/>
+<wire x1="6.75" y1="6" x2="6.75" y2="-10" width="0.127" layer="21"/>
+<wire x1="6.75" y1="-10" x2="-6.75" y2="-10" width="0.127" layer="21"/>
+<wire x1="-6.75" y1="-10" x2="-6.75" y2="6" width="0.127" layer="21"/>
+<pad name="PAD3" x="-1" y="-11" drill="0.6" shape="square"/>
+<pad name="PAD2" x="-3" y="-11" drill="0.6" shape="square"/>
+<pad name="PAD1" x="-5" y="-11" drill="0.6" shape="square"/>
+<pad name="PAD4" x="1" y="-11" drill="0.6" shape="square"/>
+<pad name="PAD5" x="3" y="-11" drill="0.6" shape="square"/>
+<pad name="PAD6" x="5" y="-11" drill="0.6" shape="square"/>
+<pad name="GND1" x="-7" y="0" drill="2.2" shape="square"/>
+<pad name="GND2" x="7" y="0" drill="2.2" shape="square"/>
+</package>
 </packages>
 <symbols>
 <symbol name="LP11ESWITCH">
@@ -1621,6 +1635,50 @@ Source: RS Component / BUORNS</description>
 <wire x1="-2.54" y1="-7.62" x2="-2.54" y2="-12.7" width="0.254" layer="94"/>
 <wire x1="-2.54" y1="-12.7" x2="0" y2="-12.7" width="0.254" layer="94"/>
 </symbol>
+<symbol name="LEDBAR">
+</symbol>
+<symbol name="2GANG_POT">
+<wire x1="-5.08" y1="15.24" x2="12.7" y2="15.24" width="0.254" layer="94"/>
+<wire x1="12.7" y1="15.24" x2="12.7" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-5.08" x2="-5.08" y2="15.24" width="0.254" layer="94"/>
+<text x="-5.08" y="16.002" size="1.778" layer="95">&gt;Name</text>
+<text x="-5.08" y="-7.62" size="1.778" layer="96">&gt;Value</text>
+<pin name="E11" x="-7.62" y="12.7" visible="pin" length="short"/>
+<pin name="C1" x="-7.62" y="10.16" visible="pin" length="short"/>
+<pin name="E12" x="-7.62" y="7.62" visible="pin" length="short"/>
+<pin name="E21" x="-7.62" y="2.54" visible="pin" length="short"/>
+<pin name="C2" x="-7.62" y="0" visible="pin" length="short"/>
+<pin name="E22" x="-7.62" y="-2.54" visible="pin" length="short"/>
+<wire x1="-5.08" y1="12.7" x2="7.62" y2="12.7" width="0.254" layer="121"/>
+<wire x1="-5.08" y1="7.62" x2="7.62" y2="7.62" width="0.254" layer="121"/>
+<wire x1="-5.08" y1="2.54" x2="7.62" y2="2.54" width="0.254" layer="121"/>
+<wire x1="-5.08" y1="-2.54" x2="7.62" y2="-2.54" width="0.254" layer="121"/>
+<wire x1="7.62" y1="2.54" x2="7.62" y2="1.524" width="0.254" layer="121"/>
+<wire x1="7.62" y1="-2.54" x2="7.62" y2="-1.524" width="0.254" layer="121"/>
+<wire x1="7.62" y1="-1.524" x2="8.382" y2="-1.524" width="0.254" layer="121"/>
+<wire x1="8.382" y1="-1.524" x2="8.382" y2="1.524" width="0.254" layer="121"/>
+<wire x1="8.382" y1="1.524" x2="6.858" y2="1.524" width="0.254" layer="121"/>
+<wire x1="6.858" y1="1.524" x2="6.858" y2="0" width="0.254" layer="121"/>
+<wire x1="6.858" y1="0" x2="6.858" y2="-1.524" width="0.254" layer="121"/>
+<wire x1="6.858" y1="-1.524" x2="7.62" y2="-1.524" width="0.254" layer="121"/>
+<wire x1="-5.08" y1="0" x2="6.858" y2="0" width="0.254" layer="121"/>
+<wire x1="7.62" y1="12.7" x2="7.62" y2="11.684" width="0.254" layer="121"/>
+<wire x1="7.62" y1="7.62" x2="7.62" y2="8.89" width="0.254" layer="121"/>
+<wire x1="7.62" y1="8.89" x2="8.382" y2="8.89" width="0.254" layer="121"/>
+<wire x1="8.382" y1="8.89" x2="8.382" y2="11.684" width="0.254" layer="121"/>
+<wire x1="8.382" y1="11.684" x2="7.112" y2="11.684" width="0.254" layer="121"/>
+<wire x1="7.112" y1="11.684" x2="7.112" y2="10.16" width="0.254" layer="121"/>
+<wire x1="7.112" y1="10.16" x2="7.112" y2="8.89" width="0.254" layer="121"/>
+<wire x1="7.112" y1="8.89" x2="7.62" y2="8.89" width="0.254" layer="121"/>
+<wire x1="-5.08" y1="10.16" x2="6.858" y2="10.16" width="0.254" layer="121"/>
+<wire x1="6.858" y1="10.16" x2="7.112" y2="10.16" width="0.254" layer="121"/>
+<wire x1="7.112" y1="10.16" x2="6.604" y2="10.668" width="0.254" layer="121"/>
+<wire x1="6.858" y1="10.16" x2="6.604" y2="9.906" width="0.254" layer="121"/>
+<wire x1="6.858" y1="0" x2="6.35" y2="0.508" width="0.254" layer="121"/>
+<wire x1="6.858" y1="0" x2="6.35" y2="-0.508" width="0.254" layer="121"/>
+<pin name="GND" x="17.78" y="-2.54" length="middle" direction="pwr" rot="R180"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="LP11-B">
@@ -2029,6 +2087,27 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <connect gate="G$1" pin="K3-G" pad="G(-)"/>
 <connect gate="G$1" pin="SW1" pad="P$1"/>
 <connect gate="G$1" pin="SW2" pad="P$1A"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BEHRINGER_100K_POT">
+<gates>
+<gate name="G$1" symbol="2GANG_POT" x="-10.16" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="BEHRINGER_100K_POT">
+<connects>
+<connect gate="G$1" pin="C1" pad="PAD1"/>
+<connect gate="G$1" pin="C2" pad="PAD4"/>
+<connect gate="G$1" pin="E11" pad="PAD2"/>
+<connect gate="G$1" pin="E12" pad="PAD6"/>
+<connect gate="G$1" pin="E21" pad="PAD3"/>
+<connect gate="G$1" pin="E22" pad="PAD5"/>
+<connect gate="G$1" pin="GND" pad="GND1 GND2"/>
 </connects>
 <technologies>
 <technology name=""/>
