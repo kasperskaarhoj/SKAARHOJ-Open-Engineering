@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.1">
+<eagle version="6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -2133,21 +2133,83 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 </deviceset>
 </devicesets>
 </library>
+<library name="SKAARHOJ">
+<packages>
+<package name="POWER_JACK_SMD">
+<wire x1="-0.08" y1="-4.5" x2="-0.08" y2="4.5" width="0.2032" layer="51"/>
+<smd name="GND" x="-6.7564" y="-7.112" dx="6.35" dy="3.81" layer="1" rot="R180"/>
+<smd name="SHUNT" x="-6.7564" y="7.112" dx="6.35" dy="3.302" layer="1" rot="R180"/>
+<smd name="PWR" x="-15.9004" y="0.762" dx="4.064" dy="3.302" layer="1" rot="R180"/>
+<wire x1="0" y1="4.445" x2="-3.175" y2="4.445" width="0.2032" layer="21"/>
+<wire x1="-3.175" y1="4.445" x2="-12.7" y2="4.445" width="0.2032" layer="21"/>
+<wire x1="-12.7" y1="4.445" x2="-14.478" y2="4.445" width="0.2032" layer="21"/>
+<wire x1="-14.478" y1="4.445" x2="-14.478" y2="-4.445" width="0.2032" layer="21"/>
+<wire x1="-14.478" y1="-4.445" x2="-12.7" y2="-4.445" width="0.2032" layer="21"/>
+<wire x1="-12.7" y1="-4.445" x2="-3.175" y2="-4.445" width="0.2032" layer="21"/>
+<wire x1="-3.175" y1="-4.445" x2="0" y2="-4.445" width="0.2032" layer="21"/>
+<wire x1="-3.175" y1="4.445" x2="-3.175" y2="-4.445" width="0.2032" layer="21"/>
+<wire x1="-12.7" y1="4.445" x2="-12.7" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="-12.7" y1="1.27" x2="-7.62" y2="1.27" width="0.2032" layer="21"/>
+<wire x1="-7.62" y1="1.27" x2="-7.62" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="-7.62" y1="-1.27" x2="-12.7" y2="-1.27" width="0.2032" layer="21"/>
+<wire x1="-12.7" y1="-1.27" x2="-12.7" y2="-4.445" width="0.2032" layer="21"/>
+<circle x="-2.9972" y="0" radius="0.889" width="0.2032" layer="21"/>
+<hole x="-2.9972" y="0" drill="1.778"/>
+</package>
+</packages>
+<symbols>
+<symbol name="POWER_JACK">
+<wire x1="-12.7" y1="0" x2="-10.16" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="-10.16" y1="2.54" x2="-7.62" y2="0" width="0.1524" layer="94"/>
+<wire x1="-7.62" y1="0" x2="-5.08" y2="0" width="0.1524" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="-5.08" y1="0" x2="-5.08" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="-2.54" y2="2.54" width="0.1524" layer="94"/>
+<text x="-12.7" y="7.62" size="1.778" layer="96">&gt;Value</text>
+<text x="-12.7" y="-2.54" size="1.778" layer="95">&gt;Name</text>
+<rectangle x1="-12.7" y1="4.318" x2="-2.54" y2="5.842" layer="94"/>
+<pin name="GNDBREAK" x="0" y="2.54" visible="off" length="short" rot="R180"/>
+<pin name="GND" x="0" y="0" visible="off" length="short" rot="R180"/>
+<pin name="PWR" x="0" y="5.08" visible="off" length="short" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="POWER_JACK_SMD">
+<description>RASM712PX Right Angle SMT Mount DC Power Jack, pin size 0.100"(2.5mm), with locating post Switchcraft.com</description>
+<gates>
+<gate name="G$1" symbol="POWER_JACK" x="0" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="POWER_JACK_SMD">
+<connects>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="GNDBREAK" pad="SHUNT"/>
+<connect gate="G$1" pin="PWR" pad="PWR"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0">
+<class number="0" name="default" width="0.254" drill="0.4064">
+<clearance class="0" value="0.254"/>
 </class>
-<class number="1" name="PWR" width="0.4064" drill="0">
+<class number="1" name="PWR" width="0.8128" drill="0.6096">
 <clearance class="1" value="0.254"/>
 </class>
-<class number="2" name="RELAY LINES" width="0.4064" drill="0">
+<class number="2" name="RELAY LINES" width="0.8128" drill="0.6096">
 <clearance class="2" value="0.254"/>
 </class>
-<class number="3" name="INput lines" width="0" drill="0">
+<class number="3" name="INput lines" width="0.254" drill="0.4064">
 <clearance class="3" value="0.254"/>
 </class>
 </classes>
@@ -2161,7 +2223,6 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <part name="GPO6" library="con-phoenix-508" deviceset="MSTBV3" device="" value="CON1"/>
 <part name="GPO7" library="con-phoenix-508" deviceset="MSTBV3" device="" value="CON1"/>
 <part name="GPO8" library="con-phoenix-508" deviceset="MSTBV3" device="" value="CON1"/>
-<part name="PWR" library="con-phoenix-508" deviceset="MSTBV2" device=""/>
 <part name="GND5" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="JP1" library="SparkFun" deviceset="M02" device="LOCK"/>
@@ -2209,6 +2270,7 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <attribute name="OC_FARNELL" value="1792792"/>
 <attribute name="OC_NEWARK" value="69R9845"/>
 </part>
+<part name="U$1" library="SKAARHOJ" deviceset="POWER_JACK_SMD" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -2281,8 +2343,6 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <instance part="GPO8" gate="-3" x="-160.02" y="-12.7" smashed="yes" rot="R90">
 <attribute name="NAME" x="-160.909" y="-19.304" size="1.778" layer="95" rot="R270"/>
 </instance>
-<instance part="PWR" gate="-1" x="-182.88" y="0"/>
-<instance part="PWR" gate="-2" x="-182.88" y="-5.08"/>
 <instance part="GND5" gate="1" x="-172.72" y="-7.62"/>
 <instance part="GND1" gate="1" x="154.94" y="25.4"/>
 <instance part="JP1" gate="G$1" x="68.58" y="73.66"/>
@@ -2306,6 +2366,7 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <instance part="GPI7" gate="-2" x="-116.84" y="-86.36" rot="R90"/>
 <instance part="GPI8" gate="-1" x="-154.94" y="-86.36" rot="R90"/>
 <instance part="GPI8" gate="-2" x="-149.86" y="-86.36" rot="R90"/>
+<instance part="U$1" gate="G$1" x="-185.42" y="-5.08"/>
 </instances>
 <busses>
 </busses>
@@ -2457,8 +2518,6 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <wire x1="45.72" y1="33.02" x2="78.74" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="GPO1" gate="-2" pin="1"/>
 <wire x1="78.74" y1="-7.62" x2="78.74" y2="33.02" width="0.1524" layer="91"/>
-<pinref part="PWR" gate="-2" pin="1"/>
-<wire x1="-177.8" y1="-5.08" x2="-172.72" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="-172.72" y1="-5.08" x2="-172.72" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="GND5" gate="1" pin="GND"/>
 <junction x="-172.72" y="-5.08"/>
@@ -2466,6 +2525,11 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <wire x1="78.74" y1="40.64" x2="78.74" y2="33.02" width="0.1524" layer="91"/>
 <junction x="121.92" y="40.64"/>
 <junction x="78.74" y="33.02"/>
+<wire x1="-185.42" y1="-5.08" x2="-172.72" y2="-5.08" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="GND"/>
+<pinref part="U$1" gate="G$1" pin="GNDBREAK"/>
+<wire x1="-185.42" y1="-2.54" x2="-185.42" y2="-5.08" width="0.1524" layer="91"/>
+<junction x="-185.42" y="-5.08"/>
 </segment>
 <segment>
 <pinref part="S1" gate="G$1" pin="1"/>
@@ -2593,8 +2657,6 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <net name="N$75" class="2">
 <segment>
 <pinref part="GPO8" gate="-3" pin="1"/>
-<pinref part="PWR" gate="-1" pin="1"/>
-<wire x1="-177.8" y1="0" x2="-175.26" y2="0" width="0.1524" layer="91"/>
 <wire x1="-175.26" y1="0" x2="-160.02" y2="0" width="0.1524" layer="91"/>
 <wire x1="-160.02" y1="0" x2="-160.02" y2="-7.62" width="0.1524" layer="91"/>
 <pinref part="GPO7" gate="-3" pin="1"/>
@@ -2631,6 +2693,8 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <junction x="-175.26" y="0"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="-175.26" y1="83.82" x2="71.12" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="-185.42" y1="0" x2="-175.26" y2="0" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="PWR"/>
 </segment>
 </net>
 <net name="N$2" class="0">
