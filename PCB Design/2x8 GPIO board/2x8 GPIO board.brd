@@ -1040,10 +1040,11 @@ Source: LITE-ON ELECTRONICS, LTV816.pdf</description>
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0">
+<class number="0" name="default" width="0.2032" drill="0.4064">
+<clearance class="0" value="0.2032"/>
 </class>
-<class number="1" name="PWR" width="0.3048" drill="0">
-<clearance class="1" value="0.1524"/>
+<class number="1" name="PWR" width="0.4064" drill="0.6096">
+<clearance class="1" value="0.2032"/>
 </class>
 <class number="2" name="RELAY LINES" width="0.3048" drill="0">
 <clearance class="2" value="0.254"/>
@@ -1139,7 +1140,7 @@ design rules under a new name.</description>
 </designrules>
 <autorouter>
 <pass name="Default">
-<param name="RoutingGrid" value="6mil"/>
+<param name="RoutingGrid" value="4mil"/>
 <param name="tpViaShape" value="round"/>
 <param name="PrefDir.1" value="*"/>
 <param name="PrefDir.2" value="0"/>
