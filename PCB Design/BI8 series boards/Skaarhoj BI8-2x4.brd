@@ -127,7 +127,7 @@
 <text x="82.931" y="4.318" size="0.8128" layer="122" rot="MR0">5V</text>
 <text x="33.782" y="34.29" size="0.8128" layer="122" rot="MR180">v24-09-12</text>
 <text x="40.3225" y="1.651" size="0.6096" layer="122" font="vector" rot="MR0">https://github.com/kasperskaarhoj/SKAARHOJ-Open-Engineering</text>
-<text x="55.245" y="0.635" size="0.8128" layer="121">Fusion: 60200</text>
+<text x="55.245" y="0.635" size="0.8128" layer="121">ITead#100003036</text>
 </plain>
 <libraries>
 <library name="SKAARHOJ">

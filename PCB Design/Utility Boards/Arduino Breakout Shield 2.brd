@@ -173,7 +173,7 @@
 <rectangle x1="0" y1="15.24" x2="6.35" y2="27.94" layer="41"/>
 <rectangle x1="0" y1="15.24" x2="6.35" y2="27.94" layer="42"/>
 <text x="21.2725" y="34.4805" size="0.6096" layer="121" font="vector">https://github.com/kasperskaarhoj/SKAARHOJ-Open-Engineering</text>
-<text x="1.27" y="1.27" size="0.8128" layer="121">Fusion: 60199</text>
+<text x="17.2085" y="0.8255" size="0.8128" layer="121">ITead#100003036</text>
 </plain>
 <libraries>
 <library name="SparkFun">
