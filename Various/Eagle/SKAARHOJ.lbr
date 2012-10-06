@@ -1239,6 +1239,23 @@ Source: RS Component / BUORNS</description>
 <text x="-1.3462" y="3.0988" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <rectangle x1="-0.254" y1="-0.254" x2="0.254" y2="0.254" layer="51"/>
 </package>
+<package name="NAV-SWITCH-5WAY">
+<wire x1="-5" y1="5" x2="5" y2="5" width="0.127" layer="21"/>
+<pad name="PIN5" x="5.15" y="-0.25" drill="1" shape="square"/>
+<pad name="PIN2" x="-5.15" y="-0.25" drill="1" shape="square"/>
+<pad name="PIN3" x="-5.15" y="-3.25" drill="1.2" shape="square"/>
+<pad name="PIN4" x="5.15" y="-3.25" drill="1.2" shape="square"/>
+<pad name="PIN1" x="-5.15" y="3.25" drill="1.2" shape="square"/>
+<pad name="PIN6" x="5.15" y="3.25" drill="1.2" shape="square"/>
+<wire x1="-5" y1="5" x2="-5" y2="-5" width="0.127" layer="21"/>
+<wire x1="-5" y1="-5" x2="5" y2="-5" width="0.127" layer="21"/>
+<wire x1="5" y1="-5" x2="5" y2="5" width="0.127" layer="21"/>
+<circle x="0" y="0" radius="3.201559375" width="0.127" layer="21"/>
+<wire x1="-1.5" y1="1.5" x2="1.5" y2="1.5" width="0.127" layer="21"/>
+<wire x1="1.5" y1="1.5" x2="1.5" y2="-1.5" width="0.127" layer="21"/>
+<wire x1="1.5" y1="-1.5" x2="-1.5" y2="-1.5" width="0.127" layer="21"/>
+<wire x1="-1.5" y1="-1.5" x2="-1.5" y2="1.5" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="LP11ESWITCH">
@@ -1822,6 +1839,31 @@ Source: RS Component / BUORNS</description>
 <pin name="7" x="5.08" y="7.62" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 <pin name="8" x="5.08" y="10.16" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 </symbol>
+<symbol name="NAV-SWITCH-5WAY">
+<wire x1="1.27" y1="15.24" x2="-2.286" y2="12.954" width="0.254" layer="94"/>
+<wire x1="-2.286" y1="7.874" x2="1.27" y2="10.16" width="0.254" layer="94"/>
+<wire x1="2.54" y1="17.78" x2="-2.54" y2="17.78" width="0.254" layer="94"/>
+<wire x1="1.27" y1="5.08" x2="-2.286" y2="2.794" width="0.254" layer="94"/>
+<wire x1="-2.286" y1="-2.286" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="17.78" x2="-2.54" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-10.16" x2="2.54" y2="-10.16" width="0.254" layer="94"/>
+<circle x="-2.54" y="7.62" radius="0.3592" width="0.254" layer="94"/>
+<circle x="-2.54" y="2.54" radius="0.3592" width="0.254" layer="94"/>
+<circle x="2.54" y="-7.62" radius="0.3592" width="0.254" layer="94"/>
+<circle x="-2.54" y="-2.54" radius="0.3592" width="0.254" layer="94"/>
+<text x="-2.54" y="18.288" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="-12.7" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="UP" x="-5.08" y="12.7" visible="off" length="short"/>
+<pin name="DWN" x="-5.08" y="7.62" visible="off" length="short"/>
+<pin name="LEFT" x="-5.08" y="2.54" visible="off" length="short"/>
+<pin name="COMMON" x="5.08" y="-7.62" visible="off" length="short" rot="R180"/>
+<pin name="RIGHT" x="-5.08" y="-2.54" visible="off" length="short"/>
+<circle x="-2.54" y="12.7" radius="0.3592" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-10.16" x2="2.54" y2="17.78" width="0.254" layer="94"/>
+<wire x1="-2.286" y1="-7.366" x2="1.27" y2="-5.08" width="0.254" layer="94"/>
+<circle x="-2.54" y="-7.62" radius="0.3592" width="0.254" layer="94"/>
+<pin name="PUSH" x="-5.08" y="-7.62" visible="off" length="short"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="LP11-B">
@@ -2343,6 +2385,27 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <connect gate="G$1" pin="6" pad="6"/>
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="NAV-SWITCH-5WAY">
+<description>For use with a push-button switch made by CnK components. The Part # is</description>
+<gates>
+<gate name="G$1" symbol="NAV-SWITCH-5WAY" x="0" y="0"/>
+</gates>
+<devices>
+<device name="CNK_LOCK" package="NAV-SWITCH-5WAY">
+<connects>
+<connect gate="G$1" pin="COMMON" pad="PIN4"/>
+<connect gate="G$1" pin="DWN" pad="PIN3"/>
+<connect gate="G$1" pin="LEFT" pad="PIN2"/>
+<connect gate="G$1" pin="PUSH" pad="PIN6"/>
+<connect gate="G$1" pin="RIGHT" pad="PIN5"/>
+<connect gate="G$1" pin="UP" pad="PIN1"/>
 </connects>
 <technologies>
 <technology name=""/>
