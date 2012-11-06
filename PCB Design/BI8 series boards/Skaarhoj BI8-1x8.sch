@@ -2638,6 +2638,13 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <part name="SERIAL" library="SparkFun" deviceset="M04X2" device=""/>
 <part name="GND5" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$17" library="SparkFun" deviceset="5V" device=""/>
+<part name="SJ3" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
+<part name="SJ4" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
+<part name="SJ5" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
+<part name="B6ALT" library="SKAARHOJ" deviceset="LP11-B" device="&quot;"/>
+<part name="U$12" library="SparkFun" deviceset="5V" device=""/>
+<part name="B7ALT" library="SKAARHOJ" deviceset="LP11-B" device="&quot;"/>
+<part name="U$18" library="SparkFun" deviceset="5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -2763,6 +2770,19 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <instance part="SERIAL" gate="G$1" x="60.96" y="10.16"/>
 <instance part="GND5" gate="1" x="48.26" y="-2.54"/>
 <instance part="U$17" gate="G$1" x="71.12" y="15.24"/>
+<instance part="SJ3" gate="1" x="-10.16" y="-7.62" smashed="yes">
+<attribute name="NAME" x="-12.7" y="-5.08" size="1.778" layer="95"/>
+</instance>
+<instance part="SJ4" gate="1" x="-10.16" y="-15.24" smashed="yes">
+<attribute name="NAME" x="-12.7" y="-12.7" size="1.778" layer="95"/>
+</instance>
+<instance part="SJ5" gate="1" x="-10.16" y="-22.86" smashed="yes">
+<attribute name="NAME" x="-12.7" y="-20.32" size="1.778" layer="95"/>
+</instance>
+<instance part="B6ALT" gate="LP11" x="-187.96" y="12.7"/>
+<instance part="U$12" gate="G$1" x="-198.12" y="7.62" rot="R90"/>
+<instance part="B7ALT" gate="LP11" x="-152.4" y="12.7"/>
+<instance part="U$18" gate="G$1" x="-162.56" y="7.62" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -2858,6 +2878,16 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <pinref part="U$17" gate="G$1" pin="5V"/>
 <wire x1="68.58" y1="15.24" x2="71.12" y2="15.24" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="B6ALT" gate="LP11" pin="A"/>
+<wire x1="-195.58" y1="7.62" x2="-198.12" y2="7.62" width="0.1524" layer="91"/>
+<pinref part="U$12" gate="G$1" pin="5V"/>
+</segment>
+<segment>
+<pinref part="B7ALT" gate="LP11" pin="A"/>
+<wire x1="-160.02" y1="7.62" x2="-162.56" y2="7.62" width="0.1524" layer="91"/>
+<pinref part="U$18" gate="G$1" pin="5V"/>
+</segment>
 </net>
 <net name="GND" class="1">
 <segment>
@@ -2920,6 +2950,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <wire x1="-144.78" y1="45.72" x2="-142.24" y2="45.72" width="0.1524" layer="91"/>
 <label x="-142.24" y="45.72" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="B7ALT" gate="LP11" pin="SW2"/>
+<wire x1="-144.78" y1="15.24" x2="-142.24" y2="15.24" width="0.1524" layer="91"/>
+<label x="-142.24" y="15.24" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="GPA2" class="0">
 <segment>
@@ -2931,6 +2966,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <pinref part="B6" gate="LP11" pin="SW2"/>
 <wire x1="-180.34" y1="45.72" x2="-177.8" y2="45.72" width="0.1524" layer="91"/>
 <label x="-177.8" y="45.72" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="B6ALT" gate="LP11" pin="SW2"/>
+<wire x1="-180.34" y1="15.24" x2="-177.8" y2="15.24" width="0.1524" layer="91"/>
+<label x="-177.8" y="15.24" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="GPA3" class="0">
@@ -3197,6 +3237,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <wire x1="-144.78" y1="35.56" x2="-142.24" y2="35.56" width="0.1524" layer="91"/>
 <label x="-142.24" y="35.56" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="B7ALT" gate="LP11" pin="K2"/>
+<wire x1="-144.78" y1="5.08" x2="-142.24" y2="5.08" width="0.1524" layer="91"/>
+<label x="-142.24" y="5.08" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="L12" class="0">
 <segment>
@@ -3208,6 +3253,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <pinref part="B7" gate="LP11" pin="K1"/>
 <wire x1="-144.78" y1="40.64" x2="-142.24" y2="40.64" width="0.1524" layer="91"/>
 <label x="-142.24" y="40.64" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="B7ALT" gate="LP11" pin="K1"/>
+<wire x1="-144.78" y1="10.16" x2="-142.24" y2="10.16" width="0.1524" layer="91"/>
+<label x="-142.24" y="10.16" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="L11" class="0">
@@ -3221,6 +3271,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <wire x1="-180.34" y1="35.56" x2="-177.8" y2="35.56" width="0.1524" layer="91"/>
 <label x="-177.8" y="35.56" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="B6ALT" gate="LP11" pin="K2"/>
+<wire x1="-180.34" y1="5.08" x2="-177.8" y2="5.08" width="0.1524" layer="91"/>
+<label x="-177.8" y="5.08" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="L10" class="0">
 <segment>
@@ -3232,6 +3287,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <pinref part="B6" gate="LP11" pin="K1"/>
 <wire x1="-180.34" y1="40.64" x2="-177.8" y2="40.64" width="0.1524" layer="91"/>
 <label x="-177.8" y="40.64" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="B6ALT" gate="LP11" pin="K1"/>
+<wire x1="-180.34" y1="10.16" x2="-177.8" y2="10.16" width="0.1524" layer="91"/>
+<label x="-177.8" y="10.16" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="L9" class="0">
@@ -3479,6 +3539,16 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <junction x="20.32" y="0"/>
 <label x="22.86" y="0" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="B6ALT" gate="LP11" pin="SW1"/>
+<wire x1="-195.58" y1="15.24" x2="-198.12" y2="15.24" width="0.1524" layer="91"/>
+<label x="-198.12" y="15.24" size="1.778" layer="95" rot="R180"/>
+</segment>
+<segment>
+<pinref part="B7ALT" gate="LP11" pin="SW1"/>
+<wire x1="-160.02" y1="15.24" x2="-162.56" y2="15.24" width="0.1524" layer="91"/>
+<label x="-162.56" y="15.24" size="1.778" layer="95" rot="R180"/>
+</segment>
 </net>
 <net name="5VL" class="0">
 <segment>
@@ -3529,6 +3599,17 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <junction x="99.06" y="-7.62"/>
 <label x="96.52" y="-7.62" size="1.778" layer="95" rot="R90"/>
 </segment>
+<segment>
+<pinref part="SJ5" gate="1" pin="1"/>
+<pinref part="SJ4" gate="1" pin="1"/>
+<wire x1="-15.24" y1="-22.86" x2="-15.24" y2="-15.24" width="0.1524" layer="91"/>
+<pinref part="SJ3" gate="1" pin="1"/>
+<wire x1="-15.24" y1="-15.24" x2="-15.24" y2="-7.62" width="0.1524" layer="91"/>
+<junction x="-15.24" y="-15.24"/>
+<wire x1="-15.24" y1="-7.62" x2="-17.78" y2="-7.62" width="0.1524" layer="91"/>
+<junction x="-15.24" y="-7.62"/>
+<label x="-17.78" y="-7.62" size="1.778" layer="95" rot="R180"/>
+</segment>
 </net>
 <net name="A0" class="0">
 <segment>
@@ -3549,6 +3630,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <wire x1="7.62" y1="15.24" x2="10.16" y2="15.24" width="0.1524" layer="91"/>
 <label x="0" y="12.7" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="SJ3" gate="1" pin="2"/>
+<wire x1="-5.08" y1="-7.62" x2="-2.54" y2="-7.62" width="0.1524" layer="91"/>
+<label x="-2.54" y="-7.62" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="A1" class="0">
 <segment>
@@ -3566,6 +3652,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <pinref part="S2" gate="G$1" pin="5"/>
 <wire x1="10.16" y1="10.16" x2="-2.54" y2="10.16" width="0.1524" layer="91"/>
 <label x="0" y="10.16" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SJ4" gate="1" pin="2"/>
+<wire x1="-5.08" y1="-15.24" x2="-2.54" y2="-15.24" width="0.1524" layer="91"/>
+<label x="-2.54" y="-15.24" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="A2" class="0">
@@ -3586,6 +3677,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <pinref part="RN1" gate="B" pin="2"/>
 <wire x1="7.62" y1="5.08" x2="10.16" y2="5.08" width="0.1524" layer="91"/>
 <label x="0" y="7.62" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SJ5" gate="1" pin="2"/>
+<wire x1="-5.08" y1="-22.86" x2="-2.54" y2="-22.86" width="0.1524" layer="91"/>
+<label x="-2.54" y="-22.86" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="SDI_SCLK" class="0">

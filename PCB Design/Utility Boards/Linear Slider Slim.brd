@@ -122,7 +122,7 @@
 <text x="74.93" y="8.89" size="0.8128" layer="122" rot="MR90">GND</text>
 <text x="3.175" y="13.335" size="0.8128" layer="122" rot="MR90">5V</text>
 <text x="44.1325" y="2.286" size="0.6096" layer="122" font="vector" rot="MR0">https://github.com/kasperskaarhoj/SKAARHOJ-Open-Engineering</text>
-<text x="58.42" y="1.27" size="0.8128" layer="121">FUSION: 60199</text>
+<text x="58.42" y="1.27" size="0.8128" layer="121">FUSION: 63103</text>
 </plain>
 <libraries>
 <library name="SKAARHOJ">
