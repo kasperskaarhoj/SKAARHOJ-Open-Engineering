@@ -1,5 +1,5 @@
 /*****************
- * Basis control for the SKAARHOJ C100 models
+ * Basis control for the SKAARHOJ C50 models
  * This example is programmed for ATEM 1M/E versions
  *
  * This example also uses a number of custom libraries which you must install first. 

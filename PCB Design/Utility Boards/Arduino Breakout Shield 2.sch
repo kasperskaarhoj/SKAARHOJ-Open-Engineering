@@ -3809,8 +3809,8 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 </class>
 </classes>
 <parts>
-<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
-<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1K5"/>
+<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1K5"/>
 <part name="U1" library="SparkFun" deviceset="ARDUINO_SHIELD" device="NO_SILK"/>
 <part name="JP1" library="SparkFun" deviceset="M06" device="POLAR"/>
 <part name="JP2" library="SparkFun" deviceset="M06" device="POLAR"/>
