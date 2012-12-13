@@ -4516,6 +4516,11 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <wire x1="127" y1="60.96" x2="129.54" y2="60.96" width="0.1524" layer="91"/>
 <label x="129.54" y="60.96" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="D4"/>
+<wire x1="12.7" y1="5.08" x2="15.24" y2="5.08" width="0.1524" layer="91"/>
+<label x="15.24" y="5.08" size="1.778" layer="95"/>
+</segment>
 </net>
 </nets>
 </sheet>

@@ -54,28 +54,38 @@ A5		I2C/SCL\
 \b \cf0 Extended Pin usage on Arduino Mega
 \b0 \
 D19-14: Serial 1-3 (plus interrupts) => Headers, fit for flatcable connection to external boards.\
-D20-21:	(Reserved, TWI)\
-D22:		LED/green\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i \cf0 (D20-21:	(Reserved, TWI))\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i0 \cf0 D22:		LED/green\
 D23:		LED/red\
 D24:		Touch Power Control (output)\
-D25-32	Reserved: Touch Menu Control (8 outputs header, 6 strictly needed)\
-D33:		Foot pedal in (Optocoupler)\
-D34:		? in  (Optocoupler)\
-D35-42:	Control of 8 relays for Bescor MP101 direction control (8 outputs header)\
-		Speed control of Bescor?\
-		LANC control? Serial..?\
-D44-46:	(Has PWM)\
-D48:		SDI/Clock	\
-D49:		SDI/Data out\
-D50-53: 	(Reserved, SDI)\
-\
-A6		Touch Power Control (input -> goes to pin 7 on touchscreen button panel...)\
+D25-32	EXT\
+D33:		Foot pedal 1 in (Optocoupler)\
+D34:		Foot pedal 2 in  (Optocoupler)\
+D35:		Joy1 press\
+D36:		Joy2 press\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i \cf0 (D44-46:	(Has PWM))\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i0 \cf0 D48:		SDI/Clock	(SCLK)\
+D49:		SDI/Data out (MOSI)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i \cf0 (D50-53: 	(Reserved, SDI))\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i0 \cf0 \
+A6		Touch\
 A7		Touch\
 A8		Touch\
 A9		Touch\
-A10		Touch\
-A11\
-A12\
-A13\
-A14\
-A15}
+A10		Touch Power Control (input -> goes to pin 7 on touchscreen button panel...)\
+A12		Joy1/A\
+A13		Joy1/B\
+A14		Joy2/A\
+A15		Joy2/B}

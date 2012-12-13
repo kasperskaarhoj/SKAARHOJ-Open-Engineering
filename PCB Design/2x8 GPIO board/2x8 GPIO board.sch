@@ -6454,6 +6454,11 @@ Source: LITEON, LTV816.pdf</description>
 <part name="SJ3" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
 <part name="SJ4" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
 <part name="SJ5" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
+<part name="C3" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
+<part name="SJ6" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
+<part name="SJ7" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
+<part name="U$4" library="SparkFun" deviceset="5V" device=""/>
+<part name="GND7" library="SparkFun" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -6463,6 +6468,7 @@ Source: LITEON, LTV816.pdf</description>
 <text x="259.08" y="116.84" size="1.778" layer="97">Arduino Mega</text>
 <text x="220.98" y="-30.48" size="2.54" layer="97">SERIAL BUS</text>
 <text x="220.98" y="-71.12" size="3.81" layer="97">CONFIG</text>
+<text x="213.36" y="10.16" size="3.81" layer="97">POWER</text>
 </plain>
 <instances>
 <instance part="K1" gate="1" x="81.28" y="58.42" rot="R270"/>
@@ -6641,6 +6647,11 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="SJ5" gate="1" x="215.9" y="-93.98" smashed="yes">
 <attribute name="NAME" x="213.36" y="-91.44" size="1.778" layer="95"/>
 </instance>
+<instance part="C3" gate="G$1" x="218.44" y="-7.62"/>
+<instance part="SJ6" gate="1" x="228.6" y="0"/>
+<instance part="SJ7" gate="1" x="228.6" y="-12.7"/>
+<instance part="U$4" gate="G$1" x="218.44" y="0"/>
+<instance part="GND7" gate="1" x="218.44" y="-15.24"/>
 </instances>
 <busses>
 </busses>
@@ -6826,6 +6837,14 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="210.82" y1="-78.74" x2="208.28" y2="-78.74" width="0.1524" layer="91"/>
 <junction x="210.82" y="-78.74"/>
 <label x="208.28" y="-78.74" size="1.778" layer="95" rot="R180"/>
+</segment>
+<segment>
+<wire x1="218.44" y1="0" x2="223.52" y2="0" width="0.1524" layer="91"/>
+<pinref part="SJ6" gate="1" pin="1"/>
+<pinref part="U$4" gate="G$1" pin="5V"/>
+<pinref part="C3" gate="G$1" pin="1"/>
+<wire x1="218.44" y1="-2.54" x2="218.44" y2="0" width="0.1524" layer="91"/>
+<junction x="218.44" y="0"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -7305,6 +7324,14 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="GND6" gate="1" pin="GND"/>
 <wire x1="215.9" y1="-38.1" x2="215.9" y2="-53.34" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<wire x1="218.44" y1="-12.7" x2="223.52" y2="-12.7" width="0.1524" layer="91"/>
+<pinref part="SJ7" gate="1" pin="1"/>
+<pinref part="GND7" gate="1" pin="GND"/>
+<pinref part="C3" gate="G$1" pin="2"/>
+<wire x1="218.44" y1="-12.7" x2="218.44" y2="-10.16" width="0.1524" layer="91"/>
+<junction x="218.44" y="-12.7"/>
+</segment>
 </net>
 <net name="N$5" class="0">
 <segment>
@@ -7744,6 +7771,11 @@ Source: LITEON, LTV816.pdf</description>
 <junction x="256.54" y="-93.98"/>
 <label x="259.08" y="-93.98" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="SJ7" gate="1" pin="2"/>
+<wire x1="233.68" y1="-12.7" x2="236.22" y2="-12.7" width="0.1524" layer="91"/>
+<label x="236.22" y="-12.7" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="A0" class="0">
 <segment>
@@ -7798,6 +7830,13 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="IC2" gate="G$1" pin="A2"/>
 <wire x1="195.58" y1="93.98" x2="198.12" y2="93.98" width="0.1524" layer="91"/>
 <label x="198.12" y="93.98" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="5VL" class="0">
+<segment>
+<pinref part="SJ6" gate="1" pin="2"/>
+<wire x1="233.68" y1="0" x2="236.22" y2="0" width="0.1524" layer="91"/>
+<label x="236.22" y="0" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>

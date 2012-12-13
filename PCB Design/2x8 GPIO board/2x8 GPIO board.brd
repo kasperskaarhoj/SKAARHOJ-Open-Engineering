@@ -1572,6 +1572,9 @@ design rules under a new name.</description>
 <attribute name="NAME" x="21.5238" y="23.876" size="0.4064" layer="26" rot="MR0"/>
 <attribute name="VALUE" x="21.9102" y="25.781" size="0.4064" layer="28" rot="MR180"/>
 </element>
+<element name="C3" library="SparkFun" package="0805" value="10uF" x="-1.27" y="-12.7"/>
+<element name="SJ6" library="SparkFun" package="SJ_2S" value="SOLDERJUMPERNC" x="-1.27" y="-3.81"/>
+<element name="SJ7" library="SparkFun" package="SJ_2S" value="SOLDERJUMPERNC" x="-1.27" y="-8.89"/>
 </elements>
 <signals>
 <signal name="N$3">
@@ -1808,6 +1811,10 @@ design rules under a new name.</description>
 <via x="35.9664" y="26.0096" extent="1-16" drill="0.6096"/>
 <via x="21.336" y="20.1168" extent="1-16" drill="0.6096"/>
 <via x="33.1216" y="37.7952" extent="1-16" drill="0.6096"/>
+<contactref element="SJ6" pad="1"/>
+<contactref element="C3" pad="1"/>
+<wire x1="-1.6819" y1="-3.81" x2="18.98" y2="13.16" width="0" layer="19" extent="1-1"/>
+<wire x1="-2.17" y1="-12.7" x2="-1.6819" y2="-3.81" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$4">
 <contactref element="K1" pad="16"/>
@@ -2557,6 +2564,10 @@ design rules under a new name.</description>
 <vertex x="100.33" y="53.34"/>
 <vertex x="0" y="53.34"/>
 </polygon>
+<contactref element="SJ7" pad="1"/>
+<contactref element="C3" pad="2"/>
+<wire x1="-1.6819" y1="-8.89" x2="-0.37" y2="-12.7" width="0" layer="19" extent="1-1"/>
+<wire x1="4.2164" y1="4.318" x2="-1.6819" y2="-8.89" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$5">
 <contactref element="IC1" pad="1"/>
@@ -3340,6 +3351,8 @@ design rules under a new name.</description>
 <wire x1="28.81" y1="19.5072" x2="28.01" y2="19.5072" width="0.2032" layer="16"/>
 <wire x1="30.41" y1="19.5072" x2="29.61" y2="19.5072" width="0.2032" layer="16"/>
 <wire x1="29.61" y1="19.5072" x2="28.81" y2="19.5072" width="0.2032" layer="16"/>
+<contactref element="SJ7" pad="2"/>
+<wire x1="-0.8581" y1="-8.89" x2="28.01" y2="19.5072" width="0" layer="19" extent="1-16"/>
 </signal>
 <signal name="A0">
 <contactref element="RN7" pad="5"/>
@@ -3379,6 +3392,9 @@ design rules under a new name.</description>
 <wire x1="25.4" y1="23.7744" x2="23.5712" y2="23.7744" width="0.2032" layer="16"/>
 <wire x1="23.368" y1="23.9776" x2="23.2719" y2="24.13" width="0.2032" layer="16"/>
 <wire x1="25.4" y1="23.7744" x2="25.585" y2="23.745" width="0.2032" layer="16"/>
+</signal>
+<signal name="5VL">
+<contactref element="SJ6" pad="2"/>
 </signal>
 </signals>
 </board>

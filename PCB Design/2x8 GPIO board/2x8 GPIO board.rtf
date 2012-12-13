@@ -17,4 +17,10 @@ Changelog v05-11-12
 - Added I2C SDA/SCL pins according to new arduino board layouts (and enabled A4/A5 I2C by solder jumpers)\
 - Added reset switch\
 - Added "Serial" header like on many other SKAARHOJ boards.\
-- Added two extra mounting holes.}
+- Added two extra mounting holes.\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0 NEXT VERSION:
+\b0 \
+- In previous version (v05-11-12) there was a bug where the signal "GNDL" wasn't connector to GND" through a solder jumper. This is now done. The error meant that the board didn't work because the biasing of the address pins on MCP23017 wasn't in place. The fix was easy; just solder a wire from that resistor network to GND.}
