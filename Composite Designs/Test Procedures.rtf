@@ -15,7 +15,12 @@
 - When loading the final sketch, set MAC address and test ATEM connection. Document this on video.\
 \
 
-\b Slider test:
+\b For all I2C devices:
+\b0 \
+- For boards with I2C communication, run the Scanning examples from PCA9685 and/or MCP23017. Check the address dip-switch positions.\
+\
+
+\b Slider board:
 \b0 \
 - SkaarhojUtils:Slider_AnalogReadOut\
 	- Confirm stability is within +/- 3. Check at various slider positions.\
@@ -24,7 +29,7 @@
 	- Confirm slider can reaching end positions (multiple trys, fast and slow)\
 \
 
-\b Encoder test:
+\b Encoder board:
 \b0 \
 - SkaarhojUtils:Encoder_RawReadOut:\
 	- Confirm pattern in rotation\
@@ -46,7 +51,19 @@
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
 
-\b \cf0 Integrated System Test (for C1xx, C2xx, C3xx models):
+\b \cf0 Thumb Joystick boards:
+\b0 \
+(Currently, no test, except reading from the analog pins)\
+\
+
+\b VU board:
+\b0 \
+- Run VU board burn-in test (Dropbox, not public yet)\
+\
+===================================\
+\
+
+\b Integrated System Test (for C1xx, C2xx, C3xx models):
 \b0 \
 - Tests display, slider, encoders, buttons, config switch altogether\
 - Confirm menu navigation works for both encoders, changing values forth and back.\
@@ -94,7 +111,10 @@
 - Load ATEM:Skaarhoj_C250\
 \
 \
-\
+
+\b C330:
+\b0 \
+- See separate document\
 \
 \
 \
