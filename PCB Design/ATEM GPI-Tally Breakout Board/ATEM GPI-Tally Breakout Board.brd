@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="mm" style="lines" multiple="1" display="no" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -119,14 +119,14 @@
 <text x="78.74" y="31.115" size="0.8128" layer="121" rot="R90">TEST GPI1</text>
 <text x="74.93" y="29.845" size="0.8128" layer="121" rot="R90">TEST GPO1</text>
 <text x="76.2" y="26.67" size="0.8128" layer="121" rot="R90">(SHORT JUMPER to enable)</text>
-<text x="33.02" y="40.64" size="1.778" layer="121" font="vector">SKAARHOJ 2012</text>
+<text x="33.02" y="40.64" size="1.778" layer="121" font="vector">SKAARHOJ 2013</text>
 <text x="19.05" y="39.37" size="1.27" layer="121" font="vector">ATEM GPI/TALLY Connector Break Out Board</text>
-<text x="20.32" y="40.64" size="0.8128" layer="121" font="vector">v02-10-12</text>
+<text x="20.32" y="40.64" size="0.8128" layer="121" font="vector">v03-01-13</text>
 <hole x="17.78" y="41.91" drill="3.2"/>
 <hole x="17.78" y="11.43" drill="3.2"/>
 <hole x="66.04" y="11.43" drill="3.2"/>
 <hole x="66.04" y="41.91" drill="3.2"/>
-<text x="56.9075" y="13.519" size="0.6096" layer="121" font="vector" rot="R180">https://github.com/kasperskaarhoj/SKAARHOJ-Open-Engineering</text>
+<text x="56.9075" y="13.519" size="0.8128" layer="121" font="vector" rot="R180">Github: SKAARHOJ-Open-Engineering</text>
 <text x="85.725" y="5.715" size="1.778" layer="121" rot="R90">Power</text>
 <text x="76.835" y="27.305" size="0.6096" layer="121" rot="R90">Power req. for LED</text>
 </plain>
