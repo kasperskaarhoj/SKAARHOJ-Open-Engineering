@@ -1766,6 +1766,23 @@ Source: PANASONIC .. aoc0000ce1.pdf</description>
 <text x="-1.5875" y="1.27" size="1.27" layer="25">&gt;NAME</text>
 <text x="-1.5875" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
 </package>
+<package name="TECONNECTIVITY-DPST">
+<wire x1="-4" y1="5.5" x2="3.048" y2="5.5" width="0.2032" layer="51"/>
+<wire x1="3.048" y1="-5.5" x2="-4" y2="-5.5" width="0.2032" layer="51"/>
+<wire x1="-4" y1="-5.5" x2="-4" y2="5.5" width="0.2032" layer="51"/>
+<wire x1="-4" y1="5.5" x2="-4" y2="-5.5" width="0.2032" layer="21"/>
+<wire x1="-4" y1="-5.5" x2="3.048" y2="-5.5" width="0.2032" layer="21"/>
+<wire x1="3.048" y1="-5.5" x2="3.048" y2="5.5" width="0.2032" layer="21"/>
+<wire x1="3.048" y1="5.5" x2="-4" y2="5.5" width="0.2032" layer="21"/>
+<pad name="P$1" x="3" y="3.2" drill="1.2"/>
+<pad name="P$2" x="3" y="0" drill="1.2"/>
+<pad name="P$3" x="3" y="-3.2" drill="1.2"/>
+<text x="-1.27" y="-2.54" size="1.27" layer="21" rot="R90">&gt;NAME</text>
+<text x="1.27" y="-2.54" size="1.27" layer="21" rot="R90">&gt;VALUE</text>
+<wire x1="-3.81" y1="0" x2="-9" y2="0" width="0.127" layer="21"/>
+<wire x1="-9" y1="0" x2="-9" y2="-3.4" width="0.127" layer="21"/>
+<wire x1="-9" y1="-3.4" x2="-3.81" y2="-3.4" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="K">
@@ -2452,6 +2469,24 @@ Source: RS Component / Phycomp</description>
 <attribute name="OC_FARNELL" value="unknown" constant="no"/>
 <attribute name="OC_NEWARK" value="unknown" constant="no"/>
 </technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="SWITCH-DPST" prefix="S">
+<description>DPDT Version of the COM-00597</description>
+<gates>
+<gate name="G$1" symbol="U" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TECONNECTIVITY-DPST">
+<connects>
+<connect gate="G$1" pin="O" pad="P$1"/>
+<connect gate="G$1" pin="P" pad="P$2"/>
+<connect gate="G$1" pin="S" pad="P$3"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -6459,6 +6494,9 @@ Source: LITEON, LTV816.pdf</description>
 <part name="SJ7" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
 <part name="U$4" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND7" library="SparkFun" deviceset="GND" device=""/>
+<part name="S3" library="SKAARHOJ" deviceset="SWITCH-DPST" device="" value="CFG"/>
+<part name="GND8" library="SparkFun" deviceset="GND" device=""/>
+<part name="S3-&gt;A1" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
 </parts>
 <sheets>
 <sheet>
@@ -6469,6 +6507,7 @@ Source: LITEON, LTV816.pdf</description>
 <text x="220.98" y="-30.48" size="2.54" layer="97">SERIAL BUS</text>
 <text x="220.98" y="-71.12" size="3.81" layer="97">CONFIG</text>
 <text x="213.36" y="10.16" size="3.81" layer="97">POWER</text>
+<text x="251.46" y="-119.38" size="1.778" layer="91">(CONFIG)</text>
 </plain>
 <instances>
 <instance part="K1" gate="1" x="81.28" y="58.42" rot="R270"/>
@@ -6652,6 +6691,9 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="SJ7" gate="1" x="228.6" y="-12.7"/>
 <instance part="U$4" gate="G$1" x="218.44" y="0"/>
 <instance part="GND7" gate="1" x="218.44" y="-15.24"/>
+<instance part="S3" gate="G$1" x="215.9" y="-119.38" rot="R90"/>
+<instance part="GND8" gate="1" x="210.82" y="-129.54"/>
+<instance part="S3-&gt;A1" gate="1" x="228.6" y="-119.38"/>
 </instances>
 <busses>
 </busses>
@@ -7332,6 +7374,11 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="218.44" y1="-12.7" x2="218.44" y2="-10.16" width="0.1524" layer="91"/>
 <junction x="218.44" y="-12.7"/>
 </segment>
+<segment>
+<pinref part="S3" gate="G$1" pin="S"/>
+<pinref part="GND8" gate="1" pin="GND"/>
+<wire x1="210.82" y1="-124.46" x2="210.82" y2="-127" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="N$5" class="0">
 <segment>
@@ -7837,6 +7884,30 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="SJ6" gate="1" pin="2"/>
 <wire x1="233.68" y1="0" x2="236.22" y2="0" width="0.1524" layer="91"/>
 <label x="236.22" y="0" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="S3" gate="G$1" pin="O"/>
+<wire x1="210.82" y1="-114.3" x2="210.82" y2="-109.22" width="0.1524" layer="91"/>
+<label x="210.82" y="-109.22" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="S3-&gt;A1" gate="1" pin="1"/>
+<pinref part="S3" gate="G$1" pin="P"/>
+<wire x1="223.52" y1="-119.38" x2="218.44" y2="-119.38" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="A1CFG" class="0">
+<segment>
+<pinref part="S3-&gt;A1" gate="1" pin="2"/>
+<wire x1="233.68" y1="-119.38" x2="238.76" y2="-119.38" width="0.1524" layer="91"/>
+<label x="238.76" y="-119.38" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="GND" gate="G$1" pin="A1"/>
+<wire x1="246.38" y1="96.52" x2="243.84" y2="96.52" width="0.1524" layer="91"/>
+<label x="243.84" y="96.52" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 </nets>
