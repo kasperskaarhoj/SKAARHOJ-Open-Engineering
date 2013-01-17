@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.2">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -6019,6 +6019,8 @@ Source: www.kingbright.com</description>
 <text x="195.58" y="-53.34" size="3.81" layer="97">SERIAL</text>
 <text x="172.72" y="-2.54" size="3.81" layer="97">POWER</text>
 <text x="231.14" y="10.16" size="3.81" layer="97">CONFIG</text>
+<text x="-525.78" y="-40.64" size="1.778" layer="97">5V</text>
+<text x="-543.56" y="-38.1" size="1.778" layer="97">Over 5V and the outputs will allways be lit...</text>
 </plain>
 <instances>
 <instance part="K1" gate="1" x="81.28" y="58.42" rot="R270"/>
