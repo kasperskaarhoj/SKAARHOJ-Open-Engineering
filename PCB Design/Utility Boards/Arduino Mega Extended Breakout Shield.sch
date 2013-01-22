@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.2">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -2379,6 +2379,9 @@ Source: LITEON, LTV816.pdf</description>
 <text x="208.28" y="71.12" size="2.54" layer="97">JOYSTICKS</text>
 <text x="114.3" y="22.86" size="2.54" layer="97">EXT1</text>
 <text x="114.3" y="-10.16" size="2.54" layer="97">FOOTPEDAL</text>
+<text x="248.92" y="78.74" size="1.778" layer="97">Headers are for RS-xxx to TTL boards from http://microcontrollershop.com/
+5V on PIN 10 for RS-232 boards (CW-TTL-RS232)
+5V on PIN 9 for RS-422 boards (CW-TTL-RS422)</text>
 </plain>
 <instances>
 <instance part="JP7" gate="G$1" x="119.38" y="63.5"/>
@@ -3166,4 +3169,10 @@ Source: LITEON, LTV816.pdf</description>
 </errors>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>
