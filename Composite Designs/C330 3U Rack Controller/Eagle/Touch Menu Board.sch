@@ -2613,11 +2613,6 @@ is in parallel</text>
 </net>
 <net name="5V" class="1">
 <segment>
-<pinref part="TSCABLE" gate="G$1" pin="1"/>
-<wire x1="-68.58" y1="66.04" x2="-71.12" y2="66.04" width="0.1524" layer="91"/>
-<label x="-71.12" y="66.04" size="1.778" layer="95" rot="R180"/>
-</segment>
-<segment>
 <pinref part="SERIAL_IN" gate="G$1" pin="2"/>
 <pinref part="U$17" gate="G$1" pin="5V"/>
 <wire x1="-76.2" y1="116.84" x2="-73.66" y2="116.84" width="0.1524" layer="91"/>
@@ -2824,6 +2819,13 @@ is in parallel</text>
 <wire x1="55.88" y1="58.42" x2="68.58" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="68.58" y1="58.42" x2="68.58" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="R8" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="SCREEN_5V" class="1">
+<segment>
+<pinref part="TSCABLE" gate="G$1" pin="1"/>
+<wire x1="-68.58" y1="66.04" x2="-71.12" y2="66.04" width="0.1524" layer="91"/>
+<label x="-71.12" y="66.04" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 </nets>
