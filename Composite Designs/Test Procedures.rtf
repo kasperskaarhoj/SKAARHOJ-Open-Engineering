@@ -17,7 +17,9 @@
 
 \b For all I2C devices:
 \b0 \
-- For boards with I2C communication, run the Scanning examples from PCA9685 and/or MCP23017. Check the address dip-switch positions.\
+- For boards with I2C communication, run the Scanning examples from PCA9685 and/or MCP23017. \
+- Check ALL address dip-switch positions; that they report the correct address with the scanning tests\
+- For a prolonged amount of time, run the SkaarhojUtils::ChipScanning test to make sure the board addressing works. Problems and crashes over time tends to be due to addressing pins which are floating.\
 \
 
 \b Slider board:
