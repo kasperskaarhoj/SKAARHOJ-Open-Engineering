@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.2">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1783,6 +1783,25 @@ Source: PANASONIC .. aoc0000ce1.pdf</description>
 <wire x1="-9" y1="0" x2="-9" y2="-3.4" width="0.127" layer="21"/>
 <wire x1="-9" y1="-3.4" x2="-3.81" y2="-3.4" width="0.127" layer="21"/>
 </package>
+<package name="LED5MM-BICOLOR">
+<description>&lt;B&gt;LED&lt;/B&gt;&lt;p&gt;
+5 mm, round</description>
+<wire x1="2.54" y1="-1.905" x2="2.54" y2="1.905" width="0.2032" layer="21"/>
+<wire x1="2.54" y1="-1.905" x2="2.54" y2="1.905" width="0.254" layer="21" curve="-286.260205" cap="flat"/>
+<wire x1="-1.143" y1="0" x2="0" y2="1.143" width="0.1524" layer="51" curve="-90" cap="flat"/>
+<wire x1="0" y1="-1.143" x2="1.143" y2="0" width="0.1524" layer="51" curve="90" cap="flat"/>
+<wire x1="-1.651" y1="0" x2="0" y2="1.651" width="0.1524" layer="51" curve="-90" cap="flat"/>
+<wire x1="0" y1="-1.651" x2="1.651" y2="0" width="0.1524" layer="51" curve="90" cap="flat"/>
+<wire x1="-2.159" y1="0" x2="0" y2="2.159" width="0.1524" layer="51" curve="-90" cap="flat"/>
+<wire x1="0" y1="-2.159" x2="2.159" y2="0" width="0.1524" layer="51" curve="90" cap="flat"/>
+<circle x="0" y="0" radius="2.54" width="0.1524" layer="21"/>
+<pad name="A3" x="-2.54" y="0" drill="0.8128" diameter="1.8796"/>
+<pad name="K1" x="0" y="0" drill="0.8128" diameter="1.8796"/>
+<text x="3.175" y="0.5334" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="3.2004" y="-1.8034" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<pad name="A2" x="2.54" y="0" drill="0.8128" diameter="1.8796"/>
+<text x="-1.27" y="-3.81" size="0.6096" layer="21">A K A</text>
+</package>
 </packages>
 <symbols>
 <symbol name="K">
@@ -1872,6 +1891,54 @@ Source: PANASONIC .. aoc0000ce1.pdf</description>
 <text x="-5.08" y="-3.048" size="1.778" layer="95">&gt;NAME</text>
 <pin name="1" x="-5.08" y="0" visible="pad" length="short" direction="pas" swaplevel="1"/>
 <pin name="2" x="5.08" y="0" visible="pad" length="short" direction="pas" swaplevel="1" rot="R180"/>
+</symbol>
+<symbol name="LEDBICOLOR-AKA">
+<wire x1="-1.27" y1="-5.08" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="1.27" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="-2.54" x2="0" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="1.27" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="-5.08" x2="0" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="-5.08" x2="1.27" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="-5.08" x2="0" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="2.032" y1="-4.318" x2="3.429" y2="-2.921" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="-3.175" x2="3.302" y2="-1.778" width="0.1524" layer="94"/>
+<text x="-6.096" y="9.652" size="1.778" layer="95" rot="R270">&gt;NAME</text>
+<text x="-8.255" y="9.652" size="1.778" layer="96" rot="R270">&gt;VALUE</text>
+<polygon width="0.1524" layer="94">
+<vertex x="3.429" y="-2.921"/>
+<vertex x="3.048" y="-3.81"/>
+<vertex x="2.54" y="-3.302"/>
+</polygon>
+<polygon width="0.1524" layer="94">
+<vertex x="3.302" y="-1.778"/>
+<vertex x="2.921" y="-2.667"/>
+<vertex x="2.413" y="-2.159"/>
+</polygon>
+<wire x1="1.27" y1="5.08" x2="0" y2="2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="2.54" x2="-1.27" y2="5.08" width="0.254" layer="94"/>
+<wire x1="1.27" y1="2.54" x2="0" y2="2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="2.54" x2="-1.27" y2="2.54" width="0.254" layer="94"/>
+<wire x1="1.27" y1="5.08" x2="0" y2="5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="5.08" x2="-1.27" y2="5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="5.08" x2="0" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="-2.032" y1="4.318" x2="-3.429" y2="2.921" width="0.1524" layer="94"/>
+<wire x1="-1.905" y1="3.175" x2="-3.302" y2="1.778" width="0.1524" layer="94"/>
+<polygon width="0.1524" layer="94">
+<vertex x="-3.429" y="2.921"/>
+<vertex x="-3.048" y="3.81"/>
+<vertex x="-2.54" y="3.302"/>
+</polygon>
+<polygon width="0.1524" layer="94">
+<vertex x="-3.302" y="1.778"/>
+<vertex x="-2.921" y="2.667"/>
+<vertex x="-2.413" y="2.159"/>
+</polygon>
+<pin name="P$1" x="2.54" y="0" length="point" rot="R180"/>
+<pin name="P$2" x="0" y="7.62" length="short" rot="R270"/>
+<pin name="P$3" x="0" y="-7.62" length="short" rot="R90"/>
+<wire x1="0" y1="2.54" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="-2.54" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="2.54" y2="0" width="0.254" layer="94"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -2484,6 +2551,23 @@ Source: RS Component / Phycomp</description>
 <connect gate="G$1" pin="O" pad="P$1"/>
 <connect gate="G$1" pin="P" pad="P$2"/>
 <connect gate="G$1" pin="S" pad="P$3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="LEDBICOLOR-AKA">
+<gates>
+<gate name="G$1" symbol="LEDBICOLOR-AKA" x="-20.32" y="10.16"/>
+</gates>
+<devices>
+<device name="" package="LED5MM-BICOLOR">
+<connects>
+<connect gate="G$1" pin="P$1" pad="K1"/>
+<connect gate="G$1" pin="P$2" pad="A2"/>
+<connect gate="G$1" pin="P$3" pad="A3"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -6497,6 +6581,9 @@ Source: LITEON, LTV816.pdf</description>
 <part name="S3" library="SKAARHOJ" deviceset="SWITCH-DPST" device="" value="CFG"/>
 <part name="GND8" library="SparkFun" deviceset="GND" device=""/>
 <part name="S3-&gt;A1" library="SparkFun" deviceset="SOLDERJUMPER" device="NC"/>
+<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
+<part name="U$7" library="SKAARHOJ" deviceset="LEDBICOLOR-AKA" device=""/>
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
 </parts>
 <sheets>
 <sheet>
@@ -6694,6 +6781,9 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="S3" gate="G$1" x="215.9" y="-119.38" rot="R90"/>
 <instance part="GND8" gate="1" x="210.82" y="-129.54"/>
 <instance part="S3-&gt;A1" gate="1" x="228.6" y="-119.38"/>
+<instance part="R3" gate="G$1" x="281.94" y="-5.08"/>
+<instance part="U$7" gate="G$1" x="274.32" y="2.54"/>
+<instance part="R4" gate="G$1" x="281.94" y="10.16"/>
 </instances>
 <busses>
 </busses>
@@ -7379,6 +7469,11 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="GND8" gate="1" pin="GND"/>
 <wire x1="210.82" y1="-124.46" x2="210.82" y2="-127" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U$7" gate="G$1" pin="P$1"/>
+<wire x1="276.86" y1="2.54" x2="284.48" y2="2.54" width="0.1524" layer="91"/>
+<label x="284.48" y="2.54" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="N$5" class="0">
 <segment>
@@ -7736,7 +7831,7 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="246.38" y1="86.36" x2="238.76" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$31" class="0">
+<net name="N$31" class="1">
 <segment>
 <pinref part="JP1" gate="G$1" pin="1"/>
 <wire x1="-185.42" y1="15.24" x2="-182.88" y2="15.24" width="0.1524" layer="91"/>
@@ -7908,6 +8003,44 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="GND" gate="G$1" pin="A1"/>
 <wire x1="246.38" y1="96.52" x2="243.84" y2="96.52" width="0.1524" layer="91"/>
 <label x="243.84" y="96.52" size="1.778" layer="95" rot="R180"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="U$7" gate="G$1" pin="P$2"/>
+<pinref part="R4" gate="G$1" pin="1"/>
+<wire x1="274.32" y1="10.16" x2="276.86" y2="10.16" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$11" class="0">
+<segment>
+<pinref part="U$7" gate="G$1" pin="P$3"/>
+<pinref part="R3" gate="G$1" pin="1"/>
+<wire x1="274.32" y1="-5.08" x2="276.86" y2="-5.08" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="D2" class="0">
+<segment>
+<pinref part="R3" gate="G$1" pin="2"/>
+<wire x1="287.02" y1="-5.08" x2="292.1" y2="-5.08" width="0.1524" layer="91"/>
+<label x="292.1" y="-5.08" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="GND" gate="G$1" pin="D2"/>
+<wire x1="271.78" y1="91.44" x2="274.32" y2="91.44" width="0.1524" layer="91"/>
+<label x="274.32" y="91.44" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="D3" class="0">
+<segment>
+<pinref part="R4" gate="G$1" pin="2"/>
+<wire x1="287.02" y1="10.16" x2="292.1" y2="10.16" width="0.1524" layer="91"/>
+<label x="292.1" y="10.16" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="GND" gate="G$1" pin="*D3"/>
+<wire x1="271.78" y1="88.9" x2="274.32" y2="88.9" width="0.1524" layer="91"/>
+<label x="274.32" y="88.9" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
