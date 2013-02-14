@@ -8,14 +8,14 @@
 User memory is designated to start at 200 though, so go there and beyond if you want to be safe for the future.\
 \
 Memory locations:\
-0-1:  Initialization check\
+0-1:  Initialization check (indicates that Arduino IP and ATEM IP are set, the rest are verified by their checksums)\
 2-5:  Arduino IP, four bytes\
 6-9:  ATEM IP, four bytes\
 10-16: Arduino MAC address (6+1 byte checksum)\
 17: Reboot counter, 1 byte\
 (slider?)\
-30-38: TouchScreen calibration data (8+1 byte checksum)\
 40-44:  Second ATEM IP, four bytes + checksum\
 45-49:  VideoHub IP, four bytes + checksum\
+50-66: TouchScreen calibration data (16+1 byte checksum)\
 \
   }
