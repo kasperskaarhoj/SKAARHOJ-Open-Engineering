@@ -21,43 +21,12 @@
 - Check ALL address dip-switch positions; that they report the correct address with the scanning tests\
 - For a prolonged amount of time, run the SkaarhojUtils::ChipScanning test to make sure the board addressing works. Problems and crashes over time tends to be due to addressing pins which are floating.\
 \
-
-\b Slider board:
-\b0 \
-- SkaarhojUtils:Slider_AnalogReadOut\
-	- Confirm stability is within +/- 3. Check at various slider positions.\
-- SkaarhojUtils:Slider_Test\
-	- Confirm slider performance in value range 0-1000\
-	- Confirm slider can reaching end positions (multiple trys, fast and slow)\
 \
 
-\b Encoder board:
-\b0 \
-- SkaarhojUtils:Encoder_RawReadOut:\
-	- Confirm pattern in rotation\
-- SkaarhojUtils:Encoder_Test\
-	- Confirm rotation in both directions. Generally there should be only 1 or -1 although fast rotation should bring it up to larger numbers (like 2-5)\
-(It's important to test it with the integrated system test as well).\
-\
-
-\b Buttons test:\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-
-\b0 \cf0 - SkaarhojBI8:inputTest\
-	- Confirm all buttons, fast and slow, look for tendency towards switch bouncing.\
-- SkaarhojBI8:burnInTest\
-	- Confirm correct color combinations during cycled colors.\
-	- "Chase buttons" at least 5 cycles, confirming no bounce issues or no double-activations (one button seems to also push another).\
-	- 24 hour burn-in test\
-	- Test ALL addresses 0-7\
-\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-
-\b \cf0 SmartSwitch test:
+\b SmartSwitch test:
 \b0 \
 - SkaarhojSmartSwitch:BasicTest\
-	- Confirm upload of grafix and changing colors/graphics as buttons are pressed.\
-	(Remember to set which pins are used for SDI in this sketch!)\
+	- Confirm upload of grafix and changing colors/graphics as buttons are pressed. (Remember to set which pins are used for SDI in this sketch!)\
 \
 
 \b Thumb Joystick boards:

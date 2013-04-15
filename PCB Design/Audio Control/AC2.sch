@@ -1931,14 +1931,14 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
-<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R5" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R6" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R5" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R6" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="820R"/>
+<part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="150R"/>
+<part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="820R"/>
+<part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="150R"/>
 <part name="U$6" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
 <part name="B1" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="ANALOG_OUT" library="SparkFun" deviceset="M04X2" device=""/>
