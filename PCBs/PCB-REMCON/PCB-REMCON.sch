@@ -772,13 +772,13 @@ Production Part - 8199
 <part name="JOY1" library="SparkFun" deviceset="M04X2" device=""/>
 <part name="U$10" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
-<part name="SERIAL_EXT" library="SparkFun" deviceset="M04X2" device=""/>
+<part name="SERIAL" library="SparkFun" deviceset="M04X2" device=""/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$1" library="SparkFun" deviceset="5V" device=""/>
-<part name="U$3" library="SparkFun" deviceset="DIODE-ZENER" device="PTH" value="5V1"/>
+<part name="Z1" library="SparkFun" deviceset="DIODE-ZENER" device="PTH" value="5V1"/>
 <part name="R6" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
-<part name="U$4" library="SparkFun" deviceset="DIODE-ZENER" device="PTH" value="5V1"/>
+<part name="Z2" library="SparkFun" deviceset="DIODE-ZENER" device="PTH" value="5V1"/>
 </parts>
 <sheets>
 <sheet>
@@ -792,13 +792,13 @@ Production Part - 8199
 <instance part="JOY1" gate="G$1" x="-7.62" y="60.96"/>
 <instance part="U$10" gate="G$1" x="-20.32" y="71.12"/>
 <instance part="GND6" gate="1" x="0" y="48.26"/>
-<instance part="SERIAL_EXT" gate="G$1" x="-7.62" y="17.78"/>
+<instance part="SERIAL" gate="G$1" x="-7.62" y="17.78"/>
 <instance part="GND1" gate="1" x="-20.32" y="5.08"/>
 <instance part="U$1" gate="G$1" x="2.54" y="22.86"/>
-<instance part="U$3" gate="G$1" x="-48.26" y="17.78" rot="R90"/>
+<instance part="Z1" gate="G$1" x="-48.26" y="17.78" rot="R90"/>
 <instance part="R6" gate="G$1" x="-38.1" y="22.86"/>
 <instance part="R7" gate="G$1" x="17.78" y="25.4"/>
-<instance part="U$4" gate="G$1" x="25.4" y="22.86" rot="R90"/>
+<instance part="Z2" gate="G$1" x="25.4" y="22.86" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -816,7 +816,7 @@ Production Part - 8199
 <wire x1="-20.32" y1="58.42" x2="-15.24" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SERIAL_EXT" gate="G$1" pin="2"/>
+<pinref part="SERIAL" gate="G$1" pin="2"/>
 <pinref part="U$1" gate="G$1" pin="5V"/>
 <wire x1="0" y1="22.86" x2="2.54" y2="22.86" width="0.1524" layer="91"/>
 </segment>
@@ -833,15 +833,15 @@ Production Part - 8199
 <pinref part="GND6" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="SERIAL_EXT" gate="G$1" pin="1"/>
+<pinref part="SERIAL" gate="G$1" pin="1"/>
 <wire x1="-15.24" y1="22.86" x2="-20.32" y2="22.86" width="0.1524" layer="91"/>
 <pinref part="GND1" gate="1" pin="GND"/>
 <wire x1="-20.32" y1="22.86" x2="-20.32" y2="7.62" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="A"/>
+<pinref part="Z1" gate="G$1" pin="A"/>
 <wire x1="-48.26" y1="15.24" x2="-48.26" y2="7.62" width="0.1524" layer="91"/>
 <wire x1="-48.26" y1="7.62" x2="-20.32" y2="7.62" width="0.1524" layer="91"/>
 <junction x="-20.32" y="7.62"/>
-<pinref part="U$4" gate="G$1" pin="A"/>
+<pinref part="Z2" gate="G$1" pin="A"/>
 <wire x1="-20.32" y1="7.62" x2="25.4" y2="7.62" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="7.62" x2="25.4" y2="20.32" width="0.1524" layer="91"/>
 </segment>
@@ -854,7 +854,7 @@ Production Part - 8199
 </segment>
 <segment>
 <pinref part="R6" gate="G$1" pin="1"/>
-<pinref part="U$3" gate="G$1" pin="C"/>
+<pinref part="Z1" gate="G$1" pin="C"/>
 <wire x1="-43.18" y1="22.86" x2="-48.26" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="-48.26" y1="22.86" x2="-48.26" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="-48.26" y1="22.86" x2="-53.34" y2="22.86" width="0.1524" layer="91"/>
@@ -870,7 +870,7 @@ Production Part - 8199
 </segment>
 <segment>
 <pinref part="R7" gate="G$1" pin="2"/>
-<pinref part="U$4" gate="G$1" pin="C"/>
+<pinref part="Z2" gate="G$1" pin="C"/>
 <wire x1="22.86" y1="25.4" x2="25.4" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="25.4" x2="27.94" y2="25.4" width="0.1524" layer="91"/>
 <junction x="25.4" y="25.4"/>
@@ -884,7 +884,7 @@ Production Part - 8199
 <label x="53.34" y="60.96" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="SERIAL_EXT" gate="G$1" pin="7"/>
+<pinref part="SERIAL" gate="G$1" pin="7"/>
 <wire x1="-15.24" y1="15.24" x2="-25.4" y2="15.24" width="0.1524" layer="91"/>
 <label x="-25.4" y="15.24" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -896,7 +896,7 @@ Production Part - 8199
 <label x="53.34" y="45.72" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="SERIAL_EXT" gate="G$1" pin="8"/>
+<pinref part="SERIAL" gate="G$1" pin="8"/>
 <wire x1="0" y1="15.24" x2="10.16" y2="15.24" width="0.1524" layer="91"/>
 <label x="10.16" y="15.24" size="1.778" layer="95"/>
 </segment>
@@ -930,7 +930,7 @@ Production Part - 8199
 <pinref part="R6" gate="G$1" pin="2"/>
 <wire x1="-33.02" y1="22.86" x2="-25.4" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="-25.4" y1="22.86" x2="-25.4" y2="20.32" width="0.1524" layer="91"/>
-<pinref part="SERIAL_EXT" gate="G$1" pin="3"/>
+<pinref part="SERIAL" gate="G$1" pin="3"/>
 <wire x1="-25.4" y1="20.32" x2="-15.24" y2="20.32" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -938,7 +938,7 @@ Production Part - 8199
 <segment>
 <pinref part="R7" gate="G$1" pin="1"/>
 <wire x1="12.7" y1="25.4" x2="12.7" y2="20.32" width="0.1524" layer="91"/>
-<pinref part="SERIAL_EXT" gate="G$1" pin="4"/>
+<pinref part="SERIAL" gate="G$1" pin="4"/>
 <wire x1="12.7" y1="20.32" x2="0" y2="20.32" width="0.1524" layer="91"/>
 </segment>
 </net>

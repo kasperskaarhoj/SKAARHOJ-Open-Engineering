@@ -893,11 +893,11 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <library name="SKAARHOJ">
 <packages>
 <package name="5PINDIN">
-<pad name="PIN3" x="-4.22" y="0" drill="2"/>
-<pad name="PIN1" x="4.22" y="0" drill="2"/>
-<pad name="PIN2" x="0" y="4.22" drill="2"/>
-<pad name="PIN5" x="-2.98" y="2.98" drill="2"/>
-<pad name="PIN4" x="2.98" y="2.98" drill="2"/>
+<pad name="PIN3" x="-4.22" y="0" drill="1.9"/>
+<pad name="PIN1" x="4.22" y="0" drill="1.9"/>
+<pad name="PIN2" x="0" y="4.22" drill="1.9"/>
+<pad name="PIN5" x="-2.98" y="2.98" drill="1.9"/>
+<pad name="PIN4" x="2.98" y="2.98" drill="1.9"/>
 </package>
 </packages>
 <symbols>
@@ -951,8 +951,8 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <class number="0" name="default" width="0.254" drill="0.4064">
 <clearance class="0" value="0.254"/>
 </class>
-<class number="1" name="PWR" width="1.778" drill="0">
-<clearance class="1" value="0.6096"/>
+<class number="1" name="PWR" width="0.4064" drill="0.6096">
+<clearance class="1" value="0.254"/>
 </class>
 </classes>
 <parts>
