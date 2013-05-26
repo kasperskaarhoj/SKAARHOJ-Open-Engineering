@@ -2379,6 +2379,9 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <plain>
 <text x="55.88" y="43.18" size="2.54" layer="97">TOUCH</text>
 <text x="55.88" y="2.54" size="1.778" layer="97">EXTRA POWER (Vin)</text>
+<text x="-53.34" y="-17.78" size="1.778" layer="97">Pin 1 of the 7-wire menu cable on the Touch Screen Controller board
+is the wire CLOSEST to the flatcable connecting the Controller board with the panel.
+And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</text>
 </plain>
 <instances>
 <instance part="TOUCH1-4" gate="G$1" x="7.62" y="12.7" rot="MR180"/>
@@ -2687,4 +2690,10 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 </errors>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>

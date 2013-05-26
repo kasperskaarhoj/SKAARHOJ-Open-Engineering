@@ -1055,29 +1055,29 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <smd name="P$3" x="1.6" y="-0.925" dx="1.9" dy="1.5" layer="1"/>
 </package>
 <package name="3BITADDR">
-<pad name="A1" x="0" y="0" drill="0.8"/>
-<pad name="A0" x="-2" y="0" drill="0.8"/>
-<pad name="H1" x="-2" y="2" drill="0.8"/>
-<pad name="H2" x="0" y="2" drill="0.8"/>
-<pad name="H3" x="2" y="2" drill="0.8"/>
-<pad name="A2" x="2" y="0" drill="0.8"/>
-<pad name="L3" x="2" y="-2" drill="0.8"/>
-<pad name="L2" x="0" y="-2" drill="0.8"/>
-<pad name="L1" x="-2" y="-2" drill="0.8"/>
+<pad name="A1" x="0" y="0" drill="0.6"/>
+<pad name="A0" x="-2.2" y="0" drill="0.6"/>
+<pad name="H1" x="-2.2" y="2" drill="0.6"/>
+<pad name="H2" x="0" y="2" drill="0.6"/>
+<pad name="H3" x="2.2" y="2" drill="0.6"/>
+<pad name="A2" x="2.2" y="0" drill="0.6"/>
+<pad name="L3" x="2.2" y="-2" drill="0.6"/>
+<pad name="L2" x="0" y="-2" drill="0.6"/>
+<pad name="L1" x="-2.2" y="-2" drill="0.6"/>
 <text x="-2.667" y="2.921" size="0.8128" layer="21">A0</text>
 <text x="-0.635" y="2.921" size="0.8128" layer="21">A1</text>
 <text x="1.397" y="2.921" size="0.8128" layer="21">A2</text>
-<text x="-4.318" y="1.651" size="0.8128" layer="21">ON</text>
-<text x="-4.826" y="-2.413" size="0.8128" layer="21">OFF</text>
+<text x="-4.6" y="1.651" size="0.8128" layer="21">ON</text>
+<text x="-5.1" y="-2.413" size="0.8128" layer="21">OFF</text>
 <wire x1="-1.016" y1="2.54" x2="-1.016" y2="-2.54" width="0.127" layer="21"/>
 <wire x1="1.016" y1="2.54" x2="1.016" y2="-2.54" width="0.127" layer="21"/>
-<wire x1="-2.794" y1="2.794" x2="2.794" y2="2.794" width="0.127" layer="21"/>
-<wire x1="2.794" y1="2.794" x2="2.794" y2="-2.794" width="0.127" layer="21"/>
-<wire x1="2.794" y1="-2.794" x2="-2.794" y2="-2.794" width="0.127" layer="21"/>
-<wire x1="-2.794" y1="-2.794" x2="-2.794" y2="2.794" width="0.127" layer="21"/>
+<wire x1="-3" y1="2.794" x2="3" y2="2.794" width="0.127" layer="21"/>
+<wire x1="3" y1="2.794" x2="3" y2="-2.794" width="0.127" layer="21"/>
+<wire x1="3" y1="-2.794" x2="-3" y2="-2.794" width="0.127" layer="21"/>
+<wire x1="-3" y1="-2.794" x2="-3" y2="2.794" width="0.127" layer="21"/>
 </package>
 <package name="3.2MMPAD">
-<pad name="P$1" x="0" y="0" drill="2.8" shape="octagon"/>
+<pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
 </package>
 </packages>
 <symbols>

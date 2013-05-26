@@ -145,7 +145,7 @@
 <wire x1="30.48" y1="12.7" x2="27.305" y2="12.7" width="0.4064" layer="122"/>
 <wire x1="27.305" y1="12.7" x2="27.305" y2="15.24" width="0.4064" layer="122"/>
 <text x="6.985" y="0.635" size="0.8128" layer="122" rot="MR0">GND</text>
-<text x="31.75" y="36.83" size="1.016" layer="122" rot="MR270">DTU 2012</text>
+<text x="31.75" y="36.83" size="1.016" layer="122" rot="MR270">SKAARHOJ 2013</text>
 <text x="30.48" y="36.83" size="1.016" layer="122" rot="MR270">v13-12-12</text>
 <text x="29.21" y="36.83" size="1.016" layer="122" rot="MR270">TOUCH MENU BOARD</text>
 </plain>
