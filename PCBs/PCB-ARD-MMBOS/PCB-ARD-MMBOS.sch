@@ -2957,6 +2957,11 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <wire x1="187.96" y1="-25.4" x2="190.5" y2="-25.4" width="0.1524" layer="91"/>
 <label x="190.5" y="-25.4" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="R9" gate="G$1" pin="1"/>
+<wire x1="76.2" y1="139.7" x2="76.2" y2="134.62" width="0.1524" layer="91"/>
+<label x="76.2" y="132.08" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="GND" class="1">
 <segment>
@@ -3060,11 +3065,6 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <pinref part="JP8" gate="G$1" pin="1"/>
 <wire x1="116.84" y1="96.52" x2="137.16" y2="96.52" width="0.1524" layer="91"/>
 <label x="137.16" y="96.52" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="R9" gate="G$1" pin="1"/>
-<wire x1="76.2" y1="139.7" x2="76.2" y2="134.62" width="0.1524" layer="91"/>
-<label x="76.2" y="134.62" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="GPIO1" gate="G$1" pin="1"/>

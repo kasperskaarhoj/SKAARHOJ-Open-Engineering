@@ -150,6 +150,13 @@
 <text x="-5.08" y="-5.08" size="1.27" layer="25">&gt;Name</text>
 <text x="-5.08" y="-6.35" size="1.27" layer="27">&gt;Value</text>
 </package>
+<package name="3.2MMPAD">
+<pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
+</package>
+<package name="3.2MMPAD6MM">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="6"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="PLAYSTATION2_ANALOG_JOYSTICK">
@@ -201,6 +208,16 @@
 <wire x1="4.318" y1="-2.54" x2="3.81" y2="-2.032" width="0.254" layer="121"/>
 <wire x1="4.318" y1="-2.54" x2="3.81" y2="-3.048" width="0.254" layer="121"/>
 </symbol>
+<symbol name="SINGLEPAD">
+<wire x1="1.27" y1="-2.54" x2="-5.08" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="-1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="-5.08" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
+<text x="-5.08" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-5.08" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<pin name="1" x="5.08" y="0" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="PLAYSTATION2_ANALOG_JOYSTICK">
@@ -219,6 +236,29 @@
 <connect gate="G$1" pin="V" pad="V2"/>
 <connect gate="G$1" pin="V+" pad="V1"/>
 <connect gate="G$1" pin="V-" pad="V3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="GNDPAD">
+<gates>
+<gate name="G$1" symbol="SINGLEPAD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="3.2MMPAD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="6MM" package="3.2MMPAD6MM">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -706,9 +746,12 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <class number="0" name="default" width="0.2032" drill="0.4064">
 <clearance class="0" value="0.2032"/>
 </class>
+<class number="1" name="Power" width="0.4064" drill="0.6096">
+<clearance class="1" value="0.2032"/>
+</class>
 </classes>
 <parts>
-<part name="U$1" library="SKAARHOJ" deviceset="PLAYSTATION2_ANALOG_JOYSTICK" device=""/>
+<part name="JOYSTICK" library="SKAARHOJ" deviceset="PLAYSTATION2_ANALOG_JOYSTICK" device=""/>
 <part name="JOY1" library="SparkFun" deviceset="M04X2" device=""/>
 <part name="U$10" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
@@ -719,6 +762,8 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C3" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
+<part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 </parts>
 <sheets>
 <sheet>
@@ -727,7 +772,7 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <text x="152.4" y="66.04" size="2.54" layer="97">JOYSTICKS</text>
 </plain>
 <instances>
-<instance part="U$1" gate="G$1" x="50.8" y="53.34"/>
+<instance part="JOYSTICK" gate="G$1" x="50.8" y="53.34"/>
 <instance part="JOY1" gate="G$1" x="109.22" y="53.34"/>
 <instance part="U$10" gate="G$1" x="96.52" y="63.5"/>
 <instance part="GND6" gate="1" x="116.84" y="40.64"/>
@@ -738,6 +783,8 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <instance part="C2" gate="G$1" x="50.8" y="20.32"/>
 <instance part="C3" gate="G$1" x="60.96" y="20.32"/>
 <instance part="GND2" gate="1" x="60.96" y="10.16"/>
+<instance part="U$15" gate="G$1" x="106.68" y="25.4"/>
+<instance part="U$20" gate="G$1" x="106.68" y="12.7"/>
 </instances>
 <busses>
 </busses>
@@ -750,12 +797,12 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <wire x1="96.52" y1="50.8" x2="101.6" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="V+"/>
+<pinref part="JOYSTICK" gate="G$1" pin="V+"/>
 <wire x1="40.64" y1="63.5" x2="38.1" y2="63.5" width="0.1524" layer="91"/>
 <label x="38.1" y="63.5" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="H+"/>
+<pinref part="JOYSTICK" gate="G$1" pin="H+"/>
 <wire x1="40.64" y1="53.34" x2="38.1" y2="53.34" width="0.1524" layer="91"/>
 <label x="38.1" y="53.34" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -773,17 +820,17 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <pinref part="GND6" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="SEL-"/>
+<pinref part="JOYSTICK" gate="G$1" pin="SEL-"/>
 <wire x1="40.64" y1="40.64" x2="38.1" y2="40.64" width="0.1524" layer="91"/>
 <label x="38.1" y="40.64" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="H-"/>
+<pinref part="JOYSTICK" gate="G$1" pin="H-"/>
 <wire x1="40.64" y1="48.26" x2="38.1" y2="48.26" width="0.1524" layer="91"/>
 <label x="38.1" y="48.26" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="V-"/>
+<pinref part="JOYSTICK" gate="G$1" pin="V-"/>
 <wire x1="40.64" y1="58.42" x2="38.1" y2="58.42" width="0.1524" layer="91"/>
 <label x="38.1" y="58.42" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -806,6 +853,16 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <junction x="60.96" y="15.24"/>
 <pinref part="GND2" gate="1" pin="GND"/>
 </segment>
+<segment>
+<pinref part="U$15" gate="G$1" pin="1"/>
+<wire x1="111.76" y1="25.4" x2="116.84" y2="25.4" width="0.1524" layer="91"/>
+<label x="116.84" y="25.4" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$20" gate="G$1" pin="1"/>
+<wire x1="111.76" y1="12.7" x2="116.84" y2="12.7" width="0.1524" layer="91"/>
+<label x="116.84" y="12.7" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="POT2" class="0">
 <segment>
@@ -814,7 +871,7 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <label x="93.98" y="55.88" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="H"/>
+<pinref part="JOYSTICK" gate="G$1" pin="H"/>
 <wire x1="40.64" y1="50.8" x2="38.1" y2="50.8" width="0.1524" layer="91"/>
 <label x="38.1" y="50.8" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -836,7 +893,7 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <label x="124.46" y="58.42" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="V"/>
+<pinref part="JOYSTICK" gate="G$1" pin="V"/>
 <wire x1="40.64" y1="60.96" x2="38.1" y2="60.96" width="0.1524" layer="91"/>
 <label x="38.1" y="60.96" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -858,7 +915,7 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <label x="93.98" y="58.42" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$1" gate="G$1" pin="SEL+"/>
+<pinref part="JOYSTICK" gate="G$1" pin="SEL+"/>
 <wire x1="40.64" y1="43.18" x2="38.1" y2="43.18" width="0.1524" layer="91"/>
 <label x="38.1" y="43.18" size="1.778" layer="95" rot="R180"/>
 </segment>

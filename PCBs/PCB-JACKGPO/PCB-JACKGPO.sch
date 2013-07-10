@@ -1063,6 +1063,50 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <pad name="TIP" x="0" y="-5.9" drill="3.2" shape="octagon" rot="R20"/>
 <pad name="RING" x="5.1" y="0" drill="3.2" shape="octagon" rot="R20"/>
 </package>
+<package name="DS2Y">
+<description>&lt;b&gt;MINIATURE RELAY&lt;/b&gt; NAiS&lt;p&gt;
+Source: http://www.mew-europe.com/..  en_ds_61005_0023.pdf</description>
+<wire x1="0" y1="6" x2="10" y2="6" width="0.2032" layer="21"/>
+<wire x1="10" y1="6" x2="10" y2="0" width="0.2032" layer="21"/>
+<wire x1="10" y1="0" x2="0" y2="0" width="0.2032" layer="21"/>
+<wire x1="0" y1="0" x2="0" y2="6" width="0.2032" layer="21"/>
+<pad name="1" x="1.2" y="0.46" drill="0.6"/>
+<pad name="O1" x="4.4" y="0.46" drill="0.6"/>
+<pad name="P1" x="6.6" y="0.46" drill="0.6"/>
+<pad name="S1" x="8.8" y="0.46" drill="0.6"/>
+<pad name="S2" x="8.8" y="5.54" drill="0.6"/>
+<pad name="P2" x="6.6" y="5.54" drill="0.6"/>
+<pad name="O2" x="4.4" y="5.54" drill="0.6"/>
+<pad name="16" x="1.2" y="5.54" drill="0.6"/>
+<text x="1.11" y="3.27" size="1.27" layer="25">&gt;NAME</text>
+<text x="1.11" y="1.73" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="2X2">
+<wire x1="-5.08" y1="-1.905" x2="-4.445" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-3.175" y1="-2.54" x2="-2.54" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-1.905" x2="-1.905" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-0.635" y1="-2.54" x2="0" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="-5.08" y1="-1.905" x2="-5.08" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="-5.08" y1="1.905" x2="-4.445" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-4.445" y1="2.54" x2="-3.175" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-3.175" y1="2.54" x2="-2.54" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="1.905" x2="-1.905" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="2.54" x2="-0.635" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-0.635" y1="2.54" x2="0" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="0" y1="1.905" x2="0" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="-2.54" x2="-0.635" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-4.445" y1="-2.54" x2="-3.175" y2="-2.54" width="0.1524" layer="21"/>
+<pad name="1" x="-3.81" y="-1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
+<pad name="2" x="-3.81" y="1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
+<pad name="3" x="-1.27" y="-1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
+<pad name="4" x="-1.27" y="1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
+<text x="-5.08" y="3.175" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="-5.08" y="-4.445" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="-4.064" y1="-1.524" x2="-3.556" y2="-1.016" layer="51"/>
+<rectangle x1="-4.064" y1="1.016" x2="-3.556" y2="1.524" layer="51"/>
+<rectangle x1="-1.524" y1="1.016" x2="-1.016" y2="1.524" layer="51"/>
+<rectangle x1="-1.524" y1="-1.524" x2="-1.016" y2="-1.016" layer="51"/>
+</package>
 <package name="351">
 <description>&lt;b&gt;RELAY&lt;/b&gt;&lt;p&gt;
 2 x switch, same as G5 V-2, Omron</description>
@@ -1100,62 +1144,18 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <wire x1="10.795" y1="-3.81" x2="10.4902" y2="-4.1402" width="0.1524" layer="21"/>
 <wire x1="12.065" y1="-3.81" x2="12.9032" y2="-3.81" width="0.1524" layer="21"/>
 <wire x1="10.795" y1="3.81" x2="10.4902" y2="4.1402" width="0.1524" layer="21"/>
-<pad name="1" x="-3.81" y="-3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="P1" x="3.81" y="-3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="O1" x="8.89" y="-3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="S1" x="13.97" y="-3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="S2" x="13.97" y="3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="O2" x="8.89" y="3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="P2" x="3.81" y="3.81" drill="1.016" shape="long" rot="R90"/>
-<pad name="16" x="-3.81" y="3.81" drill="1.016" shape="long" rot="R90"/>
+<pad name="1" x="-3.81" y="-3.81" drill="1" shape="long" rot="R90"/>
+<pad name="P1" x="3.81" y="-3.81" drill="1" shape="long" rot="R90"/>
+<pad name="O1" x="8.89" y="-3.81" drill="1" shape="long" rot="R90"/>
+<pad name="S1" x="13.97" y="-3.81" drill="1" shape="long" rot="R90"/>
+<pad name="S2" x="13.97" y="3.81" drill="1" shape="long" rot="R90"/>
+<pad name="O2" x="8.89" y="3.81" drill="1" shape="long" rot="R90"/>
+<pad name="P2" x="3.81" y="3.81" drill="1" shape="long" rot="R90"/>
+<pad name="16" x="-3.81" y="3.81" drill="1" shape="long" rot="R90"/>
 <text x="17.78" y="-5.08" size="1.778" layer="25" ratio="10" rot="R90">&gt;NAME</text>
 <text x="14.732" y="-1.397" size="1.27" layer="51" ratio="10" rot="R90">351</text>
 <text x="1.27" y="-0.889" size="1.778" layer="27" ratio="10">&gt;VALUE</text>
 <rectangle x1="-5.08" y1="-1.27" x2="-3.81" y2="1.27" layer="21"/>
-</package>
-<package name="DS2Y">
-<description>&lt;b&gt;MINIATURE RELAY&lt;/b&gt; NAiS&lt;p&gt;
-Source: http://www.mew-europe.com/..  en_ds_61005_0023.pdf</description>
-<wire x1="0" y1="6" x2="10" y2="6" width="0.2032" layer="21"/>
-<wire x1="10" y1="6" x2="10" y2="0" width="0.2032" layer="21"/>
-<wire x1="10" y1="0" x2="0" y2="0" width="0.2032" layer="21"/>
-<wire x1="0" y1="0" x2="0" y2="6" width="0.2032" layer="21"/>
-<pad name="1" x="1.2" y="0.46" drill="0.9"/>
-<pad name="O1" x="4.4" y="0.46" drill="0.9"/>
-<pad name="P1" x="6.6" y="0.46" drill="0.9"/>
-<pad name="S1" x="8.8" y="0.46" drill="0.9"/>
-<pad name="S2" x="8.8" y="5.54" drill="0.9"/>
-<pad name="P2" x="6.6" y="5.54" drill="0.9"/>
-<pad name="O2" x="4.4" y="5.54" drill="0.9"/>
-<pad name="16" x="1.2" y="5.54" drill="0.9"/>
-<text x="1.11" y="3.27" size="1.27" layer="25">&gt;NAME</text>
-<text x="1.11" y="1.73" size="1.27" layer="27">&gt;VALUE</text>
-</package>
-<package name="2X2">
-<wire x1="-5.08" y1="-1.905" x2="-4.445" y2="-2.54" width="0.1524" layer="21"/>
-<wire x1="-3.175" y1="-2.54" x2="-2.54" y2="-1.905" width="0.1524" layer="21"/>
-<wire x1="-2.54" y1="-1.905" x2="-1.905" y2="-2.54" width="0.1524" layer="21"/>
-<wire x1="-0.635" y1="-2.54" x2="0" y2="-1.905" width="0.1524" layer="21"/>
-<wire x1="-5.08" y1="-1.905" x2="-5.08" y2="1.905" width="0.1524" layer="21"/>
-<wire x1="-5.08" y1="1.905" x2="-4.445" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="-4.445" y1="2.54" x2="-3.175" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="-3.175" y1="2.54" x2="-2.54" y2="1.905" width="0.1524" layer="21"/>
-<wire x1="-2.54" y1="1.905" x2="-1.905" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="-1.905" y1="2.54" x2="-0.635" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="-0.635" y1="2.54" x2="0" y2="1.905" width="0.1524" layer="21"/>
-<wire x1="0" y1="1.905" x2="0" y2="-1.905" width="0.1524" layer="21"/>
-<wire x1="-1.905" y1="-2.54" x2="-0.635" y2="-2.54" width="0.1524" layer="21"/>
-<wire x1="-4.445" y1="-2.54" x2="-3.175" y2="-2.54" width="0.1524" layer="21"/>
-<pad name="1" x="-3.81" y="-1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
-<pad name="2" x="-3.81" y="1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
-<pad name="3" x="-1.27" y="-1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
-<pad name="4" x="-1.27" y="1.27" drill="1.016" diameter="1.8796" shape="octagon"/>
-<text x="-5.08" y="3.175" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-5.08" y="-4.445" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-4.064" y1="-1.524" x2="-3.556" y2="-1.016" layer="51"/>
-<rectangle x1="-4.064" y1="1.016" x2="-3.556" y2="1.524" layer="51"/>
-<rectangle x1="-1.524" y1="1.016" x2="-1.016" y2="1.524" layer="51"/>
-<rectangle x1="-1.524" y1="-1.524" x2="-1.016" y2="-1.016" layer="51"/>
 </package>
 </packages>
 <symbols>

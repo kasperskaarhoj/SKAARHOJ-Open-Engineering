@@ -2273,6 +2273,13 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <pad name="A2" x="2.54" y="0" drill="0.8128" diameter="1.8796"/>
 <text x="-1.27" y="-3.81" size="0.6096" layer="21">A K A</text>
 </package>
+<package name="3.2MMPAD">
+<pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
+</package>
+<package name="3.2MMPAD6MM">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="6"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="LEDBICOLOR-AKA">
@@ -2323,6 +2330,16 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <wire x1="0" y1="-2.54" x2="0" y2="0" width="0.254" layer="94"/>
 <wire x1="0" y1="0" x2="2.54" y2="0" width="0.254" layer="94"/>
 </symbol>
+<symbol name="SINGLEPAD">
+<wire x1="1.27" y1="-2.54" x2="-5.08" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="-1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="-5.08" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
+<text x="-5.08" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-5.08" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<pin name="1" x="5.08" y="0" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="LEDBICOLOR-AKA">
@@ -2342,6 +2359,29 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 </device>
 </devices>
 </deviceset>
+<deviceset name="GNDPAD">
+<gates>
+<gate name="G$1" symbol="SINGLEPAD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="3.2MMPAD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="6MM" package="3.2MMPAD6MM">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 </libraries>
@@ -2354,7 +2394,7 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <clearance class="0" value="0.2032"/>
 </class>
 <class number="1" name="Power" width="0.4064" drill="0.6096">
-<clearance class="1" value="0.3048"/>
+<clearance class="1" value="0.2032"/>
 </class>
 </classes>
 <parts>
@@ -2366,13 +2406,13 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <part name="VIN1" library="SparkFun" deviceset="M02" device="PTH2"/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
 <part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="15K"/>
-<part name="U$3" library="SKAARHOJ" deviceset="LEDBICOLOR-AKA" device=""/>
-<part name="U$1" library="SKAARHOJ" deviceset="LEDBICOLOR-AKA" device=""/>
 <part name="TSCABLE1" library="SparkFun" deviceset="M04X2" device=""/>
 <part name="SRC" library="SparkFun" deviceset="SWITCH-MOMENTARY-2" device=""/>
 <part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="ON" library="SparkFun" deviceset="SWITCH-MOMENTARY-2" device=""/>
 <part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1K"/>
+<part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 </parts>
 <sheets>
 <sheet>
@@ -2392,8 +2432,6 @@ And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</
 <instance part="VIN1" gate="G$1" x="50.8" y="5.08" rot="R180"/>
 <instance part="GND3" gate="1" x="38.1" y="-5.08"/>
 <instance part="R8" gate="G$1" x="83.82" y="45.72"/>
-<instance part="U$3" gate="G$1" x="106.68" y="30.48"/>
-<instance part="U$1" gate="G$1" x="124.46" y="30.48"/>
 <instance part="TSCABLE1" gate="G$1" x="-40.64" y="30.48"/>
 <instance part="SRC" gate="G$1" x="71.12" y="63.5" smashed="yes">
 <attribute name="NAME" x="68.58" y="66.04" size="1.778" layer="95"/>
@@ -2403,6 +2441,8 @@ And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</
 <attribute name="NAME" x="68.58" y="55.88" size="1.778" layer="95"/>
 </instance>
 <instance part="R2" gate="G$1" x="7.62" y="60.96"/>
+<instance part="U$15" gate="G$1" x="106.68" y="2.54"/>
+<instance part="U$20" gate="G$1" x="106.68" y="-10.16"/>
 </instances>
 <busses>
 </busses>
@@ -2423,16 +2463,6 @@ And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</
 <wire x1="93.98" y1="30.48" x2="93.98" y2="17.78" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="17.78" x2="68.58" y2="17.78" width="0.1524" layer="91"/>
 <junction x="68.58" y="17.78"/>
-<pinref part="U$3" gate="G$1" pin="P$1"/>
-<wire x1="109.22" y1="30.48" x2="111.76" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="111.76" y1="30.48" x2="111.76" y2="17.78" width="0.1524" layer="91"/>
-<wire x1="111.76" y1="17.78" x2="93.98" y2="17.78" width="0.1524" layer="91"/>
-<junction x="93.98" y="17.78"/>
-<pinref part="U$1" gate="G$1" pin="P$1"/>
-<wire x1="127" y1="30.48" x2="129.54" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="30.48" x2="129.54" y2="17.78" width="0.1524" layer="91"/>
-<wire x1="129.54" y1="17.78" x2="111.76" y2="17.78" width="0.1524" layer="91"/>
-<junction x="111.76" y="17.78"/>
 </segment>
 <segment>
 <pinref part="VIN1" gate="G$1" pin="1"/>
@@ -2454,6 +2484,16 @@ And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</
 <pinref part="ON" gate="G$1" pin="1"/>
 <wire x1="66.04" y1="53.34" x2="63.5" y2="53.34" width="0.1524" layer="91"/>
 <label x="63.5" y="53.34" size="1.778" layer="95" rot="R180"/>
+</segment>
+<segment>
+<pinref part="U$15" gate="G$1" pin="1"/>
+<wire x1="111.76" y1="2.54" x2="116.84" y2="2.54" width="0.1524" layer="91"/>
+<label x="116.84" y="2.54" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$20" gate="G$1" pin="1"/>
+<wire x1="111.76" y1="-10.16" x2="116.84" y2="-10.16" width="0.1524" layer="91"/>
+<label x="116.84" y="-10.16" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="VIN" class="1">
@@ -2634,12 +2674,6 @@ And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</
 <wire x1="76.2" y1="35.56" x2="76.2" y2="38.1" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="P$2"/>
 <wire x1="76.2" y1="38.1" x2="88.9" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="P$2"/>
-<wire x1="106.68" y1="38.1" x2="88.9" y2="38.1" width="0.1524" layer="91"/>
-<junction x="88.9" y="38.1"/>
-<pinref part="U$1" gate="G$1" pin="P$2"/>
-<wire x1="106.68" y1="38.1" x2="124.46" y2="38.1" width="0.1524" layer="91"/>
-<junction x="106.68" y="38.1"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -2649,12 +2683,6 @@ And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</
 <wire x1="76.2" y1="30.48" x2="76.2" y2="22.86" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="P$3"/>
 <wire x1="76.2" y1="22.86" x2="88.9" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="P$3"/>
-<wire x1="88.9" y1="22.86" x2="106.68" y2="22.86" width="0.1524" layer="91"/>
-<junction x="88.9" y="22.86"/>
-<pinref part="U$1" gate="G$1" pin="P$3"/>
-<wire x1="124.46" y1="22.86" x2="106.68" y2="22.86" width="0.1524" layer="91"/>
-<junction x="106.68" y="22.86"/>
 </segment>
 </net>
 <net name="N$11" class="0">
@@ -2680,11 +2708,6 @@ And IDC Connector (8W) is crimped onto these 7 wires and connected to TSCABLE.</
 </sheet>
 </sheets>
 <errors>
-<approved hash="106,1,-2.54,35.56,5V,,,,,"/>
-<approved hash="106,1,12.7,35.56,IR,,,,,"/>
-<approved hash="106,1,-2.54,30.48,LEDPWR,,,,,"/>
-<approved hash="106,1,12.7,27.94,N$4,,,,,"/>
-<approved hash="106,1,12.7,30.48,PWRLED1,,,,,"/>
 <approved hash="115,1,9.48267,9.96527,TOUCH1-4,,,,,"/>
 <approved hash="115,1,46.3973,2.34527,VIN1,,,,,"/>
 </errors>

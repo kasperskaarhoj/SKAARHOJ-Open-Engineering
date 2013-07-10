@@ -16,10 +16,10 @@
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
-<layer number="20" name="Dimension" color="7" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="no"/>
+<layer number="19" name="Unrouted" color="13" fill="1" visible="no" active="no"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="no"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
@@ -28,7 +28,7 @@
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
-<layer number="31" name="tCream" color="11" fill="4" visible="no" active="no"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="no"/>
 <layer number="33" name="tFinish" color="6" fill="3" visible="no" active="no"/>
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
@@ -46,9 +46,9 @@
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
-<layer number="49" name="Reference" color="13" fill="1" visible="no" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="14" fill="1" visible="no" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
@@ -1331,6 +1331,10 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <package name="3.2MMPAD">
 <pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
 </package>
+<package name="3.2MMPAD6MM">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="6"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="CFPB">
@@ -1481,8 +1485,8 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <device name="" package="LEDBICOLOR-SMD">
 <connects>
 <connect gate="G$1" pin="A" pad="P$1"/>
-<connect gate="G$1" pin="A1" pad="P$2"/>
-<connect gate="G$1" pin="C" pad="P$3"/>
+<connect gate="G$1" pin="A1" pad="P$3"/>
+<connect gate="G$1" pin="C" pad="P$2"/>
 <connect gate="G$1" pin="C1" pad="P$4"/>
 </connects>
 <technologies>
@@ -1516,6 +1520,14 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 </gates>
 <devices>
 <device name="" package="3.2MMPAD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="6MM" package="3.2MMPAD6MM">
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
@@ -2187,7 +2199,7 @@ MAX3223-MAX3243.pdf</description>
 </class>
 </classes>
 <parts>
-<part name="U$2" library="SparkFun" deviceset="POT" device=""/>
+<part name="POT1" library="SparkFun" deviceset="POT" device=""/>
 <part name="B0" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="C1" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
@@ -2213,7 +2225,7 @@ MAX3223-MAX3243.pdf</description>
 <part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
 <part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
 <part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="U$6" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
+<part name="BILED1" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
 <part name="B1" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="ANALOG_OUT" library="SparkFun" deviceset="M04X2" device=""/>
 <part name="IN(DAISY)" library="SparkFun" deviceset="M04X2" device=""/>
@@ -2257,10 +2269,9 @@ MAX3223-MAX3243.pdf</description>
 <part name="R25" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
 <part name="R26" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
 <part name="U$19" library="SKAARHOJ" deviceset="3BITADDR" device=""/>
-<part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
-<part name="U$18" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
-<part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
-<part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
+<part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 </parts>
 <sheets>
 <sheet>
@@ -2279,7 +2290,7 @@ MAX3223-MAX3243.pdf</description>
 <text x="175.26" y="20.32" size="3.81" layer="97">CONFIG</text>
 </plain>
 <instances>
-<instance part="U$2" gate="G$1" x="45.72" y="71.12"/>
+<instance part="POT1" gate="G$1" x="45.72" y="71.12"/>
 <instance part="B0" gate="G$1" x="38.1" y="30.48"/>
 <instance part="GND1" gate="1" x="45.72" y="58.42"/>
 <instance part="C1" gate="G$1" x="60.96" y="66.04"/>
@@ -2301,7 +2312,7 @@ MAX3223-MAX3243.pdf</description>
 <instance part="R8" gate="G$1" x="121.92" y="73.66"/>
 <instance part="R9" gate="G$1" x="121.92" y="81.28"/>
 <instance part="R10" gate="G$1" x="121.92" y="88.9"/>
-<instance part="U$6" gate="G$1" x="78.74" y="-7.62"/>
+<instance part="BILED1" gate="G$1" x="78.74" y="-7.62"/>
 <instance part="B1" gate="G$1" x="73.66" y="30.48"/>
 <instance part="ANALOG_OUT" gate="G$1" x="185.42" y="-45.72"/>
 <instance part="IN(DAISY)" gate="G$1" x="228.6" y="-45.72"/>
@@ -2346,7 +2357,6 @@ MAX3223-MAX3243.pdf</description>
 <instance part="R26" gate="G$1" x="340.36" y="88.9"/>
 <instance part="U$19" gate="G$1" x="180.34" y="2.54"/>
 <instance part="U$15" gate="G$1" x="116.84" y="-76.2"/>
-<instance part="U$18" gate="G$1" x="144.78" y="-76.2"/>
 <instance part="U$20" gate="G$1" x="116.84" y="-88.9"/>
 <instance part="U$21" gate="G$1" x="144.78" y="-88.9"/>
 </instances>
@@ -2356,7 +2366,7 @@ MAX3223-MAX3243.pdf</description>
 <net name="GND" class="1">
 <segment>
 <pinref part="GND1" gate="1" pin="GND"/>
-<pinref part="U$2" gate="G$1" pin="A"/>
+<pinref part="POT1" gate="G$1" pin="A"/>
 <wire x1="45.72" y1="60.96" x2="45.72" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="C1" gate="G$1" pin="2"/>
 <wire x1="60.96" y1="63.5" x2="60.96" y2="60.96" width="0.1524" layer="91"/>
@@ -2427,11 +2437,6 @@ MAX3223-MAX3243.pdf</description>
 <label x="127" y="-76.2" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$18" gate="G$1" pin="1"/>
-<wire x1="149.86" y1="-76.2" x2="154.94" y2="-76.2" width="0.1524" layer="91"/>
-<label x="154.94" y="-76.2" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="U$20" gate="G$1" pin="1"/>
 <wire x1="121.92" y1="-88.9" x2="127" y2="-88.9" width="0.1524" layer="91"/>
 <label x="127" y="-88.9" size="1.778" layer="95"/>
@@ -2481,7 +2486,7 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="132.08" y1="-33.02" x2="134.62" y2="-33.02" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$2" gate="G$1" pin="E"/>
+<pinref part="POT1" gate="G$1" pin="E"/>
 <wire x1="45.72" y1="81.28" x2="45.72" y2="78.74" width="0.1524" layer="91"/>
 <pinref part="U$4" gate="G$1" pin="5V"/>
 </segment>
@@ -2510,12 +2515,12 @@ MAX3223-MAX3243.pdf</description>
 <label x="63.5" y="25.4" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="A"/>
+<pinref part="BILED1" gate="G$1" pin="A"/>
 <wire x1="73.66" y1="-2.54" x2="71.12" y2="-2.54" width="0.1524" layer="91"/>
 <label x="71.12" y="-2.54" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="A1"/>
+<pinref part="BILED1" gate="G$1" pin="A1"/>
 <wire x1="73.66" y1="-12.7" x2="71.12" y2="-12.7" width="0.1524" layer="91"/>
 <label x="71.12" y="-12.7" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -2932,7 +2937,7 @@ MAX3223-MAX3243.pdf</description>
 <label x="175.26" y="-40.64" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$2" gate="G$1" pin="S"/>
+<pinref part="POT1" gate="G$1" pin="S"/>
 <wire x1="50.8" y1="71.12" x2="60.96" y2="71.12" width="0.1524" layer="91"/>
 <pinref part="C1" gate="G$1" pin="1"/>
 <wire x1="60.96" y1="71.12" x2="68.58" y2="71.12" width="0.1524" layer="91"/>
@@ -3296,7 +3301,7 @@ MAX3223-MAX3243.pdf</description>
 <label x="114.3" y="58.42" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="C"/>
+<pinref part="BILED1" gate="G$1" pin="C"/>
 <wire x1="81.28" y1="-2.54" x2="83.82" y2="-2.54" width="0.1524" layer="91"/>
 <label x="83.82" y="-2.54" size="1.778" layer="95"/>
 </segment>
@@ -3308,7 +3313,7 @@ MAX3223-MAX3243.pdf</description>
 <label x="114.3" y="66.04" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="C1"/>
+<pinref part="BILED1" gate="G$1" pin="C1"/>
 <wire x1="81.28" y1="-12.7" x2="83.82" y2="-12.7" width="0.1524" layer="91"/>
 <label x="83.82" y="-12.7" size="1.778" layer="95"/>
 </segment>

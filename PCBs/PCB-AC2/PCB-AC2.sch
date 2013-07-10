@@ -17,9 +17,9 @@
 <layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
-<layer number="20" name="Dimension" color="7" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="no"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="no"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="no"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
@@ -28,7 +28,7 @@
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
-<layer number="31" name="tCream" color="11" fill="4" visible="no" active="no"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="no"/>
 <layer number="33" name="tFinish" color="6" fill="3" visible="no" active="no"/>
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
@@ -46,9 +46,9 @@
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
-<layer number="49" name="Reference" color="13" fill="1" visible="no" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="14" fill="1" visible="no" active="no"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
@@ -1079,6 +1079,10 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <package name="3.2MMPAD">
 <pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
 </package>
+<package name="3.2MMPAD6MM">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="6"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="CFPB">
@@ -1264,6 +1268,14 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 </gates>
 <devices>
 <device name="" package="3.2MMPAD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="6MM" package="3.2MMPAD6MM">
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
@@ -1802,7 +1814,7 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
 <part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="820R"/>
 <part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="150R"/>
-<part name="U$6" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
+<part name="BILED2" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
 <part name="B1" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="ANALOG_OUT" library="SparkFun" deviceset="M04X2" device=""/>
 <part name="IN(DAISY)" library="SparkFun" deviceset="M04X2" device=""/>
@@ -1811,13 +1823,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <part name="GND4" library="SparkFun" deviceset="GND" device=""/>
 <part name="C4" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="U$10" library="SparkFun" deviceset="5V" device=""/>
-<part name="U$11" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
+<part name="BILED1" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
 <part name="B3" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="U$19" library="SKAARHOJ" deviceset="3BITADDR" device=""/>
-<part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
-<part name="U$18" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
-<part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
-<part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device=""/>
+<part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 </parts>
 <sheets>
 <sheet>
@@ -1855,7 +1865,7 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <instance part="R9" gate="G$1" x="121.92" y="81.28"/>
 <instance part="R10" gate="G$1" x="121.92" y="88.9"/>
 <instance part="R11" gate="G$1" x="121.92" y="96.52"/>
-<instance part="U$6" gate="G$1" x="7.62" y="-10.16"/>
+<instance part="BILED2" gate="G$1" x="7.62" y="-10.16"/>
 <instance part="B1" gate="G$1" x="2.54" y="27.94"/>
 <instance part="ANALOG_OUT" gate="G$1" x="185.42" y="-45.72"/>
 <instance part="IN(DAISY)" gate="G$1" x="228.6" y="-45.72"/>
@@ -1864,12 +1874,10 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <instance part="GND4" gate="1" x="48.26" y="55.88"/>
 <instance part="C4" gate="G$1" x="63.5" y="63.5"/>
 <instance part="U$10" gate="G$1" x="48.26" y="78.74"/>
-<instance part="U$11" gate="G$1" x="81.28" y="-10.16"/>
+<instance part="BILED1" gate="G$1" x="81.28" y="-10.16"/>
 <instance part="B3" gate="G$1" x="76.2" y="27.94"/>
 <instance part="U$19" gate="G$1" x="152.4" y="2.54"/>
 <instance part="U$15" gate="G$1" x="195.58" y="12.7"/>
-<instance part="U$18" gate="G$1" x="223.52" y="12.7"/>
-<instance part="U$20" gate="G$1" x="195.58" y="0"/>
 <instance part="U$21" gate="G$1" x="223.52" y="0"/>
 </instances>
 <busses>
@@ -1944,16 +1952,6 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="205.74" y="12.7" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$18" gate="G$1" pin="1"/>
-<wire x1="228.6" y1="12.7" x2="233.68" y2="12.7" width="0.1524" layer="91"/>
-<label x="233.68" y="12.7" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="U$20" gate="G$1" pin="1"/>
-<wire x1="200.66" y1="0" x2="205.74" y2="0" width="0.1524" layer="91"/>
-<label x="205.74" y="0" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="U$21" gate="G$1" pin="1"/>
 <wire x1="228.6" y1="0" x2="233.68" y2="0" width="0.1524" layer="91"/>
 <label x="233.68" y="0" size="1.778" layer="95"/>
@@ -2007,12 +2005,12 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="-7.62" y="22.86" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="A"/>
+<pinref part="BILED2" gate="G$1" pin="A"/>
 <wire x1="2.54" y1="-5.08" x2="0" y2="-5.08" width="0.1524" layer="91"/>
 <label x="0" y="-5.08" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="A1"/>
+<pinref part="BILED2" gate="G$1" pin="A1"/>
 <wire x1="2.54" y1="-15.24" x2="0" y2="-15.24" width="0.1524" layer="91"/>
 <label x="0" y="-15.24" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -2032,12 +2030,12 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="66.04" y="22.86" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$11" gate="G$1" pin="A"/>
+<pinref part="BILED1" gate="G$1" pin="A"/>
 <wire x1="76.2" y1="-5.08" x2="73.66" y2="-5.08" width="0.1524" layer="91"/>
 <label x="73.66" y="-5.08" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$11" gate="G$1" pin="A1"/>
+<pinref part="BILED1" gate="G$1" pin="A1"/>
 <wire x1="76.2" y1="-15.24" x2="73.66" y2="-15.24" width="0.1524" layer="91"/>
 <label x="73.66" y="-15.24" size="1.778" layer="95" rot="R180"/>
 </segment>
@@ -2237,7 +2235,7 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="114.3" y="58.42" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="C"/>
+<pinref part="BILED2" gate="G$1" pin="C"/>
 <wire x1="10.16" y1="-5.08" x2="12.7" y2="-5.08" width="0.1524" layer="91"/>
 <label x="12.7" y="-5.08" size="1.778" layer="95"/>
 </segment>
@@ -2249,7 +2247,7 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="114.3" y="66.04" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$6" gate="G$1" pin="C1"/>
+<pinref part="BILED2" gate="G$1" pin="C1"/>
 <wire x1="10.16" y1="-15.24" x2="12.7" y2="-15.24" width="0.1524" layer="91"/>
 <label x="12.7" y="-15.24" size="1.778" layer="95"/>
 </segment>
@@ -2285,7 +2283,7 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="114.3" y="88.9" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$11" gate="G$1" pin="C"/>
+<pinref part="BILED1" gate="G$1" pin="C"/>
 <wire x1="83.82" y1="-5.08" x2="86.36" y2="-5.08" width="0.1524" layer="91"/>
 <label x="86.36" y="-5.08" size="1.778" layer="95"/>
 </segment>
@@ -2297,7 +2295,7 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="114.3" y="96.52" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U$11" gate="G$1" pin="C1"/>
+<pinref part="BILED1" gate="G$1" pin="C1"/>
 <wire x1="83.82" y1="-15.24" x2="86.36" y2="-15.24" width="0.1524" layer="91"/>
 <label x="86.36" y="-15.24" size="1.778" layer="95"/>
 </segment>

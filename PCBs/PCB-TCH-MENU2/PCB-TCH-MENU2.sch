@@ -838,6 +838,13 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <wire x1="1.5" y1="-1.5" x2="-1.5" y2="-1.5" width="0.127" layer="21"/>
 <wire x1="-1.5" y1="-1.5" x2="-1.5" y2="1.5" width="0.127" layer="21"/>
 </package>
+<package name="3.2MMPAD">
+<pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
+</package>
+<package name="3.2MMPAD6MM">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="6"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="NAV-SWITCH-5WAY">
@@ -865,6 +872,16 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <circle x="-2.54" y="-7.62" radius="0.3592" width="0.254" layer="94"/>
 <pin name="PUSH" x="-5.08" y="-7.62" visible="off" length="short"/>
 </symbol>
+<symbol name="SINGLEPAD">
+<wire x1="1.27" y1="-2.54" x2="-5.08" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="-1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="-5.08" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="-5.08" y1="2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
+<text x="-5.08" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-5.08" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<pin name="1" x="5.08" y="0" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="NAV-SWITCH-5WAY">
@@ -881,6 +898,29 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <connect gate="G$1" pin="PUSH" pad="PIN6"/>
 <connect gate="G$1" pin="RIGHT" pad="PIN5"/>
 <connect gate="G$1" pin="UP" pad="PIN1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="GNDPAD">
+<gates>
+<gate name="G$1" symbol="SINGLEPAD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="3.2MMPAD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="6MM" package="3.2MMPAD6MM">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -915,6 +955,8 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
 <part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="S1" library="SparkFun" deviceset="SWITCH-MOMENTARY-2" device=""/>
+<part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 </parts>
 <sheets>
 <sheet>
@@ -949,6 +991,8 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <instance part="GND3" gate="1" x="-2.54" y="0"/>
 <instance part="R10" gate="G$1" x="-50.8" y="10.16"/>
 <instance part="S1" gate="G$1" x="-38.1" y="10.16"/>
+<instance part="U$15" gate="G$1" x="20.32" y="33.02"/>
+<instance part="U$20" gate="G$1" x="20.32" y="20.32"/>
 </instances>
 <busses>
 </busses>
@@ -970,6 +1014,16 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <wire x1="-2.54" y1="10.16" x2="-2.54" y2="2.54" width="0.1524" layer="91"/>
 <pinref part="GND3" gate="1" pin="GND"/>
 <pinref part="S1" gate="G$1" pin="2"/>
+</segment>
+<segment>
+<pinref part="U$15" gate="G$1" pin="1"/>
+<wire x1="25.4" y1="33.02" x2="30.48" y2="33.02" width="0.1524" layer="91"/>
+<label x="30.48" y="33.02" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$20" gate="G$1" pin="1"/>
+<wire x1="25.4" y1="20.32" x2="30.48" y2="20.32" width="0.1524" layer="91"/>
+<label x="30.48" y="20.32" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="IR" class="0">

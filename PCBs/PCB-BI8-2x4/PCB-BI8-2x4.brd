@@ -113,7 +113,7 @@
 <wire x1="83.82" y1="35.56" x2="0" y2="35.56" width="0" layer="20"/>
 <text x="47.244" y="33.4772" size="1.016" layer="122" rot="MR0">PCB-BI8-2x4</text>
 <text x="75.4888" y="33.4772" size="1.524" layer="122" rot="MR0">SKAARHOJ 2013</text>
-<text x="28.702" y="34.29" size="0.8128" layer="122" rot="MR180">v13-05-13</text>
+<text x="28.702" y="34.29" size="0.8128" layer="122" rot="MR180">v??-??-??</text>
 <text x="40.3225" y="1.651" size="0.8128" layer="122" font="vector" rot="MR0">GITHUB: SKAARHOJ-Open-Engineering</text>
 <wire x1="76.454" y1="8.001" x2="73.279" y2="8.001" width="0.4064" layer="122"/>
 <wire x1="73.279" y1="8.001" x2="73.279" y2="10.541" width="0.4064" layer="122"/>
