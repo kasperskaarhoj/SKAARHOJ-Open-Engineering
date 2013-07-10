@@ -2218,13 +2218,13 @@ MAX3223-MAX3243.pdf</description>
 <part name="C3" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="U$5" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
-<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R5" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R6" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R5" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R6" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="820R"/>
+<part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="150R"/>
+<part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
+<part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="47R"/>
 <part name="BILED1" library="SKAARHOJ" deviceset="LEDBICOLOR-SMD" device=""/>
 <part name="B1" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="ANALOG_OUT" library="SparkFun" deviceset="M04X2" device=""/>
@@ -2252,22 +2252,22 @@ MAX3223-MAX3243.pdf</description>
 <part name="B2" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="B3" library="SKAARHOJ" deviceset="CFPB" device=""/>
 <part name="B4" library="SKAARHOJ" deviceset="CFPB" device=""/>
-<part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R12" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R14" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R15" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R16" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R17" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R18" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R19" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R20" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R21" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R22" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R23" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R24" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R25" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
-<part name="R26" library="SparkFun" deviceset="RESISTOR" device="0603-RES"/>
+<part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R12" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R14" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R15" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R16" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R17" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R18" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R19" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R20" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R21" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R22" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R23" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R24" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R25" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
+<part name="R26" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270R"/>
 <part name="U$19" library="SKAARHOJ" deviceset="3BITADDR" device=""/>
 <part name="U$15" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
