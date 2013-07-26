@@ -116,8 +116,8 @@
 <text x="36.83" y="34.29" size="1.016" layer="122" rot="MR0">BI8-2x4RGB</text>
 <text x="20.32" y="34.29" size="0.8128" layer="122" rot="MR0">v07-01-13</text>
 <text x="42.164" y="37.846" size="0.8128" layer="122" rot="MR0">GITHUB: SKAARHOJ-Open-Engineering</text>
-<text x="105.029" y="34.798" size="0.8128" layer="122" rot="MR0">C15 Remote Control PCB</text>
-<text x="105.029" y="33.528" size="0.8128" layer="122" rot="MR0">v07-13</text>
+<text x="105.029" y="34.798" size="0.8128" layer="122" rot="MR0">PCB-CMB-4</text>
+<text x="105.029" y="33.528" size="0.8128" layer="122" rot="MR0">v??-??</text>
 <rectangle x1="86.18743125" y1="36.194896875" x2="88.04925" y2="36.279734375" layer="200"/>
 <rectangle x1="88.81125" y1="36.194896875" x2="89.31925" y2="36.279734375" layer="200"/>
 <rectangle x1="90.25143125" y1="36.194896875" x2="91.60525" y2="36.279734375" layer="200"/>
