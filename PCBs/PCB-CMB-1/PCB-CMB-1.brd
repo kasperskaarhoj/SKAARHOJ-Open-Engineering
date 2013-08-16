@@ -1017,7 +1017,7 @@ design rules under a new name.</description>
 <element name="U$18" library="SKAARHOJ" package="3.2MMPAD6MM" value="GNDPAD6MM" x="111" y="3.5"/>
 <element name="U$20" library="SKAARHOJ" package="3.2MMPAD6MM" value="GNDPAD6MM" x="65.5" y="32.06"/>
 <element name="U$21" library="SKAARHOJ" package="3.2MMPAD6MM" value="GNDPAD6MM" x="111" y="32.06"/>
-<element name="B9" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="92.71" y="17.78"/>
+<element name="B9ALT" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="92.71" y="17.78"/>
 <element name="B11" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="123.19" y="10.16" rot="R180"/>
 <element name="B12" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="138.43" y="10.16"/>
 <element name="B15" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="123.19" y="25.4" rot="R180"/>
@@ -1040,7 +1040,7 @@ design rules under a new name.</description>
 <element name="R32" library="SparkFun" package="0603-RES" value="270" x="102.122" y="7.112" rot="MR180"/>
 <element name="B10" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="107.95" y="17.78"/>
 <element name="B13" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="92.71" y="25.4" rot="R180"/>
-<element name="B9ALT" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="92.71" y="10.16" rot="R180"/>
+<element name="B9" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="92.71" y="10.16" rot="R180"/>
 <element name="B10ALT" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="101.6" y="17.78"/>
 <element name="POT1" library="SKAARHOJ" package="SLIDER20" value="10K Linear" x="73.025" y="17.78" rot="R90"/>
 <element name="C6" library="SparkFun" package="0603-CAP" value="10nF" x="70.97" y="4.54" rot="MR90"/>
@@ -1072,7 +1072,7 @@ design rules under a new name.</description>
 <contactref element="IC2" pad="5"/>
 <contactref element="IC2" pad="24"/>
 <contactref element="IC1" pad="18"/>
-<contactref element="B9" pad="COM"/>
+<contactref element="B9ALT" pad="COM"/>
 <contactref element="B11" pad="COM"/>
 <contactref element="B12" pad="COM"/>
 <contactref element="B15" pad="COM"/>
@@ -1081,7 +1081,7 @@ design rules under a new name.</description>
 <contactref element="IC3" pad="28"/>
 <contactref element="B10" pad="COM"/>
 <contactref element="B13" pad="COM"/>
-<contactref element="B9ALT" pad="COM"/>
+<contactref element="B9" pad="COM"/>
 <contactref element="B10ALT" pad="COM"/>
 <contactref element="POT1" pad="1"/>
 <contactref element="POT1ALT" pad="1"/>
@@ -1278,7 +1278,7 @@ design rules under a new name.</description>
 <contactref element="B8" pad="P$4"/>
 <contactref element="IC2" pad="23"/>
 <contactref element="IC2" pad="25"/>
-<contactref element="B9" pad="P$4"/>
+<contactref element="B9ALT" pad="P$4"/>
 <contactref element="B11" pad="P$4"/>
 <contactref element="B12" pad="P$4"/>
 <contactref element="B15" pad="P$4"/>
@@ -1290,7 +1290,7 @@ design rules under a new name.</description>
 <contactref element="IC3" pad="23"/>
 <contactref element="B10" pad="P$4"/>
 <contactref element="B13" pad="P$4"/>
-<contactref element="B9ALT" pad="P$4"/>
+<contactref element="B9" pad="P$4"/>
 <contactref element="B10ALT" pad="P$4"/>
 <contactref element="POT1" pad="3"/>
 <contactref element="C6" pad="2"/>
@@ -2617,8 +2617,8 @@ design rules under a new name.</description>
 </signal>
 <signal name="L16">
 <contactref element="R32" pad="1"/>
-<contactref element="B9" pad="P$2"/>
 <contactref element="B9ALT" pad="P$2"/>
+<contactref element="B9" pad="P$2"/>
 <wire x1="93.2688" y1="7.112" x2="101.272" y2="7.112" width="0.2032" layer="16"/>
 <wire x1="92.7608" y1="7.62" x2="93.2688" y2="7.112" width="0.2032" layer="16"/>
 <wire x1="92.7608" y1="7.62" x2="92.71" y2="7.62" width="0.2032" layer="16"/>
@@ -2631,8 +2631,8 @@ design rules under a new name.</description>
 </signal>
 <signal name="L17">
 <contactref element="R31" pad="1"/>
-<contactref element="B9" pad="P$3"/>
 <contactref element="B9ALT" pad="P$3"/>
+<contactref element="B9" pad="P$3"/>
 <wire x1="99.2632" y1="8.8392" x2="101.1936" y2="8.8392" width="0.2032" layer="16"/>
 <wire x1="95.4024" y1="12.7" x2="99.2632" y2="8.8392" width="0.2032" layer="1"/>
 <wire x1="92.7608" y1="12.7" x2="95.4024" y2="12.7" width="0.2032" layer="1"/>
@@ -2805,8 +2805,8 @@ design rules under a new name.</description>
 <via x="78.74" y="20.32" extent="1-16" drill="0.4064"/>
 </signal>
 <signal name="GPA12">
-<contactref element="B9" pad="P$5"/>
 <contactref element="B9ALT" pad="P$5"/>
+<contactref element="B9" pad="P$5"/>
 <contactref element="IC1" pad="5"/>
 <wire x1="78.4352" y1="19.6088" x2="80.0608" y2="19.6088" width="0.2032" layer="16"/>
 <wire x1="78.0288" y1="19.2024" x2="78.4352" y2="19.6088" width="0.2032" layer="16"/>
@@ -2949,24 +2949,6 @@ design rules under a new name.</description>
 <contactref element="IC1" pad="3"/>
 </signal>
 </signals>
-<errors>
-<approved hash="4,1,87784dc42d5714f4"/>
-<approved hash="4,1,52961a1c7d4974c7"/>
-<approved hash="4,1,b1a71bc671537cd6"/>
-<approved hash="4,1,308fab25b859d0ec"/>
-<approved hash="4,1,1dfcab63bf5fd6dd"/>
-<approved hash="4,1,66ad9d21d05b8c33"/>
-<approved hash="5,1,0e078bc8169c6031"/>
-<approved hash="5,1,e893f6ae1a84eeee"/>
-<approved hash="4,16,87784dc42d5714f4"/>
-<approved hash="4,16,52961a1c7d4974c7"/>
-<approved hash="4,16,b1a71bc671537cd6"/>
-<approved hash="4,16,308fab25b859d0ec"/>
-<approved hash="4,16,1dfcab63bf5fd6dd"/>
-<approved hash="4,16,66ad9d21d05b8c33"/>
-<approved hash="5,16,e893f6ae1a84eeee"/>
-<approved hash="5,16,0e078bc8169c6031"/>
-</errors>
 </board>
 </drawing>
 </eagle>
