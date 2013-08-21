@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -113,7 +113,7 @@
 <wire x1="146" y1="35.56" x2="0" y2="35.56" width="0" layer="20"/>
 <text x="54.054" y="34.3972" size="1.016" layer="122" rot="MR0">PCB-CMB-2b</text>
 <text x="125.3208" y="32.3492" size="1.524" layer="122" rot="MR0">SKAARHOJ 2013</text>
-<text x="36.305" y="35.258" size="0.8128" layer="122" rot="MR180">v07-13/2</text>
+<text x="37.575" y="35.258" size="0.8128" layer="122" rot="MR180">v08-13</text>
 <text x="45.2925" y="1.651" size="0.8128" layer="122" font="vector" rot="MR0">GITHUB: SKAARHOJ-Open-Engineering</text>
 <wire x1="72.04" y1="10.22" x2="68.865" y2="10.22" width="0.4064" layer="122"/>
 <wire x1="68.865" y1="10.22" x2="68.865" y2="12.76" width="0.4064" layer="122"/>
@@ -1618,6 +1618,18 @@ design rules under a new name.</description>
 <via x="38.4048" y="9.3472" extent="1-16" drill="0.6096"/>
 <via x="34.9504" y="32.4104" extent="1-16" drill="0.6096"/>
 <via x="37.3888" y="26.7208" extent="1-16" drill="0.6096"/>
+<polygon width="0.4064" layer="1">
+<vertex x="0" y="0"/>
+<vertex x="146.05" y="0"/>
+<vertex x="146.05" y="35.56"/>
+<vertex x="0" y="35.56"/>
+</polygon>
+<polygon width="0.4064" layer="16">
+<vertex x="0" y="0"/>
+<vertex x="146.05" y="0"/>
+<vertex x="146.05" y="35.56"/>
+<vertex x="0" y="35.56"/>
+</polygon>
 </signal>
 <signal name="GPA0">
 <contactref element="IC1" pad="21"/>
