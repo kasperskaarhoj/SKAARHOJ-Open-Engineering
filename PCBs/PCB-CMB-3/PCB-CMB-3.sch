@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -3456,15 +3456,15 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <part name="C4" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C7" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="GND4" library="SparkFun" deviceset="GND" device=""/>
-<part name="R24" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R25" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R26" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R27" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R28" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R29" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R30" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R33" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
-<part name="R34" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
+<part name="R24" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R25" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R26" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R27" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R28" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R29" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R30" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R33" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R34" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="GND7" library="SparkFun" deviceset="GND" device=""/>
 <part name="B10" library="SKAARHOJ" deviceset="NKK-NP01-SINGLECOLOR" device=""/>
 <part name="B11" library="SKAARHOJ" deviceset="NKK-NP01-SINGLECOLOR" device=""/>
