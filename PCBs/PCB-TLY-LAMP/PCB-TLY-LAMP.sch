@@ -1317,10 +1317,10 @@ Manufacturer: TECONNECTIVITY</description>
 </classes>
 <parts>
 <part name="LED1" library="SKAARHOJ" deviceset="LED20" device="" value="Front Red"/>
-<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="270"/>
+<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
 <part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
-<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="3.3k"/>
-<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="3.3k"/>
+<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
 <part name="R5" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
 <part name="U$1" library="SKAARHOJ" deviceset="RJ45-8_GND" device="" value="INPUT"/>
 <part name="U$2" library="SKAARHOJ" deviceset="RJ45-8_GND" device="" value="OUTPUT"/>
@@ -1330,26 +1330,28 @@ Manufacturer: TECONNECTIVITY</description>
 <part name="S2" library="SKAARHOJ" deviceset="SWITCH-DPDT" device="PTH1" value="FRONT TALLY ON/OFF"/>
 <part name="U$3" library="SKAARHOJ" deviceset="LEDBICOLOR" device=""/>
 <part name="D1" library="SparkFun" deviceset="DIODE-ZENER" device="SMB"/>
-<part name="R6" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100"/>
+<part name="R6" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="6.8k"/>
 <part name="T1" library="transistor" deviceset="BC847" device=""/>
-<part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
+<part name="R7" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="4.7k"/>
 <part name="Q1" library="transistor-pnp" deviceset="BC857*" device="SMD" technology="B"/>
-<part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
+<part name="R8" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="4.7k"/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND4" library="SparkFun" deviceset="GND" device=""/>
 <part name="T2" library="transistor" deviceset="BC847" device=""/>
-<part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
+<part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="4.7k"/>
 <part name="Q2" library="transistor-pnp" deviceset="BC857*" device="SMD" technology="B"/>
-<part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
+<part name="R10" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="4.7k"/>
 <part name="GND5" library="SparkFun" deviceset="GND" device=""/>
-<part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
-<part name="R12" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
+<part name="R11" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10k"/>
+<part name="R12" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10k"/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND7" library="SparkFun" deviceset="GND" device=""/>
 <part name="C3" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="GND8" library="SparkFun" deviceset="GND" device=""/>
 <part name="C1" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
+<part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10k"/>
+<part name="R14" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10k"/>
 </parts>
 <sheets>
 <sheet>
@@ -1391,6 +1393,8 @@ Manufacturer: TECONNECTIVITY</description>
 <instance part="GND8" gate="1" x="114.3" y="-7.62"/>
 <instance part="C1" gate="G$1" x="177.8" y="43.18"/>
 <instance part="GND9" gate="1" x="177.8" y="35.56"/>
+<instance part="R13" gate="G$1" x="-2.54" y="20.32" rot="R270"/>
+<instance part="R14" gate="G$1" x="60.96" y="20.32" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -1657,8 +1661,13 @@ Manufacturer: TECONNECTIVITY</description>
 <net name="5V" class="0">
 <segment>
 <pinref part="Q1" gate="G$1" pin="E"/>
-<wire x1="5.08" y1="17.78" x2="5.08" y2="20.32" width="0.1524" layer="91"/>
-<label x="5.08" y="20.32" size="1.778" layer="95" rot="R90"/>
+<wire x1="5.08" y1="17.78" x2="5.08" y2="27.94" width="0.1524" layer="91"/>
+<label x="5.08" y="27.94" size="1.778" layer="95" rot="R90"/>
+<pinref part="R13" gate="G$1" pin="1"/>
+<wire x1="-2.54" y1="25.4" x2="2.54" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="2.54" y1="25.4" x2="2.54" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="2.54" y1="17.78" x2="5.08" y2="17.78" width="0.1524" layer="91"/>
+<junction x="5.08" y="17.78"/>
 </segment>
 <segment>
 <pinref part="D1" gate="G$1" pin="C"/>
@@ -1673,8 +1682,13 @@ Manufacturer: TECONNECTIVITY</description>
 </segment>
 <segment>
 <pinref part="Q2" gate="G$1" pin="E"/>
-<wire x1="68.58" y1="17.78" x2="68.58" y2="20.32" width="0.1524" layer="91"/>
-<label x="68.58" y="20.32" size="1.778" layer="95" rot="R90"/>
+<wire x1="68.58" y1="17.78" x2="68.58" y2="27.94" width="0.1524" layer="91"/>
+<label x="68.58" y="27.94" size="1.778" layer="95" rot="R90"/>
+<pinref part="R14" gate="G$1" pin="1"/>
+<wire x1="60.96" y1="25.4" x2="66.04" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="25.4" x2="66.04" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="17.78" x2="68.58" y2="17.78" width="0.1524" layer="91"/>
+<junction x="68.58" y="17.78"/>
 </segment>
 </net>
 <net name="N$16" class="0">
@@ -1682,6 +1696,9 @@ Manufacturer: TECONNECTIVITY</description>
 <pinref part="R8" gate="G$1" pin="1"/>
 <pinref part="Q1" gate="G$1" pin="B"/>
 <wire x1="-2.54" y1="12.7" x2="0" y2="12.7" width="0.1524" layer="91"/>
+<pinref part="R13" gate="G$1" pin="2"/>
+<wire x1="-2.54" y1="15.24" x2="-2.54" y2="12.7" width="0.1524" layer="91"/>
+<junction x="-2.54" y="12.7"/>
 </segment>
 </net>
 <net name="N$13" class="0">
@@ -1704,6 +1721,9 @@ Manufacturer: TECONNECTIVITY</description>
 <pinref part="R10" gate="G$1" pin="1"/>
 <pinref part="Q2" gate="G$1" pin="B"/>
 <wire x1="60.96" y1="12.7" x2="63.5" y2="12.7" width="0.1524" layer="91"/>
+<pinref part="R14" gate="G$1" pin="2"/>
+<wire x1="60.96" y1="15.24" x2="60.96" y2="12.7" width="0.1524" layer="91"/>
+<junction x="60.96" y="12.7"/>
 </segment>
 </net>
 </nets>
