@@ -69,13 +69,21 @@
 <layer number="105" name="tPlate" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="106" name="bPlate" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="107" name="Crop" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="108" name="tBridges" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="109" name="tBPL" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="110" name="bBPL" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="111" name="MPL" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="112" name="tSilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="no" active="yes"/>
 <layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="125" name="_tNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="126" name="_bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="127" name="_tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="128" name="_bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="no" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="no" active="yes"/>
+<layer number="152" name="_bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="199" name="L$199" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
 <layer number="201" name="201bmp" color="2" fill="10" visible="no" active="yes"/>
@@ -102,6 +110,8 @@
 <layer number="222" name="222bmp" color="23" fill="1" visible="no" active="no"/>
 <layer number="223" name="223bmp" color="24" fill="1" visible="no" active="no"/>
 <layer number="224" name="224bmp" color="25" fill="1" visible="no" active="no"/>
+<layer number="248" name="Housing" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="249" name="Edge" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="250" name="Descript" color="3" fill="1" visible="no" active="no"/>
 <layer number="251" name="SMDround" color="12" fill="11" visible="no" active="no"/>
 <layer number="254" name="cooling" color="7" fill="1" visible="no" active="yes"/>
@@ -296,6 +306,50 @@ Source: http://www.mew-europe.com/..  en_ds_61005_0023.pdf</description>
 <pad name="P$2" x="11.3919" y="4.191" drill="1.7018"/>
 <pad name="P$3" x="12.5984" y="-4.191" drill="1.7018"/>
 <pad name="P$4" x="-12.5984" y="-4.191" drill="1.7018"/>
+</package>
+<package name="ER-OLED0.91-2_WRAPAROUND">
+<wire x1="-13.45" y1="6.85" x2="13.45" y2="6.85" width="0.2032" layer="21"/>
+<wire x1="13.45" y1="6.85" x2="13.45" y2="-6.85" width="0.2032" layer="21"/>
+<wire x1="13.45" y1="-6.85" x2="-13.45" y2="-6.85" width="0.2032" layer="21"/>
+<wire x1="-13.45" y1="-6.85" x2="-13.45" y2="6.85" width="0.2032" layer="21"/>
+<wire x1="-11.19" y1="4.75" x2="11.19" y2="4.75" width="0.2032" layer="51" style="shortdash"/>
+<wire x1="11.19" y1="4.75" x2="11.19" y2="-0.83" width="0.2032" layer="51" style="shortdash"/>
+<wire x1="11.19" y1="-0.83" x2="-11.19" y2="-0.83" width="0.2032" layer="51" style="shortdash"/>
+<wire x1="-11.19" y1="-0.83" x2="-11.19" y2="4.75" width="0.2032" layer="51" style="shortdash"/>
+<smd name="1" x="-8.4" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="2" x="-7.7" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="3" x="-7" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="4" x="-6.3" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="5" x="-5.6" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="6" x="-4.9" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="7" x="-4.2" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="8" x="-3.5" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="9" x="-2.8" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="10" x="-2.1" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="11" x="-1.4" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="12" x="-0.7" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="13" x="0" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="14" x="0.7" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="15" x="1.4" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="16" x="2.1" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="17" x="2.8" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="18" x="3.5" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="19" x="4.2" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="20" x="4.9" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="21" x="5.6" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="22" x="6.3" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="23" x="7" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="24" x="7.7" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<smd name="25" x="8.4" y="-1.43" dx="2.2" dy="0.35" layer="16" rot="R90"/>
+<text x="-8.2" y="0.282" size="0.8128" layer="52" font="vector" rot="R90">1</text>
+<text x="-1.9" y="0.182" size="0.8128" layer="52" font="vector" rot="R90">10</text>
+<text x="5.05" y="0.182" size="0.8128" layer="52" font="vector" rot="R90">20</text>
+<text x="8.565" y="0.182" size="0.8128" layer="52" font="vector" rot="R90">25</text>
+<text x="-13.09" y="7.435" size="0.8128" layer="25" ratio="18">&gt;NAME</text>
+<text x="-13.09" y="-7.83" size="0.4064" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-5.2" y="-6.365" size="0.8128" layer="51">PCB EDGE (1.6mm)</text>
+<hole x="-7.5" y="-5.93" drill="0.4"/>
+<hole x="7.5" y="-5.93" drill="0.4"/>
 </package>
 </packages>
 <symbols>
@@ -513,6 +567,44 @@ Source: http://www.mew-europe.com/..  en_ds_61005_0023.pdf</description>
 <pin name="E" x="0" y="7.62" visible="off" length="short" direction="pas" rot="R270"/>
 <pin name="S" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
 </symbol>
+<symbol name="ER-OLED0.91-2">
+<wire x1="-17.78" y1="38.1" x2="26.67" y2="38.1" width="0.254" layer="94"/>
+<wire x1="26.67" y1="38.1" x2="26.67" y2="-40.64" width="0.254" layer="94"/>
+<wire x1="26.67" y1="-40.64" x2="-17.78" y2="-40.64" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-40.64" x2="-17.78" y2="38.1" width="0.254" layer="94"/>
+<text x="-17.78" y="40.64" size="1.27" layer="95" font="vector">&gt;NAME</text>
+<text x="-17.78" y="-43.18" size="1.27" layer="96" font="vector">&gt;VALUE</text>
+<text x="-6.35" y="29.21" size="2.54" layer="94">128x32 OLED</text>
+<text x="-7.62" y="22.86" size="1.778" layer="97">Controller:</text>
+<text x="10.16" y="22.86" size="1.778" layer="97">SSD1305</text>
+<text x="-7.62" y="20.32" size="1.778" layer="97">VDD:</text>
+<text x="10.16" y="20.32" size="1.778" layer="97">2.8-3.3V</text>
+<pin name="NC(GND)@1" x="-20.32" y="35.56" length="short" direction="in"/>
+<pin name="VDDIO" x="-20.32" y="25.4" length="short" direction="pwr"/>
+<pin name="VSS" x="-20.32" y="30.48" length="short" direction="pwr"/>
+<pin name="VDD" x="-20.32" y="27.94" length="short" direction="pwr"/>
+<pin name="BS1" x="-20.32" y="22.86" length="short" direction="in"/>
+<pin name="BS2" x="-20.32" y="20.32" length="short" direction="in"/>
+<pin name="CS#" x="-20.32" y="17.78" length="short" direction="in"/>
+<pin name="RES#" x="-20.32" y="15.24" length="short" direction="in"/>
+<pin name="D/C#" x="-20.32" y="12.7" length="short" direction="in"/>
+<pin name="R/W#" x="-20.32" y="10.16" length="short" direction="in"/>
+<pin name="E/RD#" x="-20.32" y="7.62" length="short" direction="in"/>
+<pin name="D0/SPI_SCLK" x="-20.32" y="2.54" length="short"/>
+<pin name="D1/SPI_SDIN" x="-20.32" y="0" length="short"/>
+<pin name="D2" x="-20.32" y="-2.54" length="short"/>
+<pin name="D3" x="-20.32" y="-5.08" length="short"/>
+<pin name="D4" x="-20.32" y="-7.62" length="short"/>
+<pin name="D5" x="-20.32" y="-10.16" length="short"/>
+<pin name="D6" x="-20.32" y="-12.7" length="short"/>
+<pin name="D7" x="-20.32" y="-15.24" length="short"/>
+<pin name="IREF" x="-20.32" y="-20.32" length="short" direction="in"/>
+<pin name="VCOMH" x="-20.32" y="-22.86" length="short" direction="out"/>
+<pin name="VCC" x="-20.32" y="33.02" length="short" direction="pwr"/>
+<pin name="VLSS" x="-20.32" y="-27.94" length="short" direction="pwr"/>
+<pin name="NC(GND)@2" x="-20.32" y="-38.1" length="short" direction="in"/>
+<pin name="VCC@2" x="-20.32" y="-25.4" length="short" direction="pwr"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="RELAY5V" prefix="K">
@@ -684,6 +776,47 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <connect gate="G$1" pin="A" pad="3"/>
 <connect gate="G$1" pin="E" pad="1"/>
 <connect gate="G$1" pin="S" pad="2A"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ER-OLED0.91-2" prefix="U" uservalue="yes">
+<description>UG-2864HSWEG01 OLED display
+&lt;p&gt;Both 1.3" and 0.96" models share the same FPC tab footprint, only the screen dimensions vary.&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="ER-OLED0.91-2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ER-OLED0.91-2_WRAPAROUND">
+<connects>
+<connect gate="G$1" pin="BS1" pad="6"/>
+<connect gate="G$1" pin="BS2" pad="7"/>
+<connect gate="G$1" pin="CS#" pad="8"/>
+<connect gate="G$1" pin="D/C#" pad="10"/>
+<connect gate="G$1" pin="D0/SPI_SCLK" pad="13"/>
+<connect gate="G$1" pin="D1/SPI_SDIN" pad="14"/>
+<connect gate="G$1" pin="D2" pad="15"/>
+<connect gate="G$1" pin="D3" pad="16"/>
+<connect gate="G$1" pin="D4" pad="17"/>
+<connect gate="G$1" pin="D5" pad="18"/>
+<connect gate="G$1" pin="D6" pad="19"/>
+<connect gate="G$1" pin="D7" pad="20"/>
+<connect gate="G$1" pin="E/RD#" pad="12"/>
+<connect gate="G$1" pin="IREF" pad="21"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="1"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="25"/>
+<connect gate="G$1" pin="R/W#" pad="11"/>
+<connect gate="G$1" pin="RES#" pad="9"/>
+<connect gate="G$1" pin="VCC" pad="2"/>
+<connect gate="G$1" pin="VCC@2" pad="23"/>
+<connect gate="G$1" pin="VCOMH" pad="22"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VDDIO" pad="5"/>
+<connect gate="G$1" pin="VLSS" pad="24"/>
+<connect gate="G$1" pin="VSS" pad="3"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -5065,7 +5198,7 @@ MAX3223-MAX3243.pdf</description>
 <part name="R26" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="R27" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="R28" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
-<part name="R29" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
+<part name="R29" library="SparkFun" deviceset="RESISTOR" device="1206" value="100R"/>
 <part name="R30" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="R31" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
 <part name="R32" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100R"/>
@@ -5110,6 +5243,7 @@ MAX3223-MAX3243.pdf</description>
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$3" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$4" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U1" library="SKAARHOJ" deviceset="ER-OLED0.91-2" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5333,6 +5467,7 @@ MAX3223-MAX3243.pdf</description>
 <instance part="GND9" gate="1" x="101.6" y="185.42"/>
 <instance part="U$3" gate="G$1" x="101.6" y="205.74"/>
 <instance part="U$4" gate="G$1" x="231.14" y="213.36"/>
+<instance part="U1" gate="G$1" x="-165.1" y="203.2"/>
 </instances>
 <busses>
 </busses>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -13,7 +13,7 @@
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="13" fill="1" visible="yes" active="yes"/>
@@ -117,7 +117,7 @@
 <text x="2.0828" y="20.1422" size="0.8128" layer="122" rot="MR90">SDA</text>
 <text x="7.7978" y="20.193" size="0.8128" layer="122" rot="MR90">SCL</text>
 <text x="3.175" y="18.415" size="1.778" layer="122" rot="MR270">1</text>
-<text x="85.09" y="17.653" size="0.8128" layer="122" rot="MR270">v07-13</text>
+<text x="85.09" y="17.653" size="0.8128" layer="122" rot="MR270">v09-13</text>
 <text x="63.8175" y="2.286" size="0.8128" layer="122" font="vector" rot="MR0">GITHUB: SKAARHOJ-Open-Engineering</text>
 <wire x1="90.17" y1="30.48" x2="15.24" y2="30.48" width="0" layer="20"/>
 <wire x1="15.24" y1="30.48" x2="15.24" y2="55.88" width="0" layer="20"/>
