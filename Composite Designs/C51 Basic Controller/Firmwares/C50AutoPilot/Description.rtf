@@ -1,0 +1,31 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11800\viewh16000\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\b\fs24 \cf0 The C50 Auto Pilot Sketch
+\b0 \
+\
+This sketch implements an "auto pilot" feature with the 1M/E switcher. The main code is based on the functionality of the C50 default sketch distributed with the ATEM library. However, it has been restructed a great deal for clarity.\
+\
+In particular, this sketch implements a "Zoom" and "Auto Pilot" function on input select keys 3 and 4. This could be moved to some of the user keys at the expense of the functionality normally found there. \
+\
+When the Zoom function is active it will automatically detect if input 5 or 6 goes to program. If so, it will set the keyer Fill source of Upstream Keyer 1 to this input, assume that the DVE is used for this keyer, reset the size and position and then start a "Run to A" action. This is intended to create a creep zoom (or "Ken Burns effect"). However, that depends on how the DVE is already set up, so lets look at prerequisites for this whole thing to work:\
+\
+- Upstream Keyer 1 is dedicated to the zoom functionality and must be set to use the DVE. \
+- The DVE should have borders disabled.\
+- A position/size must be set for keyframe A in the DVE. Over 10 seconds the zoom will run from "Full" to this position, so by setting this you can configure the nature of your creep zoom.\
+\
+The Auto Pilot is hardcoded in the sketch to cycle between input 8-5-7-8-6 and over again, but with varying times in between. This can be expanded and changed relatively easily, but is not entirely parameterized although it is an obvious next step. For some of the steps a creep zoom is also implemented.\
+\
+The fact that Upstream Keyer 1 and the DVE is used for creating the creep zoom means that the PIP function cannot be used simultaneously. In fact, as of this writing, any PIP functionality configured in the DVE will be overridden everytime the Zoom or Auto Pilot function is activated. So, you would have to reinsert all the values for position, scaling, border etc if you want to use these features simultaneously. This could be improved.\
+\
+The Zoom and Auto Pilot is programmed in a way so that it's using the Cut / Auto function for transitioning at all times. It also means there is no "clean up" work to be done, because when a new step is determined it will also set the "Next Transision" setting for the keyer if the keyer is used. In this way a Cut or Auto action will automatically disable the keyer. The consequence of this is also the the "Next Transition" function for upstream keyer 1 is always disabled after a Cut or Auto sent from the C50. \
+\
+\
+Generally, the sketch is proof of concept and likely to be expanded much more if the concepts are found generally useful in real life applications.\
+\
+\
+- kasper\
+}

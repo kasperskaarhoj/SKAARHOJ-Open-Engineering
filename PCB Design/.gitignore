@@ -1,0 +1,19 @@
+# Eagle projects:
+#####################
+*.b#?
+*.s#?
+*.GBL
+*.GBO
+*.GBP
+*.GBS
+*.GML
+*.GTL
+*.GTO
+*.GTP
+*.GTS
+*.TXT
+*.gpi
+*.pro
+*.dri
+*.zip
+*.efp
