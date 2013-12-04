@@ -161,10 +161,10 @@
 <smd name="C18" x="-4" y="10.31" dx="2.6" dy="0.3" layer="1" rot="R90"/>
 <smd name="C1" x="4.5" y="10.31" dx="2.6" dy="0.3" layer="1" rot="R90"/>
 <smd name="C19" x="-4.5" y="10.31" dx="2.6" dy="0.3" layer="1" rot="R90"/>
-<pad name="P$2" x="7.25" y="9.55" drill="2.7" diameter="3.3"/>
-<pad name="P$3" x="-7.25" y="9.55" drill="2.7" diameter="3.3"/>
-<pad name="GND2" x="7.25" y="3.59" drill="1.7" diameter="2.3" shape="square"/>
-<pad name="GND3" x="-7.25" y="3.59" drill="1.7" diameter="2.3" shape="square"/>
+<pad name="P$2" x="7.25" y="9.55" drill="2"/>
+<pad name="P$3" x="-7.25" y="9.55" drill="2"/>
+<pad name="GND2" x="7.25" y="3.59" drill="1" shape="square"/>
+<pad name="GND3" x="-7.25" y="3.59" drill="1" shape="square"/>
 </package>
 <package name="HDMI_MALEINTERCON">
 <smd name="C1" x="-6.75" y="1" dx="2" dy="1.1" layer="1" rot="R90"/>

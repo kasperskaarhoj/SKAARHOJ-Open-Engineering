@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -3536,6 +3536,8 @@ Source: www.kingbright.com</description>
 <text x="-525.78" y="-40.64" size="1.778" layer="97">5V</text>
 <text x="-543.56" y="-38.1" size="1.778" layer="97">Over 5V and the outputs will allways be lit...</text>
 <text x="-119.38" y="27.94" size="3.81" layer="97">CONFIG</text>
+<text x="-223.52" y="-10.16" size="1.778" layer="91">You only need to solder U$8 on the top (main) board
+ to U$9 on the bottom (slave) board.</text>
 </plain>
 <instances>
 <instance part="U$1" gate="G$1" x="-195.58" y="78.74" rot="R270"/>
@@ -4444,4 +4446,10 @@ Source: www.kingbright.com</description>
 </errors>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>
