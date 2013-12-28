@@ -3979,6 +3979,35 @@ MAX3223-MAX3243.pdf</description>
 <smd name="P$11" x="3.6" y="-1.95" dx="0.5" dy="1.1" layer="1" rot="R180"/>
 <smd name="P$12" x="4.4" y="-1.95" dx="0.5" dy="1.1" layer="1" rot="R180"/>
 </package>
+<package name="RJ45-8_GND_UPRIGHT">
+<wire x1="-7.95" y1="10" x2="7.95" y2="10" width="0.2032" layer="21"/>
+<wire x1="-7.95" y1="-6.5" x2="-7.95" y2="10" width="0.2032" layer="21"/>
+<wire x1="-7.95" y1="-6.5" x2="7.95" y2="-6.5" width="0.2032" layer="21"/>
+<wire x1="7.95" y1="10" x2="7.95" y2="-6.5" width="0.2032" layer="21"/>
+<pad name="8" x="4.445" y="8.89" drill="1" diameter="1.8796"/>
+<pad name="7" x="3.175" y="6.35" drill="1" diameter="1.8796"/>
+<pad name="6" x="1.905" y="8.89" drill="1" diameter="1.8796"/>
+<pad name="4" x="-0.635" y="8.89" drill="1" diameter="1.8796"/>
+<pad name="2" x="-3.175" y="8.89" drill="1" diameter="1.8796"/>
+<pad name="5" x="0.635" y="6.35" drill="1" diameter="1.8796"/>
+<pad name="3" x="-1.905" y="6.35" drill="1" diameter="1.8796"/>
+<pad name="1" x="-4.445" y="6.35" drill="1" diameter="1.8796" shape="square"/>
+<hole x="-5.715" y="0" drill="3.2"/>
+<hole x="5.715" y="0" drill="3.2"/>
+<pad name="GND" x="-7.88" y="-3.05" drill="1.6"/>
+<pad name="GND1" x="7.88" y="-3.05" drill="1.6"/>
+<text x="-3.81" y="0" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3.81" y="-5.08" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="POWER_JACK_PTH_UPRIGHT">
+<wire x1="4.5" y1="-10.25" x2="4.5" y2="10.25" width="0.2032" layer="51"/>
+<wire x1="4.5" y1="10.25" x2="-4.5" y2="10.25" width="0.2032" layer="21"/>
+<wire x1="-4.5" y1="10.25" x2="-4.5" y2="-10.25" width="0.2032" layer="21"/>
+<wire x1="-4.5" y1="-10.25" x2="4.5" y2="-10.25" width="0.2032" layer="21"/>
+<pad name="GND" x="-1" y="-4.2" drill="3.048" shape="octagon"/>
+<pad name="PWR" x="-3.4" y="1.3" drill="3.7" shape="octagon"/>
+<pad name="SHUNT" x="1.935" y="-0.63" drill="3.048" shape="octagon"/>
+</package>
 </packages>
 <symbols>
 <symbol name="LP11ESWITCH">
@@ -5644,6 +5673,22 @@ Rev2 only</description>
 <technology name=""/>
 </technologies>
 </device>
+<device name="UPRIGHT" package="RJ45-8_GND_UPRIGHT">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="G" pad="GND GND1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
 </devices>
 </deviceset>
 <deviceset name="RELAY5V" prefix="K">
@@ -5916,6 +5961,16 @@ Source: RS Component / Phycomp</description>
 </technologies>
 </device>
 <device name="PTH" package="POWER_JACK_PTH">
+<connects>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="GNDBREAK" pad="SHUNT"/>
+<connect gate="G$1" pin="PWR" pad="PWR"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="PTH_UPRIGHT" package="POWER_JACK_PTH_UPRIGHT">
 <connects>
 <connect gate="G$1" pin="GND" pad="GND"/>
 <connect gate="G$1" pin="GNDBREAK" pad="SHUNT"/>
