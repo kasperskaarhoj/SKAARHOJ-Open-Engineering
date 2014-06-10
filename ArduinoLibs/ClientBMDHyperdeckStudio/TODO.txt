@@ -1,0 +1,2 @@
+* Implement clip-list
+* Improve connection management (still some issues to research there.)

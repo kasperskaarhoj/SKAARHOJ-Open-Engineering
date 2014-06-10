@@ -796,13 +796,13 @@ design rules under a new name.</description>
 <element name="C1" library="SparkFun" package="0603-CAP" value="0.1uF" x="13" y="33.5" rot="MR180"/>
 <element name="U4" library="SKAARHOJ" package="FPC_XF2M-3015-1A" value="" x="44" y="22" rot="MR180"/>
 <element name="C12" library="SparkFun" package="0805" value="10uF/25V" x="37" y="27" rot="MR90"/>
-<element name="C13" library="SparkFun" package="0805" value="4.7uF/25V" x="39" y="27" rot="MR90"/>
+<element name="C13" library="SparkFun" package="0805" value="4.7uF/25V Tantalum" x="39" y="27" rot="MR90"/>
 <element name="C14" library="SparkFun" package="0603-CAP" value="100nF" x="41" y="27" rot="MR90"/>
 <element name="R3" library="SparkFun" package="0603-RES" value="680K" x="53" y="27" rot="MR90"/>
 <element name="C15" library="SparkFun" package="0805" value="4.7uF" x="47" y="27" rot="MR90"/>
 <element name="C16" library="SparkFun" package="0603-CAP" value="100nF" x="51.5" y="27" rot="MR90"/>
 <element name="C17" library="SparkFun" package="0603-CAP" value="1uF" x="48.5" y="27" rot="MR90"/>
-<element name="R4" library="SparkFun" package="0603-RES" value="50R" x="50" y="27" rot="MR90"/>
+<element name="R4" library="SparkFun" package="0603-RES" value="50R/0.25W" x="50" y="27" rot="MR90"/>
 <element name="D2" library="SparkFun" package="SOD-323" value="1N4148" x="51" y="29.5" rot="MR0"/>
 <element name="D1" library="SparkFun" package="SOD-323" value="1N4148" x="54.5" y="29.5" rot="MR0"/>
 <element name="U5" library="microbuilder" package="SOT23-5@1" value="FAN5331SX" x="6.5" y="17" rot="MR0"/>

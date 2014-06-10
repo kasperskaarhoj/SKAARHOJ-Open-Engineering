@@ -1,0 +1,21 @@
+
+23/2 Changes (By Kasper Skårhøj)
+	* Implemented all basic features found in the switcher interface.
+	* Implemented a few of the "palette" features, such as setting the color generators and selecting media for the media banks.
+	* Cleaned up method names in the library - you WILL need to change those names if you used the first beta version of the library
+	* There are now separate functions for Program and Preview tally - they should reflect how inputs are used in keyers and during transitions.
+	
+8/6 Changes (By Kasper Skårhøj)
+	* Upgraded to 1.0.0 of this library. Using the Semantic Versioning (semver.org): "version format of X.Y.Z (Major.Minor.Patch). Bug fixes not affecting the API increment the patch version, backwards compatible API additions/changes increment the minor version, and backwards incompatible API changes increment the major version."
+	* Supporting Arduino 1.0.1 (which has a fixed UDP implementation which we have worked around somehow in the previous version) - still some things to observe and understand better.
+	* Cleaned up code more, comments in code
+	* Implemented support for a LOT more ATEM features, basically everything in the main screen of the software. This has all been made available through relevant getter and setter methods. You will have to look in the API to see what's new there.
+	* More examples, including T-bar example, C50 and C100 example, GPI/Tally example.
+
+9/6 Changes: (By Kasper Skårhøj)
+	* Uses the same buffer to RX and TX now. 
+	* Worked on better understanding the buffer situation of the Ethernet shield: Conclusion is that we in no way can get more than the first large packet from the switcher with information. So we must live with that basically. But now - with Arduino 1.0.1 - I don't see any problems with packet size mismatch and command size mismatch, that is very good!
+	* Supports ONLY Arduino >1.0.1 now (Fixed UDP implementation)
+	
+9/6 Version 1.0.2 (By Kasper Skårhøj)
+	* Modified some of the examples

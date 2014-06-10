@@ -1,0 +1,13 @@
+This library for Arduino is intended to provide functions for connecting to and controlling ATEM video switchers from Blackmagic Design (http://blackmagic-design.com/products/atem/). They make awesome HD video switchers, really cheap ones too and they are controlled over IP! So while you can get away with using their nice Win/Mac app and switch video professionally, you can also shell out a lot of money on a hardware interface which the broadcast pros will prefer any day. Hey, it's a win for everyone!
+
+Now, with this arduino library, you can develop your own custom hardware designs to switch video! For instance, what about having a foot pedal to make a cut, eh? A preliminary video to show what it can do: http://www.youtube.com/watch?v=FlyyhGyPClE (touchscreen example at the end!)
+
+Tutorial:
+I made a short video tutorial. http://www.youtube.com/watch?v=zvbWMKGv4BQ 
+I'm assuming that you have an Arduino with Ethernet and probably also managed to upload the "blink" program to see it working. But thats all you need in addition to installing this library in the Documents/Arduino/Libraries/ folder on your computer. Restart Arduino and you will find two pieces of example code for "ATEM" in the menu. Watch the video for details. You will be well off if you have a breadboard to set up a few LEDs and switches to play with.
+
+GPL licensed:
+The library is licensed under GNU GPL v3. It allows you to use the library for any project, even commercial ones, as long as you keep the code using the library open - and deliver a copy to your client. In other words, even though you might deliver a black box hardware device, you still must give your client a copy of the Arduino sketch you have uploaded to the board. And how knows; either they will improve your product, maybe do nothing at all - or mess it up so you can sell some support hours. :-)
+
+
+- kasper

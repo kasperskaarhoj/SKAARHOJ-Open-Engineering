@@ -3219,7 +3219,7 @@ chip</description>
 <part name="C18" library="microbuilder" deviceset="CAP_CERAMIC" device="0805" value="10uF"/>
 <part name="L1" library="microbuilder" deviceset="INDUCTOR" device="" value="10uH"/>
 <part name="D3" library="microbuilder" deviceset="DIODE" device="SOD-123" value="BAT54T1G"/>
-<part name="R6" library="microbuilder" deviceset="RESISTOR" device="0603" value="50K"/>
+<part name="R6" library="microbuilder" deviceset="RESISTOR" device="0603" value="51K"/>
 <part name="R7" library="microbuilder" deviceset="RESISTOR" device="0603" value="10K"/>
 <part name="U$3" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$25" library="microbuilder" deviceset="GND" device=""/>
@@ -3257,6 +3257,7 @@ chip</description>
 <part name="C24" library="SparkFun" deviceset="CAP" device="0603-CAP" value="4.7uF"/>
 <part name="C25" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="C26" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
+<part name="C27" library="SparkFun" deviceset="CAP" device="0805" value="10uF/25V"/>
 </parts>
 <sheets>
 <sheet>
@@ -3266,10 +3267,10 @@ chip</description>
 <text x="129.54" y="-5.08" size="3.81" layer="97">CONFIG</text>
 <text x="-182.88" y="25.4" size="1.778" layer="91">Based on schematics from Adafruit! Thanks!</text>
 <text x="127" y="-185.42" size="1.778" layer="97">VOUT = 1.23V * (1 + R6/R7)</text>
-<text x="127" y="-187.96" size="1.778" layer="97">VOUT = 13.53V</text>
+<text x="127" y="-187.96" size="1.778" layer="97">VOUT = 7.5V</text>
 <text x="111.76" y="-193.04" size="1.778" layer="97">This is 0.5V above the recommended voltage,</text>
 <text x="111.76" y="-195.58" size="1.778" layer="97">but uses common resistors for easy assembly</text>
-<text x="137.16" y="-134.62" size="1.778" layer="97">13V Boost</text>
+<text x="137.16" y="-134.62" size="1.778" layer="97">7.5V Boost</text>
 <text x="114.3" y="-203.2" size="1.778" layer="91">Booster circuit from Adafruit, thanks!</text>
 <text x="-182.88" y="-76.2" size="1.778" layer="91">Based on schematics from Adafruit! Thanks!</text>
 <text x="-182.88" y="-180.34" size="1.778" layer="91">Based on schematics from Adafruit! Thanks!</text>
@@ -3359,6 +3360,7 @@ chip</description>
 <instance part="C24" gate="G$1" x="-109.22" y="-350.52" rot="R180"/>
 <instance part="C25" gate="G$1" x="-124.46" y="-292.1" rot="R180"/>
 <instance part="C26" gate="G$1" x="-111.76" y="-292.1" rot="R180"/>
+<instance part="C27" gate="G$1" x="185.42" y="-160.02" rot="R180"/>
 </instances>
 <busses>
 </busses>
@@ -3558,6 +3560,10 @@ chip</description>
 <wire x1="167.64" y1="-172.72" x2="167.64" y2="-175.26" width="0.1524" layer="91"/>
 <pinref part="R7" gate="G$1" pin="1"/>
 <pinref part="U$3" gate="G$1" pin="GND"/>
+<pinref part="C27" gate="G$1" pin="1"/>
+<wire x1="185.42" y1="-165.1" x2="185.42" y2="-175.26" width="0.1524" layer="91"/>
+<wire x1="185.42" y1="-175.26" x2="167.64" y2="-175.26" width="0.1524" layer="91"/>
+<junction x="167.64" y="-175.26"/>
 </segment>
 <segment>
 <wire x1="149.86" y1="-167.64" x2="152.4" y2="-167.64" width="0.1524" layer="91"/>
@@ -4241,6 +4247,9 @@ chip</description>
 <pinref part="D3" gate="G$1" pin="C"/>
 <pinref part="7.5V1" gate="1" pin="VCC"/>
 <junction x="175.26" y="-142.24"/>
+<pinref part="C27" gate="G$1" pin="2"/>
+<wire x1="175.26" y1="-142.24" x2="185.42" y2="-142.24" width="0.1524" layer="91"/>
+<wire x1="185.42" y1="-142.24" x2="185.42" y2="-157.48" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U6" gate="G$1" pin="VCC@2"/>

@@ -1,0 +1,11 @@
+Todo list:
+
+Generally, search for "todo" in the source and there will pop up a few places where improvements are needed.
+
+Here is a more general list I'm keeping:
+* Implement more palette features (like configuration of the keyers)
+* Code clean-up, reduce memory usage, optimization (requires me to learn more C++!!)
+Also: See the development wiki: http://skaarhoj.com/wiki/index.php/ATEM_Arduino_Library
+
+A note from the atemuser.com forum, which I might need to keep in mind although I haven't experienced the need for this:
+// You must listen for when the Atem starts to use an new 'UUID' or session ID, and start using that when sending commands.

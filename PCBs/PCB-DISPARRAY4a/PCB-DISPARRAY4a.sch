@@ -1859,7 +1859,7 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <sheets>
 <sheet>
 <plain>
-<text x="5.08" y="-200.66" size="1.778" layer="91">I2C ADR: B0101xxx</text>
+<text x="5.08" y="-200.66" size="1.778" layer="91">I2C ADR: B1011xxx</text>
 <text x="121.92" y="-60.96" size="3.81" layer="97">SERIAL</text>
 <text x="101.6" y="12.7" size="3.81" layer="97">POWER</text>
 <text x="129.54" y="-5.08" size="3.81" layer="97">CONFIG</text>
