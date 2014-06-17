@@ -1060,8 +1060,8 @@ void ATEM::changeColorValue(uint8_t colorGenerator, uint16_t hue, uint16_t satur
 }
 void ATEM::mediaPlayerSelectSource(uint8_t mediaPlayer, boolean movieclip, uint8_t sourceIndex)  {
 	if (mediaPlayer>=1 && mediaPlayer<=2)	{	// TODO: Adjust to particular ATEM model... (here 1M/E)
-		uint8_t commandBytes[12];
-		memset(commandBytes, 0, 12);
+		uint8_t commandBytes[8];
+		memset(commandBytes, 0, 8);
   		commandBytes[1] = mediaPlayer-1;
 		if (movieclip)	{
 			commandBytes[0] = 4;
@@ -1069,13 +1069,13 @@ void ATEM::mediaPlayerSelectSource(uint8_t mediaPlayer, boolean movieclip, uint8
 				commandBytes[4] = sourceIndex-1;
 			}
 		} else {
-			commandBytes[0] = 2;
+			commandBytes[0] = 0x03;
 			if (sourceIndex>=1 && sourceIndex<=32)	{
 				commandBytes[3] = sourceIndex-1;
 			}
 		}
 		commandBytes[9] = 0x10;
-		_sendCommandPacket("MPSS", commandBytes, 12);
+		_sendCommandPacket("MPSS", commandBytes, 8);
 			
 			// For some reason you have to send this command immediate after (or in fact it could be in the same packet)
 			// If not done, the clip will not change if there is a shift from stills to clips or vice versa.

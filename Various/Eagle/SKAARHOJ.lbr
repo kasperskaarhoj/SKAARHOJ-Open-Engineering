@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -4365,6 +4365,33 @@ KS-S stereo microphone/headphone jack&lt;p&gt;
 <pad name="P$3" x="5" y="-8.4" drill="1.1" shape="square"/>
 <pad name="P$4" x="-5" y="-8.4" drill="1.1" shape="square"/>
 </package>
+<package name="BU-SMA-G">
+<description>FEMALE &lt;b&gt;SMA CONNECTOR&lt;/b&gt;&lt;p&gt;
+Radiall&lt;p&gt;
+distributor RS 193-9117</description>
+<wire x1="-14.1" y1="7.38" x2="0" y2="7.38" width="0.2032" layer="51"/>
+<wire x1="0" y1="7.38" x2="0" y2="-7.38" width="0.2032" layer="51"/>
+<wire x1="0" y1="-7.38" x2="-14.1" y2="-7.38" width="0.2032" layer="51"/>
+<wire x1="-14.1" y1="-7.38" x2="-14.1" y2="7.38" width="0.2032" layer="51"/>
+<wire x1="8.76" y1="3.3" x2="7.57" y2="5.84" width="0.2032" layer="21"/>
+<wire x1="7.57" y1="5.84" x2="20.83" y2="5.44" width="0.2032" layer="21"/>
+<wire x1="8.76" y1="-3.3" x2="7.57" y2="-5.84" width="0.2032" layer="21"/>
+<wire x1="7.57" y1="-5.84" x2="20.83" y2="-5.44" width="0.2032" layer="21"/>
+<wire x1="7.94" y1="-6.44" x2="8.76" y2="-3.3" width="0.2032" layer="21"/>
+<wire x1="8.76" y1="-3.3" x2="8.76" y2="3.3" width="0.2032" layer="21"/>
+<wire x1="8.76" y1="3.3" x2="7.94" y2="6.44" width="0.2032" layer="21"/>
+<wire x1="3.4" y1="6.44" x2="7.94" y2="6.44" width="0.2032" layer="21"/>
+<wire x1="3.4" y1="-6.44" x2="7.94" y2="-6.44" width="0.2032" layer="21"/>
+<wire x1="3.4" y1="6.44" x2="0" y2="7.38" width="0.2032" layer="51"/>
+<wire x1="0" y1="-7.38" x2="3.4" y2="-6.44" width="0.2032" layer="51"/>
+<wire x1="20.83" y1="5.44" x2="20.83" y2="-5.44" width="0.2032" layer="21"/>
+<pad name="CONTACT" x="-12.83" y="0" drill="1"/>
+<text x="-12.7" y="8.255" size="1.27" layer="25">&gt;NAME</text>
+<text x="-12.065" y="-9.525" size="1.27" layer="27">&gt;VALUE</text>
+<hole x="-7.75" y="-5.08" drill="2.1"/>
+<hole x="-7.75" y="5.08" drill="2.1"/>
+<pad name="GND" x="-12.83" y="2.54" drill="1"/>
+</package>
 </packages>
 <symbols>
 <symbol name="LP11ESWITCH">
@@ -6360,6 +6387,42 @@ Rev2 only</description>
 <wire x1="-10.16" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
 <wire x1="7.62" y1="-10.16" x2="7.62" y2="12.7" width="0.254" layer="94"/>
 <wire x1="7.62" y1="12.7" x2="-10.16" y2="12.7" width="0.254" layer="94"/>
+</symbol>
+<symbol name="BNC-FGND">
+<wire x1="0" y1="-2.54" x2="-0.762" y2="-1.778" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-0.508" y2="0" width="0.1524" layer="94"/>
+<wire x1="-2.54" y1="0.508" x2="-0.762" y2="0.508" width="0.254" layer="94"/>
+<wire x1="-0.762" y1="0.508" x2="-0.508" y2="0" width="0.254" layer="94"/>
+<wire x1="-0.508" y1="0" x2="-0.762" y2="-0.508" width="0.254" layer="94"/>
+<wire x1="-0.762" y1="-0.508" x2="-2.54" y2="-0.508" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="2.54" x2="0" y2="0.508" width="0.3048" layer="94" curve="-79.611142" cap="flat"/>
+<wire x1="-2.54" y1="-2.54" x2="0" y2="-0.508" width="0.3048" layer="94" curve="79.611142" cap="flat"/>
+<text x="-2.54" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-2.54" y="3.302" size="1.778" layer="95">&gt;NAME</text>
+<pin name="1" x="2.54" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+<pin name="2" x="2.54" y="-2.54" visible="off" length="short" direction="pas" rot="R180"/>
+</symbol>
+<symbol name="LMH1981">
+<wire x1="-12.7" y1="12.7" x2="10.16" y2="12.7" width="0.254" layer="94"/>
+<wire x1="10.16" y1="12.7" x2="10.16" y2="-12.7" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-12.7" x2="-12.7" y2="-12.7" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="-12.7" x2="-12.7" y2="12.7" width="0.254" layer="94"/>
+<text x="-10.16" y="15.24" size="1.27" layer="95">&gt;name</text>
+<text x="2.54" y="15.24" size="1.27" layer="96">&gt;value</text>
+<pin name="R_EXT" x="-17.78" y="10.16" length="middle" direction="in"/>
+<pin name="VIDEO_IN" x="-17.78" y="5.08" length="middle" direction="in"/>
+<pin name="HSOUT" x="15.24" y="10.16" length="middle" direction="out" rot="R180"/>
+<pin name="VSOUT" x="15.24" y="7.62" length="middle" direction="out" rot="R180"/>
+<pin name="VFOUT" x="15.24" y="5.08" length="middle" direction="out" rot="R180"/>
+<pin name="CSOUT" x="15.24" y="2.54" length="middle" direction="out" rot="R180"/>
+<pin name="BPOUT" x="15.24" y="0" length="middle" direction="out" rot="R180"/>
+<pin name="OEOUT" x="15.24" y="-2.54" length="middle" direction="out" rot="R180"/>
+<pin name="GND1" x="-2.54" y="-17.78" length="middle" direction="pwr" rot="R90"/>
+<pin name="GND2" x="-5.08" y="-17.78" length="middle" direction="pwr" rot="R90"/>
+<pin name="VDD1" x="7.62" y="-17.78" length="middle" direction="pwr" rot="R90"/>
+<pin name="VDD2" x="5.08" y="-17.78" length="middle" direction="pwr" rot="R90"/>
+<pin name="GND3" x="-7.62" y="-17.78" length="middle" direction="pwr" rot="R90"/>
+<pin name="VDD3" x="2.54" y="-17.78" length="middle" direction="pwr" rot="R90"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -8434,6 +8497,58 @@ Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544<
 <connect gate="G$1" pin="SDO" pad="5-SDO"/>
 <connect gate="G$1" pin="SS" pad="8-SS"/>
 <connect gate="G$1" pin="VDD" pad="4-VDD"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BU-SMA-G" prefix="X">
+<description>FEMALE &lt;b&gt;SMA CONNECTOR&lt;/b&gt;&lt;p&gt;
+Radiall&lt;p&gt;
+distributor RS 193-9117</description>
+<gates>
+<gate name="G1" symbol="BNC-FGND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BU-SMA-G">
+<connects>
+<connect gate="G1" pin="1" pad="CONTACT"/>
+<connect gate="G1" pin="2" pad="GND"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="unknown" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="LMH1981">
+<gates>
+<gate name="G$1" symbol="LMH1981" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TSSOP14">
+<connects>
+<connect gate="G$1" pin="BPOUT" pad="13"/>
+<connect gate="G$1" pin="CSOUT" pad="12"/>
+<connect gate="G$1" pin="GND1" pad="2"/>
+<connect gate="G$1" pin="GND2" pad="5"/>
+<connect gate="G$1" pin="GND3" pad="10"/>
+<connect gate="G$1" pin="HSOUT" pad="7"/>
+<connect gate="G$1" pin="OEOUT" pad="14"/>
+<connect gate="G$1" pin="R_EXT" pad="1"/>
+<connect gate="G$1" pin="VDD1" pad="3"/>
+<connect gate="G$1" pin="VDD2" pad="6"/>
+<connect gate="G$1" pin="VDD3" pad="11"/>
+<connect gate="G$1" pin="VFOUT" pad="9"/>
+<connect gate="G$1" pin="VIDEO_IN" pad="4"/>
+<connect gate="G$1" pin="VSOUT" pad="8"/>
 </connects>
 <technologies>
 <technology name=""/>
