@@ -27,7 +27,7 @@ void ADS7828::init() {
 word ADS7828::analogRead(uint8_t channel) {
 	word returnword = 0x00;
 	Wire.beginTransmission(_i2cAddress);
-	Wire.write(B10000100 | ((channel&7) << 4));
+	Wire.write(B10000100 | ((channel&7) << 3));
 	Wire.endTransmission();
 	
 	Wire.requestFrom((int)_i2cAddress, 2);
