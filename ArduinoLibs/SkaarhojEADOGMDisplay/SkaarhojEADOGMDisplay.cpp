@@ -85,7 +85,7 @@ void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardT
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x1D);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x50);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x6C);   
-		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x7C);   
+		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x78);   	// 7C
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x38);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x0C);     // Normally 0x0F, but here disabled cursor.
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x01);   

@@ -12,7 +12,7 @@
  
 #include <Wire.h>
 #include <MCP23017.h>
-
+#include <Streaming.h>
 
 MCP23017 GPIOchip; 
 
@@ -22,8 +22,9 @@ void setup()
   Serial.println("Serial Started");
 
   Wire.begin();           // Wire must be started!
-  GPIOchip.begin(B000);  // Address set to zero.
+  GPIOchip.begin(B101);  // Address set to zero.
   GPIOchip.init();
+  GPIOchip.internalPullupMask((B11111111 <<8) | B11111111);  //GPA7..GPA0, GPB7..GPB0
 
   GPIOchip.pinMode(0,  INPUT);
   GPIOchip.pinMode(1,  INPUT);
@@ -46,8 +47,8 @@ void setup()
 void loop()
 {
   word buttonStatus = GPIOchip.digitalWordRead();
-  Serial.println(buttonStatus, BIN);
-  delay(100);
+  Serial << _BINPADL(buttonStatus, 16, "0") << F("\n");
+  delay(5);
 } 
 
 

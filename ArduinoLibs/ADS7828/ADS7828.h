@@ -42,7 +42,8 @@ class ADS7828
     //pin states:
 
 	word analogRead();
-
+	word analogRead(uint8_t channel);
+	
 	//Our actual i2c address
 	byte _i2cAddress;
 };
