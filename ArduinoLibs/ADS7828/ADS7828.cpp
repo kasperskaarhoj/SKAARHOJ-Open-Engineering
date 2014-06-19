@@ -16,18 +16,19 @@
 */
 #include "ADS7828.h"
 
-ADS7828::ADS7828(int i2cAddress) {
-	_i2cAddress = (I2C_BASE_ADDRESS >>1) | (i2cAddress & 0x03);
+ADS7828::ADS7828() {
 }
 
-void ADS7828::init() {
+void ADS7828::init(int i2cAddress) {
+	_i2cAddress = (I2C_BASE_ADDRESS >>1) | (i2cAddress & 0x03);
 	Wire.begin();
 }
 
 word ADS7828::analogRead(uint8_t channel) {
 	word returnword = 0x00;
 	Wire.beginTransmission(_i2cAddress);
-	Wire.write(B10000100 | ((channel&7) << 3));
+	uint8_t byteToWrite = B10000100 | ((((channel>>1)|(channel<<2))&7) << 4);
+	Wire.write(byteToWrite);
 	Wire.endTransmission();
 	
 	Wire.requestFrom((int)_i2cAddress, 2);

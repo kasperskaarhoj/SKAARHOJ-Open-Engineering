@@ -35,8 +35,8 @@ class ADS7828
     //NB the i2c address here is the value of the A0, A1 pins ONLY
     //as the class takes care of its internal base address.
     //so i2cAddress should be between 0 and 3
-    ADS7828(int i2cAddress);
-    void init();
+    ADS7828();
+    void init(int i2cAddress);
 
     //These functions provide an 'arduino'-like functionality for accessing
     //pin states:

@@ -51,10 +51,10 @@ class PCA9685
 	void setLEDOff(int ledNumber);
 	void setLEDDimmed(int ledNumber, byte amount);
 	void writeLED(int ledNumber, word outputStart, word outputEnd);
-	
-  private:
 	void writeRegister(int regaddress, byte val);
 	word readRegister(int regAddress);
+	
+  private:
 	// Our actual i2c address:
 	byte _i2cAddress;
 };

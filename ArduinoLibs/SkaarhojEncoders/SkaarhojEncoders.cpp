@@ -24,6 +24,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 */
 #include "SkaarhojEncoders.h"
+#include "Streaming.h"
 
 
 /**
@@ -69,10 +70,11 @@ void SkaarhojEncoders::runLoop()	{
     word buttonStatus = _GPIOchip.getGPInterruptTriggerPin();
 	if (buttonStatus)	{	// Some interrupt was triggered at all...	
         word capture = _GPIOchip.getGPInterruptCapture();	// Capture states of GPI at the time of interrupt
- /*  	    Serial.println(buttonStatus | 0x8000,BIN);
-   	    Serial.println(capture | 0x8000,BIN);
+
+   	 /*   Serial << _BINPADL(buttonStatus,16,0) << F("\n");
+   	    Serial << _BINPADL(capture,16,0) << F("\n");
 		Serial.println("---");
-*/
+	*/	
 			// First 4 encoders (GPA0-7), turning:
 	    for(uint8_t b=0; b<4; b++)  {
 	      if ((buttonStatus >> 8) & (B1<<(b<<1)))  {	// Was this pin causing the interrupt?

@@ -2,18 +2,8 @@
 #include "Wire.h"
 #include "MCP23017.h"
 #include "SkaarhojEncoders.h"
+#include "Streaming.h"
 SkaarhojEncoders encoders;
-
-
-
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
 
 
 
@@ -24,7 +14,7 @@ void setup() {
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   Wire.begin();
-  encoders.begin(7);
+  encoders.begin(5);
   encoders.serialOutput(1);
 }
 
