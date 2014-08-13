@@ -1,0 +1,71 @@
+/***************************************************************
+ *  (c) 2014 SKAARHOJ Engineering, www.skaarhoj.com
+ *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
+ *
+ *  This script is Open Source under GNU/GPL license. 
+ *  See bottom for more details.
+ *
+ *  Licensed to Schaeffer AG for inclusion with Front Panel Designer.
+ ***************************************************************/
+/*************************************************************
+ * This is a JavaScript program written for a software called 
+ * Front Panel Designer made by Schaeffer AG. 
+ * Front Panel Designer is a CAD application for design and 
+ * online ordering of aluminum panels and this script will create 
+ * such a panel based on input parameters.
+ *
+ * This script is designed to create a basic sprocket for optical 
+ * movement detection
+ *
+ * See http://skaarhoj.com/schaeffer/ for latest version, other
+ * tools and training resources published by SKAARHOJ K/S.
+ *
+ * - kasper
+ **************************************************************/
+
+
+
+// Configure to your liking:
+var innerRadius = 80/2;
+var outerRadius = 100/2;
+var teeth = 32;
+
+
+
+
+
+
+
+/***************************************
+ *
+ * FUNCTIONS:
+ * (Nothing to edit or customize below)
+ *
+ ***************************************/
+
+function getCoordX(angle, centerDistance)	{
+	return outerRadius + Math.cos(angle/180*Math.PI)*centerDistance;
+}
+function getCoordY(angle, centerDistance)	{
+	return outerRadius + Math.sin(angle/180*Math.PI)*centerDistance;
+}
+
+	// Create panel:
+var fp = new Frontpanel("Tooth", 1.5, outerRadius*2, outerRadius*2, alu_elox);
+
+var dxf = new DxfContour("dxf-canvas1", "", 0, 100, 0);
+dxf.Start(getCoordX(0,outerRadius),getCoordY(0,outerRadius));
+
+for(var i=0;i<teeth;i++)	{
+	if (i!=0)	{
+		dxf.LineTo(getCoordX(i*360/teeth,outerRadius),getCoordY(i*360/teeth,outerRadius));
+	}
+	dxf.LineTo(getCoordX(i*360/teeth,innerRadius),getCoordY(i*360/teeth,innerRadius));
+	dxf.LineTo(getCoordX((i+0.5)*360/teeth,innerRadius),getCoordY((i+0.5)*360/teeth,innerRadius));
+	dxf.LineTo(getCoordX((i+0.5)*360/teeth,outerRadius),getCoordY((i+0.5)*360/teeth,outerRadius));
+}
+
+dxf.Finish();
+
+fp.SetBorderContour(dxf);
+AddFrontpanel(fp);

@@ -70,6 +70,7 @@ void ATEM::connect() {
 	_isConnectingTime = millis();
 	_localPacketIdCounter = 1;	// Init localPacketIDCounter to 1;
 	_hasInitialized = false;
+	_isConnected = false;
 	_lastContact = 0;
 	_Udp.begin(_localPort);
 
@@ -184,6 +185,7 @@ void ATEM::runLoop() {
 
 		    if (packetSize==packetLength) {  // Just to make sure these are equal, they should be!
 			  _lastContact = millis();
+			  _isConnected = true;
 		
 		      // If a packet is 12 bytes long it indicates that all the initial information 
 		      // has been delivered from the ATEM and we can begin to answer back on every request
@@ -238,11 +240,16 @@ void ATEM::runLoop() {
 
 bool ATEM::isConnectionTimedOut()	{
 	unsigned long currentTime = millis();
-	if (_lastContact>0 && _lastContact+10000 < currentTime)	{	// Timeout of 10 sec.
+	if (_lastContact>0 && _lastContact+5000 < currentTime)	{	// Timeout of 10 sec.
 		_lastContact = 0;
+		_isConnected = false;
 		return true;
 	}
 	return false;
+}
+
+bool ATEM::isConnected()	{
+	return _isConnected;
 }
 
 void ATEM::delay(const unsigned int delayTimeMillis)	{	// Responsible delay function which keeps the ATEM run loop up! DO NOT USE INSIDE THIS CLASS! Recursion could happen...
@@ -1123,9 +1130,12 @@ void ATEM::changeDVESettingsTemp_RunKeyFrame(uint8_t runType)	{	// runType: 1=A,
   		uint8_t commandBytes[8] = {0x02, 0x00, 0x00, 0x02, 0x00, runType, 0xff, 0xff};
   		_sendCommandPacket("RFlK", commandBytes, 8);
 }
-void ATEM::changeKeyerMask(uint16_t topMask, uint16_t bottomMask, uint16_t leftMask, uint16_t rightMask)	{
+void ATEM::changeKeyerMask(uint16_t topMask, uint16_t bottomMask, uint16_t leftMask, uint16_t rightMask) {
+	changeKeyerMask(0, topMask, bottomMask, leftMask, rightMask);
+}
+void ATEM::changeKeyerMask(uint8_t keyer, uint16_t topMask, uint16_t bottomMask, uint16_t leftMask, uint16_t rightMask)	{
 		// In "B11110", bits are (from right to left): 0=?, 1=topMask, 2=bottomMask, 3=leftMask, 4=rightMask
-  		uint8_t commandBytes[12] = {B11110, 0x00, 0x00, 0x00, highByte(topMask), lowByte(topMask), highByte(bottomMask), lowByte(bottomMask), highByte(leftMask), lowByte(leftMask), highByte(rightMask), lowByte(rightMask)};
+  		uint8_t commandBytes[12] = {B11110, 0x00, keyer-1, 0x00, highByte(topMask), lowByte(topMask), highByte(bottomMask), lowByte(bottomMask), highByte(leftMask), lowByte(leftMask), highByte(rightMask), lowByte(rightMask)};
   		_sendCommandPacket("CKMs", commandBytes, 12);
 }
 

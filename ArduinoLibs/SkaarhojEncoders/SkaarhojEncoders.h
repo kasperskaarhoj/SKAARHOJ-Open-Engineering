@@ -47,6 +47,8 @@ class SkaarhojEncoders
 	bool _countOn[5];
 	bool _pushOn[5];
 	bool _pushOnTriggerTimeFired[5];
+	bool _isPushed[5];
+	uint16_t _stateCheckDelay;
 
 	uint8_t _serialOutput;
 		
@@ -59,8 +61,10 @@ class SkaarhojEncoders
 	int state(uint8_t encNum);
 	int state(uint8_t encNum, unsigned int buttonPushTriggerDelay);
 	int lastCount(uint8_t encNum);
+	int totalCount(uint8_t encNum);
 	
 	bool hasTimedOut(unsigned long time, unsigned long timeout);
+	void setStateCheckDelay(uint16_t delayTime);
 	void serialOutput(uint8_t level);
 };
 #endif 

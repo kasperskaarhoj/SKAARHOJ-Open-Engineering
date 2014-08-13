@@ -88,15 +88,16 @@ inline Print &operator <<(Print &obj, const _BASED &arg)
 
 inline Print &operator <<(Print &obj, const _BASEDPADL &arg) {
 	if (arg.pad>1)	{
+		int i;
 		if (arg.base==HEX)	{
-			for(uint8_t i=arg.pad-1; i>0; i--)	{
+			for(i=arg.pad-1; i>0; i--)	{
 				if (!(arg.val >> (i<<2)))	{
 					obj.print(arg.padChar[0]);
 				} else break;
 			}
 		}
 		if (arg.base==BIN)	{
-			for(uint8_t i=arg.pad-1; i>0; i--)	{
+			for(i=arg.pad-1; i>0; i--)	{
 				if (!(arg.val >> i))	{
 					obj.print(arg.padChar[0]);
 				} else break;
@@ -104,13 +105,26 @@ inline Print &operator <<(Print &obj, const _BASEDPADL &arg) {
 		}
 		if (arg.base==DEC)	{
 			bool isPadding = false;
-			long cmpVal=10;
-			for(uint8_t i=arg.pad-1; i>0; i--)	{
-				if (isPadding || arg.val < cmpVal)	{
-					obj.print(arg.padChar[0]);
-					isPadding = true;
-				} else {
-					cmpVal*=10;
+			long cmpVal;
+			if (arg.val>=0)	{
+				cmpVal = 10;
+				for(i=arg.pad-1; i>0; i--)	{
+					if (isPadding || arg.val < cmpVal)	{
+						obj.print(arg.padChar[0]);
+						isPadding = true;
+					} else {
+						cmpVal*=10;
+					}
+				}
+			} else {
+				cmpVal = -10;
+				for(i=arg.pad-2; i>0; i--)	{
+					if (isPadding || arg.val > cmpVal)	{
+						obj.print(arg.padChar[0]);
+						isPadding = true;
+					} else {
+						cmpVal*=10;
+					}
 				}
 			}
 		}

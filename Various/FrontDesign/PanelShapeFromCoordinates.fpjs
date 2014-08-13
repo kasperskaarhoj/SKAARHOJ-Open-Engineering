@@ -1,0 +1,432 @@
+/***************************************************************
+ *  (c) 2014 SKAARHOJ Engineering, www.skaarhoj.com
+ *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
+ *
+ *  This script is Open Source under GNU/GPL license. 
+ *  See bottom for more details.
+ *
+ *  Licensed to Schaeffer AG for inclusion with Front Panel Designer.
+ ***************************************************************/
+/*************************************************************
+ * This is a JavaScript program written for a software called 
+ * Front Panel Designer made by Schaeffer AG. 
+ * Front Panel Designer is a CAD application for design and 
+ * online ordering of aluminum panels and this script will create 
+ * such panels based on input parameters.
+ *
+ * This script is designed to create a free form front panel from a 
+ * DXF contour which is generated from a set of coordinates and corner
+ * radii.
+ *
+ * See http://skaarhoj.com/schaeffer/ for latest version, other
+ * tools and training resources published by SKAARHOJ K/S.
+ *
+ * - kasper
+ **************************************************************/
+
+
+
+// NOTICE: Inner radii cannot be lower than 3mm since Schaeffer cuts the outline by a 3mm cutter (or 6mm)
+// NOTICE: The final panel will be moved so it's bottom and left side is flush with y=0 and x=0 respectively. Therefore any negative coordinates as well as points with a radius being the closets points to the x/y axises will upset the location of the panel.
+
+
+
+/***************************************
+ * Coordinate set
+ * It's an array where each element is another array with format [x,y,radius]
+ *
+ * All measures in mm. (25.4 mm = 1 inch)
+ ***************************************/
+
+// Test set:
+var C_coordinates = [
+[0,0,3],
+[0,20,1],
+[40,50,3],
+[0,100,3],
+[50,60,3],
+[100,100,3],
+[60,50,3],
+[100,0,3],
+[50,40,3],
+];
+
+// Test set 2
+var C_coordinates = [
+[10,10,10],
+[20,35,10],
+[10,60,2],
+[90,50,2],
+[130,60,0],
+[80,30,5],
+[130,20,2],
+[100,-50,2],
+];
+
+// Star:
+var C_coordinates = new Array();
+for(var i=0;i<5;i++)	{
+	C_coordinates[i*2] = new Array(Math.cos(deg2rad(-90-(360/5)*i))*22,Math.sin(deg2rad(-90-(360/5)*i))*22,5);
+	C_coordinates[i*2+1] = new Array(Math.cos(deg2rad(-90-(360/5)*i-(360/10)))*40,Math.sin(deg2rad(-90-(360/5)*i-(360/10)))*40,5);
+}
+
+
+// A "House" form of a panel:
+var C_coordinates = [
+[0,0,2],
+[0,60,5],
+[60,90,10],
+[120,60,5],
+[120,0,2],
+];
+
+
+
+/***************************************
+ * Setting up the front panel here:
+ ***************************************/
+var fp = new Frontpanel("Panel", 2.0, 1, 1, alu_elox);	// Use arbitrary width/height - doesn't matter.
+var dxf = shapeFromCoordinates(C_coordinates);	// Create DXF shape from C_coordinates
+fp.SetBorderContour(dxf);	// Set this DXF shape as a contour of the panel
+AddFrontpanel(fp);
+
+// Must adjust the origin of the panel to match the contour:
+var offset = getOutlineXYoffset(C_coordinates);
+//fp.SetOrigin(offset[0],offset[1]);
+
+
+
+// Add an engraving with the same form as the panel but shrunk 3mm:
+var newCoordinates = expandCoordinateSet(C_coordinates, -3);
+var hpgl = hpglFromCoordinates(newCoordinates);
+fp.AddElement(
+	hpgl,
+	offset[0],
+	offset[1] 
+);
+
+// Adding a shrunken version as a cutout:
+fp.AddElement(
+	shapeFromCoordinates(expandCoordinateSet(C_coordinates, -10,0)),
+	offset[0],
+	offset[1] 
+);
+
+
+
+
+fp.UnsetModified();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***************************************
+ *
+ * FUNCTIONS:
+ * (Nothing to edit or customize below)
+ *
+ ***************************************/
+
+function deg2rad(deg)	{
+	return deg / 180 * Math.PI;
+}
+
+/**
+ * This analyses a coordinate set to find out what the left most and bottom most point will be (taking any radius of a point into account as well, which is the tricky thing here.)
+ */
+function getOutlineXYoffset(coordinateSet)	{
+	var result = new Array(0,0);
+	var len = coordinateSet.length;
+	var first = true;
+
+	for(var i=0; i<len; i++)	{
+		var forwardBend = getInsideAngleBetweenLines(coordinateSet[i][0],coordinateSet[(i+len-1)%len][0],coordinateSet[i][1],coordinateSet[(i+len-1)%len][1],coordinateSet[i][0],coordinateSet[(i+1)%len][0],coordinateSet[i][1],coordinateSet[(i+1)%len][1]) >=0 ? true : false;
+		
+		if (forwardBend)	{
+			if (first)	{
+				first = false;
+				if (coordinateSet[i][2])	{
+					var	cornerData = roundedCorner(coordinateSet[i][0],coordinateSet[i][1], coordinateSet[(i-1+len)%len][0],coordinateSet[(i-1+len)%len][1], coordinateSet[(i+1+len)%len][0],coordinateSet[(i+1+len)%len][1], coordinateSet[i][2]);
+					result[0] = cornerData[0]-coordinateSet[i][2];
+					result[1] = cornerData[1]-coordinateSet[i][2];
+				} else {
+					result[0] = coordinateSet[i][0];
+					result[1] = coordinateSet[i][1];
+				}
+			} else {
+				if (coordinateSet[i][2])	{
+					var	cornerData = roundedCorner(coordinateSet[i][0],coordinateSet[i][1], coordinateSet[(i-1+len)%len][0],coordinateSet[(i-1+len)%len][1], coordinateSet[(i+1+len)%len][0],coordinateSet[(i+1+len)%len][1], coordinateSet[i][2]);
+					result[0] = cornerData[0]-coordinateSet[i][2]<result[0] ? cornerData[0]-coordinateSet[i][2] : result[0];
+					result[1] = cornerData[1]-coordinateSet[i][2]<result[1] ? cornerData[1]-coordinateSet[i][2] : result[1];
+				} else {
+					result[0] = coordinateSet[i][0]<result[0] ? coordinateSet[i][0] : result[0];
+					result[1] = coordinateSet[i][1]<result[1] ? coordinateSet[i][1] : result[1];
+				}
+			}
+		}
+	}
+	
+	result[0]=-result[0];
+	result[1]=-result[1];
+	
+	return result;
+}
+
+/**
+ * Returns the angle between two lines given by two coordinates each.
+ */
+function getInsideAngleBetweenLines(L1x1,L1x2,L1y1,L1y2, L2x1,L2x2,L2y1,L2y2)	{
+	var alpha1 = getAngleOfLine(L1x1,L1x2,L1y1,L1y2);
+	var alpha2 = getAngleOfLine(L2x1,L2x2,L2y1,L2y2);
+	var angleDiff = alpha2-alpha1;
+	if (angleDiff < -Math.PI) {
+		angleDiff+= 2*Math.PI;
+	} else if (angleDiff > Math.PI)	{
+		angleDiff-= 2*Math.PI;
+	}
+
+	return angleDiff;
+}
+
+/**
+ * Creates a DXF shape from input set of coordinates/radii
+ */
+function shapeFromCoordinates(coordinateSet)	{
+	var dxf = new DxfContour("dxf-canvas1", "", 5, 100, 0);
+	var len = coordinateSet.length;
+
+	for(var i=0; i<=len; i++)	{
+		if (i==0)	{
+			if (coordinateSet[0][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[0][0],coordinateSet[0][1], coordinateSet[len-1][0],coordinateSet[len-1][1], coordinateSet[1][0],coordinateSet[1][1], coordinateSet[0][2]);
+				dxf.Start(cornerCoordinates[4],cornerCoordinates[5]);
+			} else {	// none
+				dxf.Start(coordinateSet[0][0],coordinateSet[0][1]);
+			}
+		} else {
+			if (coordinateSet[(i%len)][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1], coordinateSet[(i-1)%len][0],coordinateSet[(i-1)%len][1], coordinateSet[(i+1)%len][0],coordinateSet[(i+1)%len][1], coordinateSet[(i%len)][2]);
+				dxf.LineTo(cornerCoordinates[2],cornerCoordinates[3]);
+				dxf.ArcToMP(cornerCoordinates[4],cornerCoordinates[5],cornerCoordinates[0],cornerCoordinates[1], cornerCoordinates[6]);
+			} else {	// none
+				dxf.LineTo(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1]);
+			}
+		}
+	}
+	
+	dxf.Finish();
+	
+	return dxf;
+}
+
+/**
+ * Creates a HPGL engraving from input set of coordinates/radii
+ */
+function hpglFromCoordinates(coordinateSet)	{
+	var hpgl = new HpglEngraving("hpgl", "", 5, 100);
+	hpgl.ChangePen(hpgl.DefinePen(engrave_pastel_orange,engraver_0_2mm));
+	var len = coordinateSet.length;
+
+	for(var i=0; i<=len; i++)	{
+		if (i==0)	{
+			if (coordinateSet[0][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[0][0],coordinateSet[0][1], coordinateSet[len-1][0],coordinateSet[len-1][1], coordinateSet[1][0],coordinateSet[1][1], coordinateSet[0][2]);
+				hpgl.Start(cornerCoordinates[4],cornerCoordinates[5]);
+			} else {	// none
+				hpgl.Start(coordinateSet[0][0],coordinateSet[0][1]);
+			}
+		} else {
+			if (coordinateSet[(i%len)][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1], coordinateSet[(i-1)%len][0],coordinateSet[(i-1)%len][1], coordinateSet[(i+1)%len][0],coordinateSet[(i+1)%len][1], coordinateSet[(i%len)][2]);
+				hpgl.LineTo(cornerCoordinates[2],cornerCoordinates[3]);
+				hpgl.ArcToMP(cornerCoordinates[4],cornerCoordinates[5],cornerCoordinates[0],cornerCoordinates[1], cornerCoordinates[6]);
+			} else {	// none
+				hpgl.LineTo(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1]);
+			}
+		}
+	}
+	
+	hpgl.Finish();
+	
+	return hpgl;
+}
+
+/**
+ * Calculates necessary coordinates for a rounded corner
+ */
+function roundedCorner(x,y, srcX,srcY, destX,destY, radius) {
+	var result = new Array(0,0,0,0,0,0,1);	// centerX, centerY, srcAttachX, srcAttachY, destAttachX, destAttachY, rotationDirection
+	
+	var alpha1 = getAngleOfLine(x,srcX,y,srcY);
+	var alpha2 = getAngleOfLine(x,destX,y,destY);
+	
+//	Print("alpha1="+alpha1/Math.PI*180+"\n");
+//	Print("alpha2="+alpha2/Math.PI*180+"\n");
+	
+	var angleDiff = alpha2-alpha1;
+	if (angleDiff < -Math.PI) {
+		angleDiff+= 2*Math.PI;
+	} else if (angleDiff > Math.PI)	{
+		angleDiff-= 2*Math.PI;
+	}
+	
+	var halfAngle = angleDiff/2;
+//	Print("halfAngle="+halfAngle/Math.PI*180+"\n");
+	
+	var distFromXYpoint = Math.abs(radius / Math.sin(halfAngle));
+//	Print("distFromXYpoint="+distFromXYpoint+"\n");
+
+	var travelUpOnEachLine = Math.cos(halfAngle)*distFromXYpoint;
+//	Print("travelUpOnEachLine="+travelUpOnEachLine+"\n");
+
+	var angleOfCenterLine = alpha1+halfAngle;
+
+
+	result[0] = translateXByAngle(x,angleOfCenterLine,distFromXYpoint);
+	result[1] = translateYByAngle(y,angleOfCenterLine,distFromXYpoint);
+
+	result[2] = translateXByAngle(x,alpha1,travelUpOnEachLine);
+	result[3] = translateYByAngle(y,alpha1,travelUpOnEachLine);
+	
+	result[4] = translateXByAngle(x,alpha2,travelUpOnEachLine);
+	result[5] = translateYByAngle(y,alpha2,travelUpOnEachLine);
+	
+	result[6] = halfAngle < 0 ? 1 : -1;
+	
+	return result;
+}
+
+/**
+ * Returns the angle of a line given by it's x/y coordinates (two points)
+ */
+function getAngleOfLine(x1,x2,y1,y2)	{
+	return (x2-x1)==0 ? (y2-y1 < 0?-1:1)*Math.PI/2 : Math.atan((y2-y1)/(x2-x1))+(x2-x1 < 0 ? Math.PI: 0);
+}
+
+/**
+ * Translates an X value in 2D a certain distance at a certain angle
+ */
+function translateXByAngle(x,alpha,dist)	{
+	return rounding(x+Math.cos(alpha)*dist);
+}
+
+/**
+ * Translates a Y value in 2D a certain distance at a certain angle
+ */
+function translateYByAngle(y,alpha,dist)	{
+	return rounding(y+Math.sin(alpha)*dist);
+}
+
+/**
+ * Rounding to 5 digits
+ */
+function rounding(input)	{
+	return Math.round(input*100000)/100000;
+}
+
+/**
+ * Calculates the intersection coordinate for two lines given by their coordinates of two points on that line.
+ */
+function intersectionOfLines(L1x1,L1x2,L1y1,L1y2, L2x1,L2x2,L2y1,L2y2)	{
+	// Vectors set equal:
+	//	L1x1 + t1 * (L1x2-L1x1) = L2x1 + t2 * (L2x2-L2x1)
+	//	L1y1 + t1 * (L1y2-L1y1) = L2y1 + t2 * (L2y2-L2y1)
+	// => (matrix equation)
+	//	t1 * (L1x2-L1x1) - t2 * (L2x2-L2x1) = L2x1-L1x1
+	//	t1 * (L1y2-L1y1) - t2 * (L2y2-L2y1) = L2y1-L1y1
+
+	// Determinant from matrix equation, leading to t1:
+	var c1 = L2x1-L1x1;
+	var c2 = L2y1-L1y1;
+	var a1 = L1x2-L1x1;
+	var a2 = L1y2-L1y1;
+	var b1 = L2x2-L2x1;
+	var b2 = L2y2-L2y1;
+	var t1 = (c1*b2-c2*b1)/(a1*b2-a2*b1);
+
+	// Result, using only t1 (not necessary with t2)
+	var result = new Array(L1x1 + t1 * (L1x2-L1x1), L1y1 + t1 * (L1y2-L1y1));
+	
+	// Result will not be defined for parallel or co-incident lines!
+
+	return result;
+}
+
+/**
+ * Expands (or shrinks if "expand" is negative) a set of coordinates so that a line between two points is moved "expand" mm by it's normal vector.
+ * If "expand" is zero, a copy of the coordinate set will be returned, possibly with the effect of "fixedRadii"
+ * If radii are found in the coordinate set, they are expanded also as long as "fixedRadii" remains undefined. If fixedRadii is set to a value, this will be the radius of any coordinate. If fixedRadii is zero, any radius will be undefined in the new set.
+ */
+function expandCoordinateSet(coordinateSet, expand, fixedRadii)	{	// Assuming the set to travel clockwise
+	var newCoordinates = new Array();
+
+	var len = coordinateSet.length;
+	
+	for(var i=len; i<len*2; i++)	{
+		
+		if (expand!=0)	{
+			// This line:
+			var alpha1 = getAngleOfLine(coordinateSet[(i)%len][0],coordinateSet[(i+1)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i+1)%len][1]);
+			var L1x1 = translateXByAngle(coordinateSet[(i)%len][0],alpha1+Math.PI/2,expand);
+			var L1x2 = translateXByAngle(coordinateSet[(i+1)%len][0],alpha1+Math.PI/2,expand);
+			var L1y1 = translateYByAngle(coordinateSet[(i)%len][1],alpha1+Math.PI/2,expand);
+			var L1y2 = translateYByAngle(coordinateSet[(i+1)%len][1],alpha1+Math.PI/2,expand);
+
+			// Previous line
+			var alpha2 = getAngleOfLine(coordinateSet[(i-1)%len][0],coordinateSet[(i)%len][0],coordinateSet[(i-1)%len][1],coordinateSet[(i)%len][1]);
+			var L2x1 = translateXByAngle(coordinateSet[(i-1)%len][0],alpha2+Math.PI/2,expand);
+			var L2x2 = translateXByAngle(coordinateSet[(i)%len][0],alpha2+Math.PI/2,expand);
+			var L2y1 = translateYByAngle(coordinateSet[(i-1)%len][1],alpha2+Math.PI/2,expand);
+			var L2y2 = translateYByAngle(coordinateSet[(i)%len][1],alpha2+Math.PI/2,expand);
+		
+			var intersect = intersectionOfLines(L1x1,L1x2,L1y1,L1y2, L2x1,L2x2,L2y1,L2y2);
+		
+			newCoordinates[i%len] = intersect;
+		} else {
+			newCoordinates[i%len] = new Array(coordinateSet[i%len][0],coordinateSet[i%len][1]);
+		}
+
+		if (fixedRadii==undefined)	{
+			if (coordinateSet[i%len][2])	{
+				var inwardsAngleFactor = getInsideAngleBetweenLines(coordinateSet[(i)%len][0],coordinateSet[(i-1)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i-1)%len][1],coordinateSet[(i)%len][0],coordinateSet[(i+1)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i+1)%len][1]) >=0 ? 1 : -1;
+				newCoordinates[i%len][2] = coordinateSet[i%len][2]+expand*inwardsAngleFactor > 0 ? coordinateSet[i%len][2]+expand*inwardsAngleFactor : 0;
+			}
+		} else if (fixedRadii!=0)	{
+			newCoordinates[i%len][2] = fixedRadii;
+		}
+	}
+	
+	return newCoordinates;
+}
+
+/**
+ * Returns the angle between two lines given by two coordinates each.
+ */
+function getInsideAngleBetweenLines(L1x1,L1x2,L1y1,L1y2, L2x1,L2x2,L2y1,L2y2)	{
+	var alpha1 = getAngleOfLine(L1x1,L1x2,L1y1,L1y2);
+	var alpha2 = getAngleOfLine(L2x1,L2x2,L2y1,L2y2);
+	var angleDiff = alpha2-alpha1;
+	if (angleDiff < -Math.PI) {
+		angleDiff+= 2*Math.PI;
+	} else if (angleDiff > Math.PI)	{
+		angleDiff-= 2*Math.PI;
+	}
+
+	return angleDiff;
+}

@@ -130,6 +130,9 @@ bool SkaarhojBI8::begin(uint8_t address, bool reverseButtons, bool extendedBicol
 void SkaarhojBI8::usingB1alt()	{
 	_B1Alt=true;	
 }
+void SkaarhojBI8::disableColorCache(bool disable)	{
+	_disableColorCache = disable;
+}
 bool SkaarhojBI8::isOnline() {
 	return _buttonMux.init();	// It's not necessary to init the board for this - but it doesn't harm and is most easy...
 }
@@ -214,6 +217,16 @@ void SkaarhojBI8::setColorBalanceRGB(uint8_t colorNumber, uint8_t redPart, uint8
 		_colorBalanceBlue[colorNumber] = bluePart;
 	}
 }
+uint8_t SkaarhojBI8::getColorRed(uint8_t colorNumber)	{
+	return _colorBalanceRed[colorNumber];
+}
+uint8_t SkaarhojBI8::getColorGreen(uint8_t colorNumber) {
+	return _colorBalanceGreen[colorNumber];
+}
+uint8_t SkaarhojBI8::getColorBlue(uint8_t colorNumber) {
+	return _colorBalanceBlue[colorNumber];
+}
+
 void SkaarhojBI8::setDefaultColor(uint8_t defaultColorNumber) {
 	if (_validColorNumber(defaultColorNumber))	_defaultColorNumber = defaultColorNumber;
 }
@@ -333,7 +346,7 @@ bool SkaarhojBI8::isButtonIn(uint8_t buttonNumber, uint16_t allButtonsState)	{
 // Private methods:
 
 void SkaarhojBI8::_writeButtonLed(uint8_t buttonNumber, uint8_t color)  {
-	if (_validColorNumber(color) && _validButtonNumber(buttonNumber) && _buttonColorCache[(buttonNumber-1)] != color)		{
+	if (_validColorNumber(color) && _validButtonNumber(buttonNumber) && ((_buttonColorCache[(buttonNumber-1)] != color) || _disableColorCache))		{
 		_buttonColorCache[(buttonNumber-1)] = color;
 		
 		uint8_t isNormal = _reverseButtons ? 0 : 1;

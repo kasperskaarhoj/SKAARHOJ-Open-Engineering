@@ -61,6 +61,7 @@ class SkaarhojBI8
 	bool _debugMode;
 	bool _oldBI8;
 	bool _RGBbuttons;
+	bool _disableColorCache;
 
   public:
 	SkaarhojBI8();
@@ -70,10 +71,14 @@ class SkaarhojBI8
 	bool isOnline();
 	bool isRGBboard();
 	void usingB1alt();
+	void disableColorCache(bool disable);
 	void debugMode();
 	void setButtonType(uint8_t type);
 	void setColorBalance(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart);
 	void setColorBalanceRGB(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart, uint8_t bluePart);
+	uint8_t getColorRed(uint8_t colorNumber);
+	uint8_t getColorGreen(uint8_t colorNumber);
+	uint8_t getColorBlue(uint8_t colorNumber);
 	void setDefaultColor(uint8_t defaultColorNumber);
 	void setButtonColor(uint8_t buttonNumber, uint8_t colorNumber);
 	void setButtonColorsToDefault();

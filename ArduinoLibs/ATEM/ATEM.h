@@ -56,6 +56,7 @@ class ATEM
 
 	uint16_t _localPacketIdCounter;  	// This is our counter for the command packages we might like to send to ATEM
 	boolean _hasInitialized;  			// If true, the initial reception of the ATEM memory has passed and we can begin to respond during the runLoop()
+	boolean _isConnected;
 	unsigned long _lastContact;			// Last time (millis) the switcher sent a packet to us.
 	unsigned long _isConnectingTime;	// Set to millis() after the connect() function was called - and it will force runLoop() to finish the connection session.
 
@@ -99,6 +100,7 @@ class ATEM
     void connect();
     void runLoop();
 	bool isConnectionTimedOut();
+	bool isConnected();
 	void delay(const unsigned int delayTimeMillis);
 	uint16_t getSessionID();
 
@@ -189,6 +191,7 @@ class ATEM
 	void changeDVESettingsTemp_RunKeyFrame(uint8_t runType);
 	void changeDVESettingsTemp_Rate(uint8_t rateFrames);
 	void changeKeyerMask(uint16_t topMask, uint16_t bottomMask, uint16_t leftMask, uint16_t rightMask);
+	void changeKeyerMask(uint8_t keyer, uint16_t topMask, uint16_t bottomMask, uint16_t leftMask, uint16_t rightMask);
 	void changeDownstreamKeyMask(uint8_t keyer, uint16_t topMask, uint16_t bottomMask, uint16_t leftMask, uint16_t rightMask);
 	
 	void changeAudioChannelMode(uint16_t channelNumber, uint8_t mode);

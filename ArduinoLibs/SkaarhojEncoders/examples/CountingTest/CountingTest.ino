@@ -15,7 +15,8 @@ void setup() {
 
   Wire.begin();
   encoders.begin(5);
-  encoders.serialOutput(1);
+  encoders.serialOutput(0);
+//  encoders.setStateCheckDelay(0);
 }
 
 
@@ -24,7 +25,7 @@ void loop() {
   for(uint8_t i=0; i<5; i++)  {
     int encValue = encoders.state(i,1000);
     if (encValue)  {
-   //    Serial << F("Encoder ") << i << F(": ") << encValue << "\n"; 
+       Serial << F("Enc ") << i << F(": ") << encValue << ((encValue==1 || encValue==-1)? String(" Count: ")+String(encoders.lastCount(i)) : String("") )<< "\n"; 
     }
   }
 }

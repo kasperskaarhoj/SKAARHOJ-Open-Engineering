@@ -1,0 +1,2122 @@
+/***************************************************************
+ *  (c) 2014 SKAARHOJ Engineering, www.skaarhoj.com
+ *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
+ *
+ *  This script is Open Source under GNU/GPL license. 
+ *  See bottom for more details.
+ *
+ *  Licensed to Schaeffer AG for inclusion with Front Panel Designer.
+ ***************************************************************/
+/*************************************************************
+ * This is a JavaScript program written for a software called 
+ * Front Panel Designer made by Schaeffer AG. 
+ * Front Panel Designer is a CAD application for design and 
+ * online ordering of aluminum panels and this script will create 
+ * several such panels based on input parameters. The panels will 
+ * form a full enclosure when assembled.
+ *
+ * The enclosures are based on a front and back panel with a free form
+ * defined by a set of coordinates. The sides of the enclosure follows
+ * from this free form and may have bends as well as housing profiles 
+ * or overlaps to hold them together.
+ *
+ * See http://skaarhoj.com/schaeffer/ for latest version, other
+ * tools and training resources published by SKAARHOJ K/S.
+ *
+ * - kasper
+ **************************************************************/
+
+
+
+/* 
+
+	TODO: Maybe see if assembly slots can be combined into one or two - seems it may be much cheaper.
+	TODO: Implement sanity check of coordinate sets? For instance, make sure all has the right data type, that x and y is provided etc.
+	TODO: After tests, maybe see if C_assemblySlotTolerance can/should be smaller?
+*/
+
+
+
+/***************************************
+ * Global Settings for enclosure creation.
+ * Adapt to your needs for full flexibility
+ * (Alternatively, use the preset functions below)
+ *
+ * Terminology: "End panels" refers to the "front" and "back" panels generated while "Side panels" refers to the arbitrary number of side panels. Depending on the final orientation of the enclosure this may seem natural or not.
+ *
+ * All measures in mm. (25.4 mm = 1 inch)
+ ***************************************/
+
+// Depth of enclosure (outer measures):
+// Width and Height depends on the coordinates for the side profile, see later
+var C_depth = 150;
+
+// Thickness of plates: 2, 2.5, 3, 4 (not available in all colors)
+var C_sideDefaultThickness = 2.5;		// Default thickness of the side panels. May be overridden in the coordinate sets if using housing profiles.
+var C_endsThickness = 4;				// Thickness of the end panels (front/back) of the enclosure
+var C_sideColor = elox_natural;			// Color of side panels
+var C_endsColor = elox_natural;			// Color of the end panels
+
+var C_endsMode = 3;					// How much the end panels are overlapping the perimeter of the sides. 1 is a good value if using housing profiles. 0 gives an end panel which is completely flush with the sides. Values <0 (like -1) will provide an internally placed end (in which case the use of Housing Profiles will not work out. Also, the <0 mode assumes that all sides has the same thickness = C_sideDefaultThickness)
+var C_assemblySlotDepth = 1;		// Depth in mm of the cavities in the ends which holds the side panels into place. For C_endsMode>=0 only
+var C_sideCornerRadius = 2;			// Corner radius of the end panels. 2 is a good value if using housing profiles. Use 0 for C_endsMode <0
+
+var C_addGuideEngravings = true;	// If true, adds guide engravings in orange
+var C_dryRun = false;				// If true, creates only the front panel (if false, it creates both front, back and all sides!). Useful for testing coordinate sets until ready for full generation of panels.
+
+var C_createOrder = false;			// If true, will create an order and add the accessories (profiles, assembly kits etc.)
+var C_orderBlackItems = false;		// If true, will order accessories in black instead of natural color.
+
+var C_addEdgeGrinding = true;		// You probably want edges grinded on the end profiles! Otherwise they are ugly from tool marks and often very sharp.
+
+var C_panelNamesPrefix = "";		// A panel name prefix
+var C_panelNamesSuffix = "";		// A panel name suffix
+
+var C_wings = [];					// Special feature: Adding the front/back as "wings" to a side panel. It's an array with two integers. The first one is the index of the coordinate set starting out the side which is where the wings are placed. The second value is if this side is split into multiple junctions, then it will indicate which part of the side. Notice, C_endsMode must be -1 for this whole thing to work properly and wings can furthermore only be added successfully to sides which has "sharp" angles (positive values) to adjacent sides, otherwise the DXF contour will not render at all. Works only with C_endsMode<0
+var C_wings_dryRun = false;			// If true, wings will render only the HPGL outline which can be useful to judge the feasibility of the whole operation at first
+var C_rackEarsSideIndex = -1;		// Special feature: Adding rack ears to a given side, given by the index of the coordinate set starting out the side which is where the rack ears should be are placed.
+var C_rackEarsSideExtraWidth = 40;		// If you want to create a true 19" unit, make sure 2* this value + C_depth equals 483mm. A good choice is to set this value at 23mm and C_width = 437 => 23*2+437=483mm (1U = 44.45mm or 1.75inch)
+
+/***************************************
+ * Coordinate set. Defines the form of the end profiles. 
+ * Format pr entry: [x,y,[HBArray],[joints],profile,[jointsThickness]]. x,y is mandatory, the rest are optional.
+ * Coordinate sets (x and y) must be listed clockwise. They are defined for the front panel.
+ * [HBArray] is an array of locations for housing brackets on each line between two coordinates (the current and next). The value is the outer distance from the coordinate along the side. If negative, it's a stud on the side panel.
+ * [joints] is the location of zero, one or more panel joints on the side. If a value is negative, the top/bottom overlay in the joint is reversed.
+ * If "profile" is larger than zero, a Housing Profile #1 will be placed in this coordinate (must be very close to 90 to make sense.) and the following panel will have the thickness of the value (2, 2.5, 3, 4 is allowed)
+ * NOTICE: If any bending angle is smaller than 90 degrees (and btw. it cannot in any case be smaller than 60!) the panel thickness of that side cannot be larger than 2.5 (otherwise the bevel tool will not accept it.)
+ *
+ * All measures in mm. (25.4 mm = 1 inch)
+ ***************************************/
+
+// Demo case:
+var C_coordinates = [
+[-10,-10,[30]],
+[0,74,[],[],3],
+[30,70,[20]],
+[60,90,[20,40],[30]],
+[132,65,[],[],4],
+[120,30,[15]],
+[90,30,[15],[]],
+[90,-10,[20,-70],[-50,80],0,[0,2.0]]
+];
+
+//rotateCoordinateSet(C_coordinates,-17);
+
+
+
+
+
+
+
+
+
+
+
+// TEST - "C201:"
+/*
+var C_depth = 316;
+var C_sideDefaultThickness = 2.5;
+var C_endsThickness = 4;
+var C_endsMode = 1;
+var C_assemblySlotDepth = 1;
+var C_sideCornerRadius = 2;	
+var C_panelNamesPrefix = "C201_";
+var C_panelNamesSuffix = "(47xx)";
+
+var C_coordinates = [
+[0,0,[],[],2.5],
+[0,82,[],[],4],
+[148,82,[],[],2.5],
+[148,35,[],[],2.5],
+[148-16,35],
+[16,0]
+];
+*/
+
+
+
+
+
+// TEST - "Standard Housing Profile 1 box"
+/* Corresponds to this configuration in SchaefferHousing.js:
+
+var C_type = 2;
+var C_housingProfile2Top = false;
+var C_housingProfile2Left = false;
+var C_housingProfile2Right = false;
+var C_housingProfile2Bottom = false;
+var C_depth = 100;
+var C_height = 45;	
+var C_depth = 150;
+var C_sideDefaultThickness = new Array(
+		3, 		// Front
+		2.5, 	// Top
+		3, 	// Back
+		2.5, 	// Bottom
+		2.5, 	// Left (For C_type==2 only)
+		2.5		// Right (For C_type==2 only)
+	);
+var C_sideColor = new Array(
+		elox_natural, 		// Front
+		elox_blue, 		// Top
+		elox_natural, 	// Back
+		elox_blue, 		// Bottom
+		elox_blue, 		// Left (For C_type==2 only)
+		elox_blue		// Right (For C_type==2 only)
+	);
+var C_numberOfHousingBracketsFront = new Array(2,2,1,1); // (Top, Bottom, Left, Right). 
+var C_numberOfHousingBracketsBack = new Array(2,2,1,1);  // (Top, Bottom, Left, Right). 
+var C_useStudsForHousingBracketsOnFront = false;
+var C_useStudsForHousingBracketsOnBack = false;
+var C_useAssemblySlotsFront = new Array(true, true, true, true);	// (Top, Bottom, Left, Right). If true, cavities are used on the front panel to fit the top, bottom, left and right plates.
+var C_useAssemblySlotsBack = new Array(true, true, true, true);	// (Top, Bottom, Left, Right). If true, cavities are used on the back panel to fit the top, bottom, left and right plates.
+var C_depthOfCavitiesForSlotsFront = new Array(0,0,0,0);	// (Top, Bottom, Left, Right). Depth of cavity in top/bottom/left/right plates, front side
+var C_depthOfCavitiesForSlotsBack = new Array(0,0,0,0);	// (Top, Bottom, Left, Right). Depth of cavity in top/bottom/left/right plates, back side
+var C_assemblySlotToleranceFront = new Array(0,0,0,0);	// (Top, Bottom, Left, Right). Assembly Slot Depths, front side
+var C_assemblySlotToleranceBack = new Array(0,0,0,0);				// (Top, Bottom, Left, Right). Assembly Slot Depths, back side
+var C_extraFrontWidth = 0;
+var C_extraFrontHeight = 0;
+var C_rackEars = false;
+var C_roundFrontCorners = true;
+var C_addGuideEngravings = true;
+var C_sideExpansionOffset = new Array(-1,-1,-1,-1);
+var C_housingProfileRightHeight = 0;
+
+
+*/
+/*
+var C_depth = 150;
+var C_sideDefaultThickness = 2.5;
+var C_endsThickness = 3;
+var C_endsMode = 1;
+var C_assemblySlotDepth = 0;
+var C_sideCornerRadius = 2;
+var C_sideColor = elox_blue;
+var C_endsColor = elox_natural;
+
+var C_coordinates = [
+[0,0,[21.5],[],C_sideDefaultThickness],
+[0,43,[35.67, 98-35.67],[],C_sideDefaultThickness],
+[98,43,[21.5],[],C_sideDefaultThickness],
+[98,0,[35.67, 98-35.67],[],C_sideDefaultThickness]
+];
+
+*/
+
+
+/*
+
+// Typical console:
+var C_depth = 150;
+var C_sideDefaultThickness = 2.5;
+var C_endsThickness = 3;
+var C_endsMode = 1;
+var C_assemblySlotDepth = 1;
+var C_sideCornerRadius = 2;
+var C_sideColor = elox_natural;
+var C_endsColor = elox_natural;
+
+
+var C_coordinates = [
+[0,0,[10]],
+[1.5,25],
+[14,60,[],[],C_sideDefaultThickness],
+[85,35,[-10]],
+[180,25,[],[],C_sideDefaultThickness],
+[177.5,0,[45,177-45],[-15,177-15]]
+];
+
+*/
+
+
+/*
+// Console from two pieces! (Wings)
+var C_depth = 150;
+var C_sideDefaultThickness = 2.5;
+var C_endsThickness = 2.5;
+var C_endsMode = -1;
+var C_sideCornerRadius = 0;
+var C_sideColor = elox_natural;
+var C_endsColor = elox_natural;
+var C_wings = [5,1];	// Side and end thickness values where it's connected must match	[5,1] is bottom plate attachment.
+var C_rackEarsSideIndex = 3;
+
+var C_coordinates = [
+[0,0,[10]],
+[1.5,25],
+[14,60],
+[85,35,[-10]],
+[180,25],
+[177.5,0,[45,177-45],[-15,177-15]]
+];
+
+*/
+
+
+// Rack unit 1 (two pcs):
+/*
+var C_depth = 437;
+var C_sideDefaultThickness = 2.5;
+var C_endsThickness = 2.5;
+var C_endsMode = -1;
+var C_sideCornerRadius = 0;
+var C_sideColor = elox_natural;
+var C_endsColor = elox_natural;
+var C_wings = [1,1];
+var C_rackEarsSideIndex = 2;
+var C_rackEarsSideExtraWidth = 23;
+
+var C_coordinates = [
+[0,0],
+[0,44,[],[-15,150-15]],
+[150,44],
+[150,0,[25,150-25]]
+];
+*/
+
+// Rack unit 2 (one pcs):
+/*
+var C_depth = 437;
+var C_sideDefaultThickness = 2.5;
+var C_endsThickness = 2.5;
+var C_endsMode = -1;
+var C_sideCornerRadius = 0;
+var C_sideColor = elox_natural;
+var C_endsColor = elox_natural;
+var C_wings = [1,1];
+var C_rackEarsSideIndex = 2;
+var C_rackEarsSideExtraWidth = 23;
+
+var C_coordinates = [
+[0,0],
+[0,44,[],[-15]],
+[150,44],
+[150,0,[25,150-25]]
+];
+*/
+
+// Small box with only bottom:
+/*
+var C_depth = 100;
+var C_sideDefaultThickness = 2;
+var C_endsThickness = 3;
+var C_endsMode = 1;
+var C_assemblySlotDepth = 1;
+var C_sideCornerRadius = 2;
+var C_sideColor = elox_natural;
+var C_endsColor = elox_natural;
+
+var C_coordinates = [
+[0,0],
+[0,30,[60/2]],
+[60,30],
+[60,0,[60/2],[-10,60-10]]
+];
+
+*/
+
+
+// Small box with only bottom, with a tilt (could be post-modified so the bottom assembly slot is removed and the bottom lid is a bit less wide)
+/*
+var C_depth = 150;
+var C_sideDefaultThickness = 2;
+var C_endsThickness = 3;
+var C_endsMode = 1;
+var C_assemblySlotDepth = 1;
+var C_sideCornerRadius = 2;
+var C_sideColor = elox_natural;
+var C_endsColor = elox_natural;
+
+var C_coordinates = [
+[0,0,[40]],
+[10,50],
+[110,30,[10]],
+[107,0,[50],[-10,107-10]]
+];
+
+*/
+
+
+
+
+// Vintage cloud box:
+/*
+var C_depth = 448;
+var C_sideDefaultThickness = 4;
+var C_endsThickness = 2;
+var C_endsMode = -1;
+var C_sideCornerRadius = 0;
+var C_sideColor = elox_black;
+var C_endsColor = elox_natural;
+
+var C_coordinates = [
+[0,0,[-70,-166]],
+[298,0],
+[298,-16,[],[-105],0,[2.5]],
+[298-105-7.5,-16,[30,70]],
+[298-105-7.5,-16-89,[30,118-30]],
+[298-105-7.5-118,-16-89,[30]],
+[298-105-7.5-118,-16-89+55,[],[67.5-15]],
+[0,-16-89+55,[15]]
+];
+*/
+
+// Test geometrical shapes:
+
+/*
+var C_depth = 150;
+var C_sideDefaultThickness = 2.5;
+var C_endsThickness = 4;
+var C_endsMode = 1;
+var C_assemblySlotDepth = 1.5;
+var C_sideCornerRadius = 2;
+var C_sideColor = elox_black;
+var C_endsColor = elox_black;
+
+//var C_wings = [2];
+
+// Square:
+var C_coordinates = [
+[0,0,[-20]],
+[0,40],
+[40,40,[-20]],
+[40,0,[],[10,-30]]
+];
+
+
+// Plus
+var C_coordinates = [
+[0,0],
+[0,30,[],[10]],
+[-30,30],
+[-30,60],
+[0,60],
+[0,90,[15]],
+[30,90],
+[30,60],
+[60,60,[15]],
+[60,30],
+[30,30],
+[30,0,[10]]
+];
+
+
+// Triangle:
+var C_coordinates = new Array(new Array(0,0,[],[15,25]));
+C_coordinates[1] = new Array(Math.cos(deg2rad(60))*40,Math.sin(deg2rad(60))*40,[20]);
+C_coordinates[2] = new Array(C_coordinates[1][0]+Math.cos(-deg2rad(60))*40,C_coordinates[1][1]+Math.sin(-deg2rad(60))*40);
+
+// Star:
+var C_coordinates = new Array();
+for(var i=0;i<5;i++)	{
+	C_coordinates[i*2] = new Array(Math.cos(deg2rad(-90-(360/5)*i))*22,Math.sin(deg2rad(-90-(360/5)*i))*22,[],i==0?[10]:[]);
+	C_coordinates[i*2+1] = new Array(Math.cos(deg2rad(-90-(360/5)*i-(360/10)))*40,Math.sin(deg2rad(-90-(360/5)*i-(360/10)))*40,[],i==0?[10]:[]);
+}
+C_coordinates[2][2]=[10];
+C_coordinates[6][2]=[10];
+*/
+
+/**********************************************************************
+ * NO USER SETTING BELOW!
+ **********************************************************************/
+
+/*
+Forward bend (90 degrees) radii, measured on a 500mm wide sample:
+
+4mm, @edges:
+0.5
+0.48
+0.475
+0.475
+
+4mm, @center:
+-0.05 (!)
+0.25
+
+2.5mm, @edges:
+0.6
+0.6
+*/
+
+
+// Constants:
+var C_forwardBendRadius = 0.6;	// Assumed bending radius, forward
+var C_backwardBendRadius = 0.1;	// Assumed bending radius, backwards
+var C_assemblySlotTolerance = 0.15;
+var C_panelHeightToleranceAtHousingProfileEnds = 0;
+var C_distanceBetweenThreadsOnJoints = 100;
+var C_jointOverlap = 7;
+var C_jointOverlayThickness = 1;
+
+// A "profile 1" engraving, coordinate set:
+var profile1Coordinates = [
+[0,0,2],
+[-16,0,1],
+[-16,-1],
+[-10,-1],
+[-10,-1.6-1],
+[-13,-1.6-1,1],
+[-13,-4],
+[-11.5,-5],
+[-11.5,-4],
+[-11.5+2,-4],
+[-11.5+2,-5.2-1.3],
+[-11.5+2+1,-5.2-1.3],
+[-11.5+2+1,-5.2-1.3],
+
+[-5.2-2,-5.2],
+[-5.2-2,-5.2+0.3],
+[-5.2-2-1,-5.2+0.3+1],
+[-5.2-0.3-1,-5.2+2+1],
+[-5.2-0.3,-5.2+2],
+[-5.2+0.3,-5.2+2],
+[-5.2+0.3+1,-5.2+2+1],
+
+//[-5.2,-5.2],
+
+[-5.2+2+1,-5.2+0.3+1],
+[-5.2+2,-5.2+0.3],
+[-5.2+2,-5.2-0.3],
+[-5.2+2+1,-5.2-0.3-1],
+[-5.2+0.3+1,-5.2-2-1],
+[-5.2+0.3,-5.2-2],
+[-5.2,-5.2-2],
+
+[-5.2-1.3,-11.5+2+1],
+[-5.2-1.3,-11.5+2+1],
+[-5.2-1.3,-11.5+2],
+[-4,-11.5+2],
+[-4,-11.5],
+[-5,-11.5],
+[-4,-13],
+[-1.6-1,-13,1],
+[-1.6-1,-10],
+[-1,-10],
+[-1,-16],
+[0,-16,1]
+];
+
+
+
+
+
+var globalHousingBracketCount=0;
+var globalProfile1Count=0;
+
+
+
+
+
+
+/***************************************
+ *
+ * FUNCTIONS:
+ * (Nothing to edit or customize below)
+ *
+ ***************************************/
+
+
+/**
+ * Creates a DXF shape from input set of coordinates/radii
+ */
+function shapeFromCoordinates(coordinateSet)	{
+	var dxf = new DxfContour("dxf-canvas1", "", 5, 100, 0);
+	var len = coordinateSet.length;
+
+	for(var i=0; i<=len; i++)	{
+		if (i==0)	{
+			if (coordinateSet[0][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[0][0],coordinateSet[0][1], coordinateSet[len-1][0],coordinateSet[len-1][1], coordinateSet[1][0],coordinateSet[1][1], coordinateSet[0][2]);
+				dxf.Start(cornerCoordinates[4],cornerCoordinates[5]);
+			} else {	// none
+				dxf.Start(coordinateSet[0][0],coordinateSet[0][1]);
+			}
+		} else {
+			if (coordinateSet[(i%len)][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1], coordinateSet[(i-1)%len][0],coordinateSet[(i-1)%len][1], coordinateSet[(i+1)%len][0],coordinateSet[(i+1)%len][1], coordinateSet[(i%len)][2]);
+				dxf.LineTo(cornerCoordinates[2],cornerCoordinates[3]);
+				dxf.ArcToMP(cornerCoordinates[4],cornerCoordinates[5],cornerCoordinates[0],cornerCoordinates[1], cornerCoordinates[6]);
+			} else {	// none
+				dxf.LineTo(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1]);
+			}
+		}
+	}
+	
+	dxf.Finish();
+	
+	return dxf;
+}
+
+/**
+ * Creates a HPGL engraving from input set of coordinates/radii
+ */
+function hpglFromCoordinates(coordinateSet)	{
+	var hpgl = new HpglEngraving("hpgl", "", 5, 100);
+	hpgl.ChangePen(hpgl.DefinePen(engrave_pastel_orange,engraver_0_2mm));
+	var len = coordinateSet.length;
+
+	for(var i=0; i<=len; i++)	{
+		if (i==0)	{
+			if (coordinateSet[0][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[0][0],coordinateSet[0][1], coordinateSet[len-1][0],coordinateSet[len-1][1], coordinateSet[1][0],coordinateSet[1][1], coordinateSet[0][2]);
+				hpgl.Start(cornerCoordinates[4],cornerCoordinates[5]);
+			} else {	// none
+				hpgl.Start(coordinateSet[0][0],coordinateSet[0][1]);
+			}
+		} else {
+			if (coordinateSet[(i%len)][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1], coordinateSet[(i-1)%len][0],coordinateSet[(i-1)%len][1], coordinateSet[(i+1)%len][0],coordinateSet[(i+1)%len][1], coordinateSet[(i%len)][2]);
+				hpgl.LineTo(cornerCoordinates[2],cornerCoordinates[3]);
+				hpgl.ArcToMP(cornerCoordinates[4],cornerCoordinates[5],cornerCoordinates[0],cornerCoordinates[1], cornerCoordinates[6]);
+			} else {	// none
+				hpgl.LineTo(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1]);
+			}
+		}
+	}
+	
+	hpgl.Finish();
+	
+	return hpgl;
+}
+
+/**
+ * Calculates necessary coordinates for a rounded corner
+ */
+function roundedCorner(x,y, srcX,srcY, destX,destY, radius) {
+	var result = new Array(0,0,0,0,0,0,1);	// centerX, centerY, srcAttachX, srcAttachY, destAttachX, destAttachY, rotationDirection
+	
+	var alpha1 = getAngleOfLine(x,srcX,y,srcY);
+	var alpha2 = getAngleOfLine(x,destX,y,destY);
+	
+//	Print("alpha1="+alpha1/Math.PI*180+"\n");
+//	Print("alpha2="+alpha2/Math.PI*180+"\n");
+	
+	var angleDiff = alpha2-alpha1;
+	if (angleDiff < -Math.PI) {
+		angleDiff+= 2*Math.PI;
+	} else if (angleDiff > Math.PI)	{
+		angleDiff-= 2*Math.PI;
+	}
+	
+	var halfAngle = angleDiff/2;
+//	Print("halfAngle="+halfAngle/Math.PI*180+"\n");
+	
+	var distFromXYpoint = Math.abs(radius / Math.sin(halfAngle));
+//	Print("distFromXYpoint="+distFromXYpoint+"\n");
+
+	var travelUpOnEachLine = Math.cos(halfAngle)*distFromXYpoint;
+//	Print("travelUpOnEachLine="+travelUpOnEachLine+"\n");
+
+	var angleOfCenterLine = alpha1+halfAngle;
+
+
+	result[0] = translateXByAngle(x,angleOfCenterLine,distFromXYpoint);
+	result[1] = translateYByAngle(y,angleOfCenterLine,distFromXYpoint);
+
+	result[2] = translateXByAngle(x,alpha1,travelUpOnEachLine);
+	result[3] = translateYByAngle(y,alpha1,travelUpOnEachLine);
+	
+	result[4] = translateXByAngle(x,alpha2,travelUpOnEachLine);
+	result[5] = translateYByAngle(y,alpha2,travelUpOnEachLine);
+	
+	result[6] = halfAngle < 0 ? 1 : -1;
+	
+	return result;
+}
+
+/**
+ * Returns the angle of a line given by it's x/y coordinates (two points)
+ */
+function getAngleOfLine(x1,x2,y1,y2)	{
+	return (x2-x1)==0 ? (y2-y1 < 0?-1:1)*Math.PI/2 : Math.atan((y2-y1)/(x2-x1))+(x2-x1 < 0 ? Math.PI: 0);
+}
+
+/**
+ * Translates an X value in 2D a certain distance at a certain angle
+ */
+function translateXByAngle(x,alpha,dist)	{
+	return rounding(x+Math.cos(alpha)*dist);
+}
+
+/**
+ * Translates a Y value in 2D a certain distance at a certain angle
+ */
+function translateYByAngle(y,alpha,dist)	{
+	return rounding(y+Math.sin(alpha)*dist);
+}
+
+/**
+ * Calculates the intersection coordinate for two lines given by their coordinates of two points on that line.
+ */
+function intersectionOfLines(L1x1,L1x2,L1y1,L1y2, L2x1,L2x2,L2y1,L2y2)	{
+	// Vectors set equal:
+	//	L1x1 + t1 * (L1x2-L1x1) = L2x1 + t2 * (L2x2-L2x1)
+	//	L1y1 + t1 * (L1y2-L1y1) = L2y1 + t2 * (L2y2-L2y1)
+	// => (matrix equation)
+	//	t1 * (L1x2-L1x1) - t2 * (L2x2-L2x1) = L2x1-L1x1
+	//	t1 * (L1y2-L1y1) - t2 * (L2y2-L2y1) = L2y1-L1y1
+
+	// Determinant from matrix equation, leading to t1:
+	var c1 = L2x1-L1x1;
+	var c2 = L2y1-L1y1;
+	var a1 = L1x2-L1x1;
+	var a2 = L1y2-L1y1;
+	var b1 = L2x2-L2x1;
+	var b2 = L2y2-L2y1;
+	var t1 = (c1*b2-c2*b1)/(a1*b2-a2*b1);
+
+	// Result, using only t1 (not necessary with t2)
+	var result = new Array(L1x1 + t1 * (L1x2-L1x1), L1y1 + t1 * (L1y2-L1y1));
+	
+	// Result will not be defined for parallel or co-incident lines!
+
+	return result;
+}
+
+/**
+ * Expands (or shrinks if "expand" is negative) a set of coordinates so that a line between two points is moved "expand" mm by it's normal vector.
+ * If "expand" is zero, a copy of the coordinate set will be returned, possibly with the effect of "fixedRadii"
+ * If radii are found in the coordinate set, they are expanded also as long as "fixedRadii" remains undefined. If fixedRadii is set to a value, this will be the radius of any coordinate. If fixedRadii is zero, any radius will be undefined in the new set.
+ */
+function expandCoordinateSet(coordinateSet, expand, fixedRadii)	{	// Assuming the set to travel clockwise
+	var newCoordinates = new Array();
+
+	var len = coordinateSet.length;
+	
+	for(var i=len; i<len*2; i++)	{
+		
+		if (expand!=0)	{
+			// This line:
+			var alpha1 = getAngleOfLine(coordinateSet[(i)%len][0],coordinateSet[(i+1)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i+1)%len][1]);
+			var L1x1 = translateXByAngle(coordinateSet[(i)%len][0],alpha1+Math.PI/2,expand);
+			var L1x2 = translateXByAngle(coordinateSet[(i+1)%len][0],alpha1+Math.PI/2,expand);
+			var L1y1 = translateYByAngle(coordinateSet[(i)%len][1],alpha1+Math.PI/2,expand);
+			var L1y2 = translateYByAngle(coordinateSet[(i+1)%len][1],alpha1+Math.PI/2,expand);
+
+			// Previous line
+			var alpha2 = getAngleOfLine(coordinateSet[(i-1)%len][0],coordinateSet[(i)%len][0],coordinateSet[(i-1)%len][1],coordinateSet[(i)%len][1]);
+			var L2x1 = translateXByAngle(coordinateSet[(i-1)%len][0],alpha2+Math.PI/2,expand);
+			var L2x2 = translateXByAngle(coordinateSet[(i)%len][0],alpha2+Math.PI/2,expand);
+			var L2y1 = translateYByAngle(coordinateSet[(i-1)%len][1],alpha2+Math.PI/2,expand);
+			var L2y2 = translateYByAngle(coordinateSet[(i)%len][1],alpha2+Math.PI/2,expand);
+		
+			var intersect = intersectionOfLines(L1x1,L1x2,L1y1,L1y2, L2x1,L2x2,L2y1,L2y2);
+		
+			newCoordinates[i%len] = intersect;
+		} else {
+			newCoordinates[i%len] = new Array(coordinateSet[i%len][0],coordinateSet[i%len][1]);
+		}
+
+		if (fixedRadii==undefined)	{
+			if (coordinateSet[i%len][2])	{
+				var inwardsAngleFactor = getInsideAngleBetweenLines(coordinateSet[(i)%len][0],coordinateSet[(i-1)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i-1)%len][1],coordinateSet[(i)%len][0],coordinateSet[(i+1)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i+1)%len][1]) >=0 ? 1 : -1;
+				newCoordinates[i%len][2] = coordinateSet[i%len][2]+expand*inwardsAngleFactor > 0 ? coordinateSet[i%len][2]+expand*inwardsAngleFactor : 0;
+			}
+		} else if (fixedRadii!=0)	{
+			newCoordinates[i%len][2] = fixedRadii;
+		}
+	}
+	
+	return newCoordinates;
+}
+
+/**
+ * Returns the angle between two lines given by two coordinates each.
+ */
+function getInsideAngleBetweenLines(L1x1,L1x2,L1y1,L1y2, L2x1,L2x2,L2y1,L2y2)	{
+	var alpha1 = getAngleOfLine(L1x1,L1x2,L1y1,L1y2);
+	var alpha2 = getAngleOfLine(L2x1,L2x2,L2y1,L2y2);
+	var angleDiff = alpha2-alpha1;
+	if (angleDiff < -Math.PI) {
+		angleDiff+= 2*Math.PI;
+	} else if (angleDiff > Math.PI)	{
+		angleDiff-= 2*Math.PI;
+	}
+
+	return angleDiff;
+}
+
+/**
+ * This analyses a coordinate set to find out what the left most and bottom most point will be (taking any radius of a point into account as well, which is the tricky thing here.)
+ */
+function getOutlineXYoffset(coordinateSet)	{
+	var result = new Array(0,0);
+	var len = coordinateSet.length;
+	var first = true;
+
+	for(var i=0; i<len; i++)	{
+		var forwardBend = getInsideAngleBetweenLines(coordinateSet[i][0],coordinateSet[(i+len-1)%len][0],coordinateSet[i][1],coordinateSet[(i+len-1)%len][1],coordinateSet[i][0],coordinateSet[(i+1)%len][0],coordinateSet[i][1],coordinateSet[(i+1)%len][1]) >=0 ? true : false;
+		
+		if (forwardBend)	{
+			if (first)	{
+				first = false;
+				if (coordinateSet[i][2])	{
+					var	cornerData = roundedCorner(coordinateSet[i][0],coordinateSet[i][1], coordinateSet[(i-1+len)%len][0],coordinateSet[(i-1+len)%len][1], coordinateSet[(i+1+len)%len][0],coordinateSet[(i+1+len)%len][1], coordinateSet[i][2]);
+					result[0] = cornerData[0]-coordinateSet[i][2];
+					result[1] = cornerData[1]-coordinateSet[i][2];
+				} else {
+					result[0] = coordinateSet[i][0];
+					result[1] = coordinateSet[i][1];
+				}
+			} else {
+				if (coordinateSet[i][2])	{
+					var	cornerData = roundedCorner(coordinateSet[i][0],coordinateSet[i][1], coordinateSet[(i-1+len)%len][0],coordinateSet[(i-1+len)%len][1], coordinateSet[(i+1+len)%len][0],coordinateSet[(i+1+len)%len][1], coordinateSet[i][2]);
+					result[0] = cornerData[0]-coordinateSet[i][2]<result[0] ? cornerData[0]-coordinateSet[i][2] : result[0];
+					result[1] = cornerData[1]-coordinateSet[i][2]<result[1] ? cornerData[1]-coordinateSet[i][2] : result[1];
+				} else {
+					result[0] = coordinateSet[i][0]<result[0] ? coordinateSet[i][0] : result[0];
+					result[1] = coordinateSet[i][1]<result[1] ? coordinateSet[i][1] : result[1];
+				}
+			}
+		}
+	}
+	
+	result[0]=-result[0];
+	result[1]=-result[1];
+	
+	return result;
+}
+
+/**
+ * Return length of a line between two points
+ */
+function getLineLength(L1x1,L1x2,L1y1,L1y2)	{
+	return Math.sqrt(Math.pow(L1x1-L1x2,2)+Math.pow(L1y1-L1y2,2));
+}
+
+/**
+ * Rounding to 5 digits
+ */
+function rounding(input)	{
+	return Math.round(input*100000)/100000;
+}
+
+/**
+ * Analyses a coordinate set and generates a corresponding array of useful information when later various renderings are done.
+ */
+function bendingData(coordinateSet,defaultThickness)	{
+
+	// Expand/shrink the outline - just to get data easily for the bending radii constants:
+	var forwardSet = expandCoordinateSet(coordinateSet, -C_forwardBendRadius, 0);
+	var backwardSet = expandCoordinateSet(coordinateSet, C_backwardBendRadius, 0);
+	
+	var len = coordinateSet.length;
+	var result = new Array();
+	
+	for(var i=0; i<len; i++)	{
+
+			// true if the panel in this point is bend CW (forward)
+		var forwardBend = getInsideAngleBetweenLines(coordinateSet[i][0],coordinateSet[(i+len-1)%len][0],coordinateSet[i][1],coordinateSet[(i+len-1)%len][1],coordinateSet[i][0],coordinateSet[(i+1)%len][0],coordinateSet[i][1],coordinateSet[(i+1)%len][1]) >=0 ? true : false;
+
+		// For the upcoming calculation, chose the forward or backward set of coordinates based on bend direction:
+		var referenceSet = forwardBend ? forwardSet[i] : backwardSet[i];
+
+		// Now, calculates the end compensation value which is how much a side is shortened or extended due to the bend (For instance: Bending a panel forward 90 degrees adds 0.6 mm to it's final extend!)
+		var angle = getInsideAngleBetweenLines(coordinateSet[i][0],coordinateSet[(i+1)%len][0],coordinateSet[i][1],coordinateSet[(i+1)%len][1], coordinateSet[i][0],referenceSet[0],coordinateSet[i][1],referenceSet[1]);
+		var dist = getLineLength(coordinateSet[i][0],referenceSet[0],coordinateSet[i][1],referenceSet[1]);
+		var endCompensation = Math.cos(angle)*dist*(forwardBend?-1:1);
+
+		// Set results
+		result[i] = new Array(
+				forwardBend, 	// Forward bend true? (idx=0)
+				rounding(endCompensation), 	// The amount to shorten the side (idx=1)
+				getLineLength(coordinateSet[i][0],coordinateSet[(i+1)%len][0],coordinateSet[i][1],coordinateSet[(i+1)%len][1])	// Original (outer) side length:  (idx=2)
+			);
+	}
+	
+	// Now, traverse the result array again and make more convenience calculations:
+	for(var i=0; i<len; i++)	{
+
+			// New side length (when bend) (idx=3)
+		result[i][3] = result[i][2]+result[i][1]+result[(i+1)%len][1];
+
+			// Angle of line (radians) (idx=4)
+		result[i][4] = rounding(getAngleOfLine(coordinateSet[i][0],coordinateSet[(i+1)%len][0],coordinateSet[i][1],coordinateSet[(i+1)%len][1]));
+
+			// Center of the new side (idx=5) (assuming default thickness):
+		var centerDist = result[i][3]/2-result[i][1];
+		result[i][5] = new Array(translateXByAngle(coordinateSet[i][0],result[i][4],centerDist), translateYByAngle(coordinateSet[i][1],result[i][4],centerDist));
+		result[i][5][0] = translateXByAngle(result[i][5][0],result[i][4]-Math.PI/2,defaultThickness/2);
+		result[i][5][1] = translateYByAngle(result[i][5][1],result[i][4]-Math.PI/2,defaultThickness/2);
+		
+			// Angle between this line and previous line (radians):
+		result[i][6] = getInsideAngleBetweenLines(coordinateSet[(i)%len][0],coordinateSet[(i-1+len)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i-1+len)%len][1],coordinateSet[(i)%len][0],coordinateSet[(i+1)%len][0],coordinateSet[(i)%len][1],coordinateSet[(i+1)%len][1]);
+		
+			// Bevel angle of bend (if = Math.PI/2 then no bevel at all)
+		if (result[i][6]<0)	{
+			result[i][7] = Math.PI/2;	// 90 degress = no bevel at all.
+		} else if (result[i][6]<90/180*Math.PI)	{
+			result[i][7] = Math.PI/2/3;	// 30 degress - wide
+			result[i][8] = bevel_30;
+		} else if (result[i][6]<120/180*Math.PI)	{
+			result[i][7] = Math.PI/2/2;	// 45 degress - standard
+			result[i][8] = bevel_45;
+		} else {
+			result[i][7] = Math.PI/2/3*2;	// 60 degrees - standard
+			result[i][8] = bevel_60;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * Mirror panel in X:
+ */
+function mirrorXPanel(fp)	{
+	var width = fp.Width();
+	var height = fp.Height();
+//	Print(width+"--");
+//	Print(height+"--");
+	var els = fp.Elements();
+	els.forEach(function(el){
+		el.MoveTo(width-el.X(),el.Y());
+		el.MirrorX();
+	});
+}
+
+/**
+ * Mirror coordinate set in X:
+ */
+function mirrorXCoordinates(coordinateSet,panelWidth)	{
+	var len = coordinateSet.length;
+	
+	var result = new Array();
+	
+	for(var i=0; i<len; i++)	{
+		result[i] = new Array(panelWidth-coordinateSet[i][0],coordinateSet[i][1],coordinateSet[i][2]);
+	}
+	return result;
+}
+
+/**
+ * Merge two "parallel" coordinate sets by appending all coordinates from revCoords in reverse order to fwdCoords and returning it as a copy
+ */
+function mergeFwdRevCoordinates(fwdCoords,revCoords)	{
+	var result = new Array();
+	
+	var len = fwdCoords.length;
+	for(var i=0; i<len; i++)	{
+		result[i] = new Array(fwdCoords[i][0],fwdCoords[i][1],fwdCoords[i][2]);
+	}
+	
+	var lenInner = revCoords.length;
+	for(var i=lenInner-1; i>=0; i--)	{
+		result[len] = new Array(revCoords[i][0],revCoords[i][1],revCoords[i][2]);
+		len++;
+	}
+	
+	return result;
+	
+}
+
+/**
+ * Create order
+ */
+function createOrder()	{
+
+	// Housing profiles:
+	if (globalProfile1Count>0)	{
+		var profileLengths = C_depth-C_endsThickness*2;
+		var itemID = "GLGP201"+(C_orderBlackItems?"3":"1");
+		OrderAddItemWithLength(itemID, globalProfile1Count, profileLengths);	// Housing Profiles 1
+		
+		OrderAddItem("GGMS16"+(C_orderBlackItems?"2":"1")+"2",Math.ceil(globalProfile1Count/4));	// Assembly Kit
+	}
+
+		// Edge Grinding:
+	if (C_addEdgeGrinding)	{
+		OrderSetRemark("Notice, there are edge grindings on some panels.");
+	}
+	
+		// Housing brackets:
+	if (globalHousingBracketCount>0)	{
+		if (globalHousingBracketCount<=4)	{
+			OrderAddItem("GGWS0111",1);	// Housing brackets x4
+		} else if (globalHousingBracketCount<=8)	{
+			OrderAddItem("GGWS0112",1);	// Housing brackets x8
+		} else if (globalHousingBracketCount<=12)	{
+			OrderAddItem("GGWS0113",1);	// Housing brackets x12
+		} else {
+			OrderAddItem("GGWS0114",Math.ceil(globalHousingBracketCount/25));	// Housing brackets x25
+		}
+	}
+}
+
+/**
+ * Side depth
+ */ 
+function getSideDepth()	{
+	return C_endsMode>=0 ? C_depth-(C_endsThickness-C_assemblySlotDepth)*2 : C_depth;	
+}
+
+function getNumberOfThreadsOnJoint()	{
+	var numberOfThreads = Math.round(getSideDepth()/C_distanceBetweenThreadsOnJoints);
+	numberOfThreads = numberOfThreads>1 ? numberOfThreads : 1;
+	
+	return new Array(numberOfThreads ,C_distanceBetweenThreadsOnJoints*(numberOfThreads-1)/2);	// Number and distribution offset
+}
+
+/**
+ * This will optimize the radius for cavities to the max and select the largest tool possible (to save costs)
+ */
+function setRadiusAndToolForCavity(cv)	{
+	var width = cv.Width();
+	var height = cv.Height();
+	
+	var min = width<height ? width : height;
+	var rad = min/2>1.5 ? 1.5 : min/2;
+	cv.SetCornerRadius(rad);
+	
+	if (rad==1.5)	{
+		cv.SetTool(cutter_3_0mm);
+	}
+}
+
+function deg2rad(deg)	{
+	return deg / 180 * Math.PI;
+}
+
+function addHousingBracketsOnEnds(fp,i,bendingSet,currentThickness,offX,offY,from,to,showGuides)	{
+	if (C_coordinates[i][2]!=undefined && C_coordinates[i][2].length>0)	{
+		for(var j=0; j<C_coordinates[i][2].length; j++)	{
+			var bracketLocation = Math.abs(C_coordinates[i][2][j]);
+			if (bracketLocation>Math.abs(from) && (!Math.abs(to) || bracketLocation<=Math.abs(to)))	{
+				globalHousingBracketCount+=2;
+
+				var coordinateOnOuterSideForHousingBracket = new Array(
+					translateXByAngle(C_coordinates[i][0],bendingSet[i][4], bracketLocation), 
+					translateYByAngle(C_coordinates[i][1],bendingSet[i][4], bracketLocation)
+				);
+				var coordinateForScrewHole = new Array(
+					translateXByAngle(coordinateOnOuterSideForHousingBracket[0],bendingSet[i][4]-Math.PI/2,currentThickness+6.5),
+					translateYByAngle(coordinateOnOuterSideForHousingBracket[1],bendingSet[i][4]-Math.PI/2,currentThickness+6.5)
+				);
+				var coordinateForBracketEngraving = new Array(
+					translateXByAngle(coordinateOnOuterSideForHousingBracket[0],bendingSet[i][4]-Math.PI/2,currentThickness+5),
+					translateYByAngle(coordinateOnOuterSideForHousingBracket[1],bendingSet[i][4]-Math.PI/2,currentThickness+5)
+				);
+
+				var el = new DrillHole("el", 3.00);
+				el.SetCountersink(sink_74A_M3);
+				fp.AddElement(el, coordinateForScrewHole[0]+offX, coordinateForScrewHole[1]+offY);
+
+				if (showGuides)	{
+					fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetAngle(bendingSet[i][4]/Math.PI*180).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+					coordinateForBracketEngraving[0]+offX, coordinateForBracketEngraving[1]+offY);
+
+					fp.AddElement(new TextEngraving("el", globalHousingBracketCount/2).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+					coordinateForBracketEngraving[0]+offX-4, coordinateForBracketEngraving[1]+offY-4);
+				}
+			} else {
+			//	Print(new Array(i,j,C_coordinates[i][2][j],from,to)+"\n");
+			}
+		}
+	}
+}
+function addHousingBracketsOnSides(fp,i,offY,from,to)	{
+	if (C_coordinates[i][2]!=undefined && C_coordinates[i][2].length>0)	{
+		for(var j=0; j<C_coordinates[i][2].length; j++)	{
+			var bracketLocation = Math.abs(C_coordinates[i][2][j]);
+			if (bracketLocation>Math.abs(from) && (!Math.abs(to) || bracketLocation<=Math.abs(to)))	{
+
+
+				for(var k=0;k<2;k++)	{
+					if (C_coordinates[i][2][j]<0)	{
+						var el = new Bolt("el", "GU30", 8);
+					} else {
+						var el = new DrillHole("el", 3.00);
+						el.SetCountersink(sink_74A_M3);
+					}
+
+					fp.AddElement(el, (k==0 ? 0 : fp.Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness-(C_endsThickness-C_assemblySlotDepth)+6.5 : C_endsThickness+6.5), bracketLocation+offY);
+
+					if (C_addGuideEngravings)	{
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						(k==0 ? 0 : fp.Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness-(C_endsThickness-C_assemblySlotDepth)+5 : C_endsThickness+5), bracketLocation+offY);
+						
+						fp.AddElement(new TextEngraving("el", globalHousingBracketCount/2-C_coordinates[i][2].length+j+1).SetTextHeight(1.5).SetColor(engrave_pastel_orange).SetAngle(180),
+						(k==0 ? 0 : fp.Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness-(C_endsThickness-C_assemblySlotDepth)+5 : C_endsThickness+5)-4, bracketLocation+offY-4);
+					}
+				}
+				
+			} else {
+			//	Print(new Array(i,j,C_coordinates[i][2][j],from,to)+"\n");
+			}
+		}
+	}
+}
+// Rotation 90 degress both ways:
+function rotatePanel(fp,rotation)	{
+	var width = fp.Width();
+	var height = fp.Height();
+	
+	var els = fp.Elements();
+	switch(rotation)	{
+		case 90:
+			fp.SetWidth(height);
+			fp.SetHeight(width);
+		
+			els.forEach(function(el){
+				el.MoveTo(height-el.Y(),el.X());
+				el.Rotate(90);
+			});
+		break;
+		case 180:
+			els.forEach(function(el){
+				el.MoveTo(width-el.X(),height-el.Y());
+				el.Rotate(180);
+			});
+		break;
+		case -90:
+		case 270:
+			fp.SetWidth(height);
+			fp.SetHeight(width);
+
+			els.forEach(function(el){
+				el.MoveTo(el.Y(),width-el.X());
+				el.Rotate(-90);
+			});
+		break;
+	}
+}
+function translateAllElementsOnPanel(fp,x,y)	{
+	var els = fp.Elements();
+	els.forEach(function(el){
+		el.MoveTo(el.X()+x,el.Y()+y);
+	});	
+}
+
+function rotateCoordinateSet(coordinateSet,CWangle)	{
+	for(var i=0; i<coordinateSet.length; i++) {
+		var newX = coordinateSet[i][0] * Math.cos(-CWangle/180*Math.PI) - coordinateSet[i][1] * Math.sin(-CWangle/180*Math.PI);
+		var newY = coordinateSet[i][0] * Math.sin(-CWangle/180*Math.PI) + coordinateSet[i][1] * Math.cos(-CWangle/180*Math.PI);
+		coordinateSet[i][0] = newX;
+		coordinateSet[i][1] = newY;
+	}
+}
+function translateCoordinateSet(coordinateSet,x,y)	{
+	for(var i=0; i<coordinateSet.length; i++) {
+		coordinateSet[i][0] = coordinateSet[i][0]+x;
+		coordinateSet[i][1] = coordinateSet[i][1]+y;
+	}
+}
+function mirrorCoordinateSetInYAxis(coordinateSet)	{
+	for(var i=0; i<coordinateSet.length; i++) {
+		coordinateSet[i][0] = -coordinateSet[i][0];
+	}
+}
+
+
+
+
+
+
+
+
+function createEndPanel(name, mirrored)	{
+	var fp = new Frontpanel(C_panelNamesPrefix+name+C_panelNamesSuffix, C_endsThickness, 10, 10, alu_elox);
+	fp.SetMaterialColor(C_endsColor);
+
+	// Create a panel outline:
+	var newOutlineCoordinates = expandCoordinateSet(C_coordinates, C_endsMode>=0?C_endsMode:-(C_sideDefaultThickness+0.1), C_sideCornerRadius);
+	var dxf = shapeFromCoordinates(newOutlineCoordinates);
+	fp.SetBorderContour(dxf);
+	AddFrontpanel(fp);
+
+	if (mirrored)	{
+		var dxf = shapeFromCoordinates(mirrorXCoordinates(newOutlineCoordinates,fp.Width()));
+		fp.SetBorderContour(dxf);
+	}
+
+	var outlineXYoffset = getOutlineXYoffset(newOutlineCoordinates);	// Get actual offset.
+
+		// Edge grinding
+	if (C_addEdgeGrinding)	{
+		fp.SetRemark("Please grind the edges.");
+	}
+	
+	return new Array(fp, outlineXYoffset[0], outlineXYoffset[1]);
+}
+
+
+
+// WINGS:
+var yHasWings = false;
+var yPanelIndex;
+var yCoordinateIndex;
+var yBeginOffsetFromRealSide;
+
+var yHasRackEars = false;
+var yREPanelIndex;
+var yREBeginOffsetFromRealSide;
+var yREsideLength;
+
+
+
+function processingEndPanel(fp, offX, offY, makeSidePanels, noGuideElements)	{
+
+	// Getting more pre-fab information on the coordinates:
+	var bendingSet = bendingData(C_coordinates,C_sideDefaultThickness);
+
+	// Initializing various modified coordinate sets:
+	var coordinateSet1mmExpanded = expandCoordinateSet(C_coordinates, 1, 0);
+	var coordinateSet4p2mmShrunk = expandCoordinateSet(C_coordinates, -4.2, 0);
+	var coordinateSetOuter = expandCoordinateSet(C_coordinates, 0, C_forwardBendRadius);
+	var coordinateSetInner = expandCoordinateSet(C_coordinates, -currentThickness, 0);
+
+	// Initializing something else:
+	var currentThickness = C_sideDefaultThickness;
+	var showGuides = !noGuideElements && C_addGuideEngravings;
+	var panelIndex=-1;
+	var startingIndex = -1;
+	var panelProfileCoordsFwd = new Array();
+	var panelProfileCoordsRev = new Array();
+	var panelProfileCoordsFwdIdx = 0;
+	var panelProfileCoordsRevIdx = 0;
+	var panelCavityCoordsFwd = new Array();
+	var panelCavityCoordsRev = new Array();
+	var panelCavityCoordsFwdIdx = 0;
+	var panelCavityCoordsRevIdx = 0;
+
+	var sideFPArray = new Array();
+
+	// Traversing all coordinates:
+	var len = bendingSet.length;
+	
+	outer:
+	for(var ii=0; ii<len*2; ii++)	{	// Going over it twice because we start out by searching for a beginning:
+		var i = ii%len;
+	
+		// Engraving of the side bounding box... (debugging)
+		if (showGuides)	{
+/*			fp.AddElement(
+				new Rectangle("el", bendingSet[i][3], C_sideDefaultThickness).SetAngle(bendingSet[i][4]/Math.PI*180).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+				bendingSet[i][5][0]+offX, 
+				bendingSet[i][5][1]+offY
+			);
+*/
+			
+			fp.AddElement(
+				new TextEngraving("el", "Side #"+i).SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_pastel_orange).SetAngle(bendingSet[i][4]/Math.PI*180),
+				bendingSet[i][5][0]+offX, 
+				bendingSet[i][5][1]+offY
+			);
+
+			var showAngle = Math.round(bendingSet[i][4]/Math.PI*180*100)/100;
+			var showLength = Math.round(bendingSet[i][2]*100)/100;
+			fp.AddElement(
+				new TextEngraving("el", "Length: "+ showLength + "\nAngle: "+showAngle).SetAlignment(showAngle<=180&&showAngle>0 ? align_right : align_left).SetTextHeight(1.5).SetColor(engrave_pastel_orange).SetAngle((showAngle<90&&showAngle>0)||(showAngle>180&&showAngle<270) ? -45 : 45),
+				translateXByAngle(bendingSet[i][5][0],bendingSet[i][4]+Math.PI/2,C_sideDefaultThickness/2+2)+offX, 
+				translateYByAngle(bendingSet[i][5][1],bendingSet[i][4]+Math.PI/2,C_sideDefaultThickness/2+2)+offY
+			);
+		}
+		
+			// Looking back at point we are coming from:
+		if (C_coordinates[i][4]>0)	{	// Starting with a profile. (Previous panel should be ended already.)
+			if (startingIndex==-1)	{
+				startingIndex=i;	// Start, if not already
+			}
+
+			globalProfile1Count++;
+
+			// Create a panel, initialize:
+			currentThickness = C_coordinates[i][4];	// Get thickess from profile value
+			coordinateSetInner = expandCoordinateSet(C_coordinates, -currentThickness, 0);
+
+			panelIndex++;
+			
+			// Coordinates for drawing guide HPGL:
+			panelProfileCoordsFwd[panelIndex] = new Array();
+			panelProfileCoordsRev[panelIndex] = new Array();
+			panelProfileCoordsFwdIdx = 0;
+			panelProfileCoordsRevIdx = 0;
+		
+			panelCavityCoordsFwd[panelIndex] = new Array();
+			panelCavityCoordsRev[panelIndex] = new Array();
+			panelCavityCoordsFwdIdx = 0;
+			panelCavityCoordsRevIdx = 0;
+		
+			// HPGL:
+			panelProfileCoordsFwd[panelIndex][panelProfileCoordsFwdIdx++] = new Array(
+				translateXByAngle(C_coordinates[i][0],bendingSet[i][4], 9+C_panelHeightToleranceAtHousingProfileEnds), 
+				translateYByAngle(C_coordinates[i][1],bendingSet[i][4], 9+C_panelHeightToleranceAtHousingProfileEnds)
+			);
+			panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+				translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], 9+C_panelHeightToleranceAtHousingProfileEnds), 
+				translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], 9+C_panelHeightToleranceAtHousingProfileEnds)
+			);
+			panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+				translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], 12+0.5), 
+				translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], 12+0.5)
+			);
+			panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+				translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], 12+0.5), 
+				translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], 12+0.5)
+			);
+			
+			// DXF:
+			panelCavityCoordsFwd[panelIndex][panelCavityCoordsFwdIdx++] = new Array(
+				translateXByAngle(C_coordinates[i][0],bendingSet[i][4], 8.5), 
+				translateYByAngle(C_coordinates[i][1],bendingSet[i][4], 8.5)
+			);
+			panelCavityCoordsRev[panelIndex][panelCavityCoordsRevIdx++] = new Array(
+				translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], 8.5), 
+				translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], 8.5)
+			);
+		
+			var angle = getAngleOfLine(coordinateSet1mmExpanded[i][0],coordinateSet4p2mmShrunk[i][0],coordinateSet1mmExpanded[i][1],coordinateSet4p2mmShrunk[i][1]);
+
+			// Add profile1 engraving:
+			if (showGuides)	{
+				var hpgl = hpglFromCoordinates(profile1Coordinates);
+				fp.AddElement(
+					hpgl,
+					coordinateSet1mmExpanded[i][0]+offX, 
+					coordinateSet1mmExpanded[i][1]+offY
+				);
+				hpgl.SetAngle(angle/Math.PI*180+90+45);
+			}
+					
+			// Add drill hole:
+			var el = new DrillHole("el", 5.00);
+			el.SetCountersink(sink_74A_M5);
+			fp.AddElement(
+				el,
+				translateXByAngle(coordinateSet1mmExpanded[i][0],angle,Math.sqrt(5.2*5.2+5.2*5.2))+offX, 
+				translateYByAngle(coordinateSet1mmExpanded[i][1],angle,Math.sqrt(5.2*5.2+5.2*5.2))+offY
+			);
+
+			// Housing brackets:
+			addHousingBracketsOnEnds(fp,i,bendingSet,currentThickness,offX,offY,0,C_coordinates[i][3]?C_coordinates[i][3][0]:0,showGuides);			
+
+			if (makeSidePanels)	{
+				// CREATE PANEL:
+				// Create a new side panel:
+				sideFPArray[panelIndex] = new Frontpanel(C_panelNamesPrefix+"Side("+panelIndex+")"+C_panelNamesSuffix, currentThickness, getSideDepth(), 100, alu_elox);	// 100 is just a temporary height
+				sideFPArray[panelIndex].SetMaterialColor(C_sideColor);
+				AddFrontpanel(sideFPArray[panelIndex]);
+				
+				if (showGuides)	{
+					sideFPArray[panelIndex].AddElement(
+						new TextEngraving("el", "Side #"+i).SetAlignment(align_center).SetTextHeight(2.5).SetColor(engrave_pastel_orange).SetAngle(180),
+						sideFPArray[panelIndex].Width()/2,
+						10
+					);
+				}
+
+				sideFPArray[panelIndex].SetHeight(bendingSet[i][3]-(9+bendingSet[i][1])-C_panelHeightToleranceAtHousingProfileEnds);
+
+				addHousingBracketsOnSides(sideFPArray[panelIndex],i,sideFPArray[panelIndex].Height()-(bendingSet[i][3]-bendingSet[i][1]),0,C_coordinates[i][3]?C_coordinates[i][3][0]:0);			
+						
+				var el = new Cavity("el");
+				el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+				sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, 1+0.5);
+				el.MakeRectangular(getSideDepth()+4, 4, currentThickness-1.5, 1.5).PutOnReverseSide();
+				setRadiusAndToolForCavity(el);
+			
+				if (showGuides)	{
+					sideFPArray[panelIndex].AddElement(
+						new Rectangle("el", C_depth-C_endsThickness*2, 16).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						getSideDepth()/2,
+						-2
+					);
+				}
+			}
+			
+		} else {
+			if (startingIndex>=0)	{
+				
+				 // Making coordinates for HPGL representation:
+				panelProfileCoordsFwd[panelIndex][panelProfileCoordsFwdIdx++] = panelCavityCoordsFwd[panelIndex][panelCavityCoordsFwdIdx++] = coordinateSetOuter[i];
+				
+				var cutAngle = bendingSet[i][7];
+				
+				panelCavityCoordsRev[panelIndex][panelCavityCoordsRevIdx++] = coordinateSetInner[i];	// Just plain for cavity
+				
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 0.5),bendingSet[i][4], 0.5-bendingSet[i][1]), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 0.5),bendingSet[i][4], 0.5-bendingSet[i][1])
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 0.8),bendingSet[i][4], 0.5-bendingSet[i][1]), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 0.8),bendingSet[i][4], 0.5-bendingSet[i][1])
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], 0.5+(currentThickness-0.8)*Math.tan(Math.PI/2-cutAngle)-bendingSet[i][1]), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], 0.5+(currentThickness-0.8)*Math.tan(Math.PI/2-cutAngle)-bendingSet[i][1])
+				);
+				
+				// Housing brackets:
+				addHousingBracketsOnEnds(fp,i,bendingSet,currentThickness,offX,offY,0,C_coordinates[i][3]?C_coordinates[i][3][0]:0,showGuides);			
+				
+				if (makeSidePanels)	{
+					// PANEL Mods:
+					// Add bend cavity at panel height, then increase height:
+					//Print(bendingSet[i]+"\n");
+					var el = new Cavity("el");
+					el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+					sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, sideFPArray[panelIndex].Height());
+					el.MakeRectangular(getSideDepth()+2, 3, currentThickness-0.5, 0.5);
+					el.SetHeight(1);
+					setRadiusAndToolForCavity(el);
+					if (bendingSet[i][0])	{
+						el.SetEdgeMachining(bendingSet[i][8], currentThickness-0.5-0.2, 0, 0);
+					}
+					el.PutOnReverseSide();
+					
+					if (showGuides)	{
+						sideFPArray[panelIndex].AddElement(
+							new TextEngraving("el", "Side #"+i).SetAlignment(align_center).SetTextHeight(2.5).SetColor(engrave_pastel_orange).SetAngle(180),
+							sideFPArray[panelIndex].Width()/2,
+							sideFPArray[panelIndex].Height()+10
+						);
+					}
+
+					// WINGS:
+					if (!yHasWings && C_wings[0]!=undefined && i==C_wings[0] && (C_wings[1]==undefined || C_wings[1]==0))	{
+						yHasWings = true;
+						yPanelIndex = panelIndex;
+						yCoordinateIndex = i;
+						yBeginOffsetFromRealSide = sideFPArray[panelIndex].Height()+bendingSet[i][1];
+					}
+
+					// Rack ears:
+					if (!yHasRackEars && C_rackEarsSideIndex==i)	{
+						yHasRackEars = true;
+						yREPanelIndex = panelIndex;
+						yREBeginOffsetFromRealSide = sideFPArray[panelIndex].Height()+bendingSet[i][1];
+						yREsideLength = bendingSet[i][3];
+					}
+
+
+					sideFPArray[panelIndex].SetHeight(sideFPArray[panelIndex].Height()+bendingSet[i][3]);
+					
+					addHousingBracketsOnSides(sideFPArray[panelIndex],i,sideFPArray[panelIndex].Height()-(bendingSet[i][3]-bendingSet[i][1]),0,C_coordinates[i][3]?C_coordinates[i][3][0]:0);			
+				}
+			}
+		}
+		
+		
+		
+		// If a side is split in two or more panels:
+		if (C_coordinates[i][3]!=undefined && C_coordinates[i][3].length>0)	{
+			for(var j=0;j<C_coordinates[i][3].length;j++)	{
+				if (startingIndex==-1)	{
+					startingIndex=i;	// Start
+				} else {	
+						// End previous panel, HPGL coordinates:
+					panelProfileCoordsFwd[panelIndex][panelProfileCoordsFwdIdx++] = new Array(
+						translateXByAngle(C_coordinates[i][0],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1)), 
+						translateYByAngle(C_coordinates[i][1],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1))
+					);
+					panelProfileCoordsFwd[panelIndex][panelProfileCoordsFwdIdx++] = new Array(
+						translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1)), 
+						translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1))
+					);
+					panelProfileCoordsFwd[panelIndex][panelProfileCoordsFwdIdx++] = new Array(
+						translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1)), 
+						translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1))
+					);
+					panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+						translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1)), 
+						translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1))
+					);
+
+					if (showGuides)	{
+						// Add coordinates
+						var mergedFwdRevCoordinates = mergeFwdRevCoordinates(panelProfileCoordsFwd[panelIndex], panelProfileCoordsRev[panelIndex]);
+						var hpgl = hpglFromCoordinates(mergedFwdRevCoordinates);
+						fp.AddElement(
+							hpgl,
+							offX, 
+							offY
+						);
+					}
+
+
+					// DXF:
+					panelCavityCoordsFwd[panelIndex][panelCavityCoordsFwdIdx++] = new Array(
+						translateXByAngle(C_coordinates[i][0],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)+0.5), 
+						translateYByAngle(C_coordinates[i][1],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)+0.5)
+					); 	
+					panelCavityCoordsRev[panelIndex][panelCavityCoordsRevIdx++]  = new Array(
+						translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)+0.5), 
+						translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)+0.5)
+					); 				
+
+					// Make Cavity:
+					if (C_endsMode>=0 && C_assemblySlotDepth>0)	{
+						var mergedFwdRevCoordinatesCav = mergeFwdRevCoordinates(panelCavityCoordsFwd[panelIndex], panelCavityCoordsRev[panelIndex]);
+						var dxf = shapeFromCoordinates(expandCoordinateSet(mergedFwdRevCoordinatesCav, C_assemblySlotTolerance)).SetTool(cutter_1_0mm).SetAsCavity(true).SetDepth(C_assemblySlotDepth+0.1).PutOnReverseSide();
+						fp.AddElement(
+							dxf,
+							offX,
+							offY
+						);
+					}
+				
+					if (makeSidePanels)	{
+						// Ending previous panel in terms of height and cavities:
+						var distUpOnNewSide = Math.abs(C_coordinates[i][3][j])+bendingSet[i][1];
+						sideFPArray[panelIndex].SetHeight(sideFPArray[panelIndex].Height()-bendingSet[i][3]+distUpOnNewSide+(C_jointOverlap/2));
+					
+						var el = new Cavity("el");
+						el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+						sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, sideFPArray[panelIndex].Height()-((C_jointOverlap/2)+0.2));
+						el.MakeRectangular(getSideDepth()+4, C_jointOverlap+1, C_coordinates[i][3][j]>0 ? currentThickness-C_jointOverlayThickness : C_jointOverlayThickness, 1.5);
+						if (C_coordinates[i][3][j]>0) {
+							el.PutOnReverseSide();
+						}
+						setRadiusAndToolForCavity(el);
+
+						var threadData = getNumberOfThreadsOnJoint();
+						for(var k=0;k<threadData[0];k++)	{
+							if (C_coordinates[i][3][j]>0) {
+								var el = new DrillHole("el", 3.20);
+								el.SetCountersink(sink_74A_M3);
+								sideFPArray[panelIndex].AddElement(el, getSideDepth()/2-threadData[1]+k*C_distanceBetweenThreadsOnJoints, sideFPArray[panelIndex].Height()-C_jointOverlap/2);
+							} else {
+								var el = new DrillHole("el", 3.0);
+								el.SetDiameter(3.00);
+								el.SetThreading("Metric-M3");
+								sideFPArray[panelIndex].AddElement(el, getSideDepth()/2-threadData[1]+k*C_distanceBetweenThreadsOnJoints, sideFPArray[panelIndex].Height()-C_jointOverlap/2);
+							}
+						}
+						
+						if (showGuides)	{
+							for(var k=0;k<2;k++)	{
+								sideFPArray[panelIndex].AddElement(
+									new Rectangle("el", C_endsThickness, sideFPArray[panelIndex].Height()+2*C_endsMode).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+									(k==0 ? 0 : sideFPArray[panelIndex].Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness/2-(C_endsThickness-C_assemblySlotDepth) : C_endsThickness/2),
+									sideFPArray[panelIndex].Height()/2
+								);
+								
+								sideFPArray[panelIndex].AddElement(
+									new TextEngraving("el", k==0?"Back":"Front").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_pastel_orange).SetAngle(90*(k==0?1:-1)),
+									(k==0 ? 0 : sideFPArray[panelIndex].Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness/2-(C_endsThickness-C_assemblySlotDepth) : C_endsThickness/2),
+									sideFPArray[panelIndex].Height()/2
+								);
+							}
+						}
+						
+						rotatePanel(sideFPArray[panelIndex],180);
+
+						sideFPArray[panelIndex].UnsetModified().GridOff();
+					}
+					
+					if (startingIndex+len-1<=ii)	{ break outer; }	// Stop
+				}
+				
+				
+				// Create a panel, initialize:
+				currentThickness = C_coordinates[i][5]!=undefined && C_coordinates[i][5].length>0 && C_coordinates[i][5][j]>0 ? C_coordinates[i][5][j] : C_sideDefaultThickness;
+				coordinateSetInner = expandCoordinateSet(C_coordinates, -currentThickness, 0)
+				
+				panelIndex++;
+
+				// Coordinates for drawing guide HPGL:
+				panelProfileCoordsFwd[panelIndex] = new Array();
+				panelProfileCoordsRev[panelIndex] = new Array();
+				panelProfileCoordsFwdIdx = 0;
+				panelProfileCoordsRevIdx = 0;
+
+				panelCavityCoordsFwd[panelIndex] = new Array();
+				panelCavityCoordsRev[panelIndex] = new Array();
+				panelCavityCoordsFwdIdx = 0;
+				panelCavityCoordsRevIdx = 0;
+
+				// HPGL:
+				panelProfileCoordsFwd[panelIndex][panelProfileCoordsFwdIdx++] = new Array(
+					translateXByAngle(C_coordinates[i][0],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1)), 
+					translateYByAngle(C_coordinates[i][1],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1))
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1)), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?1:-1))
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1)), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, C_jointOverlayThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1))
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1)), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])+(C_jointOverlap/2)*(C_coordinates[i][3][j]>0?-1:1))
+				);
+
+				// DXF:
+				panelCavityCoordsFwd[panelIndex][panelCavityCoordsFwdIdx++]  = new Array(
+					translateXByAngle(C_coordinates[i][0],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])-(C_jointOverlap/2)-0.5), 
+					translateYByAngle(C_coordinates[i][1],bendingSet[i][4], Math.abs(C_coordinates[i][3][j])-(C_jointOverlap/2)-0.5)
+				);
+				panelCavityCoordsRev[panelIndex][panelCavityCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])-(C_jointOverlap/2)-0.5), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], Math.abs(C_coordinates[i][3][j])-(C_jointOverlap/2)-0.5)
+				); 			
+				
+
+				// Housing brackets:
+				addHousingBracketsOnEnds(fp,i,bendingSet,currentThickness,offX,offY,C_coordinates[i][3][j],C_coordinates[i][3][j+1],showGuides);			
+			
+				if (makeSidePanels)	{
+					// Create a new side panel:
+					sideFPArray[panelIndex] = new Frontpanel(C_panelNamesPrefix+"Side("+panelIndex+"."+j+")"+C_panelNamesSuffix, currentThickness, getSideDepth(), 100, alu_elox);
+					sideFPArray[panelIndex].SetMaterialColor(C_sideColor);
+					AddFrontpanel(sideFPArray[panelIndex]);
+
+					if (showGuides)	{
+						sideFPArray[panelIndex].AddElement(
+							new TextEngraving("el", "Side #"+i).SetAlignment(align_center).SetTextHeight(2.5).SetColor(engrave_pastel_orange).SetAngle(180),
+							sideFPArray[panelIndex].Width()/2,
+							10
+						);
+					}
+
+					// WINGS:
+					if (!yHasWings && C_wings[0]!=undefined && i==C_wings[0] && C_wings[1]==(j+1))	{
+						yHasWings = true;
+						yPanelIndex = panelIndex;
+						yCoordinateIndex = i;
+						yBeginOffsetFromRealSide = -(Math.abs(C_coordinates[i][3][j])-C_jointOverlap/2);
+					}
+
+					// Setting height:
+					var distUpOnNewSide = Math.abs(C_coordinates[i][3][j])+bendingSet[i][1];
+					sideFPArray[panelIndex].SetHeight(bendingSet[i][3]-(distUpOnNewSide-C_jointOverlap/2));
+					
+					addHousingBracketsOnSides(sideFPArray[panelIndex],i,sideFPArray[panelIndex].Height()-(bendingSet[i][3]-bendingSet[i][1]),C_coordinates[i][3][j],C_coordinates[i][3][j+1]);			
+			
+					var el = new Cavity("el");
+					el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+					sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, (C_jointOverlap/2)+0.2);
+					el.MakeRectangular(getSideDepth()+4, C_jointOverlap+1, C_coordinates[i][3][j]<0 ? currentThickness-C_jointOverlayThickness : C_jointOverlayThickness, 1.5);
+					if (C_coordinates[i][3][j]<0) {
+						el.PutOnReverseSide();
+					}
+					setRadiusAndToolForCavity(el);
+				
+					var threadData = getNumberOfThreadsOnJoint();
+					for(var k=0;k<threadData[0];k++)	{
+						if (C_coordinates[i][3][j]<0) {
+							var el = new DrillHole("el", 3.20);
+							el.SetCountersink(sink_74A_M3);
+							sideFPArray[panelIndex].AddElement(el, getSideDepth()/2-threadData[1]+k*C_distanceBetweenThreadsOnJoints, C_jointOverlap/2);
+						} else {
+							var el = new DrillHole("el", 3.0);
+							el.SetDiameter(3.00);
+							el.SetThreading("Metric-M3");
+							sideFPArray[panelIndex].AddElement(el, getSideDepth()/2-threadData[1]+k*C_distanceBetweenThreadsOnJoints, C_jointOverlap/2);
+						}
+					}
+				}
+			}
+		}
+		
+		
+		// Looking ahead, are there an ending profile?
+		if (startingIndex>=0)	{
+			if (C_coordinates[(i+len+1)%len][4]>0)	{	// Ending with a profile - end panel
+
+				// HPGL coordinates:
+				panelProfileCoordsFwd[panelIndex][panelProfileCoordsFwdIdx++] = new Array(
+					translateXByAngle(C_coordinates[i][0],bendingSet[i][4], bendingSet[i][2]-(9+C_panelHeightToleranceAtHousingProfileEnds)), 
+					translateYByAngle(C_coordinates[i][1],bendingSet[i][4], bendingSet[i][2]-(9+C_panelHeightToleranceAtHousingProfileEnds))
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], bendingSet[i][2]-(12+0.5)), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], bendingSet[i][2]-(12+0.5))
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], bendingSet[i][2]-(12+0.5)), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], bendingSet[i][2]-(12+0.5))
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], bendingSet[i][2]-(9+C_panelHeightToleranceAtHousingProfileEnds)), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 1.5),bendingSet[i][4], bendingSet[i][2]-(9+C_panelHeightToleranceAtHousingProfileEnds))
+				);
+
+				if (showGuides)	{
+					// Add coordinates and 
+					var mergedFwdRevCoordinates = mergeFwdRevCoordinates(panelProfileCoordsFwd[panelIndex], panelProfileCoordsRev[panelIndex]);
+					var hpgl = hpglFromCoordinates(mergedFwdRevCoordinates);
+					fp.AddElement(
+						hpgl,
+						offX, 
+						offY
+					);
+				}
+				
+				// DXF:
+				panelCavityCoordsFwd[panelIndex][panelCavityCoordsFwdIdx++] = new Array(
+					translateXByAngle(C_coordinates[i][0],bendingSet[i][4], bendingSet[i][2]-8.5), 
+					translateYByAngle(C_coordinates[i][1],bendingSet[i][4], bendingSet[i][2]-8.5)
+				);
+				panelCavityCoordsRev[panelIndex][panelCavityCoordsRevIdx++]  = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], bendingSet[i][2]-8.5), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], bendingSet[i][2]-8.5)
+				); 
+
+				// Make Cavity:
+				if (C_endsMode>=0 && C_assemblySlotDepth>0)	{
+					var mergedFwdRevCoordinatesCav = mergeFwdRevCoordinates(panelCavityCoordsFwd[panelIndex], panelCavityCoordsRev[panelIndex]);
+					var dxf = shapeFromCoordinates(expandCoordinateSet(mergedFwdRevCoordinatesCav, C_assemblySlotTolerance)).SetTool(cutter_1_0mm).SetAsCavity(true).SetDepth(C_assemblySlotDepth+0.1).PutOnReverseSide();
+					fp.AddElement(
+						dxf,
+						offX,
+						offY
+					);
+				}
+				
+				if (makeSidePanels)	{
+					// Ending previous panel in terms of height and cavities:
+					sideFPArray[panelIndex].SetHeight(sideFPArray[panelIndex].Height()-(9+bendingSet[i][1])-C_panelHeightToleranceAtHousingProfileEnds);
+			
+					var el = new Cavity("el");
+					el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+					sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, sideFPArray[panelIndex].Height()-(1+0.5));
+					el.MakeRectangular(getSideDepth()+4, 4, currentThickness-1.5, 1.5).PutOnReverseSide();
+					setRadiusAndToolForCavity(el);
+			
+					if (showGuides)	{
+						sideFPArray[panelIndex].AddElement(
+							new Rectangle("el", C_depth-C_endsThickness*2, 16).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+							getSideDepth()/2,
+							sideFPArray[panelIndex].Height()+2
+						);
+					}
+					
+					if (showGuides)	{
+						for(var k=0;k<2;k++)	{
+							sideFPArray[panelIndex].AddElement(
+								new Rectangle("el", C_endsThickness, sideFPArray[panelIndex].Height()+2*C_endsMode).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+								(k==0 ? 0 : sideFPArray[panelIndex].Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness/2-(C_endsThickness-C_assemblySlotDepth) : C_endsThickness/2),
+								sideFPArray[panelIndex].Height()/2
+							);
+
+							sideFPArray[panelIndex].AddElement(
+								new TextEngraving("el", k==0?"Back":"Front").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_pastel_orange).SetAngle(90*(k==0?1:-1)),
+								(k==0 ? 0 : sideFPArray[panelIndex].Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness/2-(C_endsThickness-C_assemblySlotDepth) : C_endsThickness/2),
+								sideFPArray[panelIndex].Height()/2
+							);
+						}
+					}
+				
+					rotatePanel(sideFPArray[panelIndex],180);
+
+					sideFPArray[panelIndex].UnsetModified().GridOff();
+				}
+				
+				if (startingIndex+len-1==ii)	break;	// Stop
+			} else {
+				// Add some coordinates for bend:
+				var cutAngle = bendingSet[(i+1)%len][7];
+			
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], -bendingSet[i][1]+bendingSet[i][3]-(0.5+(currentThickness-0.8)*Math.tan(Math.PI/2-cutAngle))), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, currentThickness),bendingSet[i][4], -bendingSet[i][1]+bendingSet[i][3]-(0.5+(currentThickness-0.8)*Math.tan(Math.PI/2-cutAngle)))
+				);				
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 0.8),bendingSet[i][4], -bendingSet[i][1]+bendingSet[i][3]-0.5), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 0.8),bendingSet[i][4], -bendingSet[i][1]+bendingSet[i][3]-0.5)
+				);
+				panelProfileCoordsRev[panelIndex][panelProfileCoordsRevIdx++] = new Array(
+					translateXByAngle(translateXByAngle(C_coordinates[i][0],bendingSet[i][4]-Math.PI/2, 0.5),bendingSet[i][4], -bendingSet[i][1]+bendingSet[i][3]-0.5), 
+					translateYByAngle(translateYByAngle(C_coordinates[i][1],bendingSet[i][4]-Math.PI/2, 0.5),bendingSet[i][4], -bendingSet[i][1]+bendingSet[i][3]-0.5)
+				);
+			}
+		}		
+	
+		if (startingIndex>=0)	{	
+			if (showGuides)	{
+					// Print angle of bend:
+				fp.AddElement(new TextEngraving("el", Math.round(bendingSet[i][6]/Math.PI*180)+" ("+Math.round(bendingSet[i][7]/Math.PI*180)+")").SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+					coordinateSet1mmExpanded[i][0]+offX, 
+					coordinateSet1mmExpanded[i][1]+offY
+				);
+			}
+		}
+	}
+	
+	return sideFPArray;
+}
+function createWings()	{
+	if (yHasWings && C_endsMode<0)	{
+
+		// Turn it right again...:
+		rotatePanel(sidePanels[yPanelIndex],180);
+	
+		// Rotation angle:
+		var rotationAngle = getAngleOfLine(C_coordinates[yCoordinateIndex][0],C_coordinates[(yCoordinateIndex+1)%C_coordinates.length][0],C_coordinates[yCoordinateIndex][1],C_coordinates[(yCoordinateIndex+1)%C_coordinates.length][1]);
+		
+		// Place/move elements from the ends (front and back). The end panels will NOT be useful anymore and should be discarded!
+		if (!C_wings_dryRun)	{
+			
+			// Right side:
+			var els = fp1Arr[0].Elements();
+			els.forEach(function(el){
+				var elementCoordinates = new Array(new Array(el.X()-fp1Arr[1],el.Y()-fp1Arr[2]));
+				translateCoordinateSet(elementCoordinates,-C_coordinates[yCoordinateIndex][0],-C_coordinates[yCoordinateIndex][1]);	// To 0,0
+				rotateCoordinateSet(elementCoordinates,-(Math.PI/2-rotationAngle)/Math.PI*180);
+				translateCoordinateSet(elementCoordinates, sidePanels[yPanelIndex].Width()-2*C_forwardBendRadius,yBeginOffsetFromRealSide);
+				el.Rotate((Math.PI/2-rotationAngle)/Math.PI*180);
+			
+				sidePanels[yPanelIndex].AddElement(
+					el,
+					elementCoordinates[0][0],
+					elementCoordinates[0][1]
+				);
+			});	
+			
+			// Left side:
+			var mirrored_C_coordinates = expandCoordinateSet(C_coordinates, 0);
+			mirrorCoordinateSetInYAxis(mirrored_C_coordinates);
+			
+			var els = fp2Arr[0].Elements();
+			els.forEach(function(el){
+				var elementCoordinates = new Array(new Array(el.X()+fp2Arr[1],el.Y()-fp2Arr[2]));
+				translateCoordinateSet(elementCoordinates,-fp2Arr[0].Width()-mirrored_C_coordinates[yCoordinateIndex][0],-mirrored_C_coordinates[yCoordinateIndex][1]);	// To 0,0
+				rotateCoordinateSet(elementCoordinates,(Math.PI/2-rotationAngle)/Math.PI*180);
+				translateCoordinateSet(elementCoordinates, 2*C_forwardBendRadius,yBeginOffsetFromRealSide);
+				el.Rotate(-(Math.PI/2-rotationAngle)/Math.PI*180);
+				
+				sidePanels[yPanelIndex].AddElement(
+					el,
+					elementCoordinates[0][0],
+					elementCoordinates[0][1]
+				);
+			});	
+		}
+		
+	
+		// Create right set:
+		var rightCoordinates = expandCoordinateSet(C_coordinates, -(C_sideDefaultThickness+0.1), C_sideCornerRadius);
+		translateCoordinateSet(rightCoordinates,-C_coordinates[yCoordinateIndex][0],-C_coordinates[yCoordinateIndex][1]);	// To 0,0
+		rotateCoordinateSet(rightCoordinates,-(Math.PI/2-rotationAngle)/Math.PI*180);
+
+		rightCoordinates[yCoordinateIndex][2]=0;
+		rightCoordinates[(yCoordinateIndex+1)%rightCoordinates.length][2]=0;
+
+		// Copy right set and mirror:
+		var leftCoordinates = expandCoordinateSet(rightCoordinates, 0);
+		mirrorCoordinateSetInYAxis(leftCoordinates);
+
+		translateCoordinateSet(rightCoordinates, sidePanels[yPanelIndex].Width()-2*C_forwardBendRadius,yBeginOffsetFromRealSide);
+		translateCoordinateSet(leftCoordinates, 2*C_forwardBendRadius,yBeginOffsetFromRealSide);
+	
+	
+		// Bending cavities for wings:
+		var y1 = rightCoordinates[yCoordinateIndex][1]<0 ? 0 : rightCoordinates[yCoordinateIndex][1];
+		var y2 = rightCoordinates[(yCoordinateIndex+1)%rightCoordinates.length][1] > sidePanels[yPanelIndex].Height() ? sidePanels[yPanelIndex].Height() : rightCoordinates[(yCoordinateIndex+1)%rightCoordinates.length][1];
+	
+		var el = new Cavity("el");
+		el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+		sidePanels[yPanelIndex].AddElement(
+			el, 
+			C_forwardBendRadius,
+			y1+(y2-y1)/2
+		);
+		el.MakeRectangular(y2-y1+1, 3, sidePanels[yPanelIndex].Thickness()-0.5, 0.5).SetAngle(90);
+		el.SetHeight(1);
+		setRadiusAndToolForCavity(el);
+		el.SetEdgeMachining(bevel_45, sidePanels[yPanelIndex].Thickness()-0.5-0.2, 0, 0);
+		el.PutOnReverseSide();
+	
+		var el = new Cavity("el");
+		el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+		sidePanels[yPanelIndex].AddElement(
+			el, 
+			sidePanels[yPanelIndex].Width()-C_forwardBendRadius,
+			y1+(y2-y1)/2
+		);
+		el.MakeRectangular(y2-y1+1, 3, sidePanels[yPanelIndex].Thickness()-0.5, 0.5).SetAngle(90);
+		el.SetHeight(1);
+		setRadiusAndToolForCavity(el);
+		el.SetEdgeMachining(bevel_45, sidePanels[yPanelIndex].Thickness()-0.5-0.2, 0, 0);
+		el.PutOnReverseSide();
+	
+	
+		// Wing solo outlines:
+		/*
+		var hpgl = hpglFromCoordinates(rightCoordinates);
+		sidePanels[yPanelIndex].AddElement(
+			hpgl,
+			0, 
+			0
+		);
+		var hpgl = hpglFromCoordinates(leftCoordinates);
+		sidePanels[yPanelIndex].AddElement(
+			hpgl,
+			0, 
+			0
+		);
+		*/
+		
+		// Merge wing coordinates with main panel (and add Rack Ears if any:)
+		var y1 = rightCoordinates[yCoordinateIndex][1];
+		var y2 = rightCoordinates[(yCoordinateIndex+1)%rightCoordinates.length][1];
+
+		if (yHasRackEars && yREPanelIndex==yPanelIndex)	{	// Rack Ears on this panel, must be processed here...
+			var yRE1 = yREBeginOffsetFromRealSide;
+			var yRE2 = yREBeginOffsetFromRealSide+yREsideLength;
+		}
+		
+		var wingOutlineCoordinates = new Array(new Array(0,0));
+		var gIdx = 1;
+
+		
+		if (y1>0)	{
+			if (yHasRackEars && yREPanelIndex==yPanelIndex && yRE2<y1)	{
+				wingOutlineCoordinates[gIdx++] = new Array(0,yRE1);
+				wingOutlineCoordinates[gIdx++] = new Array(-C_rackEarsSideExtraWidth,yRE1,2);
+				wingOutlineCoordinates[gIdx++] = new Array(-C_rackEarsSideExtraWidth,yRE2,2);
+				wingOutlineCoordinates[gIdx++] = new Array(0,yRE2);
+			}
+
+			wingOutlineCoordinates[gIdx++] = new Array(0,y1);
+
+			var angleOfNextLineFragment = getAngleOfLine(leftCoordinates[yCoordinateIndex][0],leftCoordinates[(yCoordinateIndex-1+leftCoordinates.length)%leftCoordinates.length][0],leftCoordinates[yCoordinateIndex][1],leftCoordinates[(yCoordinateIndex-1+leftCoordinates.length)%leftCoordinates.length][1]);
+			var lowerCutOutCoords = [
+				[0,y1-10],
+				[0,y1],
+				[leftCoordinates[yCoordinateIndex][0],leftCoordinates[yCoordinateIndex][1]],
+				[translateXByAngle(leftCoordinates[yCoordinateIndex][0],angleOfNextLineFragment,10),translateYByAngle(leftCoordinates[yCoordinateIndex][1],angleOfNextLineFragment,10)]
+			];
+		} else {
+			wingOutlineCoordinates[gIdx++] = new Array(leftCoordinates[yCoordinateIndex][0],0);
+
+			var lowerCutOutCoords = [
+				[leftCoordinates[yCoordinateIndex][0]+4,-4],
+				[leftCoordinates[yCoordinateIndex][0]+4,0],
+				[leftCoordinates[yCoordinateIndex][0],0],
+				[leftCoordinates[yCoordinateIndex][0],-4]
+			];
+		}
+		var el = shapeFromCoordinates(lowerCutOutCoords);
+		el.SetTool(cutter_1_0mm);
+		sidePanels[yPanelIndex].AddElement(el,0,0);
+
+		
+		for(var i=0;i<leftCoordinates.length;i++)	{
+			wingOutlineCoordinates[gIdx++] = leftCoordinates[(yCoordinateIndex-i+leftCoordinates.length)%leftCoordinates.length];
+		}
+		var ofs = wingOutlineCoordinates[gIdx-1][0];
+
+		if (y2<sidePanels[yPanelIndex].Height())	{
+			var angleOfNextLineFragment = getAngleOfLine(wingOutlineCoordinates[gIdx-1][0],wingOutlineCoordinates[gIdx-2][0],wingOutlineCoordinates[gIdx-1][1],wingOutlineCoordinates[gIdx-2][1]);
+			var highCutOutCoords = [
+				[0,y2+10],
+				[0,y2],
+				[wingOutlineCoordinates[gIdx-1][0],wingOutlineCoordinates[gIdx-1][1]],
+				[translateXByAngle(wingOutlineCoordinates[gIdx-1][0],angleOfNextLineFragment,10),translateYByAngle(wingOutlineCoordinates[gIdx-1][1],angleOfNextLineFragment,10)]
+			];
+
+			wingOutlineCoordinates[gIdx++] = new Array(0,y2);
+
+			if (yHasRackEars && yREPanelIndex==yPanelIndex && yRE1>y2)	{
+				wingOutlineCoordinates[gIdx++] = new Array(0,yRE1);
+				wingOutlineCoordinates[gIdx++] = new Array(-C_rackEarsSideExtraWidth,yRE1,2);
+				wingOutlineCoordinates[gIdx++] = new Array(-C_rackEarsSideExtraWidth,yRE2,2);
+				wingOutlineCoordinates[gIdx++] = new Array(0,yRE2);
+			}
+
+			wingOutlineCoordinates[gIdx++] = new Array(0,sidePanels[yPanelIndex].Height());
+			wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),sidePanels[yPanelIndex].Height());
+
+			if (yHasRackEars && yREPanelIndex==yPanelIndex && yRE1>y2)	{
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),yRE2);
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width()+C_rackEarsSideExtraWidth,yRE2,2);
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width()+C_rackEarsSideExtraWidth,yRE1,2);
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),yRE1);
+			}
+
+			wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),y2);
+		} else {
+			var highCutOutCoords = [
+				[ofs,sidePanels[yPanelIndex].Height()+4],
+				[ofs,sidePanels[yPanelIndex].Height()],
+				[ofs+4,sidePanels[yPanelIndex].Height()],
+				[ofs+4,sidePanels[yPanelIndex].Height()+4]
+			];
+
+			wingOutlineCoordinates[gIdx++] = new Array(ofs,sidePanels[yPanelIndex].Height());
+			wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width()-ofs,sidePanels[yPanelIndex].Height());
+		}
+		var el = shapeFromCoordinates(highCutOutCoords);
+		el.SetTool(cutter_1_0mm);
+		sidePanels[yPanelIndex].AddElement(el,0,0);
+
+		mirrorCoordinateSetInYAxis(highCutOutCoords);
+		var el = shapeFromCoordinates(highCutOutCoords);
+		el.SetTool(cutter_1_0mm);
+		sidePanels[yPanelIndex].AddElement(el,sidePanels[yPanelIndex].Width(),0);
+
+		for(var i=0;i<rightCoordinates.length;i++)	{
+			wingOutlineCoordinates[gIdx++] = rightCoordinates[(yCoordinateIndex+1+i)%rightCoordinates.length];
+		}
+
+		if (y1>0)	{
+			if (yHasRackEars && yREPanelIndex==yPanelIndex && yRE2<y1)	{
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),yRE2);
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width()+C_rackEarsSideExtraWidth,yRE2,2);
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width()+C_rackEarsSideExtraWidth,yRE1,2);
+				wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),yRE1);
+			}
+
+			wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),y1);
+			wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width(),0);
+		} else {
+			wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yPanelIndex].Width()-ofs,0);
+		}
+		mirrorCoordinateSetInYAxis(lowerCutOutCoords);
+		var el = shapeFromCoordinates(lowerCutOutCoords);
+		el.SetTool(cutter_1_0mm);
+		sidePanels[yPanelIndex].AddElement(el,sidePanels[yPanelIndex].Width(),0);
+		
+		// Make engraving of this outline:
+		if (C_addGuideEngravings)	{
+			var hpgl = hpglFromCoordinates(wingOutlineCoordinates);
+			sidePanels[yPanelIndex].AddElement(
+				hpgl,
+				0, 
+				0
+			);
+		}
+		
+		if (yHasRackEars && yREPanelIndex==yPanelIndex)	{
+			var centerX = sidePanels[yREPanelIndex].Width()/2;
+			var centerY = yRE1+(yRE2-yRE1)/2;
+			var cOffsetX = centerX+C_rackEarsSideExtraWidth-9.00;
+			var cOffsetY = (yRE2-yRE1)/2-5.95;
+			for(var i=0;i<4;i++)	{
+				var el = new DHole("el", dhole_double, 10.50, 7.60);
+				sidePanels[yREPanelIndex].AddElement(el, centerX+cOffsetX*(i&1?-1:1), centerY+cOffsetY*(i&2?-1:1));
+				el.SetAngle(90);
+			}
+		}
+
+		// Set contour:
+		if (!C_wings_dryRun)	{
+			var dxf = shapeFromCoordinates(wingOutlineCoordinates);
+			sidePanels[yPanelIndex].SetBorderContour(dxf);
+			var outlineXYoffset = getOutlineXYoffset(wingOutlineCoordinates);
+			translateAllElementsOnPanel(sidePanels[yPanelIndex],outlineXYoffset[0],outlineXYoffset[1]);
+		}
+		sidePanels[yPanelIndex].UnsetModified();
+	}
+}
+function createRackEars()	{
+	if (yHasRackEars && C_endsMode<0)	{
+
+		// Turn it right again...:
+		rotatePanel(sidePanels[yREPanelIndex],180);
+
+		var yRE1 = yREBeginOffsetFromRealSide;
+		var yRE2 = yREBeginOffsetFromRealSide+yREsideLength;
+
+
+		var wingOutlineCoordinates = new Array(new Array(0,0));
+		var gIdx = 1;
+
+		wingOutlineCoordinates[gIdx++] = new Array(0,yRE1);
+		wingOutlineCoordinates[gIdx++] = new Array(-C_rackEarsSideExtraWidth,yRE1,2);
+		wingOutlineCoordinates[gIdx++] = new Array(-C_rackEarsSideExtraWidth,yRE2,2);
+		wingOutlineCoordinates[gIdx++] = new Array(0,yRE2);
+
+		wingOutlineCoordinates[gIdx++] = new Array(0,sidePanels[yREPanelIndex].Height());
+		wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yREPanelIndex].Width(),sidePanels[yREPanelIndex].Height());
+
+		wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yREPanelIndex].Width(),yRE2);
+		wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yREPanelIndex].Width()+C_rackEarsSideExtraWidth,yRE2,2);
+		wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yREPanelIndex].Width()+C_rackEarsSideExtraWidth,yRE1,2);
+		wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yREPanelIndex].Width(),yRE1);
+
+		wingOutlineCoordinates[gIdx++] = new Array(sidePanels[yREPanelIndex].Width(),0);
+
+		var centerX = sidePanels[yREPanelIndex].Width()/2;
+		var centerY = yRE1+(yRE2-yRE1)/2;
+		var cOffsetX = centerX+C_rackEarsSideExtraWidth-9.00;
+		var cOffsetY = (yRE2-yRE1)/2-5.95;
+		for(var i=0;i<4;i++)	{
+			var el = new DHole("el", dhole_double, 10.50, 7.60);
+			sidePanels[yREPanelIndex].AddElement(el, centerX+cOffsetX*(i&1?-1:1), centerY+cOffsetY*(i&2?-1:1));
+			el.SetAngle(90);
+		}
+
+		// Set contour:
+		var dxf = shapeFromCoordinates(wingOutlineCoordinates);
+		sidePanels[yREPanelIndex].SetBorderContour(dxf);
+		var outlineXYoffset = getOutlineXYoffset(wingOutlineCoordinates);
+		translateAllElementsOnPanel(sidePanels[yREPanelIndex],outlineXYoffset[0],outlineXYoffset[1]);
+		
+		sidePanels[yREPanelIndex].UnsetModified();
+	}
+}
+
+
+
+
+
+
+
+// ###MARKER_PREMAKE###
+
+
+
+/**************************
+ * Execute...
+ **************************/
+
+// Front (1)
+var fp1Arr = createEndPanel("Front");
+var sidePanels = processingEndPanel(fp1Arr[0], fp1Arr[1], fp1Arr[2], !C_dryRun);
+fp1Arr[0].UnsetModified().GridOff();
+
+if (!C_dryRun)	{
+	var fp2Arr = createEndPanel("Back", true);
+	processingEndPanel(fp2Arr[0], fp2Arr[1], fp2Arr[2], false, true);
+	mirrorXPanel(fp2Arr[0]);
+	fp2Arr[0].UnsetModified().GridOff();
+
+	// Create order with accessories:
+	if (C_createOrder)	{
+		createOrder();
+	}	
+}
+
+// WINGS:
+if (yHasWings)	{
+	createWings();
+} 
+if (yHasRackEars && (!yHasWings || yREPanelIndex!=yPanelIndex)) {
+	createRackEars();
+}
+
+
+
+
+
+
+
+
+
+/***************************************************************
+*  (c) 2013-2014 SKAARHOJ Engineering, www.skaarhoj.com
+*  Author: Kasper Skårhøj <kasper@skaarhoj.com>
+*  All rights reserved
+*
+*  This script is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/

@@ -35,11 +35,13 @@ SkaarhojEncoders::SkaarhojEncoders() {
 		_countOn[i] = false;
 		_pushOn[i] = false;
 		_pushOnTriggerTimeFired[i] = false;
+		_isPushed[i] = false;
 		_interruptStateNum[i] = 0;
 		_interruptStateNumMem[i] = 0;
 		_stateCheckTime[i] = 0;
 		_interruptStateTime[i] = 0;
 	}
+	_stateCheckDelay = 100;
 
 	_serialOutput = 0;
 }
@@ -58,7 +60,7 @@ void SkaarhojEncoders::begin(uint8_t address) {
     _GPIOchip.inputOutputMask(0xFFFF);  // All Inputs.
 
     _GPIOchip.setGPInterruptTriggerType(0);		// (INTCON) Trigger interrupts on change from previous on all.
-    _GPIOchip.setGPInterruptEnable((B01010101 <<8) | B0011111);          // Set up which pins triggers interrupt (GPINTEN)
+    _GPIOchip.setGPInterruptEnable((B01010101 <<8) | B00111111);          // Set up which pins triggers interrupt (GPINTEN)
 }
 
 /**
@@ -80,12 +82,12 @@ void SkaarhojEncoders::runLoop()	{
 	      if ((buttonStatus >> 8) & (B1<<(b<<1)))  {	// Was this pin causing the interrupt?
 	        if ((capture >> 8) & (B1<<(b<<1)))  {	// Check pin A polarity
 	          if ((capture >> 8) & (B10<<(b<<1)))  {	// Check pin B (direction)
-	            _interruptStateNum[b]++;
-				directionUp = true;
-	          } 
-	          else {
 	            _interruptStateNum[b]--;
 				directionUp = false;
+	          } 
+	          else {
+	            _interruptStateNum[b]++;
+				directionUp = true;
 	          }
 
 			  if (_serialOutput)	{
@@ -100,17 +102,17 @@ void SkaarhojEncoders::runLoop()	{
 	        }
 	      }
 	    }
-		/*
+
 		// Fifth encoder:
       if (buttonStatus & (B100000))  {	// Was this pin causing the interrupt?
         if (capture & (B100000))  {	// Check pin A polarity
           if (capture & (B1000000))  {	// Check pin B (direction)
-            _interruptStateNum[4]++;
-			directionUp = true;
-          } 
-          else {
             _interruptStateNum[4]--;
 			directionUp = false;
+          } 
+          else {
+            _interruptStateNum[4]++;
+			directionUp = true;
           }
 
 		  if (_serialOutput)	{
@@ -125,12 +127,13 @@ void SkaarhojEncoders::runLoop()	{
 		  _interruptStateTime[4] = millis();
         }
       }
-	  */
+
 			// 5 buttons:
 	    for(uint8_t b=0; b<5; b++)  {
 	      if (buttonStatus & (B1<<b))  {	// Was this pin causing the interrupt?
 			if (!(capture & (B1<<b)))  {	// Check polarity
 			  _pushOnMillis[b] = millis();
+			  _isPushed[b] = true;
 
 			  if (_serialOutput)	{
 				  Serial.print(F("Button "));
@@ -138,6 +141,14 @@ void SkaarhojEncoders::runLoop()	{
 				  Serial.print(F(" pushed"));
 				  Serial.println();
 			  }
+		    } else {
+  			  _isPushed[b] = false;
+  			  if (_serialOutput)	{
+  				  Serial.print(F("Button "));
+  				  Serial.print(b);
+  				  Serial.print(F(" released"));
+  				  Serial.println();
+  			  }
 		    }
 	      }
 	    }
@@ -156,12 +167,11 @@ int SkaarhojEncoders::state(uint8_t encNum) {
  */
 int SkaarhojEncoders::state(uint8_t encNum, unsigned int buttonPushTriggerDelay) {
 		// Check:
-	if (encNum <5 && hasTimedOut(_stateCheckTime[encNum],100))	{
+	if (encNum <5 && hasTimedOut(_stateCheckTime[encNum],_stateCheckDelay))	{	// This delay allows us a way to detect "fast" rotations because the interrupt may have increased the counters more than one time between each check.
 		_stateCheckTime[encNum] = millis();
-		
+
 			// If rotations has been detected in either direction:
 		if (_interruptStateNumMem[encNum] != _interruptStateNum[encNum])	{
-			_interruptStateNumMem[encNum] = _interruptStateNum[encNum];
 			
 				// Check if the last interrupt generated signal is younger than 1000 ms, only then will we accept it, otherwise we ignore.
 			if (!hasTimedOut(_interruptStateTime[encNum],1000))	{	
@@ -169,12 +179,13 @@ int SkaarhojEncoders::state(uint8_t encNum, unsigned int buttonPushTriggerDelay)
 			} else {
 				_interruptStateLastCount[encNum] = 0;
 			}
+			_interruptStateNumMem[encNum] = _interruptStateNum[encNum];
 			
 			return _interruptStateLastCount[encNum]!=0 ? (_interruptStateLastCount[encNum] < 0 ? -1 : 1) : 0;
 		}
 	
-		bool isPushed = _GPIOchip.digitalRead(3+encNum);
-		if (isPushed)  {
+//		bool isPushed = !_GPIOchip.digitalRead(encNum);
+		if (_isPushed[encNum])  {
 			if (!_pushOn[encNum]) {
 				_pushOn[encNum] = true;
 				_pushOnTriggerTimeFired[encNum] = false;
@@ -202,6 +213,20 @@ int SkaarhojEncoders::state(uint8_t encNum, unsigned int buttonPushTriggerDelay)
  */
 int SkaarhojEncoders::lastCount(uint8_t encNum) {
 	return _interruptStateLastCount[encNum];
+}
+
+/**
+ *
+ */
+int SkaarhojEncoders::totalCount(uint8_t encNum) {
+	return _interruptStateNum[encNum];
+}
+
+/**
+ *
+ */
+void SkaarhojEncoders::setStateCheckDelay(uint16_t delayTime) {
+	 _stateCheckDelay = delayTime;
 }
 
 /**

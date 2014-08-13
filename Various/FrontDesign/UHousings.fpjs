@@ -1,0 +1,1262 @@
+/***************************************************************
+ *  (c) 2013-2014 SKAARHOJ Engineering, www.skaarhoj.com
+ *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
+ *
+ *  This script is Open Source under GNU/GPL license. 
+ *  See bottom for more details.
+ *
+ *  Licensed to Schaeffer AG for inclusion with Front Panel Designer.
+ ***************************************************************/
+/*************************************************************
+ * This is a JavaScript program written for a software called 
+ * Front Panel Designer made by Schaeffer AG. 
+ * Front Panel Designer is a CAD application for design and 
+ * online ordering of aluminum panels and this script will create 
+ * several such panels based on input parameters. The panels will 
+ * form a full enclosure when assembled.
+ *
+ * The enclosures generated with this script is based on two front panels
+ * being bend (by hand) in each end so they form two U-shapes that are put together
+ *
+ * See http://skaarhoj.com/schaeffer/ for latest version, other
+ * tools and training resources published by SKAARHOJ K/S.
+ *
+ * - kasper
+ **************************************************************/
+
+
+
+// Set this to "false" if you want to manually adjust parameters below:
+var C_UI = true;
+
+
+/***************************************
+ * Global Settings for enclosure creation.
+ * Adapt to your needs for full flexibility
+ *
+ * All measures in mm. (25.4 mm = 1 inch)
+ ***************************************/
+
+
+
+// WIDTH, HEIGHT, DEPTH of enclosure (outer measures):
+var C_width = 120;	
+var C_height = 30;	
+var C_depth = 100;
+
+// Thickness of plates: 2, 2.5, 3, 4 mm possible
+var C_thickness = new Array(
+		4, 		// Top piece
+		2 	// Bottom piece
+	);
+
+// Colors: These are constants from Schaeffers Scripting API manual
+var C_color = new Array(
+		elox_natural, 		// Top piece
+		elox_natural 		// Bottom piece
+	);
+
+// Housing Brackets:   	
+var C_numberOfHousingBracketsFront = new Array(-1,-1,-1); // (Bottom, Left, Right). Defines the number of housing brackets used on the front for each side panel. -1 will automatically place them pr. 100 mm.
+var C_numberOfHousingBracketsBack = new Array(-1,-1,-1);  // (Bottom, Left, Right). Defines the number of housing brackets used on the front for each side panel. -1 will automatically place them pr. 100 mm.
+var C_numberOfHousingBracketsTop = new Array(-1,-1);  // (Left top, Right top). Defines the number of housing brackets used on the front for each side panel. -1 will automatically place them pr. 100 mm.
+var C_useStudsForHousingBracketsOnFront = true;	// Uses M3x8mm Studs for housing brackets on front (instead of countersunk holes). Notice: This requires you to drill the thread out of the housing brackets on one side and use a washer and nut to fasten it!
+var C_useStudsForHousingBracketsOnBack = false;	// Same as above, but for the back.
+var C_useStudsForHousingBracketsOnTop = true;	// Same as above, but for the top.
+
+// Ordering
+var C_createOrder = false;			// If true, will create an order and add the accessories (profiles, assembly kits etc.)
+
+// Additional features:
+var C_extraFrontWidth = 0;	// If greater than zero, it will add this amount of space on left and right side of the front face. This is useful to create "rack ears" (see also "C_rackEars" setting). If you want to create a true 19" unit, make sure 2* this value + C_width equals 483mm. A good choice is to set this value at 23mm and C_width = 437 => 23*2+437=483mm
+var C_extraTopWidth = 0;	// Like above, but mutually exclusive. FrontWidth takes priority
+var C_rackEars = false;			// If true, adds holes for rack mounting on front or top. See also "C_extraFrontWidth"
+var C_roundFrontCorners = true;	// If true, corners of the front panel are rounded by 2mm which fits the side or housing profiles.
+var C_addEdgeGrinding = true;	// You probably want edges grinded on the end profiles (front and back) if you are not making a rack unit! Otherwise they are ugly from tool marks and often very sharp.
+var C_addGuideEngravings = true;	// This will add thin, orange engraved lines for preview of where adjacent components (panels, profiles and brackets) are located on each side. Can be useful for positioning other elements after which they should be removed before ordering.
+
+var C_panelNamesPrefix = "";		// A panel name prefix
+var C_panelNamesSuffix = "";		// A panel name suffix
+
+var C_overhang = new Array(0,0);	// (left, right). Must be >=0. Overhang is when the top U-profile extends over the bottom U-profile on the left/right sides instead of being flush with it. Notice: This value can be combined with C_extraFrontWidth or C_extraTopWidth, but it's assumed that the overhang is equal to or smaller than the extra width added by those options, otherwise various positioning will not work out because the front panel width will be miscalculated.
+var C_bottomWings = new Array(0,0);	// (front, back). Must be equal to 0 (off) or >= approx. 10mm (for holes and possibility to bend it which is harder the less there is to grip) and less than a reasonable amount so there is space enough for the bottom plate. Bottom wings is when the top U-profile is bent yet another time at the ends so it enters into the bottom area. This makes for more visually homogeneous edges of the front and back face, but also creates a more complex bottom profile with extra brackets.
+var C_bottomCover = new Array(0,0);	// (front, back). Must be >=0. only applicable if bottom wings are not enabled. Bottom cover is that the top U-profile extends further down than just to the bottom level.
+
+
+
+
+
+
+if (C_UI)	{
+	showUI();
+}
+
+
+// ###MARKER_POSTCONFIG###
+
+
+
+/**********************************************************************
+ * NO USER SETTING BELOW!
+ **********************************************************************/
+
+
+
+
+function showUI()	{
+
+	var d = new Dialog("U-box - a housing based on two panels with bends",500,100); // create the dialog window
+	d.Newline().VSpacer(0).NewlineC();
+
+	var height = new Param("50.0");
+	d.Spacer(25).Text("Height:");
+	d.Spacer(10).TextEntry(1, height).Spacer(5).Text("mm").Spacer(0).NewlineC();
+
+	var width = new Param("100.0");
+	d.Spacer(25).Text("Width:");
+	d.Spacer(13).TextEntry(1, width).Spacer(5).Text("mm").Spacer(0).NewlineC();
+
+	var rack = new Param(0);
+	d.Spacer(25).Spacer(25).Spacer(25).Text("Rack Unit:").Spacer(5).Selection(" \n1U Rack Unit\n2U Rack Unit\n3U Rack Unit",rack).Spacer(5).Text("(Overrides width/height)").Spacer(0).NewlineC();
+	
+	var depth = new Param("150.0");
+	d.Spacer(25).Text("Depth:");
+	d.Spacer(10).TextEntry(1, depth).Spacer(5).Text("mm").Spacer(0).NewlineC();
+
+	d.VSpacer(10).Newline();
+
+	var thickness = new Param(0);
+	d.Spacer(25).Text("Thickness of panels:").NewlineC();
+	d.Spacer(25).Selection("2 mm\n2.5 mm\n3 mm\n4 mm", thickness).Spacer(0).NewlineC();
+	var thicknessCodes = new Array(2,2.5,3,4);
+	
+	d.VSpacer(20).Newline();
+	var color = new Param(0);
+	d.Spacer(25).Text("Color of panels:").NewlineC();
+	d.Spacer(25).RadioBox(color, " \nNatural\nGold\nRed\nBlue\nGreen\nBlack").Spacer(25).NewlineC();
+	var colorCodes = new Array(elox_natural,elox_gold,elox_red,elox_blue,elox_green,elox_black);
+
+	d.VSpacer(20).Newline();
+
+	var guideObjects = new Param(1);
+	d.Spacer(25).CheckBox(guideObjects, "Add guide engravings?").NewlineC();
+
+	var createOrder = new Param(0);
+	d.Spacer(25).CheckBox(createOrder, "Create order with housing brackets?").NewlineC();
+
+	d.Divider().NewlineC();
+
+	// And an "Ok" button, which, when pressed, will close
+	// the dialog, returning 1 from Show().
+	d.Spacer(0).DlgButton(1, "Create!").Spacer(0);
+	// Show dialog, pressed button is returned but not used
+	// in this example.
+	var b = d.Show();
+	
+	
+	// Transferring values from UI to global variables:
+	Print("\n\nConfiguration values:\n")
+
+	C_height = parseFloat(height.get());
+	C_width = parseFloat(width.get());
+	C_depth = parseFloat(depth.get());
+
+	if (rack.get())	{
+		C_width = 437;
+		C_extraFrontWidth = 23;
+		C_rackEars = true;
+		Print("C_extraFrontWidth="+C_extraFrontWidth+"\n")
+		Print("C_rackEars="+(C_rackEars?"Yes":"No")+"\n")
+
+		C_height = rack.get()*1.75*25.4-0.5;
+	}
+	
+	Print("C_height="+C_height+"\n")
+	Print("C_width="+C_width+"\n")
+	Print("C_depth="+C_depth+"\n")
+
+	C_thickness = new Array(
+		thicknessCodes[thickness.get()],
+		thicknessCodes[thickness.get()]
+	);
+	Print("C_thickness=["+C_thickness+"]\n")
+
+	C_color = new Array(
+		colorCodes[color.get()],
+		colorCodes[color.get()]
+	);
+	Print("C_color=["+C_color+"]\n")
+	
+	C_addGuideEngravings = guideObjects.get() ? true : false;
+	Print("C_addGuideEngravings="+(C_addGuideEngravings?"Yes":"No")+"\n")
+	
+	C_createOrder = createOrder.get() ? true : false;
+	Print("C_createOrder="+(C_createOrder?"Yes":"No")+"\n")
+}
+
+
+/**************************
+ * Various computations and 
+ * initializations and constants:
+ **************************/
+var globalHousingBracketCount = 0;
+var bendCompensation = 0.6;	// A bend adds to the dimension of the side compared to it's center. This is that addition. (0.6 is the best value as far as we know).
+var housingBracketAutoInterval = 100;	// The minimal interval between automatically placed housing brackets
+
+
+
+
+
+/***************************************************************************
+ * Configuration value getter-methods and helper functions
+ * panelNum = {1,2} = {top , bottom} panels
+ * sideNum = {1,2,3,4,5,6} = {front, top, back, bottom, left, right} sides
+ ***************************************************************************/
+function getThickness(panelNum)	{
+	return C_thickness[panelNum-1];
+}
+function getColor(panelNum)	{
+	return C_color[panelNum-1];
+}
+
+/** 
+ * Returns the width of the panel
+ */
+function getPanelWidth(panelNum)	{	// panelNum = {1,2}
+	switch(panelNum)	{
+		case 1:
+			if (C_extraFrontWidth>0)	{
+				return C_width+2*C_extraFrontWidth;
+			} else if (C_extraTopWidth>0)	{
+				return C_width+2*C_extraTopWidth;
+			} else {
+				return C_width+C_overhang[0]+C_overhang[1];
+			}
+		break;
+		case 2:
+			return C_depth-C_thickness[0]*2;
+		break;
+	}
+}
+
+/** 
+ * Returns the height of the panel
+ */
+function getPanelHeight(panelNum)	{	// panelNum = {1,2}
+	switch(panelNum)	{
+		case 1:
+			return (C_bottomWings[0]>0 ? C_bottomWings[0]-bendCompensation*2 : C_bottomCover[0])+	// Notice: Two bend compensations for a wing is because it also takes into account the effect on the adjacent side.
+					(C_height-bendCompensation)*2+	// For front and back, the bend compensation is towards the top face
+					(C_depth-2*bendCompensation)+	// Two bend compensations, one for each transition to front and back.
+					(C_bottomWings[1]>0 ? C_bottomWings[1]-bendCompensation*2 : C_bottomCover[1]);	// See note above.
+		break;
+		case 2:
+			return (C_height-C_thickness[0]-bendCompensation)*2 +	// Left and Right
+					C_width-2*bendCompensation;	// Bottom
+		break;
+	}
+}
+
+/** 
+ * Get center coordinates of any of the box faces.
+ * See also getFaceBoxDimensions() for more information.
+ */
+function getFaceCenterCoordinates(sideNum)	{
+	var result = new Array(0,0);
+	
+	// X:
+	switch(sideNum)	{
+		case 1: 	// Front
+		case 2: 	// Top
+		case 3: 	// Back
+			if (C_extraFrontWidth>0 || C_extraTopWidth>0)	{
+				result[0] = getPanelWidth(1)/2;	// The panel is symmetric in case extra width is added
+			} else {
+				result[0] = C_overhang[0]+C_width/2;
+			}
+		break;
+		case 4:
+		case 5:
+		case 6:
+			result[0] = getPanelWidth(2)/2;
+		break;
+	}
+	
+	// Y:
+	switch(sideNum)	{
+		case 1: 	// Front (lowest section, top panel)
+			result[1] = (C_bottomWings[0]>0 ? C_bottomWings[0]-bendCompensation*2 : C_bottomCover[0])+
+					C_height/2;
+		break;
+		case 2:  	// Top (Middle section, top panel)
+			result[1] = (C_bottomWings[0]>0 ? C_bottomWings[0]-bendCompensation*2 : C_bottomCover[0])+
+					(C_height-bendCompensation)+
+					(C_depth/2-bendCompensation);
+		break;
+		case 3: 	// Back (highest section, top panel)
+			result[1] = (C_bottomWings[0]>0 ? C_bottomWings[0]-bendCompensation*2 : C_bottomCover[0])+
+					(C_height-bendCompensation)+
+					(C_depth-2*bendCompensation)+
+					C_height/2-bendCompensation;
+		break;
+		case 4: 	// Bottom (Middle section, bottom panel)
+			result[1] = (C_height-C_thickness[0]-bendCompensation) +	// Right
+					C_width/2-bendCompensation;
+		break;
+		case 5: 	// Left (Highest section, bottom panel)
+			result[1] = (C_height-C_thickness[0]-bendCompensation) +	// Right
+					C_width-2*bendCompensation +	// Bottom
+					(C_height/2-bendCompensation);
+		break;
+		case 6: 	// Right (Lowest section, bottom panel)
+			result[1] = (C_height/2-C_thickness[0]);
+		break;
+	}	
+
+	return result;	
+}
+
+/** 
+ * Get dimensions of any of the box faces.
+ * A box face is the area on the side which corresponds to the actual box dimensions as they are given in the input parameters. This can be different from the actual width/height of the box due to overhang, extra widths of top/front and bottom cover parameters.
+ */
+function getFaceBoxDimensions(sideNum)	{
+	switch(sideNum)	{
+		case 1: 	// Front
+			return new Array(C_width,C_height);
+		break;
+		case 2: 	// Top
+			return new Array(C_width,C_depth);
+		break;
+		case 3: 	// Back
+			return new Array(C_width,C_height);
+		break;
+		case 4: 	// Bottom
+			return new Array(C_depth,C_width);	// Same orientation af left and right...
+		break;
+		case 5: 	// Left
+			return new Array(C_depth,C_height);
+		break;
+		case 6: 	// Right
+			return new Array(C_depth,C_height);
+		break;
+	}
+}
+
+/**
+ * This will optimize the radius for cavities to the max and select the largest tool possible (to save costs)
+ */
+function setRadiusAndToolForCavity(cv)	{
+	var width = cv.Width();
+	var height = cv.Height();
+	
+	var min = width<height ? width : height;
+	var rad = min/2>1.5 ? 1.5 : min/2;
+	cv.SetCornerRadius(rad);
+	
+	if (rad==1.5)	{
+		cv.SetTool(cutter_3_0mm);
+	}
+}
+/**
+ * This will add a bending cavity
+ */
+function addBendingCavity(fp, x, y, w, panel)	{
+	var el = new Cavity("el");
+	el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+	fp.AddElement(el, x, y);
+	el.MakeRectangular(w, 3, getThickness(panel)-0.5, 0.5);
+	el.SetHeight(1);
+	setRadiusAndToolForCavity(el);
+	el.SetEdgeMachining(bevel_45, getThickness(panel)-0.5-0.2, 0, 0);
+	el.PutOnReverseSide();
+}
+/**
+ * Adding a number of housing brackets to a panel
+ * Orientation: 0=normal, 90= turned 90 CW, -90=turned 90 CCW, 180 = 180
+ */
+function addHousingBrackets(fp, baselineX, baselineY, orientation, number, distibutionWidth, useStuds, reverseNumbering)	{
+	
+	var housingBrackets = number==-1 ? (parseInt(distibutionWidth/housingBracketAutoInterval)<=0 ? 1 : parseInt(distibutionWidth/housingBracketAutoInterval)) : number;
+
+	if (housingBrackets>0)	{
+		var housingBracketDist = housingBrackets>1 ? (distibutionWidth-10) / (housingBrackets-1) : 0;
+		var housingBracketStartOffset = housingBrackets>1 ? housingBracketDist*(housingBrackets-1)/2 : 0;
+
+		for(var a=0;a<housingBrackets;a++)	{
+			if (useStuds)	{
+				var el = new Bolt("el", "GU30", 8);
+			} else {
+				var el = new DrillHole("el", 3.00);
+				el.SetCountersink(sink_74A_M3);
+			}
+
+			globalHousingBracketCount+=1;
+
+			switch(orientation)	{
+				case 90:
+					var oSet = baselineY-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
+					fp.AddElement(el, baselineX+6.5, oSet);
+					if (C_addGuideEngravings)	{
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						baselineX+5, oSet);
+						fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+						baselineX+1, oSet-4);
+					}
+				break;
+				case -90:
+					var oSet = baselineY-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
+					fp.AddElement(el, baselineX-6.5, oSet);
+					if (C_addGuideEngravings)	{
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						baselineX-5, oSet);
+						fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+						baselineX-9, oSet-4);
+					}
+				break;
+				case 180:
+					var oSet = baselineX-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
+					fp.AddElement(el, oSet, baselineY-6.5);
+					if (C_addGuideEngravings)	{
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						oSet, baselineY-5);
+						fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+						oSet-4, baselineY-9);
+					}
+				break;
+				default:
+					var oSet = baselineX-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
+					fp.AddElement(el, oSet, baselineY+6.5);
+					if (C_addGuideEngravings)	{
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						oSet, baselineY+5);
+						fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+						oSet-4, baselineY+1);
+					}
+				break;
+			}
+		}
+	}
+}
+
+/**
+ * Creates a DXF shape from input set of coordinates/radii
+ */
+function shapeFromCoordinates(coordinateSet)	{
+	var dxf = new DxfContour("dxf-canvas1", "", 5, 100, 0);
+	var len = coordinateSet.length;
+
+	for(var i=0; i<=len; i++)	{
+		if (i==0)	{
+			if (coordinateSet[0][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[0][0],coordinateSet[0][1], coordinateSet[len-1][0],coordinateSet[len-1][1], coordinateSet[1][0],coordinateSet[1][1], coordinateSet[0][2]);
+				dxf.Start(cornerCoordinates[4],cornerCoordinates[5]);
+			} else {	// none
+				dxf.Start(coordinateSet[0][0],coordinateSet[0][1]);
+			}
+		} else {
+			if (coordinateSet[(i%len)][2])	{	// there is a radius
+				var cornerCoordinates = roundedCorner(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1], coordinateSet[(i-1)%len][0],coordinateSet[(i-1)%len][1], coordinateSet[(i+1)%len][0],coordinateSet[(i+1)%len][1], coordinateSet[(i%len)][2]);
+				dxf.LineTo(cornerCoordinates[2],cornerCoordinates[3]);
+				dxf.ArcToMP(cornerCoordinates[4],cornerCoordinates[5],cornerCoordinates[0],cornerCoordinates[1], cornerCoordinates[6]);
+			} else {	// none
+				dxf.LineTo(coordinateSet[(i%len)][0],coordinateSet[(i%len)][1]);
+			}
+		}
+	}
+	
+	dxf.Finish();
+	
+	return dxf;
+}
+
+/**
+ * Calculates necessary coordinates for a rounded corner
+ */
+function roundedCorner(x,y, srcX,srcY, destX,destY, radius) {
+	var result = new Array(0,0,0,0,0,0,1);	// centerX, centerY, srcAttachX, srcAttachY, destAttachX, destAttachY, rotationDirection
+	
+	var alpha1 = getAngleOfLine(x,srcX,y,srcY);
+	var alpha2 = getAngleOfLine(x,destX,y,destY);
+	
+//	Print("alpha1="+alpha1/Math.PI*180+"\n");
+//	Print("alpha2="+alpha2/Math.PI*180+"\n");
+	
+	var angleDiff = alpha2-alpha1;
+	if (angleDiff < -Math.PI) {
+		angleDiff+= 2*Math.PI;
+	} else if (angleDiff > Math.PI)	{
+		angleDiff-= 2*Math.PI;
+	}
+	
+	var halfAngle = angleDiff/2;
+//	Print("halfAngle="+halfAngle/Math.PI*180+"\n");
+	
+	var distFromXYpoint = Math.abs(radius / Math.sin(halfAngle));
+//	Print("distFromXYpoint="+distFromXYpoint+"\n");
+
+	var travelUpOnEachLine = Math.cos(halfAngle)*distFromXYpoint;
+//	Print("travelUpOnEachLine="+travelUpOnEachLine+"\n");
+
+	var angleOfCenterLine = alpha1+halfAngle;
+
+
+	result[0] = translateXByAngle(x,angleOfCenterLine,distFromXYpoint);
+	result[1] = translateYByAngle(y,angleOfCenterLine,distFromXYpoint);
+
+	result[2] = translateXByAngle(x,alpha1,travelUpOnEachLine);
+	result[3] = translateYByAngle(y,alpha1,travelUpOnEachLine);
+	
+	result[4] = translateXByAngle(x,alpha2,travelUpOnEachLine);
+	result[5] = translateYByAngle(y,alpha2,travelUpOnEachLine);
+	
+	result[6] = halfAngle < 0 ? 1 : -1;
+	
+	return result;
+}
+
+/**
+ * Returns the angle of a line given by it's x/y coordinates (two points)
+ */
+function getAngleOfLine(x1,x2,y1,y2)	{
+	return (x2-x1)==0 ? (y2-y1 < 0?-1:1)*Math.PI/2 : Math.atan((y2-y1)/(x2-x1))+(x2-x1 < 0 ? Math.PI: 0);
+}
+
+/**
+ * Translates an X value in 2D a certain distance at a certain angle
+ */
+function translateXByAngle(x,alpha,dist)	{
+	return rounding(x+Math.cos(alpha)*dist);
+}
+
+/**
+ * Translates a Y value in 2D a certain distance at a certain angle
+ */
+function translateYByAngle(y,alpha,dist)	{
+	return rounding(y+Math.sin(alpha)*dist);
+}
+
+/**
+ * Rounding to 5 digits
+ */
+function rounding(input)	{
+	return Math.round(input*100000)/100000;
+}
+
+function addFlapsToCoordinates(coordinateSet,fp,frontBottomIndex)	{
+	if (C_bottomWings[frontBottomIndex]>0)	{
+
+		var center = getFaceCenterCoordinates(1);
+		var centerX = center[0];
+		
+		var center = getFaceCenterCoordinates(4);	// Bottom
+		var dims = getFaceBoxDimensions(4);		// Bottom
+		var flaps = parseInt(dims[1]/40)<=0 ? 1 : parseInt(dims[1]/40);
+		var flapsDist = (dims[1]-30) / (flaps-1);
+		var flapsStartOffset = flaps>1 ? flapsDist*(flaps-1)/2 : 0;
+		
+			// Back wing:
+		if (frontBottomIndex==1)	{
+			for(var i=0;i<flaps;i++)	{
+				var fcX = centerX-flapsStartOffset+flapsDist*i;
+				var fcY = getPanelHeight(1)+3.5;
+
+				coordinateSet.push(new Array(fcX-4.5,getPanelHeight(1),1.5));
+				coordinateSet.push(new Array(fcX-4.5,getPanelHeight(1)+7,1.5));
+				coordinateSet.push(new Array(fcX+4.5,getPanelHeight(1)+7,1.5));
+				coordinateSet.push(new Array(fcX+4.5,getPanelHeight(1),1.5));
+				
+				var el = new DrillHole("el", 3.00);
+				el.SetThreading("Metric-M3");
+				fp.AddElement(
+					el, 
+					fcX,
+					fcY
+				);
+				
+				var el = new Cavity("el");
+				el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+				fp.AddElement(el, fcX, fcY+0.5);
+				el.MakeRectangular(11, 8, 1, 1.5);
+				setRadiusAndToolForCavity(el);
+			}
+		}		
+			// Front wing
+		if (frontBottomIndex==0)	{
+			for(var i=0;i<flaps;i++)	{
+				var fcX = centerX+flapsStartOffset-flapsDist*i;
+				var fcY = -3.5;
+
+				coordinateSet.push(new Array(fcX+4.5,0,1.5));
+				coordinateSet.push(new Array(fcX+4.5,-7,1.5));
+				coordinateSet.push(new Array(fcX-4.5,-7,1.5));
+				coordinateSet.push(new Array(fcX-4.5,0,1.5));
+				
+				var el = new DrillHole("el", 3.00);
+				el.SetThreading("Metric-M3");
+				fp.AddElement(
+					el, 
+					fcX,
+					fcY
+				);
+
+				var el = new Cavity("el");
+				el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+				fp.AddElement(el, fcX, fcY-0.5);
+				el.MakeRectangular(11, 8, 1, 1.5);
+				setRadiusAndToolForCavity(el);
+			}
+		}		
+	}
+	return coordinateSet;
+}
+function translateAllElementsOnPanel(fp,x,y)	{
+	var els = fp.Elements();
+	els.forEach(function(el){
+		el.MoveTo(el.X()+x,el.Y()+y);
+	});	
+}
+
+
+
+
+
+
+
+/************************
+ * Creator functions
+ * (Creates panels and orders)
+ *************************/
+
+/**
+ * Create top panel
+ *
+ * @param	string		Name of panel
+ * @return	Frontpanel	Front panel object
+ */
+function createTop(name) {
+
+		// Create panel:
+	var fp = new Frontpanel(C_panelNamesPrefix+name+C_panelNamesSuffix, getThickness(1), getPanelWidth(1), getPanelHeight(1), alu_elox);
+	fp.SetMaterialColor(getColor(1));
+	
+	if (C_extraFrontWidth || C_extraTopWidth || C_bottomWings[0]>0 || C_bottomWings[1]>0)	{
+		// NOTICE: Compensating the height of the extra top/front with bendCompensation may or may not be a good idea. If we didn't compensate, the extra part would theoretically have exactly the height of the front/top face but it may not bend well at the ends. Compensating means that it will be smaller letting the bend extend beyond it's edge. Well, we might wanna do a test with/without. Anyway, with bendCompCoef you can adjust...
+		var bendCompCoef = 1;
+		var coordinates = new Array();
+		if (C_extraFrontWidth && C_bottomWings[0]==0)	{
+			var center = getFaceCenterCoordinates(1);	// Front
+			var dims = getFaceBoxDimensions(1);		// Front
+			
+				// Start + Extra width wing, left:
+			coordinates.push(new Array(0,0,C_roundFrontCorners?2:0));
+			coordinates.push(new Array(0,center[1]+dims[1]/2-bendCompensation*bendCompCoef,C_roundFrontCorners?2:0));
+			coordinates.push(new Array(center[0]-dims[0]/2-C_overhang[0],center[1]+dims[1]/2-bendCompensation*bendCompCoef,0));
+			fp.AddElement(new RectHole("el", 3, 3, 0.5), center[0]-dims[0]/2-C_overhang[0]-1.5,center[1]+dims[1]/2-bendCompensation*bendCompCoef+1.5);
+			
+				// Top:
+			coordinates.push(new Array(center[0]-dims[0]/2-C_overhang[0], getPanelHeight(1), C_roundFrontCorners||C_bottomWings[1]?2:0));
+			coordinates = addFlapsToCoordinates(coordinates,fp,1);
+			coordinates.push(new Array(center[0]+dims[0]/2+C_overhang[1], getPanelHeight(1), C_roundFrontCorners||C_bottomWings[1]?2:0));
+
+				// End + Extra width wing, right:
+			coordinates.push(new Array(center[0]+dims[0]/2+C_overhang[1],center[1]+dims[1]/2-bendCompensation*bendCompCoef,0));
+			coordinates.push(new Array(getPanelWidth(1),center[1]+dims[1]/2-bendCompensation*bendCompCoef,C_roundFrontCorners?2:0));
+			coordinates.push(new Array(getPanelWidth(1),0,C_roundFrontCorners?2:0));
+			fp.AddElement(new RectHole("el", 3, 3, 0.5), center[0]+dims[0]/2+C_overhang[1]+1.5,center[1]+dims[1]/2-bendCompensation*bendCompCoef+1.5);
+		} else {
+			var center = getFaceCenterCoordinates(C_extraFrontWidth?1:2);	// Front or Top
+			var dims = getFaceBoxDimensions(C_extraFrontWidth?1:2);		// Front or Top
+
+				// Start:
+			coordinates.push(new Array(center[0]-dims[0]/2-C_overhang[0], 0, C_roundFrontCorners||C_bottomWings[0]?2:0));
+		
+			if (C_extraFrontWidth || C_extraTopWidth)	{
+					// Extra width wing, left:
+				coordinates.push(new Array(center[0]-dims[0]/2-C_overhang[0], center[1]-dims[1]/2+bendCompensation*bendCompCoef, 0));
+				coordinates.push(new Array(0, center[1]-dims[1]/2+bendCompensation*bendCompCoef, C_roundFrontCorners?2:0));
+				coordinates.push(new Array(0,center[1]+dims[1]/2-bendCompensation*bendCompCoef, C_roundFrontCorners?2:0));
+				coordinates.push(new Array(center[0]-dims[0]/2-C_overhang[0],center[1]+dims[1]/2-bendCompensation*bendCompCoef, 0));
+
+				fp.AddElement(new RectHole("el", 3, 3, 0.5), center[0]-dims[0]/2-C_overhang[0]-1.5, center[1]-dims[1]/2+bendCompensation*bendCompCoef-1.5);
+				fp.AddElement(new RectHole("el", 3, 3, 0.5), center[0]-dims[0]/2-C_overhang[0]-1.5, center[1]+dims[1]/2-bendCompensation*bendCompCoef+1.5);
+			}
+
+				// Top:
+			coordinates.push(new Array(center[0]-dims[0]/2-C_overhang[0], getPanelHeight(1), C_roundFrontCorners||C_bottomWings[1]?2:0));
+			coordinates = addFlapsToCoordinates(coordinates,fp,1);
+			coordinates.push(new Array(center[0]+dims[0]/2+C_overhang[1], getPanelHeight(1), C_roundFrontCorners||C_bottomWings[1]?2:0));
+
+			if (C_extraFrontWidth || C_extraTopWidth)	{
+					// Extra width wing, right:
+				coordinates.push(new Array(center[0]+dims[0]/2+C_overhang[1], center[1]+dims[1]/2-bendCompensation*bendCompCoef, 0));
+				coordinates.push(new Array(getPanelWidth(1), center[1]+dims[1]/2-bendCompensation*bendCompCoef, C_roundFrontCorners?2:0));
+				coordinates.push(new Array(getPanelWidth(1), center[1]-dims[1]/2+bendCompensation*bendCompCoef, C_roundFrontCorners?2:0));
+				coordinates.push(new Array(center[0]+dims[0]/2+C_overhang[1], center[1]-dims[1]/2+bendCompensation*bendCompCoef, 0));
+
+				fp.AddElement(new RectHole("el", 3, 3, 0.5), center[0]+dims[0]/2+C_overhang[1]+1.5, center[1]+dims[1]/2-bendCompensation*bendCompCoef+1.5);
+				fp.AddElement(new RectHole("el", 3, 3, 0.5), center[0]+dims[0]/2+C_overhang[1]+1.5, center[1]-dims[1]/2+bendCompensation*bendCompCoef-1.5);
+			}
+
+				// End:
+			coordinates.push(new Array(center[0]+dims[0]/2+C_overhang[1], 0, C_roundFrontCorners||C_bottomWings[0]?2:0));
+			
+			coordinates = addFlapsToCoordinates(coordinates,fp,0);
+		}
+		var dxf = shapeFromCoordinates(coordinates);
+		fp.SetBorderContour(dxf);
+		
+		
+			// FRONT special: D-holes for rack mounting:
+		if (C_rackEars)	{
+			var center = getFaceCenterCoordinates(C_extraFrontWidth?1:2);	// Front or Top
+			var dims = getFaceBoxDimensions(C_extraFrontWidth?1:2);		// Front or Top
+
+			var cOffsetX = center[0]-9.00;
+			var cOffsetY = dims[1]/2-5.95;
+
+			for(var i=0;i<4;i++)	{
+				var el = new DHole("el", dhole_double, 10.50, 7.60);
+				fp.AddElement(el, center[0]+cOffsetX*(i&1?-1:1), center[1]+cOffsetY*(i&2?-1:1));
+				el.SetAngle(90);
+			}
+		}
+	} else {
+		if (C_roundFrontCorners)	{
+			fp.SetCornerRadii(2,2,2,2);
+		}
+	}
+	
+	
+	// BENDING CAVITIES:
+
+	// Front wing - front face
+	if (C_bottomWings[0]>0)	{
+		var center = getFaceCenterCoordinates(1);	// Front
+		var dims = getFaceBoxDimensions(1);		// Front
+		addBendingCavity(fp, center[0]-(C_overhang[0]-C_overhang[1])/2, center[1]-dims[1]/2+bendCompensation, dims[0]+C_overhang[0]+C_overhang[1]+2, 1);
+	}
+	
+	// Front-Top face
+	var center = getFaceCenterCoordinates(1);	// Front
+	var dims = getFaceBoxDimensions(1);		// Front
+	addBendingCavity(fp, center[0]-(C_overhang[0]-C_overhang[1])/2, center[1]+dims[1]/2-bendCompensation, dims[0]+C_overhang[0]+C_overhang[1]+2, 1);
+	
+	// Top-Back face
+	var center = getFaceCenterCoordinates(2);	// Top
+	var dims = getFaceBoxDimensions(2);		// Top
+	addBendingCavity(fp, center[0]-(C_overhang[0]-C_overhang[1])/2, center[1]+dims[1]/2-bendCompensation, dims[0]+C_overhang[0]+C_overhang[1]+2, 1);
+	
+	// Back face - back wing
+	if (C_bottomWings[1]>10)	{	// Wings must be at least 10 mm!?
+		var center = getFaceCenterCoordinates(3);	// Back
+		var dims = getFaceBoxDimensions(3);		// Back
+		addBendingCavity(fp, center[0]-(C_overhang[0]-C_overhang[1])/2, center[1]+dims[1]/2-bendCompensation, dims[0]+C_overhang[0]+C_overhang[1]+2, 1);
+	}	
+
+
+	// HOUSING BRACKETS:
+	
+	globalHousingBracketCount = 0;	// Resetting for top panel
+	var center = getFaceCenterCoordinates(1);	// Front
+	var dims = getFaceBoxDimensions(1);		// Front
+		// Front, bottom
+	if (C_bottomWings[0]<=0)	{
+		addHousingBrackets(fp, center[0],center[1]-dims[1]/2+C_thickness[1],0,C_numberOfHousingBracketsFront[0],dims[0]-30,C_useStudsForHousingBracketsOnFront);
+	}
+		// Front, left
+	addHousingBrackets(fp, center[0]-dims[0]/2+C_thickness[1],center[1],90,C_numberOfHousingBracketsFront[1],dims[1]-30,C_useStudsForHousingBracketsOnFront);
+		// Front, right
+	addHousingBrackets(fp, center[0]+dims[0]/2-C_thickness[1],center[1],-90,C_numberOfHousingBracketsFront[2],dims[1]-30,C_useStudsForHousingBracketsOnFront);
+
+
+	var center = getFaceCenterCoordinates(3);	// Back
+	var dims = getFaceBoxDimensions(3);		// Back
+		// Back, bottom
+	if (C_bottomWings[1]<=0)	{
+		addHousingBrackets(fp, center[0],center[1]+dims[1]/2-C_thickness[1],180,C_numberOfHousingBracketsBack[0],dims[0]-30,C_useStudsForHousingBracketsOnBack);
+	}
+		// Back, left
+	addHousingBrackets(fp, center[0]-dims[0]/2+C_thickness[1],center[1],90,C_numberOfHousingBracketsBack[1],dims[1]-30,C_useStudsForHousingBracketsOnBack);
+		// Back, right
+	addHousingBrackets(fp, center[0]+dims[0]/2-C_thickness[1],center[1],-90,C_numberOfHousingBracketsBack[2],dims[1]-30,C_useStudsForHousingBracketsOnBack);
+
+
+	var center = getFaceCenterCoordinates(2);	// Top
+	var dims = getFaceBoxDimensions(2);		// Top
+		// Top, left
+	addHousingBrackets(fp, center[0]-dims[0]/2+C_thickness[1],center[1],90,C_numberOfHousingBracketsTop[0],dims[1]-30,C_useStudsForHousingBracketsOnTop);
+		// Top, right
+	addHousingBrackets(fp, center[0]+dims[0]/2-C_thickness[1],center[1],-90,C_numberOfHousingBracketsTop[1],dims[1]-30,C_useStudsForHousingBracketsOnTop);
+
+
+		// Guide engravings:
+	if (C_addGuideEngravings)	{
+
+			// Front face
+		var center = getFaceCenterCoordinates(1);	// Front
+		var dims = getFaceBoxDimensions(1);		// Front
+		fp.AddElement(	// "Box" outer area
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			center[0], 
+			center[1]
+		);
+
+		var th = C_bottomWings[0]>0 ? 0 : 1;	// Chooses OWN thickness in case we use wings (instead of the bottom panels thickness)
+		fp.AddElement(	// Inner free area (mounting)
+			new Rectangle("el", dims[0]-C_thickness[1]*2, dims[1]-C_thickness[0]-C_thickness[th]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]-(C_thickness[0]-C_thickness[th])/2
+		);
+		fp.AddElement(
+			new TextEngraving("el", "Front mounting area").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+	
+			// Top face
+		var center = getFaceCenterCoordinates(2);	// Top
+		var dims = getFaceBoxDimensions(2);		// Top
+		fp.AddElement(	// "Box" outer area
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			center[0], 
+			center[1]
+		);
+
+		fp.AddElement(	// Inner free area (mounting)
+			new Rectangle("el", dims[0]-C_thickness[1]*2, dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+		fp.AddElement(
+			new TextEngraving("el", "Top mounting area").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+
+			// 1/3 lines on top:
+		fp.AddElement(
+			new Line("el", getPanelWidth(1)).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			getPanelWidth(1)/2, 
+			center[1]-dims[1]/2+dims[1]/3
+		);
+		fp.AddElement(
+			new Line("el", getPanelHeight(1)).SetTool(engraver_0_8mm).SetColor(engrave_pastel_orange).SetAngle(90),
+			center[0]-dims[0]/2+dims[0]/3,
+			getPanelHeight(1)/2
+		);
+	
+			// Back face
+		var center = getFaceCenterCoordinates(3);	// Back
+		var dims = getFaceBoxDimensions(3);		// Back
+		fp.AddElement(	// "Box" outer area
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			center[0], 
+			center[1]
+		);
+
+		var th = C_bottomWings[1]>0 ? 0 : 1;	// Chooses OWN thickness in case we use wings (instead of the bottom panels thickness)
+		fp.AddElement(	// Inner free area (mounting)
+			new Rectangle("el", dims[0]-C_thickness[1]*2, dims[1]-C_thickness[0]-C_thickness[th]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]+(C_thickness[0]-C_thickness[th])/2
+		);
+		fp.AddElement(
+			new TextEngraving("el", "Back mounting area").SetAlignment(align_center).SetAngle(180).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+	}
+	
+		// Edge grinding
+	if (C_addEdgeGrinding)	{
+		fp.SetRemark("Please grind the edges.");
+	}
+	
+	// If front wings, then we must offset all elements 7mm up! (because DXF contour was made with y=-7 as the extreme value...)
+	if (C_bottomWings[0]>0)	{
+		translateAllElementsOnPanel(fp,0,7);
+	}
+		
+	fp.UnsetModified().GridOff();	
+	return fp;	
+}
+
+/**
+ * Create bottom panel
+ *
+ * @param	string		Name of panel
+ * @return	Frontpanel	Front panel object
+ */
+function createBottom(name) {
+
+		// Create panel:
+	var fp = new Frontpanel(C_panelNamesPrefix+name+C_panelNamesSuffix, getThickness(2), getPanelWidth(2), getPanelHeight(2), alu_elox);
+	fp.SetMaterialColor(getColor(2));
+	
+	// BENDING CAVITIES and contour:
+	var indentFront = 0;
+	var indentBack = 0;
+
+	// DXF contour:
+	if (C_bottomWings[0]>0 || C_bottomWings[1]>0)	{
+		var coordinates = new Array();
+		var tolerance = 0.2;		
+
+		var center = getFaceCenterCoordinates(6);	// Right is used (lower face), symmetric with left
+		var dims = getFaceBoxDimensions(6);			// Right is used (lower face), symmetric with left
+
+		var yOffsetFromEdge = center[1]+dims[1]/2-C_thickness[0]-tolerance;
+		
+		var center = getFaceCenterCoordinates(4);	// Bottom
+		var dims = getFaceBoxDimensions(4);		// Bottom
+		var flaps = parseInt(dims[1]/40)<=0 ? 1 : parseInt(dims[1]/40);
+		var flapsDist = (dims[1]-30) / (flaps-1);
+		var flapsStartOffset = flaps>1 ? flapsDist*(flaps-1)/2 : 0;
+		
+			// Start:
+		coordinates.push(new Array(0,0));
+			
+			// Back wing:
+		if (C_bottomWings[1]>0)	{
+			indentBack = C_bottomWings[1]-C_thickness[0]+tolerance;
+			coordinates.push(new Array(0, yOffsetFromEdge));
+			coordinates.push(new Array(indentBack, yOffsetFromEdge));
+			coordinates.push(new Array(indentBack, getPanelHeight(2)-yOffsetFromEdge));
+			coordinates.push(new Array(0, getPanelHeight(2)-yOffsetFromEdge));
+			
+			fp.AddElement(new RectHole("el", 3, 3, 0.5), indentBack-1.5, yOffsetFromEdge+1.5);
+			fp.AddElement(new RectHole("el", 3, 3, 0.5), indentBack-1.5, getPanelHeight(2)-yOffsetFromEdge-1.5);
+			
+			for(var i=0;i<flaps;i++)	{
+				var el = new DrillHole("el", 3.00);
+				el.SetCountersink(sink_74A_M3);
+				fp.AddElement(
+					el, 
+					indentBack+3.5,
+					center[1]-flapsStartOffset+flapsDist*i
+				);
+
+				var el = new Cavity("el");
+				el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+				fp.AddElement(el, indentBack+3, center[1]-flapsStartOffset+flapsDist*i);
+				el.MakeRectangular(10, 10, C_thickness[1]-1, 1.5);
+				setRadiusAndToolForCavity(el);
+				el.PutOnReverseSide();
+			}
+		}
+
+			// Top of panel:
+		coordinates.push(new Array(0, getPanelHeight(2)));
+		coordinates.push(new Array(getPanelWidth(2), getPanelHeight(2)));
+
+			// Front wing:
+		if (C_bottomWings[0]>0)	{
+			indentFront = C_bottomWings[0]-C_thickness[0]+tolerance;
+			coordinates.push(new Array(getPanelWidth(2), getPanelHeight(2)-yOffsetFromEdge));
+			coordinates.push(new Array(getPanelWidth(2)-indentFront, getPanelHeight(2)-yOffsetFromEdge));
+			coordinates.push(new Array(getPanelWidth(2)-indentFront, yOffsetFromEdge));
+			coordinates.push(new Array(getPanelWidth(2), yOffsetFromEdge));
+
+			fp.AddElement(new RectHole("el", 3, 3, 0.5), getPanelWidth(2)-indentFront+1.5, getPanelHeight(2)-yOffsetFromEdge-1.5);
+			fp.AddElement(new RectHole("el", 3, 3, 0.5), getPanelWidth(2)-indentFront+1.5, yOffsetFromEdge+1.5);
+
+			for(var i=0;i<flaps;i++)	{
+				var el = new DrillHole("el", 3.00);
+				el.SetCountersink(sink_74A_M3);
+				fp.AddElement(
+					el, 
+					getPanelWidth(2)-indentFront-3.5,
+					center[1]-flapsStartOffset+flapsDist*i
+				);
+
+				var el = new Cavity("el");
+				el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
+				fp.AddElement(el, getPanelWidth(2)-indentFront-3, center[1]-flapsStartOffset+flapsDist*i);
+				el.MakeRectangular(10, 10, C_thickness[1]-1, 1.5);
+				setRadiusAndToolForCavity(el);
+				el.PutOnReverseSide();
+			}
+		}
+
+		coordinates.push(new Array(getPanelWidth(2), 0));
+
+		var dxf = shapeFromCoordinates(coordinates);
+		fp.SetBorderContour(dxf);
+	}
+
+	var center = getFaceCenterCoordinates(4);	// Bottom
+	var dims = getFaceBoxDimensions(4);		// Bottom
+
+	addBendingCavity(fp, center[0]+(indentBack-indentFront)/2, center[1]+dims[1]/2-bendCompensation, getPanelWidth(2)-indentFront-indentBack+2, 2);
+	addBendingCavity(fp, center[0]+(indentBack-indentFront)/2, center[1]-dims[1]/2+bendCompensation, getPanelWidth(2)-indentFront-indentBack+2, 2);
+
+
+
+	// HOUSING BRACKETS:
+
+	globalHousingBracketCount = 0;	// Resetting for bottom panel
+
+	// NOTICE: Order below is important for correct numbering of housing brackets.
+		// Front, bottom
+	if (C_bottomWings[0]<=0)	{
+		var center = getFaceCenterCoordinates(4);
+		var dims = getFaceBoxDimensions(4);
+		addHousingBrackets(fp, center[0]+dims[0]/2-C_thickness[0],center[1],-90,C_numberOfHousingBracketsFront[0],dims[1]-30,false,true);
+	}
+		// Front, left
+	var center = getFaceCenterCoordinates(5);
+	var dims = getFaceBoxDimensions(5);
+	addHousingBrackets(fp, center[0]+dims[0]/2-C_thickness[0],center[1],-90,C_numberOfHousingBracketsFront[1],dims[1]-30,false);
+		// Front, right
+	var center = getFaceCenterCoordinates(6);
+	var dims = getFaceBoxDimensions(6);
+	addHousingBrackets(fp, center[0]+dims[0]/2-C_thickness[0],center[1],-90,C_numberOfHousingBracketsFront[2],dims[1]-30,false,true);
+
+
+		// Back, bottom
+	if (C_bottomWings[1]<=0)	{
+		var center = getFaceCenterCoordinates(4);
+		var dims = getFaceBoxDimensions(4);
+		addHousingBrackets(fp, center[0]-dims[0]/2+C_thickness[0],center[1],90,C_numberOfHousingBracketsBack[0],dims[1]-30,false,true);
+	}
+		// Back, left
+	var center = getFaceCenterCoordinates(5);
+	var dims = getFaceBoxDimensions(5);
+	addHousingBrackets(fp, center[0]-dims[0]/2+C_thickness[0],center[1],90,C_numberOfHousingBracketsBack[1],dims[1]-30,false,true);
+		// Back, right
+	var center = getFaceCenterCoordinates(6);
+	var dims = getFaceBoxDimensions(6);
+	addHousingBrackets(fp, center[0]-dims[0]/2+C_thickness[0],center[1],90,C_numberOfHousingBracketsBack[2],dims[1]-30,false,true);
+
+
+		// Top, left
+	var center = getFaceCenterCoordinates(5);
+	var dims = getFaceBoxDimensions(5);
+	addHousingBrackets(fp, center[0],center[1]+dims[1]/2-C_thickness[0],180,C_numberOfHousingBracketsTop[0],dims[0]-30,false,true);
+		// Top, right
+	var center = getFaceCenterCoordinates(6);
+	var dims = getFaceBoxDimensions(6);
+	addHousingBrackets(fp, center[0],center[1]-dims[1]/2+C_thickness[0],0,C_numberOfHousingBracketsTop[1],dims[0]-30,false,true);
+
+
+
+		// Guide engravings:
+	if (C_addGuideEngravings)	{
+
+			// Left face
+		var center = getFaceCenterCoordinates(5);	// Left
+		var dims = getFaceBoxDimensions(5);		// Left
+		fp.AddElement(	// "Box" outer area
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			center[0], 
+			center[1]
+		);
+
+		fp.AddElement(	// Inner free area (mounting)
+			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[1]-C_thickness[0]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]-(C_thickness[0]-C_thickness[1])/2
+		);
+		fp.AddElement(
+			new TextEngraving("el", "Left mounting area").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+	
+			// Bottom face
+		var center = getFaceCenterCoordinates(4);	// Bottom
+		var dims = getFaceBoxDimensions(4);		// Bottom
+		fp.AddElement(	// "Box" outer area
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			center[0], 
+			center[1]
+		);
+
+		fp.AddElement(	// Inner free area (mounting)
+			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[1]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+		fp.AddElement(
+			new TextEngraving("el", "Bottom mounting area").SetAlignment(align_center).SetAngle(-90).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+
+			// 1/3 lines on top:
+		fp.AddElement(
+			new Line("el", getPanelWidth(2)).SetTool(engraver_0_8mm).SetColor(engrave_pastel_orange),
+			getPanelWidth(2)/2, 
+			center[1]+dims[1]/2-dims[1]/3
+		);
+		fp.AddElement(
+			new Line("el", getPanelHeight(2)).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange).SetAngle(90),
+			center[0]+dims[0]/2-dims[0]/3,
+			getPanelHeight(2)/2
+		);
+	
+			// Right face
+		var center = getFaceCenterCoordinates(6);	// Right
+		var dims = getFaceBoxDimensions(6);		// Right
+		fp.AddElement(	// "Box" outer area
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			center[0], 
+			center[1]
+		);
+
+		fp.AddElement(	// Inner free area (mounting)
+			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[1]-C_thickness[0]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]+(C_thickness[0]-C_thickness[1])/2
+		);
+		fp.AddElement(
+			new TextEngraving("el", "Right mounting area").SetAlignment(align_center).SetAngle(180).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			center[0], 
+			center[1]
+		);
+
+
+			// Labeling sides:
+		fp.AddElement(
+			new TextEngraving("el", "Back").SetAlignment(align_center).SetAngle(90).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			-C_thickness[0]/2, 
+			getPanelHeight(2)/2
+		);
+			// Labeling sides:
+		fp.AddElement(
+			new TextEngraving("el", "Front").SetAlignment(align_center).SetAngle(-90).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			getPanelWidth(2)+C_thickness[0]/2, 
+			getPanelHeight(2)/2
+		);
+		
+		fp.AddElement(
+			new TextEngraving("el", "Top").SetAlignment(align_center).SetAngle(180).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			getPanelWidth(2)/2, 
+			-C_thickness[0]/2
+		);
+			// Labeling sides:
+		fp.AddElement(
+			new TextEngraving("el", "Top").SetAlignment(align_center).SetAngle(0).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			getPanelWidth(2)/2, 
+			getPanelHeight(2)+C_thickness[0]/2
+		);
+	}
+	
+		// Edge grinding
+	if (C_addEdgeGrinding)	{
+		fp.SetRemark("Please grind the edges.");
+	}
+	
+	fp.UnsetModified().GridOff();	
+	return fp;	
+}
+
+/**
+ * Create order
+ */
+function createOrder()	{
+	
+		// Edge Grinding:
+	if (C_addEdgeGrinding)	{
+		OrderSetRemark("Notice, there are edge grindings on some panels.");
+	}
+	
+		// Housing brackets:
+	if (globalHousingBracketCount>0)	{
+		if (globalHousingBracketCount<=4)	{
+			OrderAddItem("GGWS0111",1);	// Housing brackets x4
+		} else if (globalHousingBracketCount<=8)	{
+			OrderAddItem("GGWS0112",1);	// Housing brackets x8
+		} else if (globalHousingBracketCount<=12)	{
+			OrderAddItem("GGWS0113",1);	// Housing brackets x12
+		} else {
+			OrderAddItem("GGWS0114",Math.ceil(globalHousingBracketCount/25));	// Housing brackets x25
+		}
+	}
+}
+
+// Rotation 90 degress both ways:
+function rotatePanel(fp,rotation)	{
+	var width = fp.Width();
+	var height = fp.Height();
+	
+	var els = fp.Elements();
+	switch(rotation)	{
+		case 90:
+			fp.SetWidth(height);
+			fp.SetHeight(width);
+			
+			els.forEach(function(el){
+				el.MoveTo(height-el.Y(),el.X());
+				el.Rotate(90);
+			});
+		break;
+		case -90:
+		case 270:
+			fp.SetWidth(height);
+			fp.SetHeight(width);
+
+			els.forEach(function(el){
+				el.MoveTo(el.Y(),width-el.X());
+				el.Rotate(-90);
+			});
+		break;
+	}
+}
+
+
+
+
+// ###MARKER_PREMAKE###
+
+
+
+/**************************
+ * Execute...
+ **************************/
+
+// Front-Top-Back (1)
+var fp1 = createTop("Top");
+AddFrontpanel(fp1);
+
+
+// Right-Back-Left (2)
+var fp2 = createBottom("Bottom");
+AddFrontpanel(fp2);
+//rotatePanel(fp2,90);	// Rotates 90 CCW
+
+
+
+// Create order with accessories:
+if (C_createOrder)	{
+	createOrder();
+}
+
+
+
+
+
+
+
+
+/***************************************************************
+*  (c) 2013-2014 SKAARHOJ Engineering, www.skaarhoj.com
+*  Author: Kasper Skårhøj <kasper@skaarhoj.com>
+*  All rights reserved
+*
+*  This script is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
