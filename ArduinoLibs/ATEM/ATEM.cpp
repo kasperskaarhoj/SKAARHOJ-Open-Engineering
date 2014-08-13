@@ -375,7 +375,7 @@ void ATEM::_parsePacket(uint16_t packetLength)	{
             if (_serialOutput) Serial.println(_ATEM_TrSS_TransitionStyle, DEC);
           } else
 	      if(strcmp(cmdStr, "FtbS") == 0) {  // Fade To Black State
-			_ATEM_FtbS_state = _packetBuffer[2]; // State of Fade To Black, 0 = off and 1 = activated
+			_ATEM_FtbS_state = _packetBuffer[2]| _packetBuffer[1]; // State of Fade To Black, 0 = off and 1 = activated
 			_ATEM_FtbS_frameCount = _packetBuffer[3];	// Frames count down
             if (_serialOutput) Serial.print(F("FTB:"));
             if (_serialOutput) Serial.print(_ATEM_FtbS_state);
@@ -1031,7 +1031,7 @@ void ATEM::changeAuxState(uint8_t auxOutput, uint16_t inputNumber)  {
   // TODO: Validate that input number exists on current model!
 	// On ATEM 1M/E: Black (0), 1 (1), 2 (2), 3 (3), 4 (4), 5 (5), 6 (6), 7 (7), 8 (8), Bars (9), Color1 (10), Color 2 (11), Media 1 (12), Media 1 Key (13), Media 2 (14), Media 2 Key (15), Program (16), Preview (17), Clean1 (18), Clean 2 (19)
 
-	if (auxOutput>=1 && auxOutput<=3)	{	// Todo: Should match available aux outputs
+	if (auxOutput>=1 && auxOutput<=6)	{	// Todo: Should match available aux outputs
 		if (!ver42())	{
 	  		uint8_t commandBytes[4] = {auxOutput-1, inputNumber, 0, 0};
 	  		_sendCommandPacket("CAuS", commandBytes, 4);
