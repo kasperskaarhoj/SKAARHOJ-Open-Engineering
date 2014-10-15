@@ -1,1 +1,0 @@
-The UserMacros file contains custom macros for FrontDesign (from Schaeffer AG) fitting SKAARHOJ product development. FrontDesigns Settings for Macros should include this file

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="7.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -3541,7 +3541,7 @@ chip</description>
 <part name="U$6" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="C1" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
-<part name="U4" library="SKAARHOJ" deviceset="ER_OLED032-1" device="TOP"/>
+<part name="DISP" library="SKAARHOJ" deviceset="ER_OLED032-1" device="TOP"/>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
 <part name="C12" library="SparkFun" deviceset="CAP" device="0805" value="10uF/25V"/>
 <part name="C13" library="SparkFun" deviceset="CAP" device="0805" value="4.7uF/25V Tantalum"/>
@@ -3615,7 +3615,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <instance part="U$6" gate="G$1" x="45.72" y="-106.68"/>
 <instance part="GND1" gate="1" x="76.2" y="-116.84"/>
 <instance part="C1" gate="G$1" x="50.8" y="-114.3" rot="R90"/>
-<instance part="U4" gate="G$1" x="-83.82" y="-35.56" rot="R180"/>
+<instance part="DISP" gate="G$1" x="-83.82" y="-35.56" rot="R180"/>
 <instance part="GND2" gate="1" x="-58.42" y="-76.2"/>
 <instance part="C12" gate="G$1" x="-43.18" y="-68.58"/>
 <instance part="C13" gate="G$1" x="-25.4" y="-68.58" smashed="yes">
@@ -3730,7 +3730,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <junction x="55.88" y="-114.3"/>
 </segment>
 <segment>
-<pinref part="U4" gate="G$1" pin="VSS"/>
+<pinref part="DISP" gate="G$1" pin="VSS"/>
 <wire x1="-63.5" y1="-68.58" x2="-58.42" y2="-68.58" width="0.1524" layer="91"/>
 <wire x1="-58.42" y1="-68.58" x2="-58.42" y2="-73.66" width="0.1524" layer="91"/>
 <pinref part="GND2" gate="1" pin="GND"/>
@@ -3748,33 +3748,33 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <junction x="-43.18" y="-73.66"/>
 <wire x1="-53.34" y1="-68.58" x2="-58.42" y2="-68.58" width="0.1524" layer="91"/>
 <junction x="-58.42" y="-68.58"/>
-<pinref part="U4" gate="G$1" pin="VLSS"/>
+<pinref part="DISP" gate="G$1" pin="VLSS"/>
 <wire x1="-63.5" y1="-60.96" x2="-60.96" y2="-60.96" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-60.96" x2="-58.42" y2="-60.96" width="0.1524" layer="91"/>
 <wire x1="-58.42" y1="-60.96" x2="-58.42" y2="-68.58" width="0.1524" layer="91"/>
-<pinref part="U4" gate="G$1" pin="D3"/>
+<pinref part="DISP" gate="G$1" pin="D3"/>
 <wire x1="-63.5" y1="-48.26" x2="-60.96" y2="-48.26" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-48.26" x2="-60.96" y2="-50.8" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-60.96"/>
-<pinref part="U4" gate="G$1" pin="D7"/>
+<pinref part="DISP" gate="G$1" pin="D7"/>
 <wire x1="-60.96" y1="-50.8" x2="-60.96" y2="-53.34" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-53.34" x2="-60.96" y2="-55.88" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-55.88" x2="-60.96" y2="-58.42" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-58.42" x2="-60.96" y2="-60.96" width="0.1524" layer="91"/>
 <wire x1="-63.5" y1="-58.42" x2="-60.96" y2="-58.42" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-58.42"/>
-<pinref part="U4" gate="G$1" pin="D6"/>
+<pinref part="DISP" gate="G$1" pin="D6"/>
 <wire x1="-63.5" y1="-55.88" x2="-60.96" y2="-55.88" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-55.88"/>
-<pinref part="U4" gate="G$1" pin="D5"/>
+<pinref part="DISP" gate="G$1" pin="D5"/>
 <wire x1="-63.5" y1="-53.34" x2="-60.96" y2="-53.34" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-53.34"/>
-<pinref part="U4" gate="G$1" pin="D4"/>
+<pinref part="DISP" gate="G$1" pin="D4"/>
 <wire x1="-63.5" y1="-50.8" x2="-60.96" y2="-50.8" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-50.8"/>
 </segment>
 <segment>
-<pinref part="U4" gate="G$1" pin="VLSS@2"/>
+<pinref part="DISP" gate="G$1" pin="VLSS@2"/>
 <wire x1="-63.5" y1="-2.54" x2="-45.72" y2="-2.54" width="0.1524" layer="91"/>
 <wire x1="-45.72" y1="-2.54" x2="-17.78" y2="-2.54" width="0.1524" layer="91"/>
 <wire x1="-17.78" y1="-2.54" x2="-17.78" y2="-5.08" width="0.1524" layer="91"/>
@@ -3800,20 +3800,20 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <wire x1="-35.56" y1="-25.4" x2="-35.56" y2="-27.94" width="0.1524" layer="91"/>
 <junction x="-35.56" y="-25.4"/>
 <pinref part="GND7" gate="1" pin="GND"/>
-<pinref part="U4" gate="G$1" pin="BS1"/>
+<pinref part="DISP" gate="G$1" pin="BS1"/>
 <wire x1="-63.5" y1="-30.48" x2="-60.96" y2="-30.48" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-30.48" x2="-60.96" y2="-33.02" width="0.1524" layer="91"/>
-<pinref part="U4" gate="G$1" pin="BS0"/>
+<pinref part="DISP" gate="G$1" pin="BS0"/>
 <wire x1="-60.96" y1="-33.02" x2="-63.5" y2="-33.02" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-30.48" x2="-40.64" y2="-30.48" width="0.1524" layer="91"/>
 <wire x1="-40.64" y1="-30.48" x2="-40.64" y2="-25.4" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-30.48"/>
 <wire x1="-40.64" y1="-25.4" x2="-35.56" y2="-25.4" width="0.1524" layer="91"/>
-<pinref part="U4" gate="G$1" pin="E/RD#"/>
+<pinref part="DISP" gate="G$1" pin="E/RD#"/>
 <wire x1="-63.5" y1="-38.1" x2="-60.96" y2="-38.1" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-38.1" x2="-60.96" y2="-35.56" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-33.02"/>
-<pinref part="U4" gate="G$1" pin="R/W#"/>
+<pinref part="DISP" gate="G$1" pin="R/W#"/>
 <wire x1="-60.96" y1="-35.56" x2="-60.96" y2="-33.02" width="0.1524" layer="91"/>
 <wire x1="-63.5" y1="-35.56" x2="-60.96" y2="-35.56" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-35.56"/>
@@ -3971,10 +3971,10 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 </segment>
 <segment>
 <pinref part="U$9" gate="G$1" pin="3.3V"/>
-<pinref part="U4" gate="G$1" pin="VCI"/>
+<pinref part="DISP" gate="G$1" pin="VCI"/>
 <wire x1="-63.5" y1="-7.62" x2="-60.96" y2="-7.62" width="0.1524" layer="91"/>
 <wire x1="-60.96" y1="-7.62" x2="-60.96" y2="-12.7" width="0.1524" layer="91"/>
-<pinref part="U4" gate="G$1" pin="VDDIO"/>
+<pinref part="DISP" gate="G$1" pin="VDDIO"/>
 <wire x1="-60.96" y1="-12.7" x2="-63.5" y2="-12.7" width="0.1524" layer="91"/>
 <wire x1="-35.56" y1="-12.7" x2="-60.96" y2="-12.7" width="0.1524" layer="91"/>
 <junction x="-60.96" y="-12.7"/>
@@ -4007,7 +4007,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <label x="30.48" y="-66.04" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U4" gate="G$1" pin="D1"/>
+<pinref part="DISP" gate="G$1" pin="D1"/>
 <wire x1="-63.5" y1="-43.18" x2="-55.88" y2="-43.18" width="0.1524" layer="91"/>
 <label x="-55.88" y="-43.18" size="1.778" layer="95"/>
 </segment>
@@ -4019,7 +4019,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <label x="30.48" y="-60.96" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U4" gate="G$1" pin="D0"/>
+<pinref part="DISP" gate="G$1" pin="D0"/>
 <wire x1="-63.5" y1="-40.64" x2="-55.88" y2="-40.64" width="0.1524" layer="91"/>
 <label x="-55.88" y="-40.64" size="1.778" layer="95"/>
 </segment>
@@ -4031,7 +4031,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <label x="30.48" y="-55.88" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U4" gate="G$1" pin="DC#"/>
+<pinref part="DISP" gate="G$1" pin="DC#"/>
 <wire x1="-63.5" y1="-27.94" x2="-58.42" y2="-27.94" width="0.1524" layer="91"/>
 <label x="-58.42" y="-27.94" size="1.778" layer="95"/>
 </segment>
@@ -4043,14 +4043,14 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <label x="30.48" y="-50.8" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
-<pinref part="U4" gate="G$1" pin="RES#"/>
+<pinref part="DISP" gate="G$1" pin="RES#"/>
 <wire x1="-63.5" y1="-22.86" x2="-58.42" y2="-22.86" width="0.1524" layer="91"/>
 <label x="-58.42" y="-22.86" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CS_DISP1" class="0">
 <segment>
-<pinref part="U4" gate="G$1" pin="CS#"/>
+<pinref part="DISP" gate="G$1" pin="CS#"/>
 <wire x1="-63.5" y1="-25.4" x2="-58.42" y2="-25.4" width="0.1524" layer="91"/>
 <label x="-58.42" y="-25.4" size="1.778" layer="95"/>
 </segment>
@@ -4081,7 +4081,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 </net>
 <net name="N$5" class="0">
 <segment>
-<pinref part="U4" gate="G$1" pin="VCOMH"/>
+<pinref part="DISP" gate="G$1" pin="VCOMH"/>
 <wire x1="-63.5" y1="-63.5" x2="-53.34" y2="-63.5" width="0.1524" layer="91"/>
 <wire x1="-53.34" y1="-63.5" x2="-53.34" y2="-53.34" width="0.1524" layer="91"/>
 <pinref part="C13" gate="G$1" pin="1"/>
@@ -4091,21 +4091,21 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 </net>
 <net name="N$10" class="0">
 <segment>
-<pinref part="U4" gate="G$1" pin="IREF"/>
+<pinref part="DISP" gate="G$1" pin="IREF"/>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="-63.5" y1="-17.78" x2="-55.88" y2="-17.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$12" class="0">
 <segment>
-<pinref part="U4" gate="G$1" pin="VDD"/>
+<pinref part="DISP" gate="G$1" pin="VDD"/>
 <pinref part="C17" gate="G$1" pin="1"/>
 <wire x1="-63.5" y1="-10.16" x2="-58.42" y2="-10.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
-<pinref part="U4" gate="G$1" pin="VSL"/>
+<pinref part="DISP" gate="G$1" pin="VSL"/>
 <wire x1="-63.5" y1="-5.08" x2="-48.26" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="-48.26" y1="-5.08" x2="-48.26" y2="2.54" width="0.1524" layer="91"/>
 <pinref part="R4" gate="G$1" pin="1"/>
@@ -4142,7 +4142,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <segment>
 <pinref part="C12" gate="G$1" pin="1"/>
 <wire x1="-43.18" y1="-60.96" x2="-43.18" y2="-63.5" width="0.1524" layer="91"/>
-<pinref part="U4" gate="G$1" pin="VCC"/>
+<pinref part="DISP" gate="G$1" pin="VCC"/>
 <wire x1="-63.5" y1="-66.04" x2="-50.8" y2="-66.04" width="0.1524" layer="91"/>
 <wire x1="-50.8" y1="-66.04" x2="-50.8" y2="-63.5" width="0.1524" layer="91"/>
 <wire x1="-50.8" y1="-63.5" x2="-43.18" y2="-63.5" width="0.1524" layer="91"/>
@@ -4155,7 +4155,7 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <pinref part="U$18" gate="G$1" pin="13V"/>
 </segment>
 <segment>
-<pinref part="U4" gate="G$1" pin="VCC@2"/>
+<pinref part="DISP" gate="G$1" pin="VCC@2"/>
 <wire x1="-63.5" y1="0" x2="-53.34" y2="0" width="0.1524" layer="91"/>
 <pinref part="U$3" gate="G$1" pin="13V"/>
 </segment>
