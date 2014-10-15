@@ -1,1 +1,4 @@
-The SKAARHOJ.lbr eagle library should be copied to [EAGLE installation]/lbr/ to be used. If the library is modified in that location it will have to be copied back into the Git repository. Attempts to hard link it has failed; eagle seems to break the link when writing the library. Eagle also seems to offer no alternative library paths that the default.
+The SKAARHOJ.lbr eagle library can be included in EAGLE by:
+- opening EAGLE
+- Chose the menu Options > Directories >
+- For “Libraries”, add the path to the SKAARHOJ library with a semicolon, for instance “$EAGLEDIR/lbr:/Path-to-directory/Eagle” where “Eagle” is the directory in which you store the SKAARHOJ.lbr file.

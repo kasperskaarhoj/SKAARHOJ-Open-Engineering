@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="7.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.5" unitdist="mm" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="0.5" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -691,6 +691,9 @@ design rules under a new name.</description>
 <autorouter>
 <pass name="Default">
 <param name="RoutingGrid" value="4mil"/>
+<param name="AutoGrid" value="1"/>
+<param name="Efforts" value="0"/>
+<param name="TopRouterVariant" value="1"/>
 <param name="tpViaShape" value="round"/>
 <param name="PrefDir.1" value="*"/>
 <param name="PrefDir.2" value="0"/>
@@ -794,7 +797,7 @@ design rules under a new name.</description>
 <element name="U$23" library="SKAARHOJ" package="TSSOP24" value="PCA9671" x="13" y="27.5" rot="MR270"/>
 <element name="R2" library="SparkFun" package="0603-RES" value="10K" x="18" y="30.5" rot="MR270"/>
 <element name="C1" library="SparkFun" package="0603-CAP" value="0.1uF" x="13" y="33.5" rot="MR180"/>
-<element name="U4" library="SKAARHOJ" package="FPC_XF2M-3015-1A" value="" x="44" y="22" rot="MR180"/>
+<element name="DISP" library="SKAARHOJ" package="FPC_XF2M-3015-1A" value="" x="44" y="22" rot="MR180"/>
 <element name="C12" library="SparkFun" package="0805" value="10uF/25V" x="37" y="27" rot="MR90"/>
 <element name="C13" library="SparkFun" package="0805" value="4.7uF/25V Tantalum" x="39" y="27" rot="MR90"/>
 <element name="C14" library="SparkFun" package="0603-CAP" value="100nF" x="41" y="27" rot="MR90"/>
@@ -869,26 +872,26 @@ design rules under a new name.</description>
 <contactref element="C11" pad="2"/>
 <contactref element="U$23" pad="12"/>
 <contactref element="C1" pad="2"/>
-<contactref element="U4" pad="P$29"/>
+<contactref element="DISP" pad="P$29"/>
 <contactref element="C14" pad="2"/>
 <contactref element="C13" pad="2"/>
 <contactref element="C12" pad="2"/>
-<contactref element="U4" pad="P$26"/>
-<contactref element="U4" pad="P$3"/>
+<contactref element="DISP" pad="P$26"/>
+<contactref element="DISP" pad="P$3"/>
 <contactref element="R3" pad="2"/>
 <contactref element="C17" pad="2"/>
 <contactref element="C16" pad="2"/>
 <contactref element="C15" pad="2"/>
 <contactref element="D1" pad="1"/>
-<contactref element="U4" pad="P$14"/>
-<contactref element="U4" pad="P$15"/>
-<contactref element="U4" pad="P$17"/>
-<contactref element="U4" pad="P$16"/>
-<contactref element="U4" pad="P$21"/>
-<contactref element="U4" pad="P$25"/>
-<contactref element="U4" pad="P$24"/>
-<contactref element="U4" pad="P$23"/>
-<contactref element="U4" pad="P$22"/>
+<contactref element="DISP" pad="P$14"/>
+<contactref element="DISP" pad="P$15"/>
+<contactref element="DISP" pad="P$17"/>
+<contactref element="DISP" pad="P$16"/>
+<contactref element="DISP" pad="P$21"/>
+<contactref element="DISP" pad="P$25"/>
+<contactref element="DISP" pad="P$24"/>
+<contactref element="DISP" pad="P$23"/>
+<contactref element="DISP" pad="P$22"/>
 <contactref element="C18" pad="2"/>
 <contactref element="R7" pad="1"/>
 <contactref element="U5" pad="2"/>
@@ -1169,8 +1172,8 @@ design rules under a new name.</description>
 <contactref element="U2" pad="5"/>
 <contactref element="C11" pad="1"/>
 <contactref element="U1" pad="1"/>
-<contactref element="U4" pad="P$5"/>
-<contactref element="U4" pad="P$7"/>
+<contactref element="DISP" pad="P$5"/>
+<contactref element="DISP" pad="P$7"/>
 <contactref element="C15" pad="1"/>
 <contactref element="C16" pad="1"/>
 <contactref element="C18" pad="1"/>
@@ -1238,7 +1241,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="SDIN_3V3">
 <contactref element="U1" pad="4"/>
-<contactref element="U4" pad="P$19"/>
+<contactref element="DISP" pad="P$19"/>
 <wire x1="27.432" y1="29.6672" x2="26.0096" y2="29.6672" width="0.2032" layer="16"/>
 <wire x1="30.3784" y1="26.7208" x2="27.432" y2="29.6672" width="0.2032" layer="16"/>
 <wire x1="33.02" y1="26.7208" x2="30.3784" y2="26.7208" width="0.2032" layer="1"/>
@@ -1254,7 +1257,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="SCLK_3V3">
 <contactref element="U1" pad="6"/>
-<contactref element="U4" pad="P$18"/>
+<contactref element="DISP" pad="P$18"/>
 <wire x1="27.8384" y1="28.2448" x2="26.0096" y2="28.2448" width="0.2032" layer="16"/>
 <wire x1="29.464" y1="26.6192" x2="27.8384" y2="28.2448" width="0.2032" layer="16"/>
 <wire x1="33.1216" y1="22.9616" x2="29.464" y2="26.6192" width="0.2032" layer="1"/>
@@ -1270,7 +1273,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="DC_3V3">
 <contactref element="U1" pad="10"/>
-<contactref element="U4" pad="P$13"/>
+<contactref element="DISP" pad="P$13"/>
 <wire x1="23.5712" y1="27.6352" x2="20.1168" y2="27.6352" width="0.2032" layer="16"/>
 <wire x1="26.1112" y1="27.6352" x2="23.5712" y2="27.6352" width="0.2032" layer="1"/>
 <wire x1="31.8008" y1="21.9456" x2="26.1112" y2="27.6352" width="0.2032" layer="1"/>
@@ -1286,7 +1289,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="RES_3V3">
 <contactref element="U1" pad="12"/>
-<contactref element="U4" pad="P$11"/>
+<contactref element="DISP" pad="P$11"/>
 <wire x1="23.4696" y1="28.956" x2="20.1168" y2="28.956" width="0.2032" layer="16"/>
 <wire x1="26.2128" y1="28.956" x2="23.4696" y2="28.956" width="0.2032" layer="1"/>
 <wire x1="26.7208" y1="28.448" x2="26.2128" y2="28.956" width="0.2032" layer="1"/>
@@ -1308,7 +1311,7 @@ design rules under a new name.</description>
 <via x="45.5168" y="25.7048" extent="1-16" drill="0.4064"/>
 </signal>
 <signal name="CS_DISP1">
-<contactref element="U4" pad="P$12"/>
+<contactref element="DISP" pad="P$12"/>
 <contactref element="U1" pad="2"/>
 <wire x1="25.5016" y1="30.8864" x2="25.908" y2="30.8864" width="0.2032" layer="16"/>
 <wire x1="24.892" y1="30.2768" x2="25.5016" y2="30.8864" width="0.2032" layer="16"/>
@@ -1351,7 +1354,7 @@ design rules under a new name.</description>
 <via x="17.3736" y="32.4104" extent="1-16" drill="0.4064"/>
 </signal>
 <signal name="N$5">
-<contactref element="U4" pad="P$27"/>
+<contactref element="DISP" pad="P$27"/>
 <contactref element="C13" pad="1"/>
 <wire x1="38.3032" y1="25.4" x2="38.3032" y2="24.6888" width="0.2032" layer="16"/>
 <wire x1="38.9128" y1="26.0096" x2="38.3032" y2="25.4" width="0.2032" layer="16"/>
@@ -1359,7 +1362,7 @@ design rules under a new name.</description>
 <wire x1="38.9128" y1="26.0096" x2="39" y2="26.1" width="0.2032" layer="16"/>
 </signal>
 <signal name="N$10">
-<contactref element="U4" pad="P$9"/>
+<contactref element="DISP" pad="P$9"/>
 <contactref element="R3" pad="1"/>
 <wire x1="47.3456" y1="23.5712" x2="47.3456" y2="24.5872" width="0.2032" layer="16"/>
 <wire x1="51.7144" y1="23.5712" x2="47.3456" y2="23.5712" width="0.2032" layer="1"/>
@@ -1371,7 +1374,7 @@ design rules under a new name.</description>
 <via x="53.0352" y="24.892" extent="1-16" drill="0.4064"/>
 </signal>
 <signal name="N$12">
-<contactref element="U4" pad="P$6"/>
+<contactref element="DISP" pad="P$6"/>
 <contactref element="C17" pad="1"/>
 <wire x1="48.5648" y1="25.4" x2="48.5648" y2="26.1112" width="0.2032" layer="16"/>
 <wire x1="48.6664" y1="25.2984" x2="48.5648" y2="25.4" width="0.2032" layer="16"/>
@@ -1380,7 +1383,7 @@ design rules under a new name.</description>
 <wire x1="48.6664" y1="24.6888" x2="48.75" y2="24.63" width="0.2032" layer="16"/>
 </signal>
 <signal name="N$6">
-<contactref element="U4" pad="P$4"/>
+<contactref element="DISP" pad="P$4"/>
 <contactref element="R4" pad="1"/>
 <wire x1="49.784" y1="25.908" x2="49.784" y2="24.6888" width="0.2032" layer="16"/>
 <wire x1="49.9872" y1="26.1112" x2="49.784" y2="25.908" width="0.2032" layer="16"/>
@@ -1407,9 +1410,9 @@ design rules under a new name.</description>
 <contactref element="R6" pad="2"/>
 <contactref element="D3" pad="C"/>
 <contactref element="C12" pad="1"/>
-<contactref element="U4" pad="P$28"/>
+<contactref element="DISP" pad="P$28"/>
 <contactref element="C14" pad="1"/>
-<contactref element="U4" pad="P$2"/>
+<contactref element="DISP" pad="P$2"/>
 <wire x1="2.2352" y1="14.3256" x2="2.2352" y2="13.5128" width="0.3048" layer="16"/>
 <wire x1="3.1496" y1="15.24" x2="2.2352" y2="14.3256" width="0.3048" layer="16"/>
 <wire x1="3.1496" y1="16.4592" x2="3.1496" y2="15.24" width="0.3048" layer="16"/>
