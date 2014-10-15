@@ -1,21 +1,27 @@
-/*  HTTP Shared Client Wrapper
-	Copyright (C) 2013 Kasper Skårhøj <kaska@llab.dtu.dk>
-		
-		Developed for the Technical University of Denmark, 2013
+/*
+Copyright 2012-2014 Kasper Skårhøj, LearningLab DTU, kaska@llab.dtu.dk
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+This library is free software: you can redistribute it and/or modify 
+it under the terms of the GNU General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or (at your 
+option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This library is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along 
+with the ClientKramerVP728 library. If not, see http://www.gnu.org/licenses/.
+
+
+IMPORTANT: If you want to use this library in your own projects and/or products,
+please play a fair game and heed the license rules! See our web page for a Q&A so
+you can keep a clear conscience: http://skaarhoj.com/about/licenses/
+
+
 */
+
 #include "HTTPSharedClientWrapper.h"
 #include "Arduino.h"
 
