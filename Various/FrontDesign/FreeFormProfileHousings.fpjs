@@ -40,7 +40,6 @@
 /***************************************
  * Global Settings for enclosure creation.
  * Adapt to your needs for full flexibility
- * (Alternatively, use the preset functions below)
  *
  * Terminology: "End panels" refers to the "front" and "back" panels generated while "Side panels" refers to the arbitrary number of side panels. Depending on the final orientation of the enclosure this may seem natural or not.
  *
