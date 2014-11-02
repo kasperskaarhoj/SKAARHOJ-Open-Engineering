@@ -58,7 +58,7 @@ SkaarhojUtils utils;
 void setup() { 
 
   // Start the Ethernet, Serial (debugging) and UDP:
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");  
 
 
@@ -116,7 +116,7 @@ void setup() {
 
   // Initialize a connection to the switcher:
   AtemSwitcher.begin(IPAddress(atem_ip[0],atem_ip[1],atem_ip[2],atem_ip[3]), 56417);
-  //AtemSwitcher.serialOutput(true);  // Remove or comment out this line for production code. Serial output may decrease performance!
+  AtemSwitcher.serialOutput(0x80);  // Remove or comment out this line for production code. Serial output may decrease performance!
   AtemSwitcher.connect();
 }
 
