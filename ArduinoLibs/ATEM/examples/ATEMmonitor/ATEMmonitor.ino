@@ -49,13 +49,15 @@ inline Print &operator <<(Print &obj, T arg)
 
 void setup() { 
 
+    randomSeed(analogRead(5));
+  
   // Start the Ethernet, Serial (debugging) and UDP:
   Ethernet.begin(mac,ip);
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");  
 
   // Initialize a connection to the switcher:
-  AtemSwitcher.serialOutput(true);  // Remove or comment out this line for production code. Serial output may decrease performance!
+  AtemSwitcher.serialOutput(0x80);  // Remove or comment out this line for production code. Serial output may decrease performance!
   AtemSwitcher.connect();
 
   // Shows free memory:  
@@ -73,15 +75,4 @@ void loop() {
     Serial << F("Connection to ATEM Switcher has timed out - reconnecting!\n");
     AtemSwitcher.connect();
   }  
-
-  // If you fancy to make delays in your sketches, ALWAYS do it using the AtemSwitcher delay function - this will wait while calling ru
-  // Loop() checking for packets and thus keeping the connection up.
-    AtemSwitcher.delay(5000);
-
-
-  // If you monitor the serial output, you should see a lot of "ACK, rpID: xxxx" and then every 5 seconds this message:
-  Serial << F("End of normal loop() - still kicking?\n");
-
-  // Now, try also to disconnect the network cable - and see if it reconnects properly.
 }
-
