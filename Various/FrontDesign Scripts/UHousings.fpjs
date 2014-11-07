@@ -95,7 +95,6 @@ if (C_UI)	{
 // ###MARKER_POSTCONFIG###
 
 
-
 /**********************************************************************
  * NO USER SETTING BELOW!
  **********************************************************************/
@@ -200,9 +199,8 @@ function showUI()	{
  * initializations and constants:
  **************************/
 var globalHousingBracketCount = 0;
-var bendCompensation = 0.6;	// A bend adds to the dimension of the side compared to it's center. This is that addition. (0.6 is the best value as far as we know).
+var bendCompensation = 0.4;	// Assumed bending radius, forward
 var housingBracketAutoInterval = 100;	// The minimal interval between automatically placed housing brackets
-
 
 
 
@@ -577,7 +575,7 @@ function addFlapsToCoordinates(coordinateSet,fp,frontBottomIndex)	{
 				var el = new Cavity("el");
 				el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
 				fp.AddElement(el, fcX, fcY+0.5);
-				el.MakeRectangular(11, 8, 1, 1.5);
+				el.MakeRectangular(15, 8, 1, 1.5);
 				setRadiusAndToolForCavity(el);
 			}
 		}		
@@ -603,7 +601,7 @@ function addFlapsToCoordinates(coordinateSet,fp,frontBottomIndex)	{
 				var el = new Cavity("el");
 				el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
 				fp.AddElement(el, fcX, fcY-0.5);
-				el.MakeRectangular(11, 8, 1, 1.5);
+				el.MakeRectangular(15, 8, 1, 1.5);
 				setRadiusAndToolForCavity(el);
 			}
 		}		
@@ -930,7 +928,7 @@ function createBottom(name) {
 			
 			for(var i=0;i<flaps;i++)	{
 				var el = new DrillHole("el", 3.00);
-				el.SetCountersink(sink_74A_M3);
+				//el.SetCountersink(sink_74A_M3);
 				fp.AddElement(
 					el, 
 					indentBack+3.5,
@@ -963,7 +961,7 @@ function createBottom(name) {
 
 			for(var i=0;i<flaps;i++)	{
 				var el = new DrillHole("el", 3.00);
-				el.SetCountersink(sink_74A_M3);
+				//el.SetCountersink(sink_74A_M3);
 				fp.AddElement(
 					el, 
 					getPanelWidth(2)-indentFront-3.5,
@@ -1260,3 +1258,4 @@ if (C_createOrder)	{
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+

@@ -90,7 +90,7 @@ var C_rackEarsSideExtraWidth = 40;		// If you want to create a true 19" unit, ma
 
 // Demo case:
 var C_coordinates = [
-[-10,-10,[30]],
+[-10,-10,[30,50]],
 [0,74,[],[],3],
 [30,70,[20]],
 [60,90,[20,40],[30]],
@@ -362,8 +362,9 @@ var C_coordinates = [
 */
 
 // Test geometrical shapes:
-
 /*
+
+
 var C_depth = 150;
 var C_sideDefaultThickness = 2.5;
 var C_endsThickness = 4;
@@ -406,6 +407,7 @@ var C_coordinates = new Array(new Array(0,0,[],[15,25]));
 C_coordinates[1] = new Array(Math.cos(deg2rad(60))*40,Math.sin(deg2rad(60))*40,[20]);
 C_coordinates[2] = new Array(C_coordinates[1][0]+Math.cos(-deg2rad(60))*40,C_coordinates[1][1]+Math.sin(-deg2rad(60))*40);
 
+
 // Star:
 var C_coordinates = new Array();
 for(var i=0;i<5;i++)	{
@@ -440,9 +442,9 @@ Forward bend (90 degrees) radii, measured on a 500mm wide sample:
 
 
 // Constants:
-var C_forwardBendRadius = 0.6;	// Assumed bending radius, forward
-var C_backwardBendRadius = 0.1;	// Assumed bending radius, backwards
-var C_assemblySlotTolerance = 0.15;
+var C_forwardBendRadius = 0.45;	// Assumed bending radius, forward (went from 0.6 to 0.45 recently)
+var C_backwardBendRadius = 0.25;	// Assumed bending radius, backwards (went from 0.1 to 0.25 recently)
+var C_assemblySlotTolerance = 0.2;
 var C_panelHeightToleranceAtHousingProfileEnds = 0;
 var C_distanceBetweenThreadsOnJoints = 100;
 var C_jointOverlap = 7;
@@ -501,6 +503,7 @@ var profile1Coordinates = [
 
 
 var globalHousingBracketCount=0;
+var globalHousingBracketCount_sides=0;
 var globalProfile1Count=0;
 
 
@@ -917,9 +920,11 @@ function createOrder()	{
 
 	// Housing profiles:
 	if (globalProfile1Count>0)	{
+		globalProfile1Count = Math.round(globalProfile1Count/2);	// Division by two because the code adding them is run twice. Poor way to handle it though... sorry :-)
+		
 		var profileLengths = C_depth-C_endsThickness*2;
 		var itemID = "GLGP201"+(C_orderBlackItems?"3":"1");
-		OrderAddItemWithLength(itemID, globalProfile1Count, profileLengths);	// Housing Profiles 1
+		OrderAddItemWithLength(itemID, globalProfile1Count, profileLengths);	// Housing Profiles 1	
 		
 		OrderAddItem("GGMS16"+(C_orderBlackItems?"2":"1")+"2",Math.ceil(globalProfile1Count/4));	// Assembly Kit
 	}
@@ -931,6 +936,7 @@ function createOrder()	{
 	
 		// Housing brackets:
 	if (globalHousingBracketCount>0)	{
+		globalHousingBracketCount = Math.round(globalHousingBracketCount/2);	// Division by two because the code adding them is run twice. Poor way to handle it though... sorry :-)
 		if (globalHousingBracketCount<=4)	{
 			OrderAddItem("GGWS0111",1);	// Housing brackets x4
 		} else if (globalHousingBracketCount<=8)	{
@@ -1004,7 +1010,6 @@ function addHousingBracketsOnEnds(fp,i,bendingSet,currentThickness,offX,offY,fro
 				if (showGuides)	{
 					fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetAngle(bendingSet[i][4]/Math.PI*180).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
 					coordinateForBracketEngraving[0]+offX, coordinateForBracketEngraving[1]+offY);
-
 					fp.AddElement(new TextEngraving("el", globalHousingBracketCount/2).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
 					coordinateForBracketEngraving[0]+offX-4, coordinateForBracketEngraving[1]+offY-4);
 				}
@@ -1019,8 +1024,8 @@ function addHousingBracketsOnSides(fp,i,offY,from,to)	{
 		for(var j=0; j<C_coordinates[i][2].length; j++)	{
 			var bracketLocation = Math.abs(C_coordinates[i][2][j]);
 			if (bracketLocation>Math.abs(from) && (!Math.abs(to) || bracketLocation<=Math.abs(to)))	{
-
-
+				globalHousingBracketCount_sides+=2;
+				
 				for(var k=0;k<2;k++)	{
 					if (C_coordinates[i][2][j]<0)	{
 						var el = new Bolt("el", "GU30", 8);
@@ -1034,8 +1039,7 @@ function addHousingBracketsOnSides(fp,i,offY,from,to)	{
 					if (C_addGuideEngravings)	{
 						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
 						(k==0 ? 0 : fp.Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness-(C_endsThickness-C_assemblySlotDepth)+5 : C_endsThickness+5), bracketLocation+offY);
-						
-						fp.AddElement(new TextEngraving("el", globalHousingBracketCount/2-C_coordinates[i][2].length+j+1).SetTextHeight(1.5).SetColor(engrave_pastel_orange).SetAngle(180),
+						fp.AddElement(new TextEngraving("el", globalHousingBracketCount_sides/2).SetTextHeight(1.5).SetColor(engrave_pastel_orange).SetAngle(180),
 						(k==0 ? 0 : fp.Width())+(k==0?1:-1)*(C_endsMode>=0 ? C_endsThickness-(C_endsThickness-C_assemblySlotDepth)+5 : C_endsThickness+5)-4, bracketLocation+offY-4);
 					}
 				}
@@ -1463,7 +1467,7 @@ function processingEndPanel(fp, offX, offY, makeSidePanels, noGuideElements)	{
 					
 						var el = new Cavity("el");
 						el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
-						sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, sideFPArray[panelIndex].Height()-((C_jointOverlap/2)+0.2));
+						sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, sideFPArray[panelIndex].Height()-((C_jointOverlap/2)-0.35));
 						el.MakeRectangular(getSideDepth()+4, C_jointOverlap+1, C_coordinates[i][3][j]>0 ? currentThickness-C_jointOverlayThickness : C_jointOverlayThickness, 1.5);
 						if (C_coordinates[i][3][j]>0) {
 							el.PutOnReverseSide();
@@ -1474,7 +1478,7 @@ function processingEndPanel(fp, offX, offY, makeSidePanels, noGuideElements)	{
 						for(var k=0;k<threadData[0];k++)	{
 							if (C_coordinates[i][3][j]>0) {
 								var el = new DrillHole("el", 3.20);
-								el.SetCountersink(sink_74A_M3);
+//								el.SetCountersink(sink_74A_M3);
 								sideFPArray[panelIndex].AddElement(el, getSideDepth()/2-threadData[1]+k*C_distanceBetweenThreadsOnJoints, sideFPArray[panelIndex].Height()-C_jointOverlap/2);
 							} else {
 								var el = new DrillHole("el", 3.0);
@@ -1588,7 +1592,7 @@ function processingEndPanel(fp, offX, offY, makeSidePanels, noGuideElements)	{
 			
 					var el = new Cavity("el");
 					el.SetDepth(1);	// Temporary depth, necessary for scripting engine (v4.4)
-					sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, (C_jointOverlap/2)+0.2);
+					sideFPArray[panelIndex].AddElement(el, getSideDepth()/2, (C_jointOverlap/2)-0.35);
 					el.MakeRectangular(getSideDepth()+4, C_jointOverlap+1, C_coordinates[i][3][j]<0 ? currentThickness-C_jointOverlayThickness : C_jointOverlayThickness, 1.5);
 					if (C_coordinates[i][3][j]<0) {
 						el.PutOnReverseSide();
@@ -1599,7 +1603,7 @@ function processingEndPanel(fp, offX, offY, makeSidePanels, noGuideElements)	{
 					for(var k=0;k<threadData[0];k++)	{
 						if (C_coordinates[i][3][j]<0) {
 							var el = new DrillHole("el", 3.20);
-							el.SetCountersink(sink_74A_M3);
+//							el.SetCountersink(sink_74A_M3);
 							sideFPArray[panelIndex].AddElement(el, getSideDepth()/2-threadData[1]+k*C_distanceBetweenThreadsOnJoints, C_jointOverlap/2);
 						} else {
 							var el = new DrillHole("el", 3.0);
