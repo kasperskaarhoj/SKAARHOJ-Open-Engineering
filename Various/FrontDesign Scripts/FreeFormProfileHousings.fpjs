@@ -1,5 +1,5 @@
 /***************************************************************
- *  (c) 2014 SKAARHOJ Engineering, www.skaarhoj.com
+ *  (c) 2014 SKAARHOJ K/S, www.skaarhoj.com
  *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
  *
  *  This script is Open Source under GNU/GPL license. 
@@ -2104,7 +2104,7 @@ if (yHasRackEars && (!yHasWings || yREPanelIndex!=yPanelIndex)) {
 
 
 /***************************************************************
-*  (c) 2013-2014 SKAARHOJ Engineering, www.skaarhoj.com
+*  (c) 2013-2014 SKAARHOJ K/S, www.skaarhoj.com
 *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
 *  All rights reserved
 *
