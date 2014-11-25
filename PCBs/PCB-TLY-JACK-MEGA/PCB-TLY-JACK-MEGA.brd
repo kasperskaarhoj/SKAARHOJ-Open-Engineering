@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="7.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1368,6 +1368,9 @@ design rules under a new name.</description>
 <autorouter>
 <pass name="Default">
 <param name="RoutingGrid" value="4mil"/>
+<param name="AutoGrid" value="1"/>
+<param name="Efforts" value="0"/>
+<param name="TopRouterVariant" value="1"/>
 <param name="tpViaShape" value="round"/>
 <param name="PrefDir.1" value="-"/>
 <param name="PrefDir.2" value="0"/>
@@ -1637,9 +1640,9 @@ design rules under a new name.</description>
 <element name="LED31" library="led" package="LED3MM" value="" x="36.5" y="10" rot="R270"/>
 <element name="LED32" library="led" package="LED3MM" value="" x="57.5" y="22" rot="R270"/>
 <element name="LED33" library="led" package="LED3MM" value="" x="57.5" y="16"/>
-<element name="U$11" library="SKAARHOJ" package="RJ45-8_GND_UPRIGHT" value="Tally 1-2-3" x="26" y="14"/>
-<element name="U$12" library="SKAARHOJ" package="RJ45-8_GND_UPRIGHT" value="Tally 2-3-4" x="47" y="14"/>
-<element name="U$13" library="SKAARHOJ" package="RJ45-8_GND_UPRIGHT" value="Tally 3-4-1" x="68" y="14"/>
+<element name="U$11" library="SKAARHOJ" package="RJ45-8_GND_UPRIGHT" value="PRG Tally 1-2-3" x="26" y="14"/>
+<element name="U$12" library="SKAARHOJ" package="RJ45-8_GND_UPRIGHT" value="PRG Tally 4-5-6" x="47" y="14"/>
+<element name="U$13" library="SKAARHOJ" package="RJ45-8_GND_UPRIGHT" value="PRG Tally 7-8" x="68" y="14"/>
 <element name="RN3" library="SKAARHOJ" package="RN-9" value="" x="91.5" y="31.5" rot="MR180">
 <attribute name="OC_NEWARK" value="unknown" x="91.5" y="31.5" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="91.5" y="31.5" size="1.778" layer="28" rot="MR180" display="off"/>

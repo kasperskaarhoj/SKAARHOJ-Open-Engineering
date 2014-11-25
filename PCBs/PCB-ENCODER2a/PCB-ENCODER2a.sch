@@ -1901,13 +1901,13 @@ Based on the following sources:
 <parts>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="SW1" library="switch-alps" deviceset="EC12E_SW" device=""/>
-<part name="C1" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
-<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
+<part name="C1" library="SparkFun" deviceset="CAP" device="0805" value="22uF"/>
+<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C3" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C4" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="U$2" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
-<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="0R"/>
 <part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="SERIAL" library="SparkFun" deviceset="M04X2" device=""/>
@@ -1915,10 +1915,10 @@ Based on the following sources:
 <part name="U$17" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
 <part name="SW2" library="switch-alps" deviceset="EC12E_SW" device=""/>
-<part name="C5" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
+<part name="C5" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C6" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C7" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
-<part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="0R"/>
 <part name="IC1" library="microchip" deviceset="MCP23017" device="SS">
 <attribute name="MPN" value="MCP23017-E/SS"/>
 <attribute name="OC_FARNELL" value="1467674"/>
@@ -1932,8 +1932,8 @@ Based on the following sources:
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$9" library="SparkFun" deviceset="5V" device=""/>
 <part name="C18" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
-<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
-<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100K"/>
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100K"/>
 <part name="U$4" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$5" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND4" library="SparkFun" deviceset="GND" device=""/>

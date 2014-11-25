@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="7.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1310,6 +1310,36 @@ Source: LITEON, LTV816.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="docu-dummy">
+<description>Dummy symbols</description>
+<packages>
+</packages>
+<symbols>
+<symbol name="DIODE">
+<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="DIODE" prefix="D">
+<description>&lt;B&gt;DIODE&lt;/B&gt;&lt;p&gt;</description>
+<gates>
+<gate name="G$1" symbol="DIODE" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1343,6 +1373,7 @@ Source: LITEON, LTV816.pdf</description>
 <part name="C3" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="U$3" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
+<part name="D1" library="docu-dummy" deviceset="DIODE" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1366,6 +1397,7 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="C3" gate="G$1" x="172.72" y="-2.54"/>
 <instance part="U$3" gate="G$1" x="172.72" y="5.08"/>
 <instance part="GND3" gate="1" x="172.72" y="-10.16"/>
+<instance part="D1" gate="G$1" x="114.3" y="43.18"/>
 </instances>
 <busses>
 </busses>
@@ -1486,6 +1518,8 @@ Source: LITEON, LTV816.pdf</description>
 <segment>
 <pinref part="OK4" gate="A" pin="A"/>
 <pinref part="R19" gate="G$1" pin="2"/>
+<wire x1="114.3" y1="40.64" x2="114.3" y2="33.02" width="0.1524" layer="91"/>
+<junction x="114.3" y="33.02"/>
 </segment>
 </net>
 <net name="N$57" class="0">

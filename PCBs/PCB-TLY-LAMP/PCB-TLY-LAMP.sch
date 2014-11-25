@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="7.1.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -1302,6 +1302,36 @@ Manufacturer: TECONNECTIVITY</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="docu-dummy">
+<description>Dummy symbols</description>
+<packages>
+</packages>
+<symbols>
+<symbol name="DIODE">
+<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="DIODE" prefix="D">
+<description>&lt;B&gt;DIODE&lt;/B&gt;&lt;p&gt;</description>
+<gates>
+<gate name="G$1" symbol="DIODE" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1352,6 +1382,7 @@ Manufacturer: TECONNECTIVITY</description>
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
 <part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10k"/>
 <part name="R14" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10k"/>
+<part name="D2" library="docu-dummy" deviceset="DIODE" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1395,6 +1426,7 @@ Manufacturer: TECONNECTIVITY</description>
 <instance part="GND9" gate="1" x="177.8" y="35.56"/>
 <instance part="R13" gate="G$1" x="-2.54" y="20.32" rot="R270"/>
 <instance part="R14" gate="G$1" x="60.96" y="20.32" rot="R270"/>
+<instance part="D2" gate="G$1" x="114.3" y="96.52" rot="R180"/>
 </instances>
 <busses>
 </busses>
@@ -1617,10 +1649,13 @@ Manufacturer: TECONNECTIVITY</description>
 <label x="33.02" y="93.98" size="1.778" layer="95" rot="R90"/>
 </segment>
 <segment>
-<wire x1="109.22" y1="99.06" x2="109.22" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="99.06" x2="109.22" y2="96.52" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="2"/>
+<wire x1="109.22" y1="96.52" x2="109.22" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="93.98" x2="116.84" y2="93.98" width="0.1524" layer="91"/>
 <label x="109.22" y="99.06" size="1.778" layer="95" rot="R90"/>
+<wire x1="111.76" y1="96.52" x2="109.22" y2="96.52" width="0.1524" layer="91"/>
+<junction x="109.22" y="96.52"/>
 </segment>
 <segment>
 <wire x1="109.22" y1="60.96" x2="109.22" y2="55.88" width="0.1524" layer="91"/>

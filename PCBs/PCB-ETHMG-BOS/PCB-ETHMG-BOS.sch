@@ -3097,6 +3097,10 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <package name="3.2MMPAD">
 <pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
 </package>
+<package name="3.2MMPAD6MM">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="6"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="LEDBICOLOR-AKA">
@@ -3432,12 +3436,20 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 </device>
 </devices>
 </deviceset>
-<deviceset name="GNDPAD">
+<deviceset name="GNDPAD" prefix="P">
 <gates>
 <gate name="G$1" symbol="SINGLEPAD" x="0" y="0"/>
 </gates>
 <devices>
 <device name="" package="3.2MMPAD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="6MM" package="3.2MMPAD6MM">
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
@@ -3498,7 +3510,6 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <part name="GND9" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND10" library="SparkFun" deviceset="GND" device=""/>
 <part name="RESET" library="SKAARHOJ" deviceset="TAC_SWITCH" device=""/>
-<part name="CONFA" library="SKAARHOJ" deviceset="TAC_SWITCH" device=""/>
 <part name="GND11" library="SparkFun" deviceset="GND" device=""/>
 <part name="CONF" library="SKAARHOJ" deviceset="TAC_SWITCH" device=""/>
 <part name="R9" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
@@ -3599,7 +3610,6 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <instance part="GND9" gate="1" x="254" y="99.06"/>
 <instance part="GND10" gate="1" x="193.04" y="111.76"/>
 <instance part="RESET" gate="G$1" x="27.94" y="154.94"/>
-<instance part="CONFA" gate="G$1" x="66.04" y="139.7"/>
 <instance part="GND11" gate="1" x="60.96" y="132.08"/>
 <instance part="CONF" gate="G$1" x="66.04" y="154.94"/>
 <instance part="R9" gate="G$1" x="76.2" y="144.78" rot="R90"/>
@@ -3619,7 +3629,7 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <instance part="L2" gate="G$1" x="289.56" y="167.64" rot="R90"/>
 <instance part="L3" gate="G$1" x="203.2" y="167.64" rot="R90"/>
 <instance part="L4" gate="G$1" x="167.64" y="121.92" rot="R270"/>
-<instance part="L5" gate="G$1" x="248.92" y="121.92" rot="R270"/>
+<instance part="L5" gate="G$1" x="248.92" y="119.38" rot="R270"/>
 <instance part="U$7" gate="G$1" x="152.4" y="121.92"/>
 <instance part="U$11" gate="G$1" x="210.82" y="170.18"/>
 <instance part="U$12" gate="G$1" x="297.18" y="170.18"/>
@@ -3780,10 +3790,7 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 </segment>
 <segment>
 <pinref part="GND11" gate="1" pin="GND"/>
-<pinref part="CONFA" gate="G$1" pin="1"/>
-<wire x1="60.96" y1="134.62" x2="60.96" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="60.96" y1="139.7" x2="60.96" y2="154.94" width="0.1524" layer="91"/>
-<junction x="60.96" y="139.7"/>
+<wire x1="60.96" y1="134.62" x2="60.96" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="CONF" gate="G$1" pin="1"/>
 </segment>
 <segment>
@@ -4142,11 +4149,8 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 </segment>
 <segment>
 <wire x1="71.12" y1="154.94" x2="76.2" y2="154.94" width="0.1524" layer="91"/>
-<pinref part="CONFA" gate="G$1" pin="3"/>
 <wire x1="76.2" y1="154.94" x2="78.74" y2="154.94" width="0.1524" layer="91"/>
-<wire x1="71.12" y1="139.7" x2="71.12" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="CONF" gate="G$1" pin="3"/>
-<junction x="71.12" y="154.94"/>
 <pinref part="R9" gate="G$1" pin="2"/>
 <wire x1="76.2" y1="149.86" x2="76.2" y2="154.94" width="0.1524" layer="91"/>
 <junction x="76.2" y="154.94"/>
@@ -4437,8 +4441,8 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 </segment>
 <segment>
 <pinref part="L5" gate="G$1" pin="2"/>
-<wire x1="241.3" y1="121.92" x2="238.76" y2="121.92" width="0.1524" layer="91"/>
-<label x="238.76" y="121.92" size="1.778" layer="95" rot="R180"/>
+<wire x1="241.3" y1="119.38" x2="241.3" y2="121.92" width="0.1524" layer="91"/>
+<label x="241.3" y="121.92" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="I2C_SDA" class="0">
@@ -4809,7 +4813,7 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <segment>
 <pinref part="TOUCH" gate="G$1" pin="9"/>
 <pinref part="L5" gate="G$1" pin="1"/>
-<wire x1="256.54" y1="121.92" x2="259.08" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="256.54" y1="119.38" x2="259.08" y2="121.92" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$8" class="1">
@@ -4907,14 +4911,13 @@ Button commonly used for reset or general input. Spark Fun Electronics SKU : COM
 <approved hash="106,1,-27.94,2.54,N$29,,,,,"/>
 <approved hash="113,1,27.94,143.121,RESETA,,,,,"/>
 <approved hash="113,1,27.94,158.361,RESET,,,,,"/>
-<approved hash="113,1,66.04,143.121,CONFA,,,,,"/>
 <approved hash="113,1,66.04,158.361,CONF,,,,,"/>
 <approved hash="113,1,113.623,99.2547,JP8,,,,,"/>
 <approved hash="113,1,62.8227,200.855,JP1,,,,,"/>
 <approved hash="113,1,289.56,169.681,L2,,,,,"/>
 <approved hash="113,1,203.2,169.681,L3,,,,,"/>
 <approved hash="113,1,167.64,119.879,L4,,,,,"/>
-<approved hash="113,1,248.92,119.879,L5,,,,,"/>
+<approved hash="113,1,248.92,117.339,L5,,,,,"/>
 <approved hash="113,1,245.881,63.5,L1,,,,,"/>
 <approved hash="113,1,75.7013,60.96,L6,,,,,"/>
 </errors>

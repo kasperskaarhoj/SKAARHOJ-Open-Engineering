@@ -14752,6 +14752,9 @@ chip</description>
 <text x="-17.78" y="93.98" size="1.778" layer="91">This product includes elements created by RAPIXT.com</text>
 <text x="93.98" y="129.54" size="2.54" layer="97">POWER IN/OUTLET</text>
 <text x="30.48" y="10.16" size="1.778" layer="91">RESET IS REALLY PIN 1 - change this!!</text>
+<text x="30.48" y="5.08" size="1.778" layer="91">Also: Add solderjumper and option to reset it with 5V/gnd from another system</text>
+<text x="30.48" y="5.08" size="1.778" layer="91">Also: Add solderjumper and option to reset it with 5V/gnd from another system (h´through resistor, or better, a NPN transistor pulling to gnd.)</text>
+<text x="30.48" y="0" size="1.778" layer="91">Clamp unused inputs to GND</text>
 </plain>
 <instances>
 <instance part="JOYSTICKS" gate="G$1" x="121.92" y="50.8"/>

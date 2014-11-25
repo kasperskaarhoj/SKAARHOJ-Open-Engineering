@@ -708,7 +708,7 @@ EC12E series with push-on switch</description>
 <parts>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="SW1" library="switch-alps" deviceset="EC12E_SW" device=""/>
-<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
+<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C3" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C4" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
