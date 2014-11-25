@@ -16,6 +16,7 @@
 // Including libraries: 
 #include <SPI.h>         // needed for Arduino versions later than 0018
 #include <Ethernet.h>
+#include <utility/w5100.h>
 
 //#include <MemoryFree.h>
 
@@ -32,7 +33,7 @@ IPAddress ip(192, 168, 10, 99);              // <= SETUP!  IP address of the Ard
 // Connect to an ATEM switcher on this address and using this local port:
 // The port number is chosen randomly among high numbers.
 #include <ATEM.h>
-ATEM AtemSwitcher1(IPAddress(192, 168, 10, 28), 56417);  // <= SETUP (the IP address of the ATEM switcher)
+ATEM AtemSwitcher1(IPAddress(192, 168, 10, 241), 56417);  // <= SETUP (the IP address of the ATEM switcher)
 ATEM AtemSwitcher2(IPAddress(192, 168, 10, 240), 56416);  // <= SETUP (the IP address of the ATEM switcher)
 
 
@@ -55,11 +56,18 @@ void setup() {
   Serial.begin(9600);
   Serial << F("\n- - - - - - - -\nSerial Started\n");  
 
+  // It's absolutely necessary to define a low retransmission time when working with atem connections. 
+  // Otherwise the arduino may hang up in various network related issues which can break the connection to working atem switchers.
+  // In this sketch for example, if one switcher is not present and this short retransmission time was not set, the connection to the other two would quickly be lost.
+  W5100.setRetransmissionTime(200);  // Milli seconds
+  W5100.setRetransmissionCount(1);
+  
+  
   // Initialize a connection to the switcher:
-  AtemSwitcher1.serialOutput(true);  // Remove or comment out this line for production code. Serial output may decrease performance!
+  AtemSwitcher1.serialOutput(2);  // Remove or comment out this line for production code. Serial output may decrease performance!
   AtemSwitcher1.connect();
 
-  AtemSwitcher2.serialOutput(true);  // Remove or comment out this line for production code. Serial output may decrease performance!
+  AtemSwitcher2.serialOutput(2);  // Remove or comment out this line for production code. Serial output may decrease performance!
   AtemSwitcher2.connect();
 
   // Shows free memory:  
@@ -85,4 +93,3 @@ void loop() {
     AtemSwitcher2.connect();
   }  
 }
-

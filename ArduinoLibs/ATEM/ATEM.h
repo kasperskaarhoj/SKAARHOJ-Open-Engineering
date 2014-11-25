@@ -48,7 +48,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #define ATEM_headerCmd_RequestNextAfter 0x8
 #define ATEM_headerCmd_Ack 0x10
 
-#define ATEM_maxInitPackageCount 20		// The maximum number of initialization packages. By observation on a 2M/E this is 0-14 = 15. We allocate a bit more then...
+#define ATEM_maxInitPackageCount 24		// The maximum number of initialization packages. By observation on a 2M/E 4K this is 0-20 = 21. We allocate a bit more then...
 #define ATEM_packetBufferLength 96		// Size of packet buffer
 
 
