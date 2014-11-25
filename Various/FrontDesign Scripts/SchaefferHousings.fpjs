@@ -1,5 +1,5 @@
 /***************************************************************
- *  (c) 2013-2014 SKAARHOJ Engineering, www.skaarhoj.com
+ *  (c) 2013-2014 SKAARHOJ K/S, www.skaarhoj.com
  *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
  *
  *  This script is Open Source under GNU/GPL license. 
@@ -16,7 +16,7 @@
  * form a full enclosure when assembled.
  *
  * The enclosures are based on the Housing Manual by Schaeffer AG.
- * Some features are added and modified by SKAARHOJ Engineering.
+ * Some features are added and modified by SKAARHOJ K/S.
  *
  * See http://skaarhoj.com/schaeffer/ for latest version, other
  * tools and training resources published by SKAARHOJ K/S.
@@ -1874,7 +1874,7 @@ if (!C_dryRun)	{
 
 
 /***************************************************************
-*  (c) 2013-2014 SKAARHOJ Engineering, www.skaarhoj.com
+*  (c) 2013-2014 SKAARHOJ K/S, www.skaarhoj.com
 *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
 *  All rights reserved
 *
