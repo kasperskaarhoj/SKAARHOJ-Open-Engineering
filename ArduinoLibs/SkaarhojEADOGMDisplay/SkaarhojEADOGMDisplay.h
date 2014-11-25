@@ -37,6 +37,7 @@ class SkaarhojEADOGMDisplay : public Print  {
   SkaarhojEADOGMDisplay();
   void begin(uint8_t address, uint8_t index, uint8_t boardType);
   void clearDisplay(void);
+  void contrast(uint8_t contrast);
   void cursor(bool enable);
   void gotoRowCol(uint8_t row, uint8_t col);
   void newline();

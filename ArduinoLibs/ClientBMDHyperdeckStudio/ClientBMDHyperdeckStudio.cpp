@@ -46,6 +46,7 @@ void ClientBMDHyperdeckStudio::begin(IPAddress ip){
 	_localPort = 9993;	// Set local port
 
 	_wasRejected = false;
+	_askForClips = false;
 }
 
 /**
@@ -503,46 +504,87 @@ void ClientBMDHyperdeckStudio::_enableNotifications() {
  */
 void ClientBMDHyperdeckStudio::_pullStatus(uint8_t step) {
 	
-	// TODO: Implement "step"
 	
 	
-	_resetBuffer();
-	_addToBuffer_P(PSTR("clips get\n"));
-	_sendBuffer();
+	//step = 0;
+	//_askForClips = true;
+	
+	if (step==0 || (step%3)==1)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("transport info\n"));
+		_addToBuffer_P(PSTR("slot info: slot id: 1\n"));
+		_addToBuffer_P(PSTR("slot info: slot id: 2\n"));
+		_sendBuffer();
+	}
 
+	if (step==0 || (step%3)==0)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("transport info\n"));
+		_addToBuffer_P(PSTR("slot info\n"));
+		_addToBuffer_P(PSTR("notify\n"));
+		_addToBuffer_P(PSTR("remote\n"));
+		_addToBuffer_P(PSTR("configuration\n"));
+		_sendBuffer();
+	}
+	
+	if (step==0 || (step%3)==2)	{
+		if (_askForClips)	{
+			_resetBuffer();
+			_addToBuffer_P(PSTR("transport info\n"));
+			_addToBuffer_P(PSTR("clips get\n"));
+			_sendBuffer();
+		} else {
+			_resetBuffer();
+			_addToBuffer_P(PSTR("transport info\n"));
+			_sendBuffer();
+		}
+	}
+/*	
 	_resetBuffer();
 	_addToBuffer_P(PSTR("transport info\n"));
 	_sendBuffer();
 
-	_resetBuffer();
-	_addToBuffer_P(PSTR("slot info: slot id: 1\n"));
-	_sendBuffer();
-
-	_resetBuffer();
-	_addToBuffer_P(PSTR("slot info: slot id: 2\n"));
-	_sendBuffer();
-
+	if (step==0 || step==2)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("slot info: slot id: 1\n"));
+		_sendBuffer();
+	}
+	if (step==0 || step==3)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("slot info: slot id: 2\n"));
+		_sendBuffer();
+	}
 	// Asking this one so the last received info is the currently selected slot:
-	_resetBuffer();
-	_addToBuffer_P(PSTR("slot info\n"));
-	_sendBuffer();
-
-	_resetBuffer();
-	_addToBuffer_P(PSTR("notify\n"));
-	_sendBuffer();
+	if (step==0 || step==2 || step==3)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("slot info\n"));
+		_sendBuffer();
+	}
+	if (step==0 || step==4)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("notify\n"));
+		_sendBuffer();
+	}
 	
-	_resetBuffer();
-	_addToBuffer_P(PSTR("remote\n"));
-	_sendBuffer();
+	if (step==0 || step==5)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("remote\n"));
+		_sendBuffer();
+	}
 	
-	_resetBuffer();
-	_addToBuffer_P(PSTR("configuration\n"));
-	_sendBuffer();
+	if (step==0 || step==6)	{
+		_resetBuffer();
+		_addToBuffer_P(PSTR("configuration\n"));
+		_sendBuffer();
+	}
+	*/
 }
 
 
-
-
+// This functions is called if you wish to pull the list of clips from the HyperDeck. The reason why you may not want that is, that IF the harddrive has a LOT of files (in my test 70 files will be enough, maybe less), it will somehow mess up the communication so the connection is disconnected right after. It's still unknown why this happens and it needs to be bug-fixed. But for now, getting all clip names is also less typical for Arduino control, so it's not such a big deal.
+void ClientBMDHyperdeckStudio::askForClips(bool askForClips)	{
+	_askForClips = askForClips;
+}
 
 
 

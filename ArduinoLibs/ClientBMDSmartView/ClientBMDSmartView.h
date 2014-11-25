@@ -70,6 +70,7 @@ class ClientBMDSmartView : public SkaarhojTCPClient
 	bool isReady();	// Returns true if device can send a new message (may return false if it's currently waiting for a sent message to be acknowledged)
 	bool waitForReady();	// Waits (while calling runLoop()) until device is ready to receive new message (or max 100 ms) and returns
 	bool waitForReady(uint16_t delayTime);	
+	bool waitForInit(uint16_t delayTime);
 
   private:	// Overloading:
     void _resetDeviceStateVariables();

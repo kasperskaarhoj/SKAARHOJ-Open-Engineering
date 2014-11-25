@@ -6,6 +6,7 @@
 
 
 SkaarhojEADOGMDisplay Disp163;
+SkaarhojEADOGMDisplay Disp162;
 SkaarhojEADOGMDisplay Disp81;
 
 void setup() {                
@@ -15,14 +16,48 @@ void setup() {
   Wire.begin();
   Disp163.begin(0,0,3);  // DOGM163
   Disp81.begin(0,1,1);  // DOGM81
+  Disp162.begin(5,0,2);  // DOGM81
+
 
 
   Disp163.cursor(true);
   Disp163 << F("millis(): ") << millis();
   Disp163.print("AbCDE\nY");
+
+  Disp162.cursor(true);
+  Disp162 << F("millis():");
+  Disp162.gotoRowCol(1,0);
+  Disp162 << F("ABC");
+
+//  Disp162.print("AbCDE\nY");
+
   Disp81.cursor(true);
   Disp81 << _HEX(12345);
   delay(3000);
+  
+  for (uint8_t a=0; a<16; a++)  {
+    Disp81.contrast(a);
+    Disp81.clearDisplay();
+    Disp81 << _HEX(a);
+    delay(500);
+  }
+  Disp81.contrast(0x4);
+  
+  for (uint8_t a=0; a<16; a++)  {
+    Disp163.contrast(a);
+    Disp163.clearDisplay();
+    Disp163 << _HEX(a);
+    delay(500);
+  }
+  Disp163.contrast(0xC);
+  
+  for (uint8_t a=0; a<16; a++)  {
+    Disp162.contrast(a);
+    Disp162.clearDisplay();
+    Disp162 << _HEX(a);
+    delay(500);
+  }
+  Disp162.contrast(0xA);
   
   Disp163.cursor(false);
   Disp81.cursor(false);
@@ -36,4 +71,9 @@ void loop()  {
   Disp163 << F("0x") << _HEXPADL(millis(), 6, "0") << F("ms\n");  // Adding newline to go to next line because we don't fill out the line completely.
 
   Disp163 << _BINPADL(millis() >> 10, 16, "0");  // No need to add New Line because the line is 16 chars long through padding. It will wrap around.
+
+
+  Disp162.gotoRowCol(0,0);
+  Disp162 << F("Time:") << _DECPADL(millis(), 7, " ") << F("ms\n");  // No need to add New Line because we set position directly for the next line
+  Disp162 << F("0x") << _HEXPADL(millis(), 6, "0") << F("ms_12345");  // Adding newline to go to next line because we don't fill out the line completely.
 }
