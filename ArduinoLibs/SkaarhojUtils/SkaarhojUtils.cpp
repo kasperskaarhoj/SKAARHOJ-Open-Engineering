@@ -46,6 +46,8 @@ void SkaarhojUtils::uniDirectionalSlider_init(int sliderTolerance, int sliderLow
 	_uniDirectionalSlider_previousTransitionPosition=-1;
 	_uniDirectionalSlider_sliderDirectionUp = false;
 	_uniDirectionalSlider_disableUnidirectionality = false;
+	
+	uniDirectionalSlider_hasMoved();	// Make sure the _uniDirectionalSlider_previousSliderValue is set correctly.
 }
 
 void SkaarhojUtils::uniDirectionalSlider_disableUnidirectionality(bool disable)	{

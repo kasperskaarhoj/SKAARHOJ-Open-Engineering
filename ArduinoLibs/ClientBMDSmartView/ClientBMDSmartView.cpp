@@ -56,6 +56,19 @@ bool ClientBMDSmartView::isReady()	{
 }
 
 /**
+ * Calls runLoop until the hasInitialized() flag has been set - or until delayTime has passed (if delay time is larger than 0 in which case it never times out)
+ */
+bool ClientBMDSmartView::waitForInit(uint16_t delayTime)	{
+	unsigned long enterTime = millis();
+
+	while (!hasInitialized() && (delayTime==0 || !hasTimedOut(enterTime,delayTime)))	{
+		runLoop();
+	}
+	
+	return hasInitialized();
+}
+
+/**
  * Calls runLoop until the isReady() flag has been set - or until delayTime has passed (if delay time is larger than 0 in which case it never times out)
  */
 bool ClientBMDSmartView::waitForReady(uint16_t delayTime)	{

@@ -80,7 +80,7 @@ void SkaarhojEncoders::runLoop()	{
 			// First 4 encoders (GPA0-7), turning:
 	    for(uint8_t b=0; b<4; b++)  {
 	      if ((buttonStatus >> 8) & (B1<<(b<<1)))  {	// Was this pin causing the interrupt?
-	        if ((capture >> 8) & (B1<<(b<<1)))  {	// Check pin A polarity
+/*	        if ((capture >> 8) & (B1<<(b<<1)))  {	// Check pin A polarity
 	          if ((capture >> 8) & (B10<<(b<<1)))  {	// Check pin B (direction)
 	            _interruptStateNum[b]--;
 				directionUp = false;
@@ -99,7 +99,25 @@ void SkaarhojEncoders::runLoop()	{
 				  Serial.println();
 			  }
 			  _interruptStateTime[b] = millis();
-	        }
+	        }*/
+			  if (!((capture >> 8) & (B10<<(b<<1))))  {	// Check pin A polarity and pin B direction
+				  if (((capture >> 8) & (B1<<(b<<1))))	{
+	    	            _interruptStateNum[b]++;
+	    				directionUp = true;
+				  } else {
+	    	            _interruptStateNum[b]--;
+	    				directionUp = true;
+				  }
+	  			  if (_serialOutput)	{
+	  				  Serial.print(F("Encoder "));
+	  				  Serial.print(b);
+	  				  Serial.print(F(": "));
+	  				  Serial.print(directionUp ? F("UP,   ") : F("DOWN, "));
+	  				  Serial.print(_interruptStateNum[b]);
+	  				  Serial.println();
+	  			  }
+	  			  _interruptStateTime[b] = millis();
+	          }
 	      }
 	    }
 

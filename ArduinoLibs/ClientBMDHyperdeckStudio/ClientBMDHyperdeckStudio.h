@@ -77,6 +77,7 @@ class ClientBMDHyperdeckStudio : public SkaarhojTCPClient
 	bool _wasRejected;		// used to track if we encountered a rejection previously. A part of the connect() disconnect() management.
 
 	int _noInput;			// Used to check if there is input or not.
+	bool _askForClips;	
 		
 		// States:
 	uint8_t _Hyperdeck_currentSlotId;
@@ -119,6 +120,10 @@ class ClientBMDHyperdeckStudio : public SkaarhojTCPClient
 	void _pullStatus(uint8_t step);
 
   public:
+
+
+	  void askForClips(bool askForClips);
+
 		// These commands get the internal state of this class. Those states are updated through subscription to updates (the "notify:" command) as well as asking periodically to pull status on all accounts (_pullStatus()). After sending  a command, these values will typically receive an update within a few hundred milliseconds.
 
 	uint8_t getCurrentSlotId();

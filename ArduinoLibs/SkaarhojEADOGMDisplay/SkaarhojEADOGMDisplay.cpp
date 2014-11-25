@@ -56,14 +56,14 @@ void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardT
     _selectDisplay(_index, true);
 	switch(_boardType)	{
 		case 1:
-		      // Init sequence for a DOG081:
+		      // Init sequence for a DOG081, 5V:
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x31);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x1C);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x51);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x6A);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x74);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x30);   
-		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x0C);   
+		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x0C);     // Normally 0x0F, but here disabled cursor.   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x01);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x06);   
 		break;
@@ -120,12 +120,27 @@ void SkaarhojEADOGMDisplay::cursor(bool enable) {
 }
 
 /**
+ * Contrast
+ */
+void SkaarhojEADOGMDisplay::contrast(uint8_t contrast) {
+    _sendData(false);
+    _selectDisplay(_index, true);
+	
+//	Serial.println(_boardType!=1);
+    shiftOut(_dataPin, _clockPin, MSBFIRST, _boardType!=1 ? 0x39 : 0x31);   
+    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x70 | (contrast & 0xF));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, _boardType!=1 ? 0x38 : 0x30);   
+	
+    _selectDisplay(_index,false);
+}
+
+/**
  * Goto (0,0 is first line, first column)
  */
 void SkaarhojEADOGMDisplay::gotoRowCol(uint8_t row, uint8_t col) {
 	_DDRAMaddr = (row << (_boardType==1?3:4)) + col;
 
- //Serial << row << " - " << col << " => " << _DDRAMaddr << "\n";
+//	Serial << row << " - " << col << " => " << _DDRAMaddr << "\n";
 
 	switch(_boardType)	{
 		case 1:
@@ -140,6 +155,9 @@ void SkaarhojEADOGMDisplay::gotoRowCol(uint8_t row, uint8_t col) {
 	}
 	
 //	 Serial << _DDRAMaddr << "\n";
+	if (_boardType==2 && _DDRAMaddr >= 16)	{
+		_DDRAMaddr+=24;
+	}
 	
     _sendData(false);
     _selectDisplay(_index, true);
