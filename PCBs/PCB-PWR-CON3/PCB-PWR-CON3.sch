@@ -11,6 +11,16 @@
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="no" active="no"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="no" active="no"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="no" active="no"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="no" active="no"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="no" active="no"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="no" active="no"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
@@ -1059,10 +1069,10 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <library name="SKAARHOJ">
 <packages>
 <package name="NC4-MD-L1">
-<pad name="PIN4" x="-4.1" y="0.9" drill="2"/>
-<pad name="PIN3" x="-2.1" y="-2.9" drill="2"/>
-<pad name="PIN2" x="2.1" y="-3.7" drill="2"/>
-<pad name="PIN1" x="4.2" y="0" drill="2"/>
+<pad name="PIN4" x="-4.1" y="0.9" drill="2.3"/>
+<pad name="PIN3" x="-2.1" y="-2.9" drill="2.3"/>
+<pad name="PIN2" x="2.1" y="-3.7" drill="2.3"/>
+<pad name="PIN1" x="4.2" y="0" drill="2.3"/>
 <pad name="G" x="5.64" y="5.64" drill="4.2" shape="octagon" rot="R20"/>
 <circle x="0" y="0" radius="11.43" width="0.127" layer="21"/>
 </package>

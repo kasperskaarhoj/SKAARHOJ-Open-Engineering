@@ -1121,9 +1121,9 @@ design rules under a new name.</description>
 <signal name="I2C_SDA">
 <contactref element="SERIAL" pad="3"/>
 <contactref element="U$23" pad="23"/>
-<contactref element="U$19" pad="H3"/>
-<contactref element="U$19" pad="H2"/>
 <contactref element="U$19" pad="H1"/>
+<contactref element="U$19" pad="H2"/>
+<contactref element="U$19" pad="H3"/>
 <wire x1="10.5822" y1="11.575" x2="66.61" y2="19.94" width="0" layer="19" extent="16-16"/>
 <wire x1="5" y1="12.2" x2="10.5822" y2="11.575" width="0" layer="19" extent="16-16"/>
 <wire x1="5" y1="10" x2="5" y2="12.2" width="0" layer="19" extent="1-1"/>
@@ -1132,8 +1132,8 @@ design rules under a new name.</description>
 <signal name="I2C_SCL">
 <contactref element="SERIAL" pad="4"/>
 <contactref element="U$23" pad="22"/>
-<contactref element="U$19" pad="L2"/>
 <contactref element="U$19" pad="L1"/>
+<contactref element="U$19" pad="L2"/>
 <contactref element="U$19" pad="L3"/>
 <wire x1="10.5822" y1="10.925" x2="69.15" y2="19.94" width="0" layer="19" extent="16-16"/>
 <wire x1="1" y1="10" x2="10.5822" y2="10.925" width="0" layer="19" extent="16-16"/>

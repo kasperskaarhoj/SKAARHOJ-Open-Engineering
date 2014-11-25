@@ -1601,9 +1601,6 @@ design rules under a new name.</description>
 <signal name="I2C_SDA">
 <contactref element="SERIAL" pad="3"/>
 <contactref element="U$23" pad="23"/>
-<contactref element="U$19" pad="L2"/>
-<contactref element="U$19" pad="L1"/>
-<contactref element="U$19" pad="L3"/>
 <wire x1="60.7568" y1="16.6624" x2="59.7408" y2="16.6624" width="0.2032" layer="16"/>
 <wire x1="60.3504" y1="16.256" x2="60.7568" y2="16.6624" width="0.2032" layer="1"/>
 <wire x1="60.3504" y1="12.8016" x2="60.3504" y2="16.256" width="0.2032" layer="1"/>
@@ -1617,13 +1614,6 @@ design rules under a new name.</description>
 <wire x1="72.136" y1="7.7216" x2="70.7136" y2="9.144" width="0.2032" layer="16"/>
 <wire x1="74.7776" y1="5.08" x2="72.136" y2="7.7216" width="0.2032" layer="1"/>
 <wire x1="59.7408" y1="16.6624" x2="59.5822" y2="16.575" width="0.2032" layer="16"/>
-<wire x1="74.7776" y1="5.08" x2="74.8" y2="5" width="0.2032" layer="1"/>
-<wire x1="74.9808" y1="5.08" x2="76.8096" y2="5.08" width="0.2032" layer="1"/>
-<wire x1="76.8096" y1="5.08" x2="77" y2="5" width="0.2032" layer="1"/>
-<wire x1="74.9808" y1="5.08" x2="74.8" y2="5" width="0.2032" layer="1"/>
-<wire x1="77.0128" y1="5.08" x2="79.0448" y2="5.08" width="0.2032" layer="1"/>
-<wire x1="79.0448" y1="5.08" x2="79.2" y2="5" width="0.2032" layer="1"/>
-<wire x1="77.0128" y1="5.08" x2="77" y2="5" width="0.2032" layer="1"/>
 <wire x1="44.9072" y1="14.224" x2="42.4688" y2="14.224" width="0.2032" layer="16"/>
 <wire x1="54.2544" y1="14.224" x2="44.9072" y2="14.224" width="0.2032" layer="1"/>
 <wire x1="54.2544" y1="9.144" x2="54.2544" y2="14.224" width="0.2032" layer="1"/>
@@ -1634,19 +1624,16 @@ design rules under a new name.</description>
 <via x="72.136" y="7.7216" extent="1-16" drill="0.3048"/>
 <via x="44.9072" y="14.224" extent="1-16" drill="0.3048"/>
 <via x="54.2544" y="9.144" extent="1-16" drill="0.3048"/>
+<contactref element="U$19" pad="H1"/>
+<contactref element="U$19" pad="H3"/>
+<contactref element="U$19" pad="H2"/>
+<wire x1="77" y1="9" x2="79.2" y2="9" width="0" layer="19" extent="1-1"/>
+<wire x1="74.8" y1="9" x2="77" y2="9" width="0" layer="19" extent="1-1"/>
+<wire x1="72.136" y1="7.7216" x2="74.8" y2="9" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="I2C_SCL">
 <contactref element="SERIAL" pad="4"/>
 <contactref element="U$23" pad="22"/>
-<contactref element="U$19" pad="H3"/>
-<contactref element="U$19" pad="H2"/>
-<contactref element="U$19" pad="H1"/>
-<wire x1="76.8096" y1="9.144" x2="74.9808" y2="9.144" width="0.2032" layer="16"/>
-<wire x1="74.9808" y1="9.144" x2="74.8" y2="9" width="0.2032" layer="16"/>
-<wire x1="76.8096" y1="9.144" x2="77" y2="9" width="0.2032" layer="16"/>
-<wire x1="77.0128" y1="9.144" x2="79.0448" y2="9.144" width="0.2032" layer="16"/>
-<wire x1="79.0448" y1="9.144" x2="79.2" y2="9" width="0.2032" layer="16"/>
-<wire x1="77.0128" y1="9.144" x2="77" y2="9" width="0.2032" layer="16"/>
 <wire x1="60.96" y1="15.8496" x2="59.7408" y2="15.8496" width="0.2032" layer="16"/>
 <wire x1="61.3664" y1="16.256" x2="60.96" y2="15.8496" width="0.2032" layer="1"/>
 <wire x1="61.3664" y1="17.0688" x2="61.3664" y2="16.256" width="0.2032" layer="1"/>
@@ -1666,11 +1653,16 @@ design rules under a new name.</description>
 <wire x1="63.8048" y1="14.6304" x2="66.6496" y2="11.7856" width="0.2032" layer="1"/>
 <wire x1="60.96" y1="14.6304" x2="63.8048" y2="14.6304" width="0.2032" layer="1"/>
 <wire x1="60.96" y1="15.8496" x2="60.96" y2="14.6304" width="0.2032" layer="1"/>
-<wire x1="74.7776" y1="9.144" x2="74.8" y2="9" width="0.2032" layer="1"/>
 <via x="60.96" y="15.8496" extent="1-16" drill="0.3048"/>
 <via x="56.2864" y="15.4432" extent="1-16" drill="0.3048"/>
 <via x="74.7776" y="11.5824" extent="1-16" drill="0.3048"/>
 <via x="66.6496" y="11.7856" extent="1-16" drill="0.3048"/>
+<contactref element="U$19" pad="L2"/>
+<contactref element="U$19" pad="L3"/>
+<contactref element="U$19" pad="L1"/>
+<wire x1="77" y1="5" x2="79.2" y2="5" width="0" layer="19" extent="1-1"/>
+<wire x1="74.8" y1="5" x2="77" y2="5" width="0" layer="19" extent="1-1"/>
+<wire x1="74.7776" y1="9.144" x2="74.8" y2="5" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="A0">
 <contactref element="U$19" pad="A0"/>
