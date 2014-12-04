@@ -1,7 +1,8 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil;  c-file-style: "k&r"; c-basic-offset: 2; -*-
 
    Webduino, a simple Arduino web server
-   Copyright 2009-2012 Ben Combee, Ran Talbott, Christopher Lee, Martin Lormes
+   Copyright 2009-2014 Ben Combee, Ran Talbott, Christopher Lee, Martin Lormes
+   Francisco M Cuenca-Acuna
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
    of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +29,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <Ethernet.h>
 #include <EthernetClient.h>
 #include <EthernetServer.h>
 
@@ -37,12 +39,6 @@
 
 #define WEBDUINO_VERSION 1007
 #define WEBDUINO_VERSION_STRING "1.7"
-
-#if WEBDUINO_SUPRESS_SERVER_HEADER
-#define WEBDUINO_SERVER_HEADER ""
-#else
-#define WEBDUINO_SERVER_HEADER "Server: Webduino/" WEBDUINO_VERSION_STRING CRLF
-#endif
 
 // standard END-OF-LINE marker in HTTP
 #define CRLF "\r\n"
@@ -55,6 +51,10 @@
 // reading the HTTP request.  Used to avoid DOS attacks.
 #ifndef WEBDUINO_READ_TIMEOUT_IN_MS
 #define WEBDUINO_READ_TIMEOUT_IN_MS 1000
+#endif
+
+#ifndef WEBDUINO_COMMANDS_COUNT
+#define WEBDUINO_COMMANDS_COUNT 8
 #endif
 
 #ifndef WEBDUINO_URL_PATH_COMMAND_LENGTH
@@ -76,6 +76,10 @@
 #ifndef WEBDUINO_SERVER_ERROR_MESSAGE
 #define WEBDUINO_SERVER_ERROR_MESSAGE "<h1>500 Internal Server Error</h1>"
 #endif // WEBDUINO_SERVER_ERROR_MESSAGE
+
+#ifndef WEBDUINO_OUTPUT_BUFFER_SIZE
+#define WEBDUINO_OUTPUT_BUFFER_SIZE 32
+#endif // WEBDUINO_OUTPUT_BUFFER_SIZE
 
 // add '#define WEBDUINO_FAVICON_DATA ""' to your application
 // before including WebServer.h to send a null file as the favicon.ico file
@@ -128,7 +132,7 @@ extern "C" unsigned long millis(void);
 
 // declare a static string
 #ifdef __AVR__
-#define P(name)   static const unsigned char name[] PROGMEM
+#define P(name)   static const unsigned char name[] __attribute__(( section(".progmem." #name) ))
 #else
 #define P(name)   static const unsigned char name[]
 #endif
@@ -177,7 +181,7 @@ public:
                               bool tail_complete);
 
   // constructor for webserver object
-  WebServer(const char *urlPrefix = "", int port = 80);
+  WebServer(const char *urlPrefix = "", uint16_t port = 80);
 
   // start listening for connections
   void begin();
@@ -216,6 +220,12 @@ public:
 
   // inline overload for printP to handle signed char strings
   void printP(const char *str) { printP((unsigned char*)str); }
+
+  // support for C style formating
+  void printf(char *fmt, ... );
+  #ifdef F
+  void printf(const __FlashStringHelper *format, ... );
+  #endif
 
   // output raw data stored in program memory
   void writeP(const unsigned char *data, size_t length);
@@ -295,13 +305,16 @@ public:
 
   // implementation of write used to implement Print interface
   virtual size_t write(uint8_t);
-  virtual size_t write(const char *str);
   virtual size_t write(const uint8_t *buffer, size_t size);
-  size_t write(const char *data, size_t length);
 
   // tells if there is anything to process
   uint8_t available();
 
+  // Flush the send buffer
+  void flushBuf(); 
+
+  // Close the current connection and flush ethernet buffers
+  void reset(); 
 private:
   EthernetServer m_server;
   EthernetClient m_client;
@@ -320,11 +333,13 @@ private:
   {
     const char *verb;
     Command *cmd;
-  } m_commands[8];
+  } m_commands[WEBDUINO_COMMANDS_COUNT];
   unsigned char m_cmdCount;
   UrlPathCommand *m_urlPathCmd;
 
-  void reset();
+  uint8_t m_buffer[WEBDUINO_OUTPUT_BUFFER_SIZE];
+  uint8_t m_bufFill;
+
   void getRequest(WebServer::ConnectionType &type, char *request, int *length);
   bool dispatchCommand(ConnectionType requestType, char *verb,
                        bool tail_complete);
@@ -348,18 +363,21 @@ private:
  * IMPLEMENTATION
  ********************************************************************/
 
-WebServer::WebServer(const char *urlPrefix, int port) :
+WebServer::WebServer(const char *urlPrefix, uint16_t port) :
   m_server(port),
-  m_client(MAX_SOCK_NUM),
+  m_client(),
   m_urlPrefix(urlPrefix),
   m_pushbackDepth(0),
   m_contentLength(0),
   m_failureCmd(&defaultFailCmd),
   m_defaultCmd(&defaultFailCmd),
   m_cmdCount(0),
-  m_urlPathCmd(NULL)
+  m_urlPathCmd(NULL),
+  m_bufFill(0)
 {
 }
+
+P(webServerHeader) = "Server: Webduino/" WEBDUINO_VERSION_STRING CRLF;
 
 void WebServer::begin()
 {
@@ -392,71 +410,82 @@ void WebServer::setUrlPathCommand(UrlPathCommand *cmd)
 
 size_t WebServer::write(uint8_t ch)
 {
-  return m_client.write(ch);
-}
+  m_buffer[m_bufFill++] = ch;
 
-size_t WebServer::write(const char *str)
-{
-  return m_client.write(str);
+  if(m_bufFill == sizeof(m_buffer))
+  {
+    m_client.write(m_buffer, sizeof(m_buffer));
+    m_bufFill = 0;
+  }
+
+  return sizeof(ch);
 }
 
 size_t WebServer::write(const uint8_t *buffer, size_t size)
 {
+  flushBuf(); //Flush any buffered output
   return m_client.write(buffer, size);
 }
 
-size_t WebServer::write(const char *buffer, size_t length)
+void WebServer::flushBuf()
 {
-  return m_client.write((const uint8_t *)buffer, length);
+  if(m_bufFill > 0)
+  {
+    m_client.write(m_buffer, m_bufFill);
+    m_bufFill = 0;
+  }
 }
 
 void WebServer::writeP(const unsigned char *data, size_t length)
 {
-  // copy data out of program memory into local storage, write out in
-  // chunks of 32 bytes to avoid extra short TCP/IP packets
-  uint8_t buffer[32];
-  size_t bufferEnd = 0;
+  // copy data out of program memory into local storage
 
   while (length--)
   {
-    if (bufferEnd == 32)
-    {
-      m_client.write(buffer, 32);
-      bufferEnd = 0;
-    }
-
-    buffer[bufferEnd++] = pgm_read_byte(data++);
+    write(pgm_read_byte(data++));
   }
-
-  if (bufferEnd > 0)
-    m_client.write(buffer, bufferEnd);
 }
 
 void WebServer::printP(const unsigned char *str)
 {
-  // copy data out of program memory into local storage, write out in
-  // chunks of 32 bytes to avoid extra short TCP/IP packets
-  uint8_t buffer[32];
-  size_t bufferEnd = 0;
+  // copy data out of program memory into local storage
 
-  while ((buffer[bufferEnd++] = pgm_read_byte(str++)))
+  while (uint8_t value = pgm_read_byte(str++))
   {
-    if (bufferEnd == 32)
-    {
-      m_client.write(buffer, 32);
-      bufferEnd = 0;
-    }
+    write(value);
   }
-
-  // write out everything left but trailing NUL
-  if (bufferEnd > 1)
-    m_client.write(buffer, bufferEnd - 1);
 }
 
 void WebServer::printCRLF()
 {
-  m_client.write((const uint8_t *)"\r\n", 2);
+  print(CRLF);
 }
+
+void WebServer::printf(char *fmt, ... )
+{
+  char tmp[128]; // resulting string limited to 128 chars
+  va_list args;
+  va_start (args, fmt );
+  vsnprintf(tmp, 128, fmt, args);
+  va_end (args);
+  print(tmp);
+}
+
+#ifdef F
+void WebServer::printf(const __FlashStringHelper *format, ... )
+{
+  char buf[128]; // resulting string limited to 128 chars
+  va_list ap;
+  va_start(ap, format);
+#ifdef __AVR__
+  vsnprintf_P(buf, sizeof(buf), (const char *)format, ap); // progmem for AVR
+#else
+  vsnprintf(buf, sizeof(buf), (const char *)format, ap); // for the rest of the world
+#endif  
+  va_end(ap);
+  print(buf);
+}
+#endif
 
 bool WebServer::dispatchCommand(ConnectionType requestType, char *verb,
         bool tail_complete)
@@ -480,10 +509,10 @@ bool WebServer::dispatchCommand(ConnectionType requestType, char *verb,
   // if the first character is a slash,  there's more after it.
   if (verb[0] == '/')
   {
-    unsigned char i;
+    uint8_t i;
     char *qm_loc;
-    unsigned int verb_len;
-    int qm_offset;
+    uint16_t verb_len;
+    uint8_t qm_offset;
     // Skip over the leading "/",  because it makes the code more
     // efficient and easier to understand.
     verb++;
@@ -510,7 +539,7 @@ bool WebServer::dispatchCommand(ConnectionType requestType, char *verb,
     {
       // Initialize with null bytes, so number of parts can be determined.
       char *url_path[WEBDUINO_URL_PATH_COMMAND_LENGTH] = {0};
-      int part = 0;
+      uint8_t part = 0;
 
       // URL path should be terminated with null byte.
       *(verb + verb_len) = 0;
@@ -603,6 +632,8 @@ void WebServer::processConnection(char *buff, int *bufflen)
       m_failureCmd(*this, requestType, buff, (*bufflen) >= 0);
     }
 
+    flushBuf();
+
 #if WEBDUINO_SERIAL_DEBUGGING > 1
     Serial.println("*** stopping connection ***");
 #endif
@@ -620,14 +651,19 @@ bool WebServer::checkCredentials(const char authCredentials[45])
 
 void WebServer::httpFail()
 {
-  P(failMsg) =
-    "HTTP/1.0 400 Bad Request" CRLF
-    WEBDUINO_SERVER_HEADER
+  P(failMsg1) = "HTTP/1.0 400 Bad Request" CRLF;
+  printP(failMsg1);
+
+#ifndef WEBDUINO_SUPRESS_SERVER_HEADER
+  printP(webServerHeader);
+#endif
+
+  P(failMsg2) = 
     "Content-Type: text/html" CRLF
     CRLF
     WEBDUINO_FAIL_MESSAGE;
 
-  printP(failMsg);
+  printP(failMsg2);
 }
 
 void WebServer::defaultFailCmd(WebServer &server,
@@ -660,50 +696,70 @@ void WebServer::favicon(ConnectionType type)
 
 void WebServer::httpUnauthorized()
 {
-  P(failMsg) =
-    "HTTP/1.0 401 Authorization Required" CRLF
-    WEBDUINO_SERVER_HEADER
+  P(unauthMsg1) = "HTTP/1.0 401 Authorization Required" CRLF;
+  printP(unauthMsg1);
+
+#ifndef WEBDUINO_SUPRESS_SERVER_HEADER
+  printP(webServerHeader);
+#endif
+
+  P(unauthMsg2) = 
     "Content-Type: text/html" CRLF
     "WWW-Authenticate: Basic realm=\"" WEBDUINO_AUTH_REALM "\"" CRLF
     CRLF
     WEBDUINO_AUTH_MESSAGE;
 
-  printP(failMsg);
+  printP(unauthMsg2);
 }
 
 void WebServer::httpServerError()
 {
-  P(failMsg) =
-    "HTTP/1.0 500 Internal Server Error" CRLF
-    WEBDUINO_SERVER_HEADER
+  P(servErrMsg1) = "HTTP/1.0 500 Internal Server Error" CRLF;
+  printP(servErrMsg1);
+
+#ifndef WEBDUINO_SUPRESS_SERVER_HEADER
+  printP(webServerHeader);
+#endif
+
+  P(servErrMsg2) = 
     "Content-Type: text/html" CRLF
     CRLF
     WEBDUINO_SERVER_ERROR_MESSAGE;
 
-  printP(failMsg);
+  printP(servErrMsg2);
 }
 
 void WebServer::httpNoContent()
 {
-  P(noContentMsg) =
-    "HTTP/1.0 204 NO CONTENT" CRLF
-    WEBDUINO_SERVER_HEADER
+  P(noContentMsg1) = "HTTP/1.0 204 NO CONTENT" CRLF;
+  printP(noContentMsg1);
+
+#ifndef WEBDUINO_SUPRESS_SERVER_HEADER
+  printP(webServerHeader);
+#endif
+
+  P(noContentMsg2) = 
     CRLF
     CRLF;
 
-  printP(noContentMsg);
+  printP(noContentMsg2);
 }
 
 void WebServer::httpSuccess(const char *contentType,
                             const char *extraHeaders)
 {
-  P(successMsg1) =
-    "HTTP/1.0 200 OK" CRLF
-    WEBDUINO_SERVER_HEADER
+  P(successMsg1) = "HTTP/1.0 200 OK" CRLF;
+  printP(successMsg1);
+
+#ifndef WEBDUINO_SUPRESS_SERVER_HEADER
+  printP(webServerHeader);
+#endif
+
+  P(successMsg2) = 
     "Access-Control-Allow-Origin: *" CRLF
     "Content-Type: ";
 
-  printP(successMsg1);
+  printP(successMsg2);
   print(contentType);
   printCRLF();
   if (extraHeaders)
@@ -713,12 +769,15 @@ void WebServer::httpSuccess(const char *contentType,
 
 void WebServer::httpSeeOther(const char *otherURL)
 {
-  P(seeOtherMsg) =
-    "HTTP/1.0 303 See Other" CRLF
-    WEBDUINO_SERVER_HEADER
-    "Location: ";
+  P(seeOtherMsg1) = "HTTP/1.0 303 See Other" CRLF;
+  printP(seeOtherMsg1);
 
-  printP(seeOtherMsg);
+#ifndef WEBDUINO_SUPRESS_SERVER_HEADER
+  printP(webServerHeader);
+#endif
+
+  P(seeOtherMsg2) = "Location: ";
+  printP(seeOtherMsg2);
   print(otherURL);
   printCRLF();
   printCRLF();
@@ -933,7 +992,7 @@ bool WebServer::readPOSTparam(char *name, int nameLen,
       int ch2 = read();
       if (ch1 == -1 || ch2 == -1)
         return false;
-      char hex[3] = { ch1, ch2, 0 };
+      char hex[3] = { (char)ch1, (char)ch2, '\0' };
       ch = strtoul(hex, NULL, 16);
     }
 
