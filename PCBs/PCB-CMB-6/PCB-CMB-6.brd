@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -2166,10 +2166,10 @@ design rules under a new name.</description>
 <attribute name="MF" value="" x="121.898" y="41.927" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_FARNELL" value="1520813" x="121.898" y="41.927" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="C24" library="SparkFun" package="0603-CAP" value="100nF" x="105.41" y="69.85" rot="MR180"/>
+<element name="C24" library="SparkFun" package="0603-CAP" value="10nF" x="105.41" y="69.85" rot="MR180"/>
 <element name="C25" library="SparkFun" package="0603-CAP" value="10nF" x="106.299" y="60.579" rot="MR270"/>
 <element name="C26" library="SparkFun" package="0603-CAP" value="10nF" x="102.87" y="59.69" rot="MR180"/>
-<element name="R56" library="SparkFun" package="0603-RES" value="10K" x="101.6" y="69.85" rot="MR0"/>
+<element name="R56" library="SparkFun" package="0603-RES" value="0R" x="101.6" y="69.85" rot="MR0"/>
 <element name="IC8" library="microchip" package="SSOP28" value="MCP23017SS" x="88.773" y="55.118" rot="MR0">
 <attribute name="OC_NEWARK" value="31K2960" x="121.793" y="46.228" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="MCP23017-E/SS" x="121.793" y="46.228" size="1.778" layer="28" rot="MR0" display="off"/>
@@ -2178,7 +2178,7 @@ design rules under a new name.</description>
 </element>
 <element name="C30" library="SparkFun" package="0603-CAP" value="100nF" x="87.376" y="49.53" rot="MR180"/>
 <element name="IC9" library="74xx-eu" package="SO14" value="74HCT14D" x="113.919" y="44.323" rot="MR270"/>
-<element name="R58" library="SparkFun" package="0603-RES" value="10K" x="101.6" y="68.072" rot="MR180"/>
+<element name="R58" library="SparkFun" package="0603-RES" value="100K" x="101.6" y="68.072" rot="MR180"/>
 <element name="C27" library="SparkFun" package="0603-CAP" value="100nF" x="116.078" y="50.038" rot="MR180"/>
 <element name="U$66" library="SKAARHOJ" package="2X2" value="M02X2" x="117.618" y="55.787" rot="MR180"/>
 <element name="B26ALT" library="SKAARHOJ" package="LP11" value="LP11-B&quot;" x="50.8" y="80.01" rot="R180"/>

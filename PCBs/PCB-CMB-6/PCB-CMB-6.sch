@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -12611,10 +12611,10 @@ Based on the following sources:
 <part name="GND30" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND31" library="SparkFun" deviceset="GND" device=""/>
 <part name="SW1" library="switch-alps" deviceset="EC12E_SW" device=""/>
-<part name="C24" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
+<part name="C24" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C25" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C26" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
-<part name="R56" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="R56" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="0R"/>
 <part name="IC8" library="microchip" deviceset="MCP23017" device="SS">
 <attribute name="MPN" value="MCP23017-E/SS"/>
 <attribute name="OC_FARNELL" value="1467674"/>
@@ -12624,7 +12624,7 @@ Based on the following sources:
 <part name="C30" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="GND33" library="SparkFun" deviceset="GND" device=""/>
 <part name="IC9" library="74xx-eu" deviceset="74*14" device="D" technology="HCT" value="74HCT14D"/>
-<part name="R58" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
+<part name="R58" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="100K"/>
 <part name="U$73" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND34" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND32" library="SparkFun" deviceset="GND" device=""/>
