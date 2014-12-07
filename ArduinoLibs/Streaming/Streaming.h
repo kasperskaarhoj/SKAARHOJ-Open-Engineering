@@ -33,6 +33,16 @@ template<class T>
 inline Print &operator <<(Print &stream, T arg) 
 { stream.print(arg); return stream; }
 
+struct _STRPAD 
+{ 
+  const char* val;
+  uint8_t pad;
+  const char* padChar;
+  bool right;
+  _STRPAD(const char* v, uint8_t p, const char* pc, bool r): val(v), pad(p), padChar(pc), right(r) 
+  {}
+};
+
 struct _BASED 
 { 
   long val; 
@@ -77,11 +87,30 @@ inline Print &operator <<(Print &obj, const _BYTE_CODE &arg)
 #define _HEXPADL(a,pad,padChar)     _BASEDPADL(a, pad, padChar, HEX)
 #define _DECPADL(a,pad,padChar)     _BASEDPADL(a, pad, padChar, DEC)
 #define _BINPADL(a,pad,padChar)     _BASEDPADL(a, pad, padChar, BIN)
+#define _STRPADL(a,pad,padChar)     _STRPAD(a, pad, padChar, false)
+#define _STRPADR(a,pad,padChar)     _STRPAD(a, pad, padChar, true)
 
 // Specialization for class _BASED
 // Thanks to Arduino forum user Ben Combee who suggested this 
 // clever technique to allow for expressions like
 //   Serial << _HEX(a);
+
+inline Print &operator <<(Print &obj, const _STRPAD &arg)
+{ 
+	if (!arg.right)	{
+		for(uint8_t a=0; a<arg.pad-strlen(arg.val);a++)	{
+			obj.print(arg.padChar[0]);
+		}
+	}
+	obj.print(arg.val); 
+	if (arg.right)	{
+		for(uint8_t a=0; a<arg.pad-strlen(arg.val);a++)	{
+			obj.print(arg.padChar[0]);
+		}
+	}
+
+	return obj; 
+} 
 
 inline Print &operator <<(Print &obj, const _BASED &arg)
 { obj.print(arg.val, arg.base); return obj; } 

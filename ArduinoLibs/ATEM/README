@@ -1,3 +1,6 @@
+**** (LIBRARY OBSOLETE, Used ATEMstd instead.) ****
+
+
 This library for Arduino is intended to provide functions for connecting to and controlling ATEM video switchers from Blackmagic Design (http://blackmagic-design.com/products/atem/). They make awesome HD video switchers, really cheap ones too and they are controlled over IP! So while you can get away with using their nice Win/Mac app and switch video professionally, you can also shell out a lot of money on a hardware interface which the broadcast pros will prefer any day. Hey, it's a win for everyone!
 
 Now, with this arduino library, you can develop your own custom hardware designs to switch video! For instance, what about having a foot pedal to make a cut, eh? A preliminary video to show what it can do: http://www.youtube.com/watch?v=FlyyhGyPClE (touchscreen example at the end!)
