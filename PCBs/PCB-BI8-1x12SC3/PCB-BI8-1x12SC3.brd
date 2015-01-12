@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -491,13 +491,13 @@
 <package name="3BITADDR">
 <pad name="A1" x="0" y="0" drill="0.6"/>
 <pad name="A0" x="-2.2" y="0" drill="0.6"/>
-<pad name="H1" x="-2.2" y="2" drill="0.6" shape="offset" rot="R305"/>
-<pad name="H2" x="0" y="2" drill="0.6" shape="offset" rot="R305"/>
-<pad name="H3" x="2.2" y="2" drill="0.6" shape="offset" rot="R305"/>
+<pad name="H1" x="-2.2" y="2" drill="0.6" rot="R305"/>
+<pad name="H2" x="0" y="2" drill="0.6" rot="R305"/>
+<pad name="H3" x="2.2" y="2" drill="0.6" rot="R305"/>
 <pad name="A2" x="2.2" y="0" drill="0.6"/>
-<pad name="L3" x="2.2" y="-2" drill="0.6" shape="offset" rot="R55"/>
-<pad name="L2" x="0" y="-2" drill="0.6" shape="offset" rot="R55"/>
-<pad name="L1" x="-2.2" y="-2" drill="0.6" shape="offset" rot="R55"/>
+<pad name="L3" x="2.2" y="-2" drill="0.6" rot="R55"/>
+<pad name="L2" x="0" y="-2" drill="0.6" rot="R55"/>
+<pad name="L1" x="-2.2" y="-2" drill="0.6" rot="R55"/>
 <text x="-2.667" y="2.921" size="0.8128" layer="21">A0</text>
 <text x="-0.635" y="2.921" size="0.8128" layer="21">A1</text>
 <text x="1.397" y="2.921" size="0.8128" layer="21">A2</text>

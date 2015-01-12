@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -10318,8 +10318,13 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="R13" gate="G$1" pin="2"/>
 <wire x1="129.54" y1="-154.94" x2="134.62" y2="-154.94" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="1"/>
-<wire x1="134.62" y1="-154.94" x2="157.48" y2="-154.94" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="-154.94" x2="149.86" y2="-154.94" width="0.1524" layer="91"/>
 <junction x="134.62" y="-154.94"/>
+<pinref part="SW2ALT" gate="G$1" pin="B"/>
+<wire x1="149.86" y1="-154.94" x2="157.48" y2="-154.94" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="-124.46" x2="149.86" y2="-124.46" width="0.1524" layer="91"/>
+<wire x1="149.86" y1="-124.46" x2="149.86" y2="-154.94" width="0.1524" layer="91"/>
+<junction x="149.86" y="-154.94"/>
 </segment>
 </net>
 <net name="AD4" class="0">
