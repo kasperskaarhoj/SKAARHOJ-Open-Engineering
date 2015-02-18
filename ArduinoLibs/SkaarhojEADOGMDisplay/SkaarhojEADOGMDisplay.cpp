@@ -158,11 +158,19 @@ void SkaarhojEADOGMDisplay::gotoRowCol(uint8_t row, uint8_t col) {
 	if (_boardType==2 && _DDRAMaddr >= 16)	{
 		_DDRAMaddr+=24;
 	}
-	
+
     _sendData(false);
     _selectDisplay(_index, true);
     shiftOut(_dataPin, _clockPin, MSBFIRST, B10000000 | (_DDRAMaddr & B1111111));
-    _selectDisplay(_index,false);
+/*	for(uint8_t a=0;a<8;a++)	{
+		digitalWrite(_dataPin, (B10000000 | (_DDRAMaddr & B1111111)) & (B1<<(7-a)));
+		digitalWrite(_clockPin, HIGH);
+//		delayMicroseconds(1500);
+		digitalWrite(_clockPin, LOW);
+	}
+  */  
+	_selectDisplay(_index,false);
+	delayMicroseconds(30);
 }
 
 /**

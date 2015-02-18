@@ -55,6 +55,7 @@ class ClientPanaAWHExTCP
 
 	void runLoop();
     void connect();
+	void changeLastIPBytes(uint8_t lastByte);
 	bool isReady();
 	
     bool doPan(uint8_t panSpeed);

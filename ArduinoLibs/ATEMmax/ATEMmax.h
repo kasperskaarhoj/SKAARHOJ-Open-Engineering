@@ -50,6 +50,7 @@ class ATEMmax : public ATEMbase
 
 
 
+
 // *********************************
 // **
 // ** Implementations in ATEMmax.h:
@@ -232,6 +233,8 @@ private:
 			int atemCameraControlIris[9];
 			int atemCameraControlFocus[9];
 			int atemCameraControlGain[9];
+			int atemCameraControlWhiteBalance[9];
+			int atemCameraControlZoom[9];
 			int atemCameraControlLiftR[9];
 			int atemCameraControlGammaR[9];
 			int atemCameraControlGainR[9];
@@ -627,6 +630,8 @@ public:
 			int getCameraControlIris(uint8_t input);
 			int getCameraControlFocus(uint8_t input);
 			int getCameraControlGain(uint8_t input);
+			int getCameraControlWhiteBalance(uint8_t input);
+			int getCameraControlZoomSpeed(uint8_t input);
 			int getCameraControlLiftR(uint8_t input);
 			int getCameraControlGammaR(uint8_t input);
 			int getCameraControlGainR(uint8_t input);
@@ -647,6 +652,8 @@ public:
 			void setCameraControlIris(uint8_t input, int iris);
 			void setCameraControlFocus(uint8_t input, int focus);
 			void setCameraControlGain(uint8_t input, int gain);
+			void setCameraControlWhiteBalance(uint8_t input, int whiteBalance);
+			void setCameraControlZoomSpeed(uint8_t input, int zoomSpeed);
 			void setCameraControlLiftR(uint8_t input, int liftR);
 			void setCameraControlGammaR(uint8_t input, int gammaR);
 			void setCameraControlGainR(uint8_t input, int gainR);

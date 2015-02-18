@@ -1177,7 +1177,7 @@ extern char *strcasestr_P(const char *, const char *) __ATTR_PURE__;
 extern size_t strcspn_P(const char *__s, const char * __reject) __ATTR_PURE__;
 extern size_t strlcat_P (char *, const char *, size_t );
 extern size_t strlcpy_P (char *, const char *, size_t );
-extern size_t __strlen_P(const char *) __ATTR_CONST__;  /* program memory can't change */
+extern size_t strlen_P(const char *) __ATTR_CONST__;  /* program memory can't change */
 extern size_t strnlen_P(const char *, size_t) __ATTR_CONST__; /* program memory can't change */
 extern int strncmp_P(const char *, const char *, size_t) __ATTR_PURE__;
 extern int strncasecmp_P(const char *, const char *, size_t) __ATTR_PURE__;
@@ -1208,11 +1208,7 @@ extern size_t strlcpy_PF (char *dst, uint_farptr_t src, size_t siz);
 extern int memcmp_PF(const void *, uint_farptr_t, size_t) __ATTR_PURE__;
 
 
-__attribute__((__always_inline__)) static inline size_t strlen_P(const char * s);
-static inline size_t strlen_P(const char *s) {
-  return __builtin_constant_p(__builtin_strlen(s))
-     ? __builtin_strlen(s) : __strlen_P(s);
-} 
+
 
 
 

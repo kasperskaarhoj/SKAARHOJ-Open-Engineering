@@ -8,13 +8,7 @@ open source code, so SKAARHOJ encourage you to support Adafruit and
 open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
-#include <avr/pgmspace.h>
-#include <util/delay.h>
-#include <stdlib.h>
 
-#include <Wire.h>
-
-#include "Adafruit_GFX.h"
 #include "SkaarhojDisplayArray.h"
 
 
@@ -340,3 +334,32 @@ void SkaarhojDisplayArray::writeControlPins() {
 
 
 
+
+void SkaarhojDisplayArray::testProgramme(uint8_t buttonMask)	{
+  static uint16_t lastTime;
+
+  for (int i = 0; i < 8; i++)  {
+    if (buttonMask & (B1 << i)) {
+
+        clearDisplay();   // clears the screen and buffer
+        setTextColor(WHITE);
+        setCursor(0, 0);
+        setTextSize(1);
+        print(millis(), HEX);
+        if (i == 0)	{
+          print(F(" [dt="));
+          print((uint16_t)millis() - lastTime);
+          lastTime = millis();
+          print(F("]"));
+        }
+        print(F(" "));
+        setTextSize(2);
+        print((uint8_t)millis(), BIN);
+        setTextSize(1);
+        print(millis(), DEC);
+		print(F(" - "));
+        print(millis(), BIN);
+        display(B1 << i);
+    }
+  }
+}

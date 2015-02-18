@@ -485,7 +485,7 @@ void ATEM::_parsePacket(uint16_t packetLength)	{
             if (_serialOutput) Serial.println(_ATEM_TrSS_TransitionStyle, DEC);
           } else
 	      if(strcmp(cmdStr, "FtbS") == 0) {  // Fade To Black State
-			_ATEM_FtbS_state = _packetBuffer[2]; // State of Fade To Black, 0 = off and 1 = activated
+			_ATEM_FtbS_state = _packetBuffer[2]| _packetBuffer[1]; // State of Fade To Black, 0 = off and 1 = activated
 			_ATEM_FtbS_frameCount = _packetBuffer[3];	// Frames count down
             if (_serialOutput) Serial.print(F("FTB:"));
             if (_serialOutput) Serial.print(_ATEM_FtbS_state);

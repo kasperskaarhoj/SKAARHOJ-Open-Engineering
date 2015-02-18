@@ -16,10 +16,10 @@ void setup() {
   Wire.begin();
   Disp163.begin(0,0,3);  // DOGM163
   Disp81.begin(0,1,1);  // DOGM81
-  Disp162.begin(5,0,2);  // DOGM81
+  Disp162.begin(4,0,2);  // DOGM81
 
 
-
+/*
   Disp163.cursor(true);
   Disp163 << F("millis(): ") << millis();
   Disp163.print("AbCDE\nY");
@@ -62,18 +62,32 @@ void setup() {
   Disp163.cursor(false);
   Disp81.cursor(false);
   Disp163.clearDisplay();
+  */
 }
 
 void loop()  {
+ /*
   Disp163 << F("Time:") << _DECPADL(millis(), 7, " ") << F("ms");  // No need to add New Line because we set position directly for the next line
 
   Disp163.gotoRowCol(1,4);
   Disp163 << F("0x") << _HEXPADL(millis(), 6, "0") << F("ms\n");  // Adding newline to go to next line because we don't fill out the line completely.
 
   Disp163 << _BINPADL(millis() >> 10, 16, "0");  // No need to add New Line because the line is 16 chars long through padding. It will wrap around.
+*/
 
+ // Disp162.gotoRowCol(0,0);
+ // Disp162 << F("Time"); 
+ // Disp162.gotoRowCol(0,6);
+ // Disp162 << _DECPADL(millis(), 7, " ") << F("\n");  // No need to add New Line because we set position directly for the next line
+//  Disp162.gotoRowCol(1,0);
 
+  for(uint8_t a=0; a<10;a++)  {
+      Disp162 << a;
+  //    delay(100);
+  }
   Disp162.gotoRowCol(0,0);
-  Disp162 << F("Time:") << _DECPADL(millis(), 7, " ") << F("ms\n");  // No need to add New Line because we set position directly for the next line
-  Disp162 << F("0x") << _HEXPADL(millis(), 6, "0") << F("ms_12345");  // Adding newline to go to next line because we don't fill out the line completely.
+//  Disp162 << F("0x") << _HEXPADL(millis(), 6, "0");
+//  delay(100);
+//  Disp162.gotoRowCol(1,10);
+//  Disp162 << F("12345");  // Adding newline to go to next line because we don't fill out the line completely.
 }

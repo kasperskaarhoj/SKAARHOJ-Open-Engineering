@@ -95,7 +95,7 @@ class ATEMbase
 	bool isConnected();
 	bool hasInitialized();
 
-  	void serialOutput(boolean serialOutput);
+  	void serialOutput(uint8_t level);
 	bool hasTimedOut(unsigned long time, unsigned long timeout);
 
 	float audioWord2Db(uint16_t input);
@@ -104,6 +104,11 @@ class ATEMbase
   	uint8_t getVideoSrcIndex(uint16_t videoSrc);
   	uint8_t getAudioSrcIndex(uint16_t audioSrc);
 	
+	uint16_t getVideoIndexSrc(uint8_t index);
+	uint16_t getAudioIndexSrc(uint8_t index);
+	
+	uint8_t maxAtemSeriesVideoInputs();
+		
 	void commandBundleStart();
 	void commandBundleEnd();
 	void resetCommandBundle();

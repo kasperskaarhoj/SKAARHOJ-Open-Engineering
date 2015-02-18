@@ -28,6 +28,8 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #include "Arduino.h"
 #include "MCP23017.h"
+#include <Streaming.h>
+#include <SkaarhojPgmspace.h>
 
 
 
@@ -66,5 +68,7 @@ class SkaarhojEncoders
 	bool hasTimedOut(unsigned long time, unsigned long timeout);
 	void setStateCheckDelay(uint16_t delayTime);
 	void serialOutput(uint8_t level);
+	
+	void testProgramme(uint8_t buttonMask);
 };
 #endif 

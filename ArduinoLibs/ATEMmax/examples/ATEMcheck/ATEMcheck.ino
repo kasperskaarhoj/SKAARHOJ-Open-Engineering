@@ -179,170 +179,6 @@ void processCommands()  {
   }
 }
 
-/*
- * Translating a index to a video source
- */
-uint16_t getVideoIndex2Src(uint8_t index)	{
-  switch (index) {
-    case 0:  // Black
-      return 0;
-    case 1:  // Input 1
-      return 1;
-    case 2:  // Input 2
-      return 2;
-    case 3:  // Input 3
-      return 3;
-    case 4:  // Input 4
-      return 4;
-    case 5:  // Input 5
-      return 5;
-    case 6:  // Input 6
-      return 6;
-    case 7:  // Input 7
-      return 7;
-    case 8:  // Input 8
-      return 8;
-    case 9:  // Input 9
-      return 9;
-    case 10:  // Input 10
-      return 10;
-    case 11:  // Input 11
-      return 11;
-    case 12:  // Input 12
-      return 12;
-    case 13:  // Input 13
-      return 13;
-    case 14:  // Input 14
-      return 14;
-    case 15:  // Input 15
-      return 15;
-    case 16:  // Input 16
-      return 16;
-    case 17:  // Input 17
-      return 17;
-    case 18:  // Input 18
-      return 18;
-    case 19:  // Input 19
-      return 19;
-    case 20:  // Input 20
-      return 20;
-    case 21:  // Color Bars
-      return 1000;
-    case 22:  // Color 1
-      return 2001;
-    case 23:  // Color 2
-      return 2002;
-    case 24:  // Media Player 1
-      return 3010;
-    case 25:  // Media Player 1 Key
-      return 3011;
-    case 26:  // Media Player 2
-      return 3020;
-    case 27:  // Media Player 2 Key
-      return 3021;
-    case 28:  // Key 1 Mask
-      return 4010;
-    case 29:  // Key 2 Mask
-      return 4020;
-    case 30:  // Key 3 Mask
-      return 4030;
-    case 31:  // Key 4 Mask
-      return 4040;
-    case 32:  // DSK 1 Mask
-      return 5010;
-    case 33:  // DSK 2 Mask
-      return 5020;
-    case 34:  // Super Source
-      return 6000;
-    case 35:  // Clean Feed 1
-      return 7001;
-    case 36:  // Clean Feed 2
-      return 7002;
-    case 37:  // Auxilary 1
-      return 8001;
-    case 38:  // Auxilary 2
-      return 8002;
-    case 39:  // Auxilary 3
-      return 8003;
-    case 40:  // Auxilary 4
-      return 8004;
-    case 41:  // Auxilary 5
-      return 8005;
-    case 42:  // Auxilary 6
-      return 8006;
-    case 43:  // ME 1 Prog
-      return 10010;
-    case 44:  // ME 1 Prev
-      return 10011;
-    case 45:  // ME 2 Prog
-      return 10020;
-    case 46:  // ME 2 Prev
-      return 10021;
-    default:
-      return 0;
-  }
-}
-
-/*
- * Translating a index to a audio source
- */
-uint16_t getAudioIndex2Src(uint8_t index)	{
-  switch (index) {
-    case 0:  // Input 1
-      return 1;
-    case 1:  // Input 2
-      return 2;
-    case 2:  // Input 3
-      return 3;
-    case 3:  // Input 4
-      return 4;
-    case 4:  // Input 5
-      return 5;
-    case 5:  // Input 6
-      return 6;
-    case 6:  // Input 7
-      return 7;
-    case 7:  // Input 8
-      return 8;
-    case 8:  // Input 9
-      return 9;
-    case 9:  // Input 10
-      return 10;
-    case 10:  // Input 11
-      return 11;
-    case 11:  // Input 12
-      return 12;
-    case 12:  // Input 13
-      return 13;
-    case 13:  // Input 14
-      return 14;
-    case 14:  // Input 15
-      return 15;
-    case 15:  // Input 16
-      return 16;
-    case 16:  // Input 17
-      return 17;
-    case 17:  // Input 18
-      return 18;
-    case 18:  // Input 19
-      return 19;
-    case 19:  // Input 20
-      return 20;
-    case 20:  // XLR
-      return 1001;
-    case 21:  // AES/EBU
-      return 1101;
-    case 22:  // RCA
-      return 1201;
-    case 23:  // MP1
-      return 2001;
-    case 24:  // MP2
-      return 2002;
-    default:
-      return 0;
-  }
-}
-
 uint8_t getTallyBySourceResolveIndex(uint16_t videoSource)  {
   for (uint8_t a = 0; a < AtemSwitcher.getTallyBySourceSources(); a++)  {
     if (AtemSwitcher.getTallyBySourceVideoSource(a) == videoSource)  return a;
@@ -416,15 +252,15 @@ void loop() {
   printLine();
   processCommands();
   Serial << F("Source - Short - Long Name - Avail.Ext.Port.Type - Ext.Port.Type - Port.Type - Avail:Keys/SS-b/SS-a/MV/Aux - Avail:MEs\n");
-  for (a = 0; a <= 46; a++)  {
-    Serial << _DECPADL(getVideoIndex2Src(a), 5, " ") << F(" - ")
-           << _STRPADR(AtemSwitcher.getInputShortName(getVideoIndex2Src(a)), 4, " ") << F(" - ")
-           << _STRPADR(AtemSwitcher.getInputLongName(getVideoIndex2Src(a)), 20, " ") << F(" - ")
-           << _BINPADL(AtemSwitcher.getInputAvailableExternalPortTypes(getVideoIndex2Src(a)), 5, "0")  << F(" - ")
-           << AtemSwitcher.getInputExternalPortType(getVideoIndex2Src(a))  << F(" - ")
-           << _DECPADL(AtemSwitcher.getInputPortType(getVideoIndex2Src(a)), 3, " ")  << F(" - ")
-           << _BINPADL(AtemSwitcher.getInputAvailability(getVideoIndex2Src(a)), 5, "0")  << F(" - ")
-           << _BINPADL(AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(a)), 2, "0")  << F("\n");
+  for (a = 0; a < AtemSwitcher.maxAtemSeriesVideoInputs(); a++)  {
+    Serial << _DECPADL(AtemSwitcher.getVideoIndexSrc(a), 5, " ") << F(" - ")
+           << _STRPADR(AtemSwitcher.getInputShortName(AtemSwitcher.getVideoIndexSrc(a)), 4, " ") << F(" - ")
+           << _STRPADR(AtemSwitcher.getInputLongName(AtemSwitcher.getVideoIndexSrc(a)), 20, " ") << F(" - ")
+           << _BINPADL(AtemSwitcher.getInputAvailableExternalPortTypes(AtemSwitcher.getVideoIndexSrc(a)), 5, "0")  << F(" - ")
+           << AtemSwitcher.getInputExternalPortType(AtemSwitcher.getVideoIndexSrc(a))  << F(" - ")
+           << _DECPADL(AtemSwitcher.getInputPortType(AtemSwitcher.getVideoIndexSrc(a)), 3, " ")  << F(" - ")
+           << _BINPADL(AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(a)), 5, "0")  << F(" - ")
+           << _BINPADL(AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(a)), 2, "0")  << F("\n");
   }
 
   // Input properties:
@@ -433,10 +269,10 @@ void loop() {
   processCommands();
   Serial << F("Source - Input Type - From MP? - Plug Type\n");
   for (a = 0; a <= 24; a++)  {
-    Serial << _DECPADL(getAudioIndex2Src(a), 4, " ") << F(" - ")
-           << _DECPADL(AtemSwitcher.getAudioMixerInputType(getAudioIndex2Src(a)), 3, " ") << F(" - ")
-           << (AtemSwitcher.getAudioMixerInputFromMediaPlayer(getAudioIndex2Src(a)) ? F("YES") : F("NO ")) << F(" - ")
-           << _DECPADL(AtemSwitcher.getAudioMixerInputPlugtype(getAudioIndex2Src(a)), 3, " ") << F("\n");
+    Serial << _DECPADL(AtemSwitcher.getAudioIndexSrc(a), 4, " ") << F(" - ")
+           << _DECPADL(AtemSwitcher.getAudioMixerInputType(AtemSwitcher.getAudioIndexSrc(a)), 3, " ") << F(" - ")
+           << (AtemSwitcher.getAudioMixerInputFromMediaPlayer(AtemSwitcher.getAudioIndexSrc(a)) ? F("YES") : F("NO ")) << F(" - ")
+           << _DECPADL(AtemSwitcher.getAudioMixerInputPlugtype(AtemSwitcher.getAudioIndexSrc(a)), 3, " ") << F("\n");
   }
 
 
@@ -477,12 +313,12 @@ void loop() {
       printLine();
       processCommands();
       origValue = AtemSwitcher.getAuxSourceInput(aUXChannel);
-      for (uint16_t input = 0; input <= 46; input++)	{
-        if (AtemSwitcher.getInputAvailability(getVideoIndex2Src(input)) & 0x01)  {  // Checking if source can be used on AUX outputs
-          AtemSwitcher.setAuxSourceInput(aUXChannel, getVideoIndex2Src(input));
+      for (uint16_t input = 0; input < AtemSwitcher.maxAtemSeriesVideoInputs(); input++)	{
+        if (AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(input)) & 0x01)  {  // Checking if source can be used on AUX outputs
+          AtemSwitcher.setAuxSourceInput(aUXChannel, AtemSwitcher.getVideoIndexSrc(input));
 
           timeout = millis();
-          while (AtemSwitcher.getAuxSourceInput(aUXChannel) != getVideoIndex2Src(input) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getAuxSourceInput(aUXChannel) != AtemSwitcher.getVideoIndexSrc(input) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -491,7 +327,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setAuxSourceInput(") << aUXChannel << F(", ") << getVideoIndex2Src(input) << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setAuxSourceInput(") << aUXChannel << F(", ") << AtemSwitcher.getVideoIndexSrc(input) << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay
         }
       }
@@ -513,11 +349,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getProgramInputVideoSource(mE);
-    for (uint16_t videoSource = 0; videoSource <= 46; videoSource++)	{
-      if (AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(videoSource)) & (B1 << mE))  {
-        AtemSwitcher.setProgramInputVideoSource(mE, getVideoIndex2Src(videoSource));
+    for (uint16_t videoSource = 0; videoSource < AtemSwitcher.maxAtemSeriesVideoInputs(); videoSource++)	{
+      if (AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(videoSource)) & (B1 << mE))  {
+        AtemSwitcher.setProgramInputVideoSource(mE, AtemSwitcher.getVideoIndexSrc(videoSource));
         timeout = millis();
-        while (AtemSwitcher.getProgramInputVideoSource(mE) != getVideoIndex2Src(videoSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getProgramInputVideoSource(mE) != AtemSwitcher.getVideoIndexSrc(videoSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -526,19 +362,19 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setProgramInputVideoSource(") << mE << F(", ") << getVideoIndex2Src(videoSource) << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setProgramInputVideoSource(") << mE << F(", ") << AtemSwitcher.getVideoIndexSrc(videoSource) << F("): ") << (millis() - timeout) << F(" ms\n");
 
         // Check tally:
         if (mE == 0)  {
           AtemSwitcher.runLoop(100);
-          if (!(AtemSwitcher.getTallyBySourceTallyFlags(getTallyBySourceResolveIndex(getVideoIndex2Src(videoSource))) & B1))  {
+          if (!(AtemSwitcher.getTallyBySourceTallyFlags(getTallyBySourceResolveIndex(AtemSwitcher.getVideoIndexSrc(videoSource))) & B1))  {
             Serial << F(" - ERROR, Tally By Source did not reflect this state (On)!\n");
           }
           else {
             Serial << F(" - OK for Tally By Source\n");
           }
-          if (getVideoIndex2Src(videoSource) > 0 && getVideoIndex2Src(videoSource) <= AtemSwitcher.getTallyByIndexSources())  {
-            if (!(AtemSwitcher.getTallyByIndexTallyFlags(getVideoIndex2Src(videoSource) - 1) & B1))  {
+          if (AtemSwitcher.getVideoIndexSrc(videoSource) > 0 && AtemSwitcher.getVideoIndexSrc(videoSource) <= AtemSwitcher.getTallyByIndexSources())  {
+            if (!(AtemSwitcher.getTallyByIndexTallyFlags(AtemSwitcher.getVideoIndexSrc(videoSource) - 1) & B1))  {
               Serial << F(" - ERROR, Tally By Index did not reflect this state (On)!\n");
             }
             else {
@@ -559,11 +395,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getPreviewInputVideoSource(mE);
-    for (uint16_t videoSource = 0; videoSource <= 46; videoSource++)	{
-      if (AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(videoSource)) & (B1 << mE))  {
-        AtemSwitcher.setPreviewInputVideoSource(mE, getVideoIndex2Src(videoSource));
+    for (uint16_t videoSource = 0; videoSource < AtemSwitcher.maxAtemSeriesVideoInputs(); videoSource++)	{
+      if (AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(videoSource)) & (B1 << mE))  {
+        AtemSwitcher.setPreviewInputVideoSource(mE, AtemSwitcher.getVideoIndexSrc(videoSource));
         timeout = millis();
-        while (AtemSwitcher.getPreviewInputVideoSource(mE) != getVideoIndex2Src(videoSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getPreviewInputVideoSource(mE) != AtemSwitcher.getVideoIndexSrc(videoSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -572,19 +408,19 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setPreviewInputVideoSource(") << mE << F(", ") << getVideoIndex2Src(videoSource) << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setPreviewInputVideoSource(") << mE << F(", ") << AtemSwitcher.getVideoIndexSrc(videoSource) << F("): ") << (millis() - timeout) << F(" ms\n");
 
         // Check tally:
         if (mE == 0)  {
           AtemSwitcher.runLoop(100);
-          if (!(AtemSwitcher.getTallyBySourceTallyFlags(getTallyBySourceResolveIndex(getVideoIndex2Src(videoSource))) & B10))  {
+          if (!(AtemSwitcher.getTallyBySourceTallyFlags(getTallyBySourceResolveIndex(AtemSwitcher.getVideoIndexSrc(videoSource))) & B10))  {
             Serial << F(" - ERROR, Tally By Source did not reflect this state (On)!\n");
           }
           else {
             Serial << F(" - OK for Tally By Source\n");
           }
-          if (getVideoIndex2Src(videoSource) > 0 && getVideoIndex2Src(videoSource) <= AtemSwitcher.getTallyByIndexSources())  {
-            if (!(AtemSwitcher.getTallyByIndexTallyFlags(getVideoIndex2Src(videoSource) - 1) & B10))  {
+          if (AtemSwitcher.getVideoIndexSrc(videoSource) > 0 && AtemSwitcher.getVideoIndexSrc(videoSource) <= AtemSwitcher.getTallyByIndexSources())  {
+            if (!(AtemSwitcher.getTallyByIndexTallyFlags(AtemSwitcher.getVideoIndexSrc(videoSource) - 1) & B10))  {
               Serial << F(" - ERROR, Tally By Index did not reflect this state (On)!\n");
             }
             else {
@@ -854,11 +690,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getTransitionDipInput(mE);
-    for (uint16_t input = 0; input <= 46; input++)	{
-      if (AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(input)) & (B1 << mE))  {
-        AtemSwitcher.setTransitionDipInput(mE, getVideoIndex2Src(input));
+    for (uint16_t input = 0; input < AtemSwitcher.maxAtemSeriesVideoInputs(); input++)	{
+      if (AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(input)) & (B1 << mE))  {
+        AtemSwitcher.setTransitionDipInput(mE, AtemSwitcher.getVideoIndexSrc(input));
         timeout = millis();
-        while (AtemSwitcher.getTransitionDipInput(mE) != getVideoIndex2Src(input) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getTransitionDipInput(mE) != AtemSwitcher.getVideoIndexSrc(input) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -867,7 +703,7 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setTransitionDipInput(") << mE << F(", ") << getVideoIndex2Src(input)  << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setTransitionDipInput(") << mE << F(", ") << AtemSwitcher.getVideoIndexSrc(input)  << F("): ") << (millis() - timeout) << F(" ms\n");
         AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
       }
     }
@@ -952,11 +788,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getTransitionWipeFillSource(mE);
-    for (uint16_t fillSource = 0; fillSource <= 46; fillSource++)	{
-      if (AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(fillSource)) & (B1 << mE))  {
-        AtemSwitcher.setTransitionWipeFillSource(mE, getVideoIndex2Src(fillSource));
+    for (uint16_t fillSource = 0; fillSource < AtemSwitcher.maxAtemSeriesVideoInputs(); fillSource++)	{
+      if (AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(fillSource)) & (B1 << mE))  {
+        AtemSwitcher.setTransitionWipeFillSource(mE, AtemSwitcher.getVideoIndexSrc(fillSource));
         timeout = millis();
-        while (AtemSwitcher.getTransitionWipeFillSource(mE) != getVideoIndex2Src(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getTransitionWipeFillSource(mE) != AtemSwitcher.getVideoIndexSrc(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -965,7 +801,7 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setTransitionWipeFillSource(") << mE << F(", ") << getVideoIndex2Src(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setTransitionWipeFillSource(") << mE << F(", ") << AtemSwitcher.getVideoIndexSrc(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
         AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
       }
     }
@@ -1170,11 +1006,11 @@ void loop() {
       printLine();
       processCommands();
       origValue = AtemSwitcher.getTransitionDVEFillSource(mE);
-      for (uint16_t fillSource = 0; fillSource <= 46; fillSource++)	{
-        if (AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(fillSource)) & (B1 << mE))  {
-          AtemSwitcher.setTransitionDVEFillSource(mE, getVideoIndex2Src(fillSource));
+      for (uint16_t fillSource = 0; fillSource < AtemSwitcher.maxAtemSeriesVideoInputs(); fillSource++)	{
+        if (AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(fillSource)) & (B1 << mE))  {
+          AtemSwitcher.setTransitionDVEFillSource(mE, AtemSwitcher.getVideoIndexSrc(fillSource));
           timeout = millis();
-          while (AtemSwitcher.getTransitionDVEFillSource(mE) != getVideoIndex2Src(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getTransitionDVEFillSource(mE) != AtemSwitcher.getVideoIndexSrc(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -1183,7 +1019,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setTransitionDVEFillSource(") << mE << F(", ") << getVideoIndex2Src(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setTransitionDVEFillSource(") << mE << F(", ") << AtemSwitcher.getVideoIndexSrc(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
       }
@@ -1196,11 +1032,11 @@ void loop() {
       printLine();
       processCommands();
       origValue = AtemSwitcher.getTransitionDVEKeySource(mE);
-      for (uint16_t keySource = 0; keySource <= 46; keySource++)	{
-        if (AtemSwitcher.getInputAvailability(getVideoIndex2Src(keySource)) & 0x10)  {  // Source on keys
-          AtemSwitcher.setTransitionDVEKeySource(mE, getVideoIndex2Src(keySource));
+      for (uint16_t keySource = 0; keySource < AtemSwitcher.maxAtemSeriesVideoInputs(); keySource++)	{
+        if (AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(keySource)) & 0x10)  {  // Source on keys
+          AtemSwitcher.setTransitionDVEKeySource(mE, AtemSwitcher.getVideoIndexSrc(keySource));
           timeout = millis();
-          while (AtemSwitcher.getTransitionDVEKeySource(mE) != getVideoIndex2Src(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getTransitionDVEKeySource(mE) != AtemSwitcher.getVideoIndexSrc(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -1209,7 +1045,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setTransitionDVEKeySource(") << mE << F(", ") << getVideoIndex2Src(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setTransitionDVEKeySource(") << mE << F(", ") << AtemSwitcher.getVideoIndexSrc(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
       }
@@ -1707,29 +1543,30 @@ void loop() {
       AtemSwitcher.setKeyerMasked(mE, keyer, origValue);
       AtemSwitcher.runLoop(delayBetweenCmds);	// Delay before next command
 
-      // Keyer - Fly Enabled
-      Serial << F("\nKeyer - Fly Enabled:\n");
-      printLine();
-      processCommands();
-      origValue = AtemSwitcher.getKeyerFlyEnabled(mE, keyer);
-      for (uint8_t masked = 0; masked <= 1; masked++)	{
-        AtemSwitcher.setKeyerFlyEnabled(mE, keyer, masked);
-        timeout = millis();
-        while (AtemSwitcher.getKeyerFlyEnabled(mE, keyer) != masked && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
-          AtemSwitcher.runLoop();
+      if (AtemSwitcher.getTopologyDVEs() > 0)  {
+        // Keyer - Fly Enabled
+        Serial << F("\nKeyer - Fly Enabled:\n");
+        printLine();
+        processCommands();
+        origValue = AtemSwitcher.getKeyerFlyEnabled(mE, keyer);
+        for (uint8_t enabled = 0; enabled <= 1; enabled++)	{
+          AtemSwitcher.setKeyerFlyEnabled(mE, keyer, enabled);
+          timeout = millis();
+          while (AtemSwitcher.getKeyerFlyEnabled(mE, keyer) != enabled && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+            AtemSwitcher.runLoop();
+          }
+          if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+            Serial << F("ERROR. Value is: ") << AtemSwitcher.getKeyerFlyEnabled(mE, keyer);
+          }
+          else {
+            Serial << F("OK");
+          }
+          Serial << F(" for setKeyerFlyEnabled(") << mE << F(", ") << keyer << F(", ") << enabled  << F("): ") << (millis() - timeout) << F(" ms\n");
+          AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
-        if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
-          Serial << F("ERROR. Value is: ") << AtemSwitcher.getKeyerFlyEnabled(mE, keyer);
-        }
-        else {
-          Serial << F("OK");
-        }
-        Serial << F(" for setKeyerFlyEnabled(") << mE << F(", ") << keyer << F(", ") << masked  << F("): ") << (millis() - timeout) << F(" ms\n");
-        AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
+        AtemSwitcher.setKeyerFlyEnabled(mE, keyer, origValue);
+        AtemSwitcher.runLoop(delayBetweenCmds);	// Delay before next command
       }
-      AtemSwitcher.setKeyerFlyEnabled(mE, keyer, origValue);
-      AtemSwitcher.runLoop(delayBetweenCmds);	// Delay before next command
-
 
       // Keyer - Top
       Serial << F("\nKeyer - Top:\n");
@@ -1832,11 +1669,11 @@ void loop() {
       printLine();
       processCommands();
       origValue = AtemSwitcher.getKeyerFillSource(mE, keyer);
-      for (uint16_t fillSource = 0; fillSource <= 46; fillSource++)	{
-        if (AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(fillSource)) & (B1 << mE))  {
-          AtemSwitcher.setKeyerFillSource(mE, keyer, getVideoIndex2Src(fillSource));
+      for (uint16_t fillSource = 0; fillSource < AtemSwitcher.maxAtemSeriesVideoInputs(); fillSource++)	{
+        if (AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(fillSource)) & (B1 << mE))  {
+          AtemSwitcher.setKeyerFillSource(mE, keyer, AtemSwitcher.getVideoIndexSrc(fillSource));
           timeout = millis();
-          while (AtemSwitcher.getKeyerFillSource(mE, keyer) != getVideoIndex2Src(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getKeyerFillSource(mE, keyer) != AtemSwitcher.getVideoIndexSrc(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -1845,7 +1682,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setKeyerFillSource(") << mE << F(", ") << keyer << F(", ") << getVideoIndex2Src(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setKeyerFillSource(") << mE << F(", ") << keyer << F(", ") << AtemSwitcher.getVideoIndexSrc(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
       }
@@ -1858,11 +1695,11 @@ void loop() {
       printLine();
       processCommands();
       origValue = AtemSwitcher.getKeyerKeySource(mE, keyer);
-      for (uint16_t keySource = 0; keySource <= 46; keySource++)	{
-        if (AtemSwitcher.getInputAvailability(getVideoIndex2Src(keySource)) & 0x10)  {
-          AtemSwitcher.setKeyerKeySource(mE, keyer, getVideoIndex2Src(keySource));
+      for (uint16_t keySource = 0; keySource < AtemSwitcher.maxAtemSeriesVideoInputs(); keySource++)	{
+        if (AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(keySource)) & 0x10)  {
+          AtemSwitcher.setKeyerKeySource(mE, keyer, AtemSwitcher.getVideoIndexSrc(keySource));
           timeout = millis();
-          while (AtemSwitcher.getKeyerKeySource(mE, keyer) != getVideoIndex2Src(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getKeyerKeySource(mE, keyer) != AtemSwitcher.getVideoIndexSrc(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -1871,7 +1708,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setKeyerKeySource(") << mE << F(", ") << keyer << F(", ") << getVideoIndex2Src(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setKeyerKeySource(") << mE << F(", ") << keyer << F(", ") << AtemSwitcher.getVideoIndexSrc(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
       }
@@ -2865,11 +2702,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getSuperSourceFillSource();
-    for (uint16_t fillSource = 0; fillSource <= 46; fillSource++)	{
-      if (AtemSwitcher.getInputAvailability(getVideoIndex2Src(fillSource)) & 0x04)  {
-        AtemSwitcher.setSuperSourceFillSource(getVideoIndex2Src(fillSource));
+    for (uint16_t fillSource = 0; fillSource < AtemSwitcher.maxAtemSeriesVideoInputs(); fillSource++)	{
+      if (AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(fillSource)) & 0x04)  {
+        AtemSwitcher.setSuperSourceFillSource(AtemSwitcher.getVideoIndexSrc(fillSource));
         timeout = millis();
-        while (AtemSwitcher.getSuperSourceFillSource() != getVideoIndex2Src(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getSuperSourceFillSource() != AtemSwitcher.getVideoIndexSrc(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -2878,7 +2715,7 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setSuperSourceFillSource(") << getVideoIndex2Src(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setSuperSourceFillSource(") << AtemSwitcher.getVideoIndexSrc(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
         AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between commands
       }
     }
@@ -2891,11 +2728,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getSuperSourceKeySource();
-    for (uint16_t keySource = 0; keySource <= 46; keySource++)	{
-      if ((AtemSwitcher.getInputAvailability(getVideoIndex2Src(keySource)) & 0x10) && getVideoIndex2Src(keySource) != 6000)  {
-        AtemSwitcher.setSuperSourceKeySource(getVideoIndex2Src(keySource));
+    for (uint16_t keySource = 0; keySource < AtemSwitcher.maxAtemSeriesVideoInputs(); keySource++)	{
+      if ((AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(keySource)) & 0x10) && AtemSwitcher.getVideoIndexSrc(keySource) != 6000)  {
+        AtemSwitcher.setSuperSourceKeySource(AtemSwitcher.getVideoIndexSrc(keySource));
         timeout = millis();
-        while (AtemSwitcher.getSuperSourceKeySource() != getVideoIndex2Src(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getSuperSourceKeySource() != AtemSwitcher.getVideoIndexSrc(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -2904,7 +2741,7 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setSuperSourceKeySource(") << getVideoIndex2Src(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setSuperSourceKeySource(") << AtemSwitcher.getVideoIndexSrc(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
         AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between commands
       }
     }
@@ -3375,11 +3212,11 @@ void loop() {
       printLine();
       processCommands();
       origValue = AtemSwitcher.getSuperSourceBoxParametersInputSource(box);
-      for (uint16_t inputSource = 0; inputSource <= 46; inputSource++)	{
-        if (AtemSwitcher.getInputAvailability(getVideoIndex2Src(inputSource)) & 0x08)  {
-          AtemSwitcher.setSuperSourceBoxParametersInputSource(box, getVideoIndex2Src(inputSource));
+      for (uint16_t inputSource = 0; inputSource < AtemSwitcher.maxAtemSeriesVideoInputs(); inputSource++)	{
+        if (AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(inputSource)) & 0x08)  {
+          AtemSwitcher.setSuperSourceBoxParametersInputSource(box, AtemSwitcher.getVideoIndexSrc(inputSource));
           timeout = millis();
-          while (AtemSwitcher.getSuperSourceBoxParametersInputSource(box) != getVideoIndex2Src(inputSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getSuperSourceBoxParametersInputSource(box) != AtemSwitcher.getVideoIndexSrc(inputSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -3388,7 +3225,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setSuperSourceBoxParametersInputSource(") << box << F(", ") << getVideoIndex2Src(inputSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setSuperSourceBoxParametersInputSource(") << box << F(", ") << AtemSwitcher.getVideoIndexSrc(inputSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
       }
@@ -3862,11 +3699,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getDownstreamKeyerFillSource(keyer);
-    for (uint16_t fillSource = 0; fillSource <= 46; fillSource++)	{
-      if (AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(fillSource)) & B1)  {
-        AtemSwitcher.setDownstreamKeyerFillSource(keyer, getVideoIndex2Src(fillSource));
+    for (uint16_t fillSource = 0; fillSource < AtemSwitcher.maxAtemSeriesVideoInputs(); fillSource++)	{
+      if (AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(fillSource)) & B1)  {
+        AtemSwitcher.setDownstreamKeyerFillSource(keyer, AtemSwitcher.getVideoIndexSrc(fillSource));
         timeout = millis();
-        while (AtemSwitcher.getDownstreamKeyerFillSource(keyer) != getVideoIndex2Src(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getDownstreamKeyerFillSource(keyer) != AtemSwitcher.getVideoIndexSrc(fillSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -3875,7 +3712,7 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setDownstreamKeyerFillSource(") << keyer << F(", ") << getVideoIndex2Src(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setDownstreamKeyerFillSource(") << keyer << F(", ") << AtemSwitcher.getVideoIndexSrc(fillSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
         AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
       }
     }
@@ -3888,11 +3725,11 @@ void loop() {
     printLine();
     processCommands();
     origValue = AtemSwitcher.getDownstreamKeyerKeySource(keyer);
-    for (uint16_t keySource = 0; keySource <= 46; keySource++)	{
-      if (AtemSwitcher.getInputAvailability(getVideoIndex2Src(keySource)) & 0x10)  {  // Source on keys
-        AtemSwitcher.setDownstreamKeyerKeySource(keyer, getVideoIndex2Src(keySource));
+    for (uint16_t keySource = 0; keySource < AtemSwitcher.maxAtemSeriesVideoInputs(); keySource++)	{
+      if (AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(keySource)) & 0x10)  {  // Source on keys
+        AtemSwitcher.setDownstreamKeyerKeySource(keyer, AtemSwitcher.getVideoIndexSrc(keySource));
         timeout = millis();
-        while (AtemSwitcher.getDownstreamKeyerKeySource(keyer) != getVideoIndex2Src(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        while (AtemSwitcher.getDownstreamKeyerKeySource(keyer) != AtemSwitcher.getVideoIndexSrc(keySource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
           AtemSwitcher.runLoop();
         }
         if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -3901,7 +3738,7 @@ void loop() {
         else {
           Serial << F("OK");
         }
-        Serial << F(" for setDownstreamKeyerKeySource(") << keyer << F(", ") << getVideoIndex2Src(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+        Serial << F(" for setDownstreamKeyerKeySource(") << keyer << F(", ") << AtemSwitcher.getVideoIndexSrc(keySource)  << F("): ") << (millis() - timeout) << F(" ms\n");
         AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
       }
     }
@@ -4181,96 +4018,96 @@ void loop() {
 #if TEST_FLY
   Serial << F("\n\n***************************\n* Fly: \n***************************\n");
 
-  if (AtemSwitcher.getTopologyDVEs()>0)  {
-    
+  if (AtemSwitcher.getTopologyDVEs() > 0)  {
+
     // Save settings:
-    long temp_sizeX = AtemSwitcher.getKeyDVESizeX(0,0);	
-    long temp_sizeY = AtemSwitcher.getKeyDVESizeY(0,0);
-    long temp_posX = AtemSwitcher.getKeyDVEPositionX(0,0);	
-    long temp_posY = AtemSwitcher.getKeyDVEPositionY(0,0);	
-    long temp_rot = AtemSwitcher.getKeyDVERotation(0,0);
-    uint16_t temp_oW = AtemSwitcher.getKeyDVEBorderOuterWidth(0,0);
-    uint16_t temp_iW = AtemSwitcher.getKeyDVEBorderInnerWidth(0,0);
-    uint16_t temp_oS = AtemSwitcher.getKeyDVEBorderOuterSoftness(0,0);
-    uint16_t temp_iS = AtemSwitcher.getKeyDVEBorderInnerSoftness(0,0);
-    uint16_t temp_bS = AtemSwitcher.getKeyDVEBorderBevelSoftness(0,0);
-    uint16_t temp_bP = AtemSwitcher.getKeyDVEBorderBevelPosition(0,0);
-    uint16_t temp_bO = AtemSwitcher.getKeyDVEBorderOpacity(0,0);
-    uint16_t temp_bH = AtemSwitcher.getKeyDVEBorderHue(0,0);
-    uint16_t temp_bSat = AtemSwitcher.getKeyDVEBorderSaturation(0,0);
-    uint16_t temp_bL = AtemSwitcher.getKeyDVEBorderLuma(0,0);
-    uint16_t temp_lSD = AtemSwitcher.getKeyDVELightSourceDirection(0,0);
-    uint16_t temp_lSA = AtemSwitcher.getKeyDVELightSourceAltitude(0,0);
+    long temp_sizeX = AtemSwitcher.getKeyDVESizeX(0, 0);
+    long temp_sizeY = AtemSwitcher.getKeyDVESizeY(0, 0);
+    long temp_posX = AtemSwitcher.getKeyDVEPositionX(0, 0);
+    long temp_posY = AtemSwitcher.getKeyDVEPositionY(0, 0);
+    long temp_rot = AtemSwitcher.getKeyDVERotation(0, 0);
+    uint16_t temp_oW = AtemSwitcher.getKeyDVEBorderOuterWidth(0, 0);
+    uint16_t temp_iW = AtemSwitcher.getKeyDVEBorderInnerWidth(0, 0);
+    uint16_t temp_oS = AtemSwitcher.getKeyDVEBorderOuterSoftness(0, 0);
+    uint16_t temp_iS = AtemSwitcher.getKeyDVEBorderInnerSoftness(0, 0);
+    uint16_t temp_bS = AtemSwitcher.getKeyDVEBorderBevelSoftness(0, 0);
+    uint16_t temp_bP = AtemSwitcher.getKeyDVEBorderBevelPosition(0, 0);
+    uint16_t temp_bO = AtemSwitcher.getKeyDVEBorderOpacity(0, 0);
+    uint16_t temp_bH = AtemSwitcher.getKeyDVEBorderHue(0, 0);
+    uint16_t temp_bSat = AtemSwitcher.getKeyDVEBorderSaturation(0, 0);
+    uint16_t temp_bL = AtemSwitcher.getKeyDVEBorderLuma(0, 0);
+    uint16_t temp_lSD = AtemSwitcher.getKeyDVELightSourceDirection(0, 0);
+    uint16_t temp_lSA = AtemSwitcher.getKeyDVELightSourceAltitude(0, 0);
     AtemSwitcher.runLoop(1000);
 
-    
+
     Serial << F("Keyframe A Set? ") << (AtemSwitcher.getKeyerFlyIsASet(0, 0) ? F("Yes") : F("No")) << F("\n");
     Serial << F("Keyframe B Set? ") << (AtemSwitcher.getKeyerFlyIsBSet(0, 0) ? F("Yes") : F("No")) << F("\n");
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
-    
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
+
     // Set up keyframe A:
     Serial << F("\nSet up keyframe A:\n");
     printLine();
 
     AtemSwitcher.commandBundleStart();
-    AtemSwitcher.setKeyDVESizeX(0, 0, random(100,3000));	
-    AtemSwitcher.setKeyDVESizeY(0, 0, random(100,3000));
-    AtemSwitcher.setKeyDVEPositionX(0, 0, random(-10000,10000));
-    AtemSwitcher.setKeyDVEPositionY(0, 0, random(-10000,10000));
-    AtemSwitcher.setKeyDVERotation(0, 0, random(0,10000));
-    AtemSwitcher.setKeyDVEBorderOuterWidth(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderInnerWidth(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderOuterSoftness(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderInnerSoftness(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderBevelSoftness(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderBevelPosition(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderOpacity(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderHue(0, 0, random(0,3550));
-    AtemSwitcher.setKeyDVEBorderSaturation(0, 0, random(0,1000));
-    AtemSwitcher.setKeyDVEBorderLuma(0, 0, random(0,1000));
-    AtemSwitcher.setKeyDVELightSourceDirection(0, 0, random(0,2000));
-    AtemSwitcher.setKeyDVELightSourceAltitude(0, 0, random(10,100));
+    AtemSwitcher.setKeyDVESizeX(0, 0, random(100, 3000));
+    AtemSwitcher.setKeyDVESizeY(0, 0, random(100, 3000));
+    AtemSwitcher.setKeyDVEPositionX(0, 0, random(-10000, 10000));
+    AtemSwitcher.setKeyDVEPositionY(0, 0, random(-10000, 10000));
+    AtemSwitcher.setKeyDVERotation(0, 0, random(0, 10000));
+    AtemSwitcher.setKeyDVEBorderOuterWidth(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderInnerWidth(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderOuterSoftness(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderInnerSoftness(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderBevelSoftness(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderBevelPosition(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderOpacity(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderHue(0, 0, random(0, 3550));
+    AtemSwitcher.setKeyDVEBorderSaturation(0, 0, random(0, 1000));
+    AtemSwitcher.setKeyDVEBorderLuma(0, 0, random(0, 1000));
+    AtemSwitcher.setKeyDVELightSourceDirection(0, 0, random(0, 2000));
+    AtemSwitcher.setKeyDVELightSourceAltitude(0, 0, random(10, 100));
     AtemSwitcher.commandBundleEnd();
 
     AtemSwitcher.setKeyerFlyKeyFrame(0, 0, 1);  // Stored in Keyframe A now
     AtemSwitcher.runLoop(1000);
-    
+
     Serial << F("Keyframe A Set? ") << (AtemSwitcher.getKeyerFlyIsASet(0, 0) ? F("Yes") : F("No")) << F("\n");
     Serial << F("Keyframe B Set? ") << (AtemSwitcher.getKeyerFlyIsBSet(0, 0) ? F("Yes") : F("No")) << F("\n");
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
-    
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
+
     // Set up keyframe B:
     Serial << F("\nSet up keyframe B:\n");
     printLine();
 
     AtemSwitcher.commandBundleStart();
-    AtemSwitcher.setKeyDVESizeX(0, 0, random(100,3000));	
-    AtemSwitcher.setKeyDVESizeY(0, 0, random(100,3000));
-    AtemSwitcher.setKeyDVEPositionX(0, 0, random(-10000,10000));
-    AtemSwitcher.setKeyDVEPositionY(0, 0, random(-10000,10000));
-    AtemSwitcher.setKeyDVERotation(0, 0, random(0,10000));
-    AtemSwitcher.setKeyDVEBorderOuterWidth(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderInnerWidth(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderOuterSoftness(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderInnerSoftness(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderBevelSoftness(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderBevelPosition(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderOpacity(0, 0, random(0,100));
-    AtemSwitcher.setKeyDVEBorderHue(0, 0, random(0,3550));
-    AtemSwitcher.setKeyDVEBorderSaturation(0, 0, random(0,1000));
-    AtemSwitcher.setKeyDVEBorderLuma(0, 0, random(0,1000));
-    AtemSwitcher.setKeyDVELightSourceDirection(0, 0, random(0,2000));
-    AtemSwitcher.setKeyDVELightSourceAltitude(0, 0, random(10,100));
+    AtemSwitcher.setKeyDVESizeX(0, 0, random(100, 3000));
+    AtemSwitcher.setKeyDVESizeY(0, 0, random(100, 3000));
+    AtemSwitcher.setKeyDVEPositionX(0, 0, random(-10000, 10000));
+    AtemSwitcher.setKeyDVEPositionY(0, 0, random(-10000, 10000));
+    AtemSwitcher.setKeyDVERotation(0, 0, random(0, 10000));
+    AtemSwitcher.setKeyDVEBorderOuterWidth(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderInnerWidth(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderOuterSoftness(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderInnerSoftness(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderBevelSoftness(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderBevelPosition(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderOpacity(0, 0, random(0, 100));
+    AtemSwitcher.setKeyDVEBorderHue(0, 0, random(0, 3550));
+    AtemSwitcher.setKeyDVEBorderSaturation(0, 0, random(0, 1000));
+    AtemSwitcher.setKeyDVEBorderLuma(0, 0, random(0, 1000));
+    AtemSwitcher.setKeyDVELightSourceDirection(0, 0, random(0, 2000));
+    AtemSwitcher.setKeyDVELightSourceAltitude(0, 0, random(10, 100));
     AtemSwitcher.commandBundleEnd();
 
     AtemSwitcher.setKeyerFlyKeyFrame(0, 0, 2);  // Stored in Keyframe A now
     AtemSwitcher.runLoop(1000);
-    
-    
+
+
     Serial << F("Keyframe A Set? ") << (AtemSwitcher.getKeyerFlyIsASet(0, 0) ? F("Yes") : F("No")) << F("\n");
     Serial << F("Keyframe B Set? ") << (AtemSwitcher.getKeyerFlyIsBSet(0, 0) ? F("Yes") : F("No")) << F("\n");
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
-    
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
+
 
     Serial << F("\nRun to A:\n");
     printLine();
@@ -4278,60 +4115,60 @@ void loop() {
     AtemSwitcher.setRunFlyingKeyKeyFrame(0, 0, 1);  // Run to A
     AtemSwitcher.runLoop(3000);
 
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
 
-    if (AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 1) != AtemSwitcher.getKeyDVESizeX(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameSizeX: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVESizeX(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 1) != AtemSwitcher.getKeyDVESizeX(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameSizeX: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVESizeX(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 1) != AtemSwitcher.getKeyDVESizeY(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameSizeY: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVESizeY(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 1) != AtemSwitcher.getKeyDVESizeY(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameSizeY: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVESizeY(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 1) != AtemSwitcher.getKeyDVEPositionX(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFramePositionX: ") << AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEPositionX(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 1) != AtemSwitcher.getKeyDVEPositionX(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFramePositionX: ") << AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEPositionX(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 1) != AtemSwitcher.getKeyDVEPositionY(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFramePositionY: ") << AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEPositionY(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 1) != AtemSwitcher.getKeyDVEPositionY(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFramePositionY: ") << AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEPositionY(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 1) != AtemSwitcher.getKeyDVERotation(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameRotation: ") << AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVERotation(0,0) << F("\n");
-    }
-
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 1) != AtemSwitcher.getKeyDVEBorderOuterWidth(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterWidth(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 1) != AtemSwitcher.getKeyDVEBorderInnerWidth(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerWidth(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 1) != AtemSwitcher.getKeyDVEBorderOuterSoftness(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterSoftness(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 1) != AtemSwitcher.getKeyDVEBorderInnerSoftness(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerSoftness(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 1) != AtemSwitcher.getKeyDVEBorderBevelSoftness(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelSoftness(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 1) != AtemSwitcher.getKeyDVEBorderBevelPosition(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelPosition: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelPosition(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 1) != AtemSwitcher.getKeyDVERotation(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameRotation: ") << AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVERotation(0, 0) << F("\n");
     }
 
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 1) != AtemSwitcher.getKeyDVEBorderOpacity(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderOpacity: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderOpacity(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 1) != AtemSwitcher.getKeyDVEBorderOuterWidth(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterWidth(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 1) != AtemSwitcher.getKeyDVEBorderHue(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderHue: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderHue(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 1) != AtemSwitcher.getKeyDVEBorderInnerWidth(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerWidth(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 1) != AtemSwitcher.getKeyDVEBorderSaturation(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderSaturation: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderSaturation(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 1) != AtemSwitcher.getKeyDVEBorderOuterSoftness(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterSoftness(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 1) != AtemSwitcher.getKeyDVEBorderLuma(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderLuma: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderLuma(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 1) != AtemSwitcher.getKeyDVEBorderInnerSoftness(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerSoftness(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 1) != AtemSwitcher.getKeyDVELightSourceDirection(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceDirection: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVELightSourceDirection(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 1) != AtemSwitcher.getKeyDVEBorderBevelSoftness(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelSoftness(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 1) != AtemSwitcher.getKeyDVELightSourceAltitude(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceAltitude: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVELightSourceAltitude(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 1) != AtemSwitcher.getKeyDVEBorderBevelPosition(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelPosition: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelPosition(0, 0) << F("\n");
+    }
+
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 1) != AtemSwitcher.getKeyDVEBorderOpacity(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderOpacity: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderOpacity(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 1) != AtemSwitcher.getKeyDVEBorderHue(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderHue: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderHue(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 1) != AtemSwitcher.getKeyDVEBorderSaturation(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderSaturation: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderSaturation(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 1) != AtemSwitcher.getKeyDVEBorderLuma(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderLuma: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVEBorderLuma(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 1) != AtemSwitcher.getKeyDVELightSourceDirection(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceDirection: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVELightSourceDirection(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 1) != AtemSwitcher.getKeyDVELightSourceAltitude(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceAltitude: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 1) << F(" != ") << AtemSwitcher.getKeyDVELightSourceAltitude(0, 0) << F("\n");
     }
 
 
@@ -4347,61 +4184,61 @@ void loop() {
     AtemSwitcher.setRunFlyingKeyKeyFrame(0, 0, 2);  // Run to B
     AtemSwitcher.runLoop(3000);
 
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
 
 
-    if (AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 2) != AtemSwitcher.getKeyDVESizeX(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameSizeX: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVESizeX(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 2) != AtemSwitcher.getKeyDVESizeX(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameSizeX: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeX(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVESizeX(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 2) != AtemSwitcher.getKeyDVESizeY(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameSizeY: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVESizeY(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 2) != AtemSwitcher.getKeyDVESizeY(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameSizeY: ") << AtemSwitcher.getKeyerFlyKeyFrameSizeY(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVESizeY(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 2) != AtemSwitcher.getKeyDVEPositionX(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFramePositionX: ") << AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEPositionX(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 2) != AtemSwitcher.getKeyDVEPositionX(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFramePositionX: ") << AtemSwitcher.getKeyerFlyKeyFramePositionX(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEPositionX(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 2) != AtemSwitcher.getKeyDVEPositionY(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFramePositionY: ") << AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEPositionY(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 2) != AtemSwitcher.getKeyDVEPositionY(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFramePositionY: ") << AtemSwitcher.getKeyerFlyKeyFramePositionY(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEPositionY(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 2) != AtemSwitcher.getKeyDVERotation(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameRotation: ") << AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVERotation(0,0) << F("\n");
-    }
-
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 2) != AtemSwitcher.getKeyDVEBorderOuterWidth(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterWidth(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 2) != AtemSwitcher.getKeyDVEBorderInnerWidth(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerWidth(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 2) != AtemSwitcher.getKeyDVEBorderOuterSoftness(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterSoftness(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 2) != AtemSwitcher.getKeyDVEBorderInnerSoftness(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerSoftness(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 2) != AtemSwitcher.getKeyDVEBorderBevelSoftness(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelSoftness(0,0) << F("\n");
-    }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 2) != AtemSwitcher.getKeyDVEBorderBevelPosition(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelPosition: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelPosition(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 2) != AtemSwitcher.getKeyDVERotation(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameRotation: ") << AtemSwitcher.getKeyerFlyKeyFrameRotation(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVERotation(0, 0) << F("\n");
     }
 
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 2) != AtemSwitcher.getKeyDVEBorderOpacity(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderOpacity: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderOpacity(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 2) != AtemSwitcher.getKeyDVEBorderOuterWidth(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterWidth(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterWidth(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 2) != AtemSwitcher.getKeyDVEBorderHue(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderHue: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderHue(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 2) != AtemSwitcher.getKeyDVEBorderInnerWidth(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerWidth: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerWidth(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerWidth(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 2) != AtemSwitcher.getKeyDVEBorderSaturation(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderSaturation: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderSaturation(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 2) != AtemSwitcher.getKeyDVEBorderOuterSoftness(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderOuterSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOuterSoftness(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderOuterSoftness(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 2) != AtemSwitcher.getKeyDVEBorderLuma(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameBorderLuma: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderLuma(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 2) != AtemSwitcher.getKeyDVEBorderInnerSoftness(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderInnerSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderInnerSoftness(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderInnerSoftness(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 2) != AtemSwitcher.getKeyDVELightSourceDirection(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceDirection: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVELightSourceDirection(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 2) != AtemSwitcher.getKeyDVEBorderBevelSoftness(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelSoftness: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelSoftness(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelSoftness(0, 0) << F("\n");
     }
-    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 2) != AtemSwitcher.getKeyDVELightSourceAltitude(0,0))  {
-        Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceAltitude: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVELightSourceAltitude(0,0) << F("\n");
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 2) != AtemSwitcher.getKeyDVEBorderBevelPosition(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderBevelPosition: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderBevelPosition(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderBevelPosition(0, 0) << F("\n");
+    }
+
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 2) != AtemSwitcher.getKeyDVEBorderOpacity(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderOpacity: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderOpacity(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderOpacity(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 2) != AtemSwitcher.getKeyDVEBorderHue(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderHue: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderHue(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderHue(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 2) != AtemSwitcher.getKeyDVEBorderSaturation(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderSaturation: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderSaturation(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderSaturation(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 2) != AtemSwitcher.getKeyDVEBorderLuma(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameBorderLuma: ") << AtemSwitcher.getKeyerFlyKeyFrameBorderLuma(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVEBorderLuma(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 2) != AtemSwitcher.getKeyDVELightSourceDirection(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceDirection: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceDirection(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVELightSourceDirection(0, 0) << F("\n");
+    }
+    if (AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 2) != AtemSwitcher.getKeyDVELightSourceAltitude(0, 0))  {
+      Serial << F("ERROR: getKeyerFlyKeyFrameLightSourceAltitude: ") << AtemSwitcher.getKeyerFlyKeyFrameLightSourceAltitude(0, 0, 2) << F(" != ") << AtemSwitcher.getKeyDVELightSourceAltitude(0, 0) << F("\n");
     }
 
 
@@ -4413,7 +4250,7 @@ void loop() {
     AtemSwitcher.setRunFlyingKeyKeyFrame(0, 0, 3);  // Run to Full
     AtemSwitcher.runLoop(3000);
 
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
 
 
     Serial << F("\nRun to Infinite Index 8:\n");
@@ -4424,28 +4261,28 @@ void loop() {
     AtemSwitcher.setRunFlyingKeyRuntoInfiniteindex(0, 0, 8);
     AtemSwitcher.commandBundleEnd();
     AtemSwitcher.runLoop(3000);
-    
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
+
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
     Serial << F("Infinite Index: ") << AtemSwitcher.getKeyerFlyRuntoInfiniteindex(0, 0) << F("\n");
-    
+
     AtemSwitcher.commandBundleStart();
     AtemSwitcher.setRunFlyingKeyKeyFrame(0, 0, 4);  // Run to Infinite
     AtemSwitcher.setRunFlyingKeyRuntoInfiniteindex(0, 0, 3);
     AtemSwitcher.commandBundleEnd();
     AtemSwitcher.runLoop(3000);
-    
-    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0),5,"0") << F("\n");
+
+    Serial << F("Is At Keyframe? ") << _BINPADL(AtemSwitcher.getKeyerFlyIsAtKeyFrame(0, 0), 5, "0") << F("\n");
     Serial << F("Infinite Index: ") << AtemSwitcher.getKeyerFlyRuntoInfiniteindex(0, 0) << F("\n");
-    
-    
+
+
     AtemSwitcher.setRunFlyingKeyKeyFrame(0, 0, 3);  // Run to Full
     AtemSwitcher.runLoop(3000);
 
 
-    
-     // Restore settings:
+
+    // Restore settings:
     AtemSwitcher.commandBundleStart();
-    AtemSwitcher.setKeyDVESizeX(0, 0, temp_sizeX);	
+    AtemSwitcher.setKeyDVESizeX(0, 0, temp_sizeX);
     AtemSwitcher.setKeyDVESizeY(0, 0, temp_sizeY);
     AtemSwitcher.setKeyDVEPositionX(0, 0, temp_posX);
     AtemSwitcher.setKeyDVEPositionY(0, 0, temp_posY);
@@ -4901,6 +4738,57 @@ void loop() {
       AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between commands
     }
     AtemSwitcher.setCameraControlGain(input, origValue);
+    AtemSwitcher.runLoop(delayBetweenCmds);	// Delay before next feature is tested
+
+
+    // Camera Control - White Balance
+    Serial << F("\nCamera Control - White Balance:\n");
+    printLine();
+    processCommands();
+    origValue = AtemSwitcher.getCameraControlWhiteBalance(input);
+    uint16_t whiteBalanceValues[] = {
+      3200, 4500, 5000, 5600, 6500, 7500
+    };
+    for (int wb = 0; wb < 6; wb++)	{
+      AtemSwitcher.setCameraControlWhiteBalance(input, whiteBalanceValues[wb]);
+      timeout = millis();
+      while ((AtemSwitcher.getCameraControlWhiteBalance(input) >> 8) != (whiteBalanceValues[wb] >> 8) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        AtemSwitcher.runLoop();
+      }
+      if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        Serial << F("ERROR. Value is: ") << AtemSwitcher.getCameraControlWhiteBalance(input);
+      }
+      else {
+        Serial << F("OK");
+      }
+      Serial << F(" for setCameraControlWhiteBalance(") << input << F(", ") << whiteBalanceValues[wb]  << F("): ") << (millis() - timeout) << F(" ms\n");
+      AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between commands
+    }
+    AtemSwitcher.setCameraControlWhiteBalance(input, origValue);
+    AtemSwitcher.runLoop(delayBetweenCmds);	// Delay before next feature is tested
+
+
+    // Camera Control - Zoom Speed
+    Serial << F("\nCamera Control - Zoom Speed:\n");
+    printLine();
+    processCommands();
+    origValue = AtemSwitcher.getCameraControlZoomSpeed(input);
+    for (int zoomSpeed = -2048; zoomSpeed <= 2048; zoomSpeed += 820)	{
+      AtemSwitcher.setCameraControlZoomSpeed(input, zoomSpeed);
+      timeout = millis();
+      while (AtemSwitcher.getCameraControlZoomSpeed(input) != zoomSpeed && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        AtemSwitcher.runLoop();
+      }
+      if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+        Serial << F("ERROR. Value is: ") << AtemSwitcher.getCameraControlZoomSpeed(input);
+      }
+      else {
+        Serial << F("OK");
+      }
+      Serial << F(" for setCameraControlZoomSpeed(") << input << F(", ") << zoomSpeed  << F("): ") << (millis() - timeout) << F(" ms\n");
+      AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between commands
+    }
+    AtemSwitcher.setCameraControlZoomSpeed(input, origValue);
     AtemSwitcher.runLoop(delayBetweenCmds);	// Delay before next feature is tested
 
 
@@ -5460,11 +5348,11 @@ void loop() {
       printLine();
       processCommands();
       origValue = AtemSwitcher.getMultiViewerInputVideoSource(multiViewer, windowIndex);
-      for (uint16_t videoSource = 0; videoSource <= 46; videoSource++)	{
-        if (AtemSwitcher.getInputAvailability(getVideoIndex2Src(videoSource)) & 0x02)  {  // Checking if source can be used on MV
-          AtemSwitcher.setMultiViewerInputVideoSource(multiViewer, windowIndex, getVideoIndex2Src(videoSource));
+      for (uint16_t videoSource = 0; videoSource < AtemSwitcher.maxAtemSeriesVideoInputs(); videoSource++)	{
+        if (AtemSwitcher.getInputAvailability(AtemSwitcher.getVideoIndexSrc(videoSource)) & 0x02)  {  // Checking if source can be used on MV
+          AtemSwitcher.setMultiViewerInputVideoSource(multiViewer, windowIndex, AtemSwitcher.getVideoIndexSrc(videoSource));
           timeout = millis();
-          while (AtemSwitcher.getMultiViewerInputVideoSource(multiViewer, windowIndex) != getVideoIndex2Src(videoSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getMultiViewerInputVideoSource(multiViewer, windowIndex) != AtemSwitcher.getVideoIndexSrc(videoSource) && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -5473,7 +5361,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setMultiViewerInputVideoSource(") << multiViewer << F(", ") << windowIndex << F(", ") << getVideoIndex2Src(videoSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setMultiViewerInputVideoSource(") << multiViewer << F(", ") << windowIndex << F(", ") << AtemSwitcher.getVideoIndexSrc(videoSource)  << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
       }
@@ -5490,21 +5378,21 @@ void loop() {
   }
 
 
-  for (uint16_t videoSource = 0; videoSource <= 46; videoSource++)	{
-    uint8_t portTypesForThisSource = AtemSwitcher.getInputAvailableExternalPortTypes(getVideoIndex2Src(videoSource));
+  for (uint16_t videoSource = 0; videoSource < AtemSwitcher.maxAtemSeriesVideoInputs(); videoSource++)	{
+    uint8_t portTypesForThisSource = AtemSwitcher.getInputAvailableExternalPortTypes(AtemSwitcher.getVideoIndexSrc(videoSource));
 
     if (portTypesForThisSource > 0)  {
       // Input - External Port Type
       Serial << F("\nInput - External Port Type:\n");
       printLine();
       processCommands();
-      origValue = AtemSwitcher.getInputExternalPortType(getVideoIndex2Src(videoSource));
+      origValue = AtemSwitcher.getInputExternalPortType(AtemSwitcher.getVideoIndexSrc(videoSource));
       for (uint8_t externalPortType = 1; externalPortType <= 5; externalPortType++)	{
         uint8_t vMap[] = {0, 1, 2, 4, 3, 5};
         if (portTypesForThisSource & (B1 << (vMap[externalPortType] - 1)))  {
-          AtemSwitcher.setInputExternalPortType(getVideoIndex2Src(videoSource), externalPortType);
+          AtemSwitcher.setInputExternalPortType(AtemSwitcher.getVideoIndexSrc(videoSource), externalPortType);
           timeout = millis();
-          while (AtemSwitcher.getInputExternalPortType(getVideoIndex2Src(videoSource)) != externalPortType && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+          while (AtemSwitcher.getInputExternalPortType(AtemSwitcher.getVideoIndexSrc(videoSource)) != externalPortType && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
             AtemSwitcher.runLoop();
           }
           if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
@@ -5513,7 +5401,7 @@ void loop() {
           else {
             Serial << F("OK");
           }
-          Serial << F(" for setInputExternalPortType(") << getVideoIndex2Src(videoSource) << F(", ") << externalPortType  << F("): ") << (millis() - timeout) << F(" ms\n");
+          Serial << F(" for setInputExternalPortType(") << AtemSwitcher.getVideoIndexSrc(videoSource) << F(", ") << externalPortType  << F("): ") << (millis() - timeout) << F(" ms\n");
           AtemSwitcher.runLoop(delayBetweenValues);	// Short delay between values
         }
       }
@@ -5525,47 +5413,47 @@ void loop() {
   Serial << F("\nLong and short names:\n");
   printLine();
   processCommands();
-  for (uint16_t videoSource = 0; videoSource <= 46; videoSource++)	{
-    if ((AtemSwitcher.getInputMEAvailability(getVideoIndex2Src(videoSource)) & 0x01) && getVideoIndex2Src(videoSource) < 10000)  { // It seems, that all sources that can go on ME can be renamed!
+  for (uint16_t videoSource = 0; videoSource < AtemSwitcher.maxAtemSeriesVideoInputs(); videoSource++)	{
+    if ((AtemSwitcher.getInputMEAvailability(AtemSwitcher.getVideoIndexSrc(videoSource)) & 0x01) && AtemSwitcher.getVideoIndexSrc(videoSource) < 10000)  { // It seems, that all sources that can go on ME can be renamed!
       char origStrValue[21];
 
       // Long names:
-      strncpy (origStrValue, AtemSwitcher.getInputLongName(getVideoIndex2Src(videoSource)), sizeof(origStrValue));
-      AtemSwitcher.setInputLongName(getVideoIndex2Src(videoSource), "TEST STRING LONG 12345");
+      strncpy (origStrValue, AtemSwitcher.getInputLongName(AtemSwitcher.getVideoIndexSrc(videoSource)), sizeof(origStrValue));
+      AtemSwitcher.setInputLongName(AtemSwitcher.getVideoIndexSrc(videoSource), "TEST STRING LONG 12345");
 
       timeout = millis();
-      while (strcmp ("TEST STRING LONG 123", AtemSwitcher.getInputLongName(getVideoIndex2Src(videoSource))) != 0 && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+      while (strcmp ("TEST STRING LONG 123", AtemSwitcher.getInputLongName(AtemSwitcher.getVideoIndexSrc(videoSource))) != 0 && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
         AtemSwitcher.runLoop();
       }
       if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
-        Serial << F("ERROR. Value is: ") << AtemSwitcher.getInputLongName(getVideoIndex2Src(videoSource));
+        Serial << F("ERROR. Value is: ") << AtemSwitcher.getInputLongName(AtemSwitcher.getVideoIndexSrc(videoSource));
       }
       else {
         Serial << F("OK");
       }
-      Serial << F(" for setInputLongName() ") << getVideoIndex2Src(videoSource) << F(", \"") << "TEST STRING LONG 12345" << F("\"): ") << (millis() - timeout) << F(" ms\n");
+      Serial << F(" for setInputLongName() ") << AtemSwitcher.getVideoIndexSrc(videoSource) << F(", \"") << "TEST STRING LONG 12345" << F("\"): ") << (millis() - timeout) << F(" ms\n");
 
-      AtemSwitcher.setInputLongName(getVideoIndex2Src(videoSource), origStrValue);
+      AtemSwitcher.setInputLongName(AtemSwitcher.getVideoIndexSrc(videoSource), origStrValue);
       AtemSwitcher.runLoop(delayBetweenValues);	// Short delay
 
 
       // Short names:
-      strncpy (origStrValue, AtemSwitcher.getInputShortName(getVideoIndex2Src(videoSource)), sizeof(origStrValue));
-      AtemSwitcher.setInputShortName(getVideoIndex2Src(videoSource), "T12345");
+      strncpy (origStrValue, AtemSwitcher.getInputShortName(AtemSwitcher.getVideoIndexSrc(videoSource)), sizeof(origStrValue));
+      AtemSwitcher.setInputShortName(AtemSwitcher.getVideoIndexSrc(videoSource), "T12345");
 
       timeout = millis();
-      while (strcmp ("T123", AtemSwitcher.getInputShortName(getVideoIndex2Src(videoSource))) != 0 && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
+      while (strcmp ("T123", AtemSwitcher.getInputShortName(AtemSwitcher.getVideoIndexSrc(videoSource))) != 0 && !AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
         AtemSwitcher.runLoop();
       }
       if (AtemSwitcher.hasTimedOut(timeout, timeOutDelay))	{
-        Serial << F("ERROR. Value is: ") << AtemSwitcher.getInputShortName(getVideoIndex2Src(videoSource));
+        Serial << F("ERROR. Value is: ") << AtemSwitcher.getInputShortName(AtemSwitcher.getVideoIndexSrc(videoSource));
       }
       else {
         Serial << F("OK");
       }
-      Serial << F(" for setInputShortName() ") << getVideoIndex2Src(videoSource) << F(", \"") << "T12345" << F("\"): ") << (millis() - timeout) << F(" ms\n");
+      Serial << F(" for setInputShortName() ") << AtemSwitcher.getVideoIndexSrc(videoSource) << F(", \"") << "T12345" << F("\"): ") << (millis() - timeout) << F(" ms\n");
 
-      AtemSwitcher.setInputShortName(getVideoIndex2Src(videoSource), origStrValue);
+      AtemSwitcher.setInputShortName(AtemSwitcher.getVideoIndexSrc(videoSource), origStrValue);
       AtemSwitcher.runLoop(delayBetweenValues);	// Short delay
     }
   }
@@ -5624,68 +5512,3 @@ void loop() {
   while (true) {
   };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

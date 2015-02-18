@@ -9,13 +9,11 @@ open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
 
-#if ARDUINO >= 100
- #include "Arduino.h"
-#else
- #include "WProgram.h"
-#endif
-
+#include "Arduino.h"
+#include "SkaarhojPgmspace.h"
 #include <Adafruit_GFX.h>
+#include <Wire.h>
+
 
 #define BLACK 0
 #define WHITE 1
@@ -36,7 +34,8 @@ class SkaarhojDisplayArray : public Adafruit_GFX {
   void clearDisplay(void);
   void invertDisplay(bool i, uint8_t cs);
   void display(uint8_t cs);
-
+  
+  void testProgramme(uint8_t buttonMask);
 
  private:
 	uint8_t _boardAddress, _boardType, _dataPin, _clockPin, _cs;

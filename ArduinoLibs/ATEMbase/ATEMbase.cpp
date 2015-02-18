@@ -330,7 +330,7 @@ void ATEMbase::_createCommandHeader(const uint8_t headerCmd, const uint16_t leng
 void ATEMbase::_sendPacketBuffer(uint8_t length)	{
 	_Udp.beginPacket(_switcherIP,  9910);
 	_Udp.write(_packetBuffer,length);
-	_Udp.endPacket(); 
+	_Udp.endPacket(); 	// TODO: Figure out why this may hang!!
 }
 
 /**
@@ -700,6 +700,173 @@ uint8_t ATEMbase::getAudioSrcIndex(uint16_t audioSrc)	{
 	}
 }
 
+/*
+ * Translating a index to a video source
+ */
+uint16_t ATEMbase::getVideoIndexSrc(uint8_t index)	{
+  switch (index) {
+    case 0:  // Black
+      return 0;
+    case 1:  // Input 1
+      return 1;
+    case 2:  // Input 2
+      return 2;
+    case 3:  // Input 3
+      return 3;
+    case 4:  // Input 4
+      return 4;
+    case 5:  // Input 5
+      return 5;
+    case 6:  // Input 6
+      return 6;
+    case 7:  // Input 7
+      return 7;
+    case 8:  // Input 8
+      return 8;
+    case 9:  // Input 9
+      return 9;
+    case 10:  // Input 10
+      return 10;
+    case 11:  // Input 11
+      return 11;
+    case 12:  // Input 12
+      return 12;
+    case 13:  // Input 13
+      return 13;
+    case 14:  // Input 14
+      return 14;
+    case 15:  // Input 15
+      return 15;
+    case 16:  // Input 16
+      return 16;
+    case 17:  // Input 17
+      return 17;
+    case 18:  // Input 18
+      return 18;
+    case 19:  // Input 19
+      return 19;
+    case 20:  // Input 20
+      return 20;
+    case 21:  // Color Bars
+      return 1000;
+    case 22:  // Color 1
+      return 2001;
+    case 23:  // Color 2
+      return 2002;
+    case 24:  // Media Player 1
+      return 3010;
+    case 25:  // Media Player 1 Key
+      return 3011;
+    case 26:  // Media Player 2
+      return 3020;
+    case 27:  // Media Player 2 Key
+      return 3021;
+    case 28:  // Key 1 Mask
+      return 4010;
+    case 29:  // Key 2 Mask
+      return 4020;
+    case 30:  // Key 3 Mask
+      return 4030;
+    case 31:  // Key 4 Mask
+      return 4040;
+    case 32:  // DSK 1 Mask
+      return 5010;
+    case 33:  // DSK 2 Mask
+      return 5020;
+    case 34:  // Super Source
+      return 6000;
+    case 35:  // Clean Feed 1
+      return 7001;
+    case 36:  // Clean Feed 2
+      return 7002;
+    case 37:  // Auxilary 1
+      return 8001;
+    case 38:  // Auxilary 2
+      return 8002;
+    case 39:  // Auxilary 3
+      return 8003;
+    case 40:  // Auxilary 4
+      return 8004;
+    case 41:  // Auxilary 5
+      return 8005;
+    case 42:  // Auxilary 6
+      return 8006;
+    case 43:  // ME 1 Prog
+      return 10010;
+    case 44:  // ME 1 Prev
+      return 10011;
+    case 45:  // ME 2 Prog
+      return 10020;
+    case 46:  // ME 2 Prev
+      return 10021;
+    default:
+      return 0;
+  }
+}
+
+/*
+ * Translating a index to a audio source
+ */
+uint16_t ATEMbase::getAudioIndexSrc(uint8_t index)	{
+  switch (index) {
+    case 0:  // Input 1
+      return 1;
+    case 1:  // Input 2
+      return 2;
+    case 2:  // Input 3
+      return 3;
+    case 3:  // Input 4
+      return 4;
+    case 4:  // Input 5
+      return 5;
+    case 5:  // Input 6
+      return 6;
+    case 6:  // Input 7
+      return 7;
+    case 7:  // Input 8
+      return 8;
+    case 8:  // Input 9
+      return 9;
+    case 9:  // Input 10
+      return 10;
+    case 10:  // Input 11
+      return 11;
+    case 11:  // Input 12
+      return 12;
+    case 12:  // Input 13
+      return 13;
+    case 13:  // Input 14
+      return 14;
+    case 14:  // Input 15
+      return 15;
+    case 15:  // Input 16
+      return 16;
+    case 16:  // Input 17
+      return 17;
+    case 17:  // Input 18
+      return 18;
+    case 18:  // Input 19
+      return 19;
+    case 19:  // Input 20
+      return 20;
+    case 20:  // XLR
+      return 1001;
+    case 21:  // AES/EBU
+      return 1101;
+    case 22:  // RCA
+      return 1201;
+    case 23:  // MP1
+      return 2001;
+    case 24:  // MP2
+      return 2002;
+    default:
+      return 0;
+  }
+}
+
+uint8_t ATEMbase::maxAtemSeriesVideoInputs()	{
+	return 47;	// For the largest ATEM switcher, this is the number of video inputs. The max "index" number from the list above
+}
 
 
 void ATEMbase::commandBundleStart()	{
