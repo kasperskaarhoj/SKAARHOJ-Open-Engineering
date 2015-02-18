@@ -269,3 +269,23 @@ bool SkaarhojEncoders::hasTimedOut(unsigned long time, unsigned long timeout)  {
 void SkaarhojEncoders::serialOutput(uint8_t level) {
 	_serialOutput = level;
 }
+
+
+
+void SkaarhojEncoders::testProgramme(uint8_t buttonMask)	{
+  runLoop();
+
+  for (uint8_t i = 0; i < 5; i++)  {
+    if (buttonMask & (B1 << i)) {
+
+      int encValue = state(i, 1000);
+      if (encValue)  {
+        Serial << F("Enc ") << i << F(": ") << encValue;
+		if (encValue == 1 || encValue == -1)	{
+			Serial << F(" Count: ") << lastCount(i);
+		}
+		Serial << F("\n");
+      }
+    }
+  }
+}

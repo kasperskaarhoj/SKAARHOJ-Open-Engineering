@@ -18,11 +18,6 @@ with the UDPmessenger library. If not, see http://www.gnu.org/licenses/.
 
 */
 
-#if defined(ARDUINO) && ARDUINO >= 100
-  #include "Arduino.h"
-#else
-  #include "WProgram.h"
-#endif
 
 #include "UDPmessenger.h"
 
@@ -33,7 +28,7 @@ with the UDPmessenger library. If not, see http://www.gnu.org/licenses/.
 UDPmessenger::UDPmessenger(){}
 
 /**
- * Setting up LOCAL IP address (used to deduct which 255.255.255.0 subnet all communication is on) and listening port
+ * Setting up LOCAL IP address (used to deduct which 255.255.255.0 subnet all communication is on) and listening/sending port
  */
 void UDPmessenger::begin(const IPAddress ip, const uint16_t localPort){
 
@@ -41,15 +36,76 @@ void UDPmessenger::begin(const IPAddress ip, const uint16_t localPort){
 	EthernetUDP Udp;
 	_Udp = Udp;
 	
-	_localIP = ip;
-	_localPort = localPort;	
+	_localIP = ip;		// This IP
+	_localPort = localPort;		// Local port to write/receive on.
 	
 	_serialOutput = false;
+	_maxResponseTime = 1000;	// 1000 us, should be fine for a local network.
+	_retryTimeout = 10000;	// 10000 ms between retries.
+	
+	memset(_slaveLastResponseTime,0,UDPmessenger_SLAVE_POOL+1);
+	memset(_slaveIndexToAddress,0,UDPmessenger_SLAVE_POOL+1);
+	memset(_slaveLastRetryTime,0,UDPmessenger_SLAVE_POOL+1);
+	
 
 	_Udp.begin(_localPort);
-	clearDataArray();
+	resetTXBuffer();
 }
 
+/**
+ * Sets up an address which we will track regarding network access. This should be done for all addresses which we will initiate connection to (being a master for), since we don't know if they will respond.
+ * All addresses which treats us as a slave can be assumed to exist and we don't have to worry about those.
+ * The reason is: If we try to talk to non-present network nodes, we a) waste time on timeouts and b) actually may experience weird behaviour by the Arduino UDP library which may send double-sized packets it seems.
+ * Returns index, if it was possible to allocate one.
+ */
+uint8_t UDPmessenger::trackAddress(uint8_t address)	{
+	if (!addressToIndex(address))	{	// If not already registered, search:
+		for(uint8_t i=0; i<UDPmessenger_SLAVE_POOL; i++)	{
+			if (_slaveIndexToAddress[i+1]==0)	{
+				_slaveIndexToAddress[i+1] = address;
+				break;
+			}
+		}
+	}
+	return addressToIndex(address);
+}
+
+/**
+ * Searches for an index matching the address, returns it if found, otherwise zero.
+ */
+uint8_t UDPmessenger::addressToIndex(uint8_t address)	{
+	for(uint8_t i=0; i<UDPmessenger_SLAVE_POOL; i++)	{
+		if (_slaveIndexToAddress[i+1]==address)	{
+			return i+1;
+		}
+	}
+	return 0;	// Returns index zero if not found
+}
+
+/**
+ * Returns true if missing nodes should be tried again
+ */
+bool UDPmessenger::retryMissingNodes(uint8_t idx)	{
+    if ((unsigned long)(_slaveLastRetryTime[idx] + _retryTimeout) < (unsigned long)millis())  {
+	  _slaveLastRetryTime[idx] = millis()+idx*100;
+	  Serial << F("Retry ") << idx << F("\n");
+      return true; 
+    } 
+    else {
+      return false;
+    }
+}
+
+/**
+ * Returns true if missing nodes should be tried again
+ */
+uint8_t UDPmessenger::ownAddress()	{
+	return _localIP[3];
+}
+
+/**
+ * Registering call-back function
+ */
 void UDPmessenger::registerReceptionCallbackFunction(void (*fptr)(const uint8_t cmd, const uint8_t from, const uint8_t dataLength, const uint8_t *dataArray))			{
 	 _receptionCallBack = fptr; 
 }
@@ -62,7 +118,7 @@ void UDPmessenger::runLoop() {
 	while(true) {	// Iterate until buffer is empty:
   	  uint16_t packetSize = _Udp.parsePacket();
 	  if (_Udp.available() && packetSize !=0)   {  
-		clearDataArray();
+		resetTXBuffer();
 //  		Serial.print(F("Packet size: "));
 //	    Serial.println(packetSize, DEC);
 
@@ -75,7 +131,7 @@ void UDPmessenger::runLoop() {
 	    if (packetSize==packetLength) {  // Just to make sure these are equal, they should be!
 			if (packetLength > UDPmessenger_PGKHDR_SIZE)	{
 				_parsePacket(packetLength);
-				send();
+				send();	// Sends a response if we build one
 			}
 	    } else {
 			if (_serialOutput) 	{
@@ -102,6 +158,7 @@ void UDPmessenger::runLoop() {
  * Processes each command in package
  */
 void UDPmessenger::_parsePacket(uint16_t packetLength)	{
+ // Serial << F("Parse-begin: ") << packetLength << F("\n");
 
       uint16_t indexPointer = UDPmessenger_PGKHDR_SIZE;	// header size: 2 bytes has already been read from the whole packet...
       while (indexPointer < packetLength)  {
@@ -110,9 +167,11 @@ void UDPmessenger::_parsePacket(uint16_t packetLength)	{
         _Udp.read(_rxPacketBuffer, 2);
         uint8_t cmdLength = _rxPacketBuffer[0];
     	uint8_t cmd = _rxPacketBuffer[1];
+
+//	  Serial << cmd << F("-") << cmdLength << F("\n");
  
        if (cmdLength>=2 && cmdLength-2<=UDPmessenger_BUFFER_SIZE)  {
-		  if (cmdLength>=2)	{_Udp.read(_rxPacketBuffer, cmdLength-2);}
+		  if (cmdLength>2)	{_Udp.read(_rxPacketBuffer, cmdLength-2);}
 		
 			if (_receptionCallBack != NULL)	{
 			    IPAddress remote = _Udp.remoteIP();
@@ -127,18 +186,30 @@ void UDPmessenger::_parsePacket(uint16_t packetLength)	{
 			}
 		}
       }
+//	  Serial << F("Parse-end\n");
 }
 
-void UDPmessenger::clearDataArray()	{
+/**
+ * Clearing TX buffer and pointer
+ */
+void UDPmessenger::resetTXBuffer()	{
   memset(_txPacketBuffer, 0, UDPmessenger_BUFFER_SIZE);
   _txBufferPointer = UDPmessenger_PGKHDR_SIZE;
 }
-bool UDPmessenger::addValueToDataBuffer(const uint8_t value, const uint8_t position)	{
-	if (_txBufferPointer+2+position < UDPmessenger_BUFFER_SIZE)	{
-		_txPacketBuffer[_txBufferPointer+2+position] = value;
+
+/**
+ * Returns true if a command of given data length can fit in buffer
+ */
+bool UDPmessenger::fitCommand(const uint8_t dataLength)	{
+	if (_txBufferPointer+2+dataLength <= UDPmessenger_BUFFER_SIZE)	{
 		return true;
 	} else return false;
 }
+
+/**
+ * Adds a command to the TX buffer. Returns true if there was space enough for it! 
+ * Must call AFTER adding values for the command. Check if there is space for it using fitCommand()
+ */
 bool UDPmessenger::addCommand(const uint8_t cmd, const uint8_t dataLength)	{
 	if (_txBufferPointer+2+dataLength <= UDPmessenger_BUFFER_SIZE)	{
 		_txPacketBuffer[_txBufferPointer] = dataLength+2;
@@ -147,20 +218,74 @@ bool UDPmessenger::addCommand(const uint8_t cmd, const uint8_t dataLength)	{
 		return true;
 	} else return false;
 }
+
+/**
+ * Writes bytes to the current command in the TX buffer. Returns true if within buffer memory area
+ */
+bool UDPmessenger::addValueToDataBuffer(const uint8_t value, const uint8_t position)	{
+	if (_txBufferPointer+2+position < UDPmessenger_BUFFER_SIZE)	{
+		_txPacketBuffer[_txBufferPointer+2+position] = value;
+		return true;
+	} else return false;
+}
+
+/**
+ * Write TX buffer back remote IP/port
+ */
 void UDPmessenger::send()	{
     IPAddress remote = _Udp.remoteIP();
-	send(remote[3], _Udp.remotePort());
+	send(remote[3], _Udp.remotePort(), true);
 }
-void UDPmessenger::send(uint8_t address, uint16_t port)	{
+
+/**
+ * Write TX buffer to own choice of address and port
+ */
+void UDPmessenger::send(uint8_t address, uint16_t port, bool bypassResponseTimeCheck)	{
+  uint8_t idx = 0;
   if (_txBufferPointer>2)	{
-	  IPAddress remote(_localIP[0], _localIP[1], _localIP[2], address);
-	  _Udp.beginPacket(remote,  port);
-		_txPacketBuffer[0] = highByte(_txBufferPointer);
-		_txPacketBuffer[1] = lowByte(_txBufferPointer);
-	  _Udp.write(_txPacketBuffer,_txBufferPointer);
-	  _Udp.endPacket();
+	  if (!bypassResponseTimeCheck)	{
+		  idx = addressToIndex(address);
+	  }
+	  
+	  if (bypassResponseTimeCheck || idx==0 || _slaveLastResponseTime[idx]<_maxResponseTime || retryMissingNodes(idx))	{
+		  IPAddress remote(_localIP[0], _localIP[1], _localIP[2], address);
+		  _Udp.beginPacket(remote,  port);
+			_txPacketBuffer[0] = highByte(_txBufferPointer);
+			_txPacketBuffer[1] = lowByte(_txBufferPointer);
+		  _Udp.write(_txPacketBuffer,_txBufferPointer);
+		  
+		  /*
+			  Serial << F("UDPmessenger: addr:") << address << F(": ");
+			  	for(uint8_t i=0; i<_txBufferPointer; i++)	{
+			  		Serial << _HEXPADL(_txPacketBuffer[i],2,"0") << F(" ");
+			  	}
+			  Serial << F("\n");
+			*/  
+
+		  if (!bypassResponseTimeCheck && idx)	{	// Update response time:
+			  unsigned long test = micros();
+			  _Udp.endPacket();
+			   unsigned long res = micros()-test;
+		   	  _slaveLastResponseTime[idx] = res > 0xFFFF ? 0xFFFF : res;
+		/*	  if (_serialOutput) 	{
+				  Serial.print(address);
+				  Serial.print(F(": "));
+				  Serial.println(res);
+			  }*/
+		  } else {
+		  	_Udp.endPacket();
+		  }
+	  }
   }
-  clearDataArray();
+  resetTXBuffer();
+}
+
+/**
+ * Returns true if a slave (registered to be tracked) has a good response time
+ */
+bool UDPmessenger::isPresent(uint8_t address)	{
+	uint8_t idx = addressToIndex(address);
+	return (idx && _slaveLastResponseTime[idx]>0) ? _slaveLastResponseTime[idx]<_maxResponseTime : false;
 }
 
 /**

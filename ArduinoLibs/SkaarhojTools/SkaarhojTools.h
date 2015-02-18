@@ -43,7 +43,7 @@ private:
 	void serialOutput(uint8_t level); // Sets whether informative (debug) serial output is enabled or not. Level=1: Normal, Level=2: Development
 	uint8_t getSerialOutput();
 	bool serLevel(uint8_t level);
-	bool hasTimedOut(unsigned long time, unsigned long timeout);
+	bool hasTimedOut(unsigned long &time, const unsigned long timeout, bool updateTime=false);
 	void runLoopCount();
 	int shapeInt(int inputInteger, int low, int high);
 };

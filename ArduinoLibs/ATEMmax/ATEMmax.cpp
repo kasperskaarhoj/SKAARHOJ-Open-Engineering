@@ -47,6 +47,8 @@ ATEMmax::ATEMmax(){}
 
 
 
+
+
 // *********************************
 // **
 // ** Implementations in ATEMmax.c:
@@ -2223,6 +2225,36 @@ void ATEMmax::_parseGetCommands(const char *cmdStr)	{
 			if ((_serialOutput==0x80 && atemCameraControlGain[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 				Serial.print(F("atemCameraControlGain[input=")); Serial.print(input); Serial.print(F("] = "));
 				Serial.println(atemCameraControlGain[input]);
+			}
+			#endif
+			
+		}
+		
+		if (_packetBuffer[1]==1 && _packetBuffer[2]==2)	{
+			
+			#if ATEM_debug
+			temp = atemCameraControlWhiteBalance[input];
+			#endif					
+			atemCameraControlWhiteBalance[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemCameraControlWhiteBalance[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemCameraControlWhiteBalance[input=")); Serial.print(input); Serial.print(F("] = "));
+				Serial.println(atemCameraControlWhiteBalance[input]);
+			}
+			#endif
+			
+		}
+		
+		if (_packetBuffer[1]==0 && _packetBuffer[2]==9)	{
+			
+			#if ATEM_debug
+			temp = atemCameraControlZoom[input];
+			#endif					
+			atemCameraControlZoom[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemCameraControlZoom[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemCameraControlZoom[input=")); Serial.print(input); Serial.print(F("] = "));
+				Serial.println(atemCameraControlZoom[input]);
 			}
 			#endif
 			
@@ -7379,6 +7411,22 @@ void ATEMmax::_parseGetCommands(const char *cmdStr)	{
 	}
 	
 	/**
+	 * Get Camera Control; White Balance
+	 * input 	1-8: Camera
+	 */
+	int ATEMmax::getCameraControlWhiteBalance(uint8_t input) {
+		return atemCameraControlWhiteBalance[input];
+	}
+	
+	/**
+	 * Get Camera Control; Zoom
+	 * input 	1-8: Camera
+	 */
+	int ATEMmax::getCameraControlZoomSpeed(uint8_t input) {
+		return atemCameraControlZoom[input];
+	}
+	
+	/**
 	 * Get Camera Control; Lift R
 	 * input 	1-8: Camera
 	 */
@@ -7586,6 +7634,56 @@ void ATEMmax::_parseGetCommands(const char *cmdStr)	{
 
 		_packetBuffer[12+_cBBO+4+4+16] = highByte(gain);
 		_packetBuffer[12+_cBBO+4+4+17] = lowByte(gain);
+
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Set Camera Control; White Balance
+	 * input 	0-7: Camera
+	 * 
+	 */
+	void ATEMmax::setCameraControlWhiteBalance(uint8_t input, int whiteBalance) {
+
+  		_prepareCommandPacket(PSTR("CCmd"),24);
+
+			// Preset values:
+		_packetBuffer[12+_cBBO+4+4+1] = 1;
+		_packetBuffer[12+_cBBO+4+4+2] = 2;
+
+		_packetBuffer[12+_cBBO+4+4+4] = 0x02;
+		_packetBuffer[12+_cBBO+4+4+9] = 0x01;
+
+		_packetBuffer[12+_cBBO+4+4+0] = input;
+
+		_packetBuffer[12+_cBBO+4+4+16] = highByte(whiteBalance);
+		_packetBuffer[12+_cBBO+4+4+17] = lowByte(whiteBalance);
+
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Set Camera Control; Zoom
+	 * input 	0-7: Camera
+	 * 
+	 */
+	void ATEMmax::setCameraControlZoomSpeed(uint8_t input, int zoomSpeed) {
+
+  		_prepareCommandPacket(PSTR("CCmd"),24);
+
+			// Preset values:
+		_packetBuffer[12+_cBBO+4+4+1] = 0;
+		_packetBuffer[12+_cBBO+4+4+2] = 9;
+
+		_packetBuffer[12+_cBBO+4+4+4] = 0x80;
+		_packetBuffer[12+_cBBO+4+4+9] = 0x01;
+
+		_packetBuffer[12+_cBBO+4+4+0] = input;
+
+		_packetBuffer[12+_cBBO+4+4+16] = highByte(zoomSpeed);
+		_packetBuffer[12+_cBBO+4+4+17] = lowByte(zoomSpeed);
 
    		_finishCommandPacket();
 
@@ -9678,6 +9776,4 @@ void ATEMmax::_parseGetCommands(const char *cmdStr)	{
 		return atemLastStateChangeTimeCodeFrame;
 	}
 	
-
-
 

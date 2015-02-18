@@ -94,6 +94,7 @@ class SkaarhojBI8
 	uint16_t buttonDownAll();
 	uint16_t buttonIsPressedAll();
 	bool isButtonIn(uint8_t buttonNumber, uint16_t allButtonsState);
+	void testProgramme(uint16_t buttonMask);
 	
 	
   private:

@@ -87,6 +87,10 @@ void ClientPanaAWHExTCP::runLoop() {
  */
 void ClientPanaAWHExTCP::connect() {
 }
+void ClientPanaAWHExTCP::changeLastIPBytes(uint8_t lastByte) {
+	_cameraIP[3] = lastByte;
+}
+
 
 bool ClientPanaAWHExTCP::doPan(uint8_t panSpeed) {	// 01-99, 50 is neutral
 	if (isReady())	{

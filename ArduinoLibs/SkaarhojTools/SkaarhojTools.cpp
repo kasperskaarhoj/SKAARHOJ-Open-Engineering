@@ -59,8 +59,11 @@ bool SkaarhojTools::serLevel(uint8_t level) {
 /**
  * Timeout check
  */
-bool SkaarhojTools::hasTimedOut(unsigned long time, unsigned long timeout)  {
-  if ((unsigned long)(time + timeout) <= (unsigned long)millis())  {  // This should "wrap around" if time+timout is larger than the size of unsigned-longs, right?
+bool SkaarhojTools::hasTimedOut(unsigned long &time, const unsigned long timeout, bool updateTime)  {
+//  if ((unsigned long)(time + timeout) <= (unsigned long)millis()-30000)  {  // This should "wrap around" if time+timout is larger than the size of unsigned-longs, right?
+  if (millis()-time < 0x80000000 && millis()-time >= timeout)  {	// The last clause is necessary in case time > millis()
+	  if (!(millis()-time >= timeout)) Serial << millis() << F("-") << time << F("=") << timeout << F("*******************\n");
+	if (updateTime)	time = millis();
     return true;
   } 
   else {

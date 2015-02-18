@@ -19,16 +19,17 @@
 #define SkaarhojSmartSwitch2_H
 
 #include "Arduino.h"
+#include "SkaarhojPgmspace.h"
 #include <Adafruit_GFX.h>
+#include <Wire.h>
+#include "MCP23017.h"
+
 
 #define BLACK 0
 #define WHITE 1
 
 #define SKAARHOJSMARTSWITCH_LCDWIDTH                  64
 #define SKAARHOJSMARTSWITCH_LCDHEIGHT                 32
-
-#include "Wire.h"
-#include "MCP23017.h"
 
 /**
   Version 1.0.0
@@ -77,6 +78,8 @@ class SkaarhojSmartSwitch2: public Adafruit_GFX {
 
     void clearDisplay(void);
     void display(uint8_t cs);
+	
+	void testProgramme(uint8_t buttonMask);
 	
   private:
 	void _readButtonStatus();
