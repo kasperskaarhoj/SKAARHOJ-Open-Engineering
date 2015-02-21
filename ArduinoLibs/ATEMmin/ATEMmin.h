@@ -42,7 +42,6 @@ class ATEMmin : public ATEMbase
 	  
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMmin.h:

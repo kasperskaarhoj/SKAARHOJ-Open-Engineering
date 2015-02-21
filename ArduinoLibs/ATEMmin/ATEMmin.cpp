@@ -44,8 +44,6 @@ ATEMmin::ATEMmin(){}
 
 
 
-
-
 // *********************************
 // **
 // ** Implementations in ATEMmin.c:
@@ -109,6 +107,9 @@ void ATEMmin::_parseGetCommands(const char *cmdStr)	{
 		}
 		#endif
 	}
+
+	
+
 
 
 	
@@ -602,7 +603,7 @@ void ATEMmin::_parseGetCommands(const char *cmdStr)	{
 	 */
 	void ATEMmin::setAuxSourceInput(uint8_t aUXChannel, uint16_t input) {
 	
-  		_prepareCommandPacket(PSTR("CAuS"),8,(_packetBuffer[12+_cBBO+4+4+1]==aUXChannel));
+  		_prepareCommandPacket(PSTR("CAuS"),4,(_packetBuffer[12+_cBBO+4+4+1]==aUXChannel));
 
 			// Set Mask: 1
 		_packetBuffer[12+_cBBO+4+4+0] |= 1;
