@@ -3653,7 +3653,7 @@ chip</description>
 </part>
 <part name="D3" library="microbuilder" deviceset="DIODE" device="SOD-123" value="BAT54T1G"/>
 <part name="R6" library="microbuilder" deviceset="RESISTOR" device="0603" value="100K"/>
-<part name="R7" library="microbuilder" deviceset="RESISTOR" device="0603" value="10K"/>
+<part name="R7" library="microbuilder" deviceset="RESISTOR" device="0603" value="11K"/>
 <part name="U$24" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$25" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$26" library="microbuilder" deviceset="GND" device=""/>
@@ -3682,9 +3682,7 @@ chip</description>
 <text x="45.72" y="7.62" size="3.81" layer="97">POWER</text>
 <text x="129.54" y="-5.08" size="3.81" layer="97">CONFIG</text>
 <text x="132.08" y="-170.18" size="1.778" layer="97">VOUT = 1.23V * (1 + R6/R7)</text>
-<text x="132.08" y="-172.72" size="1.778" layer="97">VOUT = 13.53V</text>
-<text x="116.84" y="-177.8" size="1.778" layer="97">This is 0.5V above the recommended voltage,</text>
-<text x="116.84" y="-180.34" size="1.778" layer="97">but uses common resistors for easy assembly</text>
+<text x="132.08" y="-172.72" size="1.778" layer="97">VOUT = 12.41V</text>
 <text x="142.24" y="-114.3" size="1.778" layer="97">13V Boost</text>
 <text x="119.38" y="-187.96" size="1.778" layer="91">Booster circuit from Adafruit, thanks!</text>
 <text x="-76.2" y="-116.84" size="1.778" layer="91">VSS: GND (Logic)

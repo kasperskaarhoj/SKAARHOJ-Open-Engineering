@@ -2274,7 +2274,10 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <instance part="C7" gate="G$1" x="-165.1" y="0" rot="R90"/>
 <instance part="R1" gate="G$1" x="-172.72" y="-15.24"/>
 <instance part="C8" gate="G$1" x="-160.02" y="-17.78" rot="R90"/>
-<instance part="C9" gate="G$1" x="-165.1" y="-20.32" rot="R90"/>
+<instance part="C9" gate="G$1" x="-165.1" y="-20.32" smashed="yes" rot="R90">
+<attribute name="NAME" x="-168.021" y="-18.796" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="-162.941" y="-28.956" size="1.778" layer="96" rot="R90"/>
+</instance>
 <instance part="U1" gate="G$1" x="-55.88" y="-5.08" rot="R180"/>
 <instance part="U$8" gate="G$1" x="-10.16" y="10.16"/>
 <instance part="U2" gate="G$1" x="50.8" y="-5.08"/>
