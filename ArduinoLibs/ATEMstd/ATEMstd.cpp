@@ -437,7 +437,6 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMstd.c:
@@ -2308,6 +2307,125 @@ void ATEMstd::_parseGetCommands(const char *cmdStr)	{
 	}
 	
 	/**
+	 * Set Key DVE; Masked
+	 * mE 	0: ME1, 1: ME2
+	 * keyer 	0-3: Keyer 1-4
+	 * masked 	Bit 0: On/Off
+	 */
+	void ATEMstd::setKeyDVEMasked(uint8_t mE, uint8_t keyer, bool masked) {
+	
+  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
+
+			// Set Mask: 1048576
+		_packetBuffer[12+_cBBO+4+4+1] |= 16;
+				
+		_packetBuffer[12+_cBBO+4+4+4] = mE;
+		
+		_packetBuffer[12+_cBBO+4+4+5] = keyer;
+		
+		_packetBuffer[12+_cBBO+4+4+51] = masked;
+		
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Set Key DVE; Top
+	 * mE 	0: ME1, 1: ME2
+	 * keyer 	0-3: Keyer 1-4
+	 * top 	-9000-9000: -9.00-9.00
+	 */
+	void ATEMstd::setKeyDVETop(uint8_t mE, uint8_t keyer, int top) {
+	
+  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
+
+			// Set Mask: 2097152
+		_packetBuffer[12+_cBBO+4+4+1] |= 32;
+				
+		_packetBuffer[12+_cBBO+4+4+4] = mE;
+		
+		_packetBuffer[12+_cBBO+4+4+5] = keyer;
+		
+		_packetBuffer[12+_cBBO+4+4+52] = highByte(top);
+		_packetBuffer[12+_cBBO+4+4+53] = lowByte(top);
+		
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Set Key DVE; Bottom
+	 * mE 	0: ME1, 1: ME2
+	 * keyer 	0-3: Keyer 1-4
+	 * bottom 	-9000-9000: -9.00-9.00
+	 */
+	void ATEMstd::setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom) {
+	
+  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
+
+			// Set Mask: 4194304
+		_packetBuffer[12+_cBBO+4+4+1] |= 64;
+				
+		_packetBuffer[12+_cBBO+4+4+4] = mE;
+		
+		_packetBuffer[12+_cBBO+4+4+5] = keyer;
+		
+		_packetBuffer[12+_cBBO+4+4+54] = highByte(bottom);
+		_packetBuffer[12+_cBBO+4+4+55] = lowByte(bottom);
+		
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Set Key DVE; Left
+	 * mE 	0: ME1, 1: ME2
+	 * keyer 	0-3: Keyer 1-4
+	 * left 	-16000-16000: -9.00-9.00
+	 */
+	void ATEMstd::setKeyDVELeft(uint8_t mE, uint8_t keyer, int left) {
+	
+  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
+
+			// Set Mask: 8388608
+		_packetBuffer[12+_cBBO+4+4+1] |= 128;
+				
+		_packetBuffer[12+_cBBO+4+4+4] = mE;
+		
+		_packetBuffer[12+_cBBO+4+4+5] = keyer;
+		
+		_packetBuffer[12+_cBBO+4+4+56] = highByte(left);
+		_packetBuffer[12+_cBBO+4+4+57] = lowByte(left);
+		
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Set Key DVE; Right
+	 * mE 	0: ME1, 1: ME2
+	 * keyer 	0-3: Keyer 1-4
+	 * right 	-16000-16000: -9.00-9.00
+	 */
+	void ATEMstd::setKeyDVERight(uint8_t mE, uint8_t keyer, int right) {
+	
+  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
+
+			// Set Mask: 16777216
+		_packetBuffer[12+_cBBO+4+4+0] |= 1;
+				
+		_packetBuffer[12+_cBBO+4+4+4] = mE;
+		
+		_packetBuffer[12+_cBBO+4+4+5] = keyer;
+		
+		_packetBuffer[12+_cBBO+4+4+58] = highByte(right);
+		_packetBuffer[12+_cBBO+4+4+59] = lowByte(right);
+		
+   		_finishCommandPacket();
+
+	}
+	
+	/**
 	 * Set Key DVE; Rate
 	 * mE 	0: ME1, 1: ME2
 	 * keyer 	0-3: Keyer 1-4
@@ -2910,7 +3028,7 @@ void ATEMstd::_parseGetCommands(const char *cmdStr)	{
 	 */
 	void ATEMstd::setAuxSourceInput(uint8_t aUXChannel, uint16_t input) {
 	
-  		_prepareCommandPacket(PSTR("CAuS"),8,(_packetBuffer[12+_cBBO+4+4+1]==aUXChannel));
+  		_prepareCommandPacket(PSTR("CAuS"),4,(_packetBuffer[12+_cBBO+4+4+1]==aUXChannel));
 
 			// Set Mask: 1
 		_packetBuffer[12+_cBBO+4+4+0] |= 1;
@@ -3225,8 +3343,5 @@ void ATEMstd::_parseGetCommands(const char *cmdStr)	{
 		return atemTallyByIndexTallyFlags[sources];
 	}
 	
-
-
-
 
 

@@ -280,6 +280,11 @@ private:
 				void setKeyDVEBorderLuma(uint8_t mE, uint8_t keyer, uint16_t borderLuma);
 				void setKeyDVELightSourceDirection(uint8_t mE, uint8_t keyer, uint16_t lightSourceDirection);
 				void setKeyDVELightSourceAltitude(uint8_t mE, uint8_t keyer, uint8_t lightSourceAltitude);
+				void setKeyDVEMasked(uint8_t mE, uint8_t keyer, bool masked);
+				void setKeyDVETop(uint8_t mE, uint8_t keyer, int top);
+				void setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom);
+				void setKeyDVELeft(uint8_t mE, uint8_t keyer, int left);
+				void setKeyDVERight(uint8_t mE, uint8_t keyer, int right);
 				void setKeyDVERate(uint8_t mE, uint8_t keyer, uint8_t rate);
 				void setRunFlyingKeyKeyFrame(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
 				void setRunFlyingKeyRuntoInfiniteindex(uint8_t mE, uint8_t keyer, uint8_t runtoInfiniteindex);

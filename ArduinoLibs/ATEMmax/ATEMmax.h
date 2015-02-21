@@ -50,7 +50,6 @@ class ATEMmax : public ATEMbase
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMmax.h:
@@ -100,6 +99,8 @@ private:
 			uint16_t atemPreviewInputVideoSource[2];
 			uint8_t atemTransitionStyle[2];
 			uint8_t atemTransitionNextTransition[2];
+			uint8_t atemTransitionStyleNext[2];
+			uint8_t atemTransitionNextTransitionNext[2];
 			bool atemTransitionPreviewEnabled[2];
 			bool atemTransitionInTransition[2];
 			uint8_t atemTransitionFramesRemaining[2];
@@ -183,6 +184,11 @@ private:
 			uint16_t atemKeyDVEBorderLuma[2][4];
 			uint16_t atemKeyDVELightSourceDirection[2][4];
 			uint8_t atemKeyDVELightSourceAltitude[2][4];
+			bool atemKeyDVEMasked[2][4];
+			int atemKeyDVETop[2][4];
+			int atemKeyDVEBottom[2][4];
+			int atemKeyDVELeft[2][4];
+			int atemKeyDVERight[2][4];
 			uint8_t atemKeyDVERate[2][4];
 			bool atemKeyerFlyIsASet[2][4];
 			bool atemKeyerFlyIsBSet[2][4];
@@ -205,6 +211,10 @@ private:
 			uint16_t atemKeyerFlyKeyFrameBorderLuma[2][4][3];
 			uint16_t atemKeyerFlyKeyFrameLightSourceDirection[2][4][3];
 			uint8_t atemKeyerFlyKeyFrameLightSourceAltitude[2][4][3];
+			int atemKeyerFlyKeyFrameTop[2][4][3];
+			int atemKeyerFlyKeyFrameBottom[2][4][3];
+			int atemKeyerFlyKeyFrameLeft[2][4][3];
+			int atemKeyerFlyKeyFrameRight[2][4][3];
 			uint16_t atemDownstreamKeyerFillSource[2];
 			uint16_t atemDownstreamKeyerKeySource[2];
 			bool atemDownstreamKeyerTie[2];
@@ -234,7 +244,7 @@ private:
 			int atemCameraControlFocus[9];
 			int atemCameraControlGain[9];
 			int atemCameraControlWhiteBalance[9];
-			int atemCameraControlZoom[9];
+			int atemCameraControlZoomSpeed[9];
 			int atemCameraControlLiftR[9];
 			int atemCameraControlGammaR[9];
 			int atemCameraControlGainR[9];
@@ -389,6 +399,8 @@ public:
 			void performAutoME(uint8_t mE);
 			uint8_t getTransitionStyle(uint8_t mE);
 			uint8_t getTransitionNextTransition(uint8_t mE);
+			uint8_t getTransitionStyleNext(uint8_t mE);
+			uint8_t getTransitionNextTransitionNext(uint8_t mE);
 			void setTransitionStyle(uint8_t mE, uint8_t style);
 			void setTransitionNextTransition(uint8_t mE, uint8_t nextTransition);
 			bool getTransitionPreviewEnabled(uint8_t mE);
@@ -535,6 +547,11 @@ public:
 			uint16_t getKeyDVEBorderLuma(uint8_t mE, uint8_t keyer);
 			uint16_t getKeyDVELightSourceDirection(uint8_t mE, uint8_t keyer);
 			uint8_t getKeyDVELightSourceAltitude(uint8_t mE, uint8_t keyer);
+			bool getKeyDVEMasked(uint8_t mE, uint8_t keyer);
+			int getKeyDVETop(uint8_t mE, uint8_t keyer);
+			int getKeyDVEBottom(uint8_t mE, uint8_t keyer);
+			int getKeyDVELeft(uint8_t mE, uint8_t keyer);
+			int getKeyDVERight(uint8_t mE, uint8_t keyer);
 			uint8_t getKeyDVERate(uint8_t mE, uint8_t keyer);
 			void setKeyDVESizeX(uint8_t mE, uint8_t keyer, long sizeX);
 			void setKeyDVESizeY(uint8_t mE, uint8_t keyer, long sizeY);
@@ -556,6 +573,11 @@ public:
 			void setKeyDVEBorderLuma(uint8_t mE, uint8_t keyer, uint16_t borderLuma);
 			void setKeyDVELightSourceDirection(uint8_t mE, uint8_t keyer, uint16_t lightSourceDirection);
 			void setKeyDVELightSourceAltitude(uint8_t mE, uint8_t keyer, uint8_t lightSourceAltitude);
+			void setKeyDVEMasked(uint8_t mE, uint8_t keyer, bool masked);
+			void setKeyDVETop(uint8_t mE, uint8_t keyer, int top);
+			void setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom);
+			void setKeyDVELeft(uint8_t mE, uint8_t keyer, int left);
+			void setKeyDVERight(uint8_t mE, uint8_t keyer, int right);
 			void setKeyDVERate(uint8_t mE, uint8_t keyer, uint8_t rate);
 			bool getKeyerFlyIsASet(uint8_t mE, uint8_t keyer);
 			bool getKeyerFlyIsBSet(uint8_t mE, uint8_t keyer);
@@ -581,6 +603,10 @@ public:
 			uint16_t getKeyerFlyKeyFrameBorderLuma(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
 			uint16_t getKeyerFlyKeyFrameLightSourceDirection(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
 			uint8_t getKeyerFlyKeyFrameLightSourceAltitude(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
+			int getKeyerFlyKeyFrameTop(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
+			int getKeyerFlyKeyFrameBottom(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
+			int getKeyerFlyKeyFrameLeft(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
+			int getKeyerFlyKeyFrameRight(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
 			uint16_t getDownstreamKeyerFillSource(uint8_t keyer);
 			uint16_t getDownstreamKeyerKeySource(uint8_t keyer);
 			void setDownstreamKeyerFillSource(uint8_t keyer, uint16_t fillSource);

@@ -52,7 +52,6 @@ private:
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMext.h:
@@ -177,6 +176,11 @@ private:
 			uint16_t atemKeyDVEBorderLuma[2][4];
 			uint16_t atemKeyDVELightSourceDirection[2][4];
 			uint8_t atemKeyDVELightSourceAltitude[2][4];
+			bool atemKeyDVEMasked[2][4];
+			int atemKeyDVETop[2][4];
+			int atemKeyDVEBottom[2][4];
+			int atemKeyDVELeft[2][4];
+			int atemKeyDVERight[2][4];
 			uint8_t atemKeyDVERate[2][4];
 			uint16_t atemDownstreamKeyerFillSource[2];
 			uint16_t atemDownstreamKeyerKeySource[2];
@@ -207,7 +211,7 @@ private:
 			int atemCameraControlFocus[9];
 			int atemCameraControlGain[9];
 			int atemCameraControlWhiteBalance[9];
-			int atemCameraControlZoom[9];
+			int atemCameraControlZoomSpeed[9];
 			int atemCameraControlLiftR[9];
 			int atemCameraControlGammaR[9];
 			int atemCameraControlGainR[9];
@@ -495,6 +499,11 @@ public:
 			uint16_t getKeyDVEBorderLuma(uint8_t mE, uint8_t keyer);
 			uint16_t getKeyDVELightSourceDirection(uint8_t mE, uint8_t keyer);
 			uint8_t getKeyDVELightSourceAltitude(uint8_t mE, uint8_t keyer);
+			bool getKeyDVEMasked(uint8_t mE, uint8_t keyer);
+			int getKeyDVETop(uint8_t mE, uint8_t keyer);
+			int getKeyDVEBottom(uint8_t mE, uint8_t keyer);
+			int getKeyDVELeft(uint8_t mE, uint8_t keyer);
+			int getKeyDVERight(uint8_t mE, uint8_t keyer);
 			uint8_t getKeyDVERate(uint8_t mE, uint8_t keyer);
 			void setKeyDVESizeX(uint8_t mE, uint8_t keyer, long sizeX);
 			void setKeyDVESizeY(uint8_t mE, uint8_t keyer, long sizeY);
@@ -516,6 +525,11 @@ public:
 			void setKeyDVEBorderLuma(uint8_t mE, uint8_t keyer, uint16_t borderLuma);
 			void setKeyDVELightSourceDirection(uint8_t mE, uint8_t keyer, uint16_t lightSourceDirection);
 			void setKeyDVELightSourceAltitude(uint8_t mE, uint8_t keyer, uint8_t lightSourceAltitude);
+			void setKeyDVEMasked(uint8_t mE, uint8_t keyer, bool masked);
+			void setKeyDVETop(uint8_t mE, uint8_t keyer, int top);
+			void setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom);
+			void setKeyDVELeft(uint8_t mE, uint8_t keyer, int left);
+			void setKeyDVERight(uint8_t mE, uint8_t keyer, int right);
 			void setKeyDVERate(uint8_t mE, uint8_t keyer, uint8_t rate);
 			void setKeyerFlyKeyFrame(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
 			void setRunFlyingKeyKeyFrame(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
