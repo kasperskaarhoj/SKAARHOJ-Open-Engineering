@@ -63,10 +63,10 @@ UDP messenger
 #ifndef SharedVariables_h
 #define SharedVariables_h
 
-#include "SkaarhojPgmspace.h"
 #include "Arduino.h"
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include "Streaming.h"
-#include <SkaarhojBufferTools.h>
+#include "SkaarhojBufferTools.h"
 #include <UDPmessenger.h>
 
 

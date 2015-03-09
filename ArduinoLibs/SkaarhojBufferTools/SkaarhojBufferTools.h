@@ -29,7 +29,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #include "Arduino.h"
 
-#include <avr/pgmspace.h>
+
 
 
 #define SkaarhojBufferTools_BUFFERSIZE 64

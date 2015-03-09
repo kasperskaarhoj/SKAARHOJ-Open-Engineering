@@ -3,9 +3,14 @@
  */
  
  
+#include <SPI.h>
+#include <Ethernet.h>
+#include <UDPmessenger.h>
+
 #include <SkaarhojPgmspace.h>
 #include <SharedVariables.h>
 #include <Streaming.h>
+#include <SkaarhojBufferTools.h>
 
 SharedVariables shareObj(12);  // Number of shared variables we allocate memory to handle
 
@@ -52,15 +57,15 @@ void setup() {
   shareObj.shareLocalVariable(0, test_int, 3, PSTR("Test int"), PSTR("A test integer"), -1000, 1000);
   shareObj.shareLocalVariable(1, test_bool, 3, PSTR("Test bool"), PSTR("A test boolean"));
   shareObj.shareLocalVariable(2, test_uint8_t, 3, PSTR("Test uint8_t"), PSTR("A test uint8_t"), 1, 100);
-  shareObj.shareLocalVariable(3, test_uint16_t, 3, PSTR("Test uint16_t"), PSTR("A test uint16_t"), 1, 10000);
-  shareObj.shareLocalVariable(4, test_long, 3, PSTR("Test long"), PSTR("A test long"), 1, 100000);
-  shareObj.shareLocalVariable(5, test_unsigned_long, 3, PSTR("Test unsigned long"), PSTR("A test unsigned long"), -100000, 100000);
-  shareObj.shareLocalVariable(6, test_float, 3, PSTR("Test float"), PSTR("A test float"), -10.5, 10.5);
+  shareObj.shareLocalVariable(3, test_uint16_t, 3, PSTR("Test uint16_t"), PSTR("A test uint16_t"), 1, 40000);
+  shareObj.shareLocalVariable(4, test_long, 3, PSTR("Test long"), PSTR("A test long"));
+  shareObj.shareLocalVariable(5, test_unsigned_long, 3, PSTR("Test unsigned long"), PSTR("A test unsigned long"));
+  shareObj.shareLocalVariable(6, test_float, 3, PSTR("Test float"), PSTR("A test float"), -10, 10);
   shareObj.shareLocalVariable(7, test_char, 3, PSTR("Test char"), PSTR("A test char"));
   shareObj.shareLocalVariable(8, test_string, sizeof(test_string), 3, PSTR("Test string"), PSTR("A test string"));
-  shareObj.shareLocalVariable(9, test_array, sizeof(test_array), 3, PSTR("Test array"), PSTR("A test array with single bytes"));
+  shareObj.shareLocalVariable(9, test_array, sizeof(test_array), 3, PSTR("Test array, uint8_t"), PSTR("A test array with single bytes"));
   shareObj.shareLocalVariable(10, test_array_int, sizeof(test_array_int), 3, PSTR("Test array, integer"), PSTR("A test array with integers"));
-  shareObj.shareLocalVariable(11, test_uint16_t_array[1], 3, PSTR("Test uint16_t_array[1]"), PSTR("Testing an individual position of an array"), 1, 10000);
+  shareObj.shareLocalVariable(11, test_uint16_t_array[1], 3, PSTR("Test element uint16_t_array[1]"), PSTR("Testing an individual position of an array"), 1, 10000);
 
 
   Serial << F("... (test modification of values in global space, increment by 100) ...\n");
@@ -131,8 +136,8 @@ void setup() {
   Serial << F("test_uint16_t_array[1] = ") << test_uint16_t_array[1] << F("\n");
 
 
-  shareObj.printOverview();
-  shareObj.printValues();
+  shareObj.printOverview(Serial);
+  shareObj.printValues(Serial);
 }
 void loop() {
 }

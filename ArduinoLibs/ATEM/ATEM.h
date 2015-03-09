@@ -33,9 +33,6 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "Arduino.h"
 #include "EthernetUdp.h"
 
-#ifndef __arm__
-	#include <avr/pgmspace.h>
-#endif
 
 
 
@@ -162,7 +159,7 @@ class ATEM
 	void _sendPacketBufferCmdData(const char cmd[4], uint8_t cmdBytes);
 
   public:
-  	void serialOutput(boolean serialOutput);
+  	void serialOutput(uint8_t level);
 	bool hasTimedOut(unsigned long time, unsigned long timeout);
 	
 	

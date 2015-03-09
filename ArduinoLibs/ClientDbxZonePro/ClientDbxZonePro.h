@@ -29,7 +29,7 @@ with the ClientDbxZonePro library. If not, see http://www.gnu.org/licenses/.
 #include "SkaarhojTCPClient.h"
 
 #include <Ethernet.h>
-#include <avr/pgmspace.h>
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 
 
 

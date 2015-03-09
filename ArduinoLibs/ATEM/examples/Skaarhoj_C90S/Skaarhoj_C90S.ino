@@ -77,7 +77,7 @@ SkaarhojSmartSwitch SmartSwitch;
 uint8_t BUSselect = 0;  // Preview/Program by default
 
 // AUX graphic:
-static uint8_t SSS_AUXgfx[] PROGMEM = {
+static const uint8_t SSS_AUXgfx[] PROGMEM = {
   64, // width
   15, // height
 
@@ -96,7 +96,7 @@ static uint8_t SSS_AUXgfx[] PROGMEM = {
 };
 
 // PGM graphic:
-static uint8_t SSS_PGMgfx[] PROGMEM = {
+static const uint8_t SSS_PGMgfx[] PROGMEM = {
   64, // width
   32, // height
 
@@ -128,7 +128,7 @@ static uint8_t SSS_PGMgfx[] PROGMEM = {
 
 
 // PIP_L graphic:
-static uint8_t SSS_PIPLgfx[] PROGMEM = {
+static const uint8_t SSS_PIPLgfx[] PROGMEM = {
   64, // width
   32, // height
 
@@ -158,7 +158,7 @@ static uint8_t SSS_PIPLgfx[] PROGMEM = {
 };
 
 // PIP_R graphic:
-static uint8_t SSS_PIPRgfx[] PROGMEM = {
+static const uint8_t SSS_PIPRgfx[] PROGMEM = {
   64, // width
   32, // height
 

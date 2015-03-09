@@ -32,12 +32,8 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #include "Arduino.h"
 #include "EthernetUdp.h"
-#include "SkaarhojPgmspace.h"
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 
-
-
-
-// Header bits:
 #define ATEM_headerCmd_AckRequest 0x1
 #define ATEM_headerCmd_HelloPacket 0x2
 #define ATEM_headerCmd_Resend 0x4

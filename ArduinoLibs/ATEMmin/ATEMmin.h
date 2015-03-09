@@ -99,7 +99,6 @@ public:
 			uint16_t getTallyByIndexSources();
 			uint8_t getTallyByIndexTallyFlags(uint16_t sources);
 	  
-	  
 };
 
 #endif

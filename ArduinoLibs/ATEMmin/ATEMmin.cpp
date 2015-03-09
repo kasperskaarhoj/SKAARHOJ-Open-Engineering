@@ -43,7 +43,6 @@ ATEMmin::ATEMmin(){}
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMmin.c:

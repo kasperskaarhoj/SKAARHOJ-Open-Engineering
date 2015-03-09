@@ -32,7 +32,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "SkaarhojBufferTools.h"
 
 #include <Ethernet.h>
-#include <avr/pgmspace.h>
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 
 
 
