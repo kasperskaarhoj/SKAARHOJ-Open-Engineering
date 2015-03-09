@@ -34,7 +34,7 @@ with the Panasonic AW-HE library. If not, see http://www.gnu.org/licenses/.
 #endif
 
 
-#include <avr/pgmspace.h>
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include <Ethernet.h>
 
 class ClientPanaAWHExTCP

@@ -32,6 +32,39 @@ void SkaarhojSmartSwitch2::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if ((x < 0) || (x >= width()) || (y < 0) || (y >= height()))
     return;
 
+  if (color==65535)	{	// INVERSION MODE
+	  color = getPixel(x,y) ? 0 : 1;
+  }
+
+  // check rotation, move pixel around if necessary
+  switch (getRotation()) {
+  case 1:
+    swap(x, y);
+    x = WIDTH - x - 1;
+    break;
+  case 2:
+    x = WIDTH - x - 1;
+    y = HEIGHT - y - 1;
+    break;
+  case 3:
+    swap(x, y);
+    y = HEIGHT - y - 1;
+    break;
+  }  
+
+
+
+  // x is which column
+  if (color>0)
+	buffer[(7-x/8) + (y*SKAARHOJSMARTSWITCH_LCDWIDTH/8)] |= _BV((x%8));
+  else
+	buffer[(7-x/8) + (y*SKAARHOJSMARTSWITCH_LCDWIDTH/8)] &= ~_BV((x%8)); 
+}
+
+bool SkaarhojSmartSwitch2::getPixel(int16_t x, int16_t y) {
+  if ((x < 0) || (x >= width()) || (y < 0) || (y >= height()))
+    return false;
+
   // check rotation, move pixel around if necessary
   switch (getRotation()) {
   case 1:
@@ -49,10 +82,7 @@ void SkaarhojSmartSwitch2::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }  
 
   // x is which column
-  if (color)
-	buffer[(7-x/8) + (y*SKAARHOJSMARTSWITCH_LCDWIDTH/8)] |= _BV((x%8));
-  else
-	buffer[(7-x/8) + (y*SKAARHOJSMARTSWITCH_LCDWIDTH/8)] &= ~_BV((x%8)); 
+  return buffer[(7-x/8) + (y*SKAARHOJSMARTSWITCH_LCDWIDTH/8)] & _BV((x%8));
 }
 
 // Empty constructor.

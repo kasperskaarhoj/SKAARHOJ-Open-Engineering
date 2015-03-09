@@ -159,7 +159,6 @@ private:
 
 
 
-
 	// *********************************
 	// **
 	// ** Implementations in ATEMstd.h:
@@ -207,6 +206,12 @@ private:
 				uint8_t atemMediaPlayerSourceType[2];
 				uint8_t atemMediaPlayerSourceStillIndex[2];
 				uint8_t atemMediaPlayerSourceClipIndex[2];
+				uint8_t atemMacroRunStatusState;
+				bool atemMacroRunStatusIsLooping;
+				uint16_t atemMacroRunStatusIndex;
+				bool atemMacroPropertiesIsUsed[10];
+				bool atemMacroRecordingStatusIsRecording;
+				uint16_t atemMacroRecordingStatusIndex;
 				uint8_t atemAudioMixerInputMixOption[25];
 				uint16_t atemAudioMixerInputVolume[25];
 				int atemAudioMixerInputBalance[25];
@@ -338,6 +343,14 @@ private:
 				void setMediaPlayerSourceType(uint8_t mediaPlayer, uint8_t type);
 				void setMediaPlayerSourceStillIndex(uint8_t mediaPlayer, uint8_t stillIndex);
 				void setMediaPlayerSourceClipIndex(uint8_t mediaPlayer, uint8_t clipIndex);
+				uint8_t getMacroRunStatusState();
+				bool getMacroRunStatusIsLooping();
+				uint16_t getMacroRunStatusIndex();
+				void setMacroAction(uint16_t index, uint8_t action);
+				bool getMacroPropertiesIsUsed(uint8_t macroIndex);
+				void setMacroAddPauseFrames(uint16_t frames);
+				bool getMacroRecordingStatusIsRecording();
+				uint16_t getMacroRecordingStatusIndex();
 				uint8_t getAudioMixerInputMixOption(uint16_t audioSource);
 				uint16_t getAudioMixerInputVolume(uint16_t audioSource);
 				int getAudioMixerInputBalance(uint16_t audioSource);
@@ -348,6 +361,7 @@ private:
 				void setAudioLevelsEnable(bool enable);
 				uint16_t getTallyByIndexSources();
 				uint8_t getTallyByIndexTallyFlags(uint16_t sources);
+
 	  
 };
 

@@ -10,7 +10,7 @@ open-source hardware by purchasing products from Adafruit as well!
 
 
 #include "Arduino.h"
-#include "SkaarhojPgmspace.h"
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include <Adafruit_GFX.h>
 #include <Wire.h>
 

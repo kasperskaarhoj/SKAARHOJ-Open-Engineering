@@ -35,7 +35,7 @@ with the ClientGrassValleyKayak library. If not, see http://www.gnu.org/licenses
 
 
 #include <EthernetUdp.h>
-#include <avr/pgmspace.h>
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 
 class ClientGrassValleyKayak
 {
