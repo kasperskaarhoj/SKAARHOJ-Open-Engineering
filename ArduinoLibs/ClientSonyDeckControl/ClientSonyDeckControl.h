@@ -32,7 +32,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "Arduino.h"
 #include "SkaarhojSerialClient.h"
 
-#include <avr/pgmspace.h>
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 
 
 #define ClientSonyDeckControl_BUFFERLEN 15

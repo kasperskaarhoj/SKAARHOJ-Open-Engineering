@@ -3,7 +3,7 @@
 #include "MCP23017.h"
 #include "SkaarhojEncoders.h"
 #include "Streaming.h"
-#include "SkaarhojPgmspace.h"
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 SkaarhojEncoders encoders;
 
 

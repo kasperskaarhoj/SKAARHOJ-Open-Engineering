@@ -19,6 +19,7 @@
 // Including libraries: 
 #include <SPI.h>
 #include <Ethernet.h>
+#include <UDPmessenger.h>
 
 
 // MAC address and IP address for this *particular* Arduino / Ethernet Shield!

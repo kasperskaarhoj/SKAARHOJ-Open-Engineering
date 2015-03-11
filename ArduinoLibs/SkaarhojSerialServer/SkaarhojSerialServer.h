@@ -31,7 +31,6 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "Arduino.h"
 #include "SkaarhojBufferTools.h"
 
-#include <avr/pgmspace.h>
 
 
 

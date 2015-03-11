@@ -13482,11 +13482,6 @@ Based on the following sources:
 <label x="157.48" y="337.82" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="JP4" gate="G$1" pin="2"/>
-<wire x1="154.94" y1="335.28" x2="157.48" y2="335.28" width="0.1524" layer="91"/>
-<label x="157.48" y="335.28" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="SERIAL1" gate="G$1" pin="2"/>
 <pinref part="L3" gate="G$1" pin="1"/>
 <wire x1="104.14" y1="205.74" x2="101.6" y2="205.74" width="0.1524" layer="91"/>
@@ -13736,6 +13731,11 @@ Based on the following sources:
 <pinref part="B12ALT" gate="LP11" pin="A"/>
 <wire x1="-71.12" y1="708.66" x2="-73.66" y2="708.66" width="0.1524" layer="91"/>
 <pinref part="U$89" gate="G$1" pin="5V"/>
+</segment>
+<segment>
+<pinref part="JP3" gate="G$1" pin="2"/>
+<wire x1="116.84" y1="335.28" x2="119.38" y2="335.28" width="0.1524" layer="91"/>
+<label x="119.38" y="335.28" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="GND" class="1">
@@ -14548,9 +14548,9 @@ Based on the following sources:
 <label x="144.78" y="370.84" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="JP3" gate="G$1" pin="2"/>
-<wire x1="116.84" y1="335.28" x2="119.38" y2="335.28" width="0.1524" layer="91"/>
-<label x="119.38" y="335.28" size="1.778" layer="95"/>
+<pinref part="JP4" gate="G$1" pin="2"/>
+<wire x1="154.94" y1="335.28" x2="157.48" y2="335.28" width="0.1524" layer="91"/>
+<label x="157.48" y="335.28" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="D2" class="0">
