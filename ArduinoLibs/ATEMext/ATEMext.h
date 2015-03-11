@@ -83,6 +83,7 @@ private:
 			uint8_t atemAudioMixerConfigAudioChannels;
 			bool atemAudioMixerConfigHasMonitor;
 			long atemVideoMixerConfigModes;
+			uint8_t atemMacroPoolBanks;
 			uint8_t atemDownConverterMode;
 			uint8_t atemVideoModeFormat;
 			char atemInputShortName[47][5];
@@ -243,6 +244,12 @@ private:
 			uint16_t atemMediaPlayerClipSourceFrames[2];
 			bool atemMediaPlayerAudioSourceIsUsed[3];
 			char atemMediaPlayerAudioSourceFileName[3][17];
+			uint8_t atemMacroRunStatusState;
+			bool atemMacroRunStatusIsLooping;
+			uint16_t atemMacroRunStatusIndex;
+			bool atemMacroPropertiesIsUsed[10];
+			bool atemMacroRecordingStatusIsRecording;
+			uint16_t atemMacroRecordingStatusIndex;
 			uint16_t atemSuperSourceFillSource;
 			uint16_t atemSuperSourceKeySource;
 			bool atemSuperSourceForeground;
@@ -332,6 +339,7 @@ public:
 			uint8_t getAudioMixerConfigAudioChannels();
 			bool getAudioMixerConfigHasMonitor();
 			long getVideoMixerConfigModes();
+			uint8_t getMacroPoolBanks();
 			uint8_t getDownConverterMode();
 			void setDownConverterMode(uint8_t mode);
 			uint8_t getVideoModeFormat();
@@ -646,6 +654,16 @@ public:
 			uint16_t getMediaPlayerClipSourceFrames(uint8_t clipBank);
 			bool getMediaPlayerAudioSourceIsUsed(uint8_t clipBank);
 			char *  getMediaPlayerAudioSourceFileName(uint8_t clipBank);
+			uint8_t getMacroRunStatusState();
+			bool getMacroRunStatusIsLooping();
+			uint16_t getMacroRunStatusIndex();
+			void setMacroAction(uint16_t index, uint8_t action);
+			void setMacroRunChangePropertiesLooping(bool looping);
+			bool getMacroPropertiesIsUsed(uint8_t macroIndex);
+			void setMacroStartRecordingIndex(uint8_t index);
+			void setMacroAddPauseFrames(uint16_t frames);
+			bool getMacroRecordingStatusIsRecording();
+			uint16_t getMacroRecordingStatusIndex();
 			uint16_t getSuperSourceFillSource();
 			uint16_t getSuperSourceKeySource();
 			bool getSuperSourceForeground();

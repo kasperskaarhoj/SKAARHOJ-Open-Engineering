@@ -437,6 +437,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 
 
 
+
 // *********************************
 // **
 // ** Implementations in ATEMstd.c:
@@ -444,8 +445,8 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 // *********************************
 
 void ATEMstd::_parseGetCommands(const char *cmdStr)	{
-	uint8_t mE,keyer,colorGenerator,aUXChannel,mediaPlayer;
-	uint16_t audioSource,sources;
+	uint8_t mE,keyer,colorGenerator,aUXChannel,mediaPlayer,macroIndex;
+	uint16_t index,audioSource,sources;
 	long temp;
 	uint8_t readBytesForTlSr;
 	
@@ -1016,6 +1017,84 @@ void ATEMstd::_parseGetCommands(const char *cmdStr)	{
 			#endif
 			
 		}
+	} else 
+	if(!strcmp_P(cmdStr, PSTR("MRPr"))) {
+		
+			#if ATEM_debug
+			temp = atemMacroRunStatusState;
+			#endif					
+			atemMacroRunStatusState = _packetBuffer[0];
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemMacroRunStatusState!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemMacroRunStatusState = "));
+				Serial.println(atemMacroRunStatusState);
+			}
+			#endif
+			
+			#if ATEM_debug
+			temp = atemMacroRunStatusIsLooping;
+			#endif					
+			atemMacroRunStatusIsLooping = _packetBuffer[1];
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemMacroRunStatusIsLooping!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemMacroRunStatusIsLooping = "));
+				Serial.println(atemMacroRunStatusIsLooping);
+			}
+			#endif
+			
+			#if ATEM_debug
+			temp = atemMacroRunStatusIndex;
+			#endif					
+			atemMacroRunStatusIndex = word(_packetBuffer[2], _packetBuffer[3]);
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemMacroRunStatusIndex!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemMacroRunStatusIndex = "));
+				Serial.println(atemMacroRunStatusIndex);
+			}
+			#endif
+			
+	} else 
+	if(!strcmp_P(cmdStr, PSTR("MPrp"))) {
+		
+		macroIndex = _packetBuffer[1];
+		if (macroIndex<=9) {
+			#if ATEM_debug
+			temp = atemMacroPropertiesIsUsed[macroIndex];
+			#endif					
+			atemMacroPropertiesIsUsed[macroIndex] = _packetBuffer[2];
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemMacroPropertiesIsUsed[macroIndex]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemMacroPropertiesIsUsed[macroIndex=")); Serial.print(macroIndex); Serial.print(F("] = "));
+				Serial.println(atemMacroPropertiesIsUsed[macroIndex]);
+			}
+			#endif
+			
+		}
+	} else 
+	if(!strcmp_P(cmdStr, PSTR("MRcS"))) {
+		
+			#if ATEM_debug
+			temp = atemMacroRecordingStatusIsRecording;
+			#endif					
+			atemMacroRecordingStatusIsRecording = _packetBuffer[0];
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemMacroRecordingStatusIsRecording!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemMacroRecordingStatusIsRecording = "));
+				Serial.println(atemMacroRecordingStatusIsRecording);
+			}
+			#endif
+			
+			#if ATEM_debug
+			temp = atemMacroRecordingStatusIndex;
+			#endif					
+			atemMacroRecordingStatusIndex = word(_packetBuffer[2], _packetBuffer[3]);
+			#if ATEM_debug
+			if ((_serialOutput==0x80 && atemMacroRecordingStatusIndex!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+				Serial.print(F("atemMacroRecordingStatusIndex = "));
+				Serial.println(atemMacroRecordingStatusIndex);
+			}
+			#endif
+			
 	} else 
 	if(!strcmp_P(cmdStr, PSTR("AMIP"))) {
 		
@@ -3208,6 +3287,82 @@ void ATEMstd::_parseGetCommands(const char *cmdStr)	{
 	}
 	
 	/**
+	 * Get Macro Run Status; State
+	 */
+	uint8_t ATEMstd::getMacroRunStatusState() {
+		return atemMacroRunStatusState;
+	}
+	
+	/**
+	 * Get Macro Run Status; Is Looping
+	 */
+	bool ATEMstd::getMacroRunStatusIsLooping() {
+		return atemMacroRunStatusIsLooping;
+	}
+	
+	/**
+	 * Get Macro Run Status; Index
+	 */
+	uint16_t ATEMstd::getMacroRunStatusIndex() {
+		return atemMacroRunStatusIndex;
+	}
+	
+	/**
+	 * Set Macro Action; Action
+	 * index 	0-99: Macro Index Number. 0xFFFF: stop
+	 * action 	0: Run Macro, 1: Stop (w/Index 0xFFFF), 2: Stop Recording (w/Index 0xFFFF), 3: Insert Wait for User (w/Index 0xFFFF), 4: Continue (w/Index 0xFFFF), 5: Delete Macro
+	 */
+	void ATEMstd::setMacroAction(uint16_t index, uint8_t action) {
+	
+  		_prepareCommandPacket(PSTR("MAct"),4,(_packetBuffer[12+_cBBO+4+4+0]==highByte(index)) && (_packetBuffer[12+_cBBO+4+4+1]==lowByte(index)));
+
+		_packetBuffer[12+_cBBO+4+4+0] = highByte(index);
+		_packetBuffer[12+_cBBO+4+4+1] = lowByte(index);
+		
+		_packetBuffer[12+_cBBO+4+4+2] = action;
+		
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Get Macro Properties; Is Used
+	 * macroIndex 	0-9: Macro Index Number
+	 */
+	bool ATEMstd::getMacroPropertiesIsUsed(uint8_t macroIndex) {
+		return atemMacroPropertiesIsUsed[macroIndex];
+	}
+	
+	/**
+	 * Set Macro Add Pause; Frames
+	 * frames 	Number of
+	 */
+	void ATEMstd::setMacroAddPauseFrames(uint16_t frames) {
+	
+  		_prepareCommandPacket(PSTR("MSlp"),4);
+
+		_packetBuffer[12+_cBBO+4+4+2] = highByte(frames);
+		_packetBuffer[12+_cBBO+4+4+3] = lowByte(frames);
+		
+   		_finishCommandPacket();
+
+	}
+	
+	/**
+	 * Get Macro Recording Status; Is Recording
+	 */
+	bool ATEMstd::getMacroRecordingStatusIsRecording() {
+		return atemMacroRecordingStatusIsRecording;
+	}
+	
+	/**
+	 * Get Macro Recording Status; Index
+	 */
+	uint16_t ATEMstd::getMacroRecordingStatusIndex() {
+		return atemMacroRecordingStatusIndex;
+	}
+	
+	/**
 	 * Get Audio Mixer Input; Mix Option
 	 * audioSource 	(See audio source list)
 	 */
@@ -3343,5 +3498,7 @@ void ATEMstd::_parseGetCommands(const char *cmdStr)	{
 		return atemTallyByIndexTallyFlags[sources];
 	}
 	
+
+
 
 
