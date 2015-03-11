@@ -25,6 +25,7 @@
 #define TEST_AUDIO_LEVELS 1
 #define TEST_CCU 1
 #define TEST_TALLY 1
+#define TEST_MACROS 1
 #define TEST_SETTINGS 1
 
 
@@ -239,6 +240,7 @@ void loop() {
   }
   Serial << F("Media Player Stills: ") << AtemSwitcher.getMediaPlayersStillBanks() << F("\n");
   Serial << F("Media Player Clips: ") << AtemSwitcher.getMediaPlayersClipBanks() << F("\n");
+  Serial << F("Macro Pool Banks: ") << AtemSwitcher.getMacroPoolBanks() << F("\n");
   Serial << F("Multi Viewers: ") << AtemSwitcher.getMultiViewConfigMultiViewers() << F("\n");
   Serial << F("Tally Channels: ") << AtemSwitcher.getTallyChannelConfigTallyChannels() << F("\n");
   Serial << F("Audio Channels: ") << AtemSwitcher.getAudioMixerConfigAudioChannels() << F("\n");
@@ -5230,7 +5232,7 @@ void loop() {
     a++;
   }
 
-  Serial << F("\nVideo Tally:\n(Send key press to stop)\n");
+  Serial << F("\nVideo Tally (source):\n(Send key press to stop)\n");
   printLine();
   processCommands();
   a = 0;
@@ -5257,6 +5259,128 @@ void loop() {
     a++;
   }
   AtemSwitcher.runLoop(1000);
+#endif
+
+
+#if TEST_MACROS
+  Serial << F("\n\n***************************\n* Macroes: \n***************************\n");
+
+  Serial << F("\nExisting Macros (1-10):\n");
+  printLine();
+  processCommands();
+
+  for (uint8_t i = 0; i < 10; i++)  {
+    if (AtemSwitcher.getMacroPropertiesIsUsed(i))  {
+      Serial << i << F(": ") << AtemSwitcher.getMacroPropertiesName(i) << F("\n");
+    }
+  }
+  AtemSwitcher.runLoop(1000);
+
+  Serial << F("\nRecord Macro (10):\n");
+  printLine();
+  processCommands();
+
+  if (AtemSwitcher.getMacroRecordingStatusIsRecording())  {
+    Serial << F("Is recording! (ERROR): Index: ") << AtemSwitcher.getMacroRecordingStatusIndex() << F("\n");
+  } else {
+    Serial << F("Is not recording yet (good thing).\n");
+  }
+
+  AtemSwitcher.setMacroStartRecordingIndex(9);
+  AtemSwitcher.runLoop(1000);
+
+  if (AtemSwitcher.getMacroRecordingStatusIsRecording())  {
+    Serial << F("Is recording, Index: ") << (AtemSwitcher.getMacroRecordingStatusIndex() + 1) << F("\n");
+  } else {
+    Serial << F("Is not recording yet (ERROR).\n");
+  }
+
+  AtemSwitcher.setProgramInputVideoSource(0, 1);
+  AtemSwitcher.setPreviewInputVideoSource(0, 2);
+  AtemSwitcher.setMacroAddPauseFrames(25);
+  AtemSwitcher.runLoop(1000);
+
+  AtemSwitcher.setProgramInputVideoSource(0, 2);
+  AtemSwitcher.setPreviewInputVideoSource(0, 3);
+  AtemSwitcher.setMacroAddPauseFrames(25);
+  AtemSwitcher.runLoop(1000);
+
+  AtemSwitcher.setProgramInputVideoSource(0, 3);
+  AtemSwitcher.setPreviewInputVideoSource(0, 4);
+  AtemSwitcher.setMacroAction(0xffff, 3);  // Insert "Wait for user"
+  AtemSwitcher.runLoop(1000);
+
+  AtemSwitcher.setProgramInputVideoSource(0, 4);
+  AtemSwitcher.setPreviewInputVideoSource(0, 5);
+  AtemSwitcher.runLoop(1000);
+
+  AtemSwitcher.setMacroAction(0xffff, 2);  // Stop recording
+  AtemSwitcher.runLoop(1000);
+
+  if (AtemSwitcher.getMacroRecordingStatusIsRecording())  {
+    Serial << F("Is recording still! (ERROR)\n");
+  } else {
+    Serial << F("Has stopped recording. Great. Now, ready for playback:\n");
+  }
+  AtemSwitcher.runLoop(1000);
+
+  if (AtemSwitcher.getMacroRunStatusState() != 0)  {
+    Serial << F("ERROR: Run Status is not zero: ") <<  AtemSwitcher.getMacroRunStatusState() << F("\n");
+  }
+  if (!AtemSwitcher.getMacroPropertiesIsUsed(9))  {
+    Serial << F("ERROR: No macro seems to be recorded!\n");
+  }
+
+
+  AtemSwitcher.setMacroRunChangePropertiesLooping(false);
+  AtemSwitcher.setMacroAction(9, 0);  // Run Macro 10 (index 9)
+  AtemSwitcher.runLoop(100);
+  if (AtemSwitcher.getMacroRunStatusState() == 1 && AtemSwitcher.getMacroRunStatusIndex() == 9 && !AtemSwitcher.getMacroRunStatusIsLooping())  {
+    Serial << F("Macro is running correctly, waiting for the user input point...\n");
+    while ((AtemSwitcher.getMacroRunStatusState()&B10) != 2)  {
+      AtemSwitcher.runLoop();
+    }
+
+    Serial << F("Waiting point reached, now continue:\n");
+    AtemSwitcher.runLoop(2000);
+    AtemSwitcher.setMacroAction(0xffff, 4);  // Continue command
+
+    Serial << F("Waiting for it to end:\n");
+    while (AtemSwitcher.getMacroRunStatusState() != 0)  {
+      AtemSwitcher.runLoop();
+    }
+
+    Serial << F("Done...\n");
+  } else {
+    Serial << F("ERROR: Run Status is not zero: ") <<  AtemSwitcher.getMacroRunStatusState() << F("\n");
+    AtemSwitcher.setMacroAction(0xffff, 1);  // Stop macro.
+  }
+
+  Serial << F("Now, run with looping: \n");
+  AtemSwitcher.setMacroRunChangePropertiesLooping(true);
+  AtemSwitcher.setMacroAction(9, 0);  // Run Macro 10 (index 9)
+  AtemSwitcher.runLoop(1000);
+  if (AtemSwitcher.getMacroRunStatusState() == 1 && AtemSwitcher.getMacroRunStatusIndex() == 9 && AtemSwitcher.getMacroRunStatusIsLooping())  {
+    Serial << F("Macro is running correctly....stopping it\n");
+    AtemSwitcher.setMacroAction(0xffff, 1);  // Stop macro.
+  }
+  AtemSwitcher.runLoop(1000);
+
+  if (AtemSwitcher.getMacroRunStatusState() != 0)  {
+    Serial << F("ERROR: Run Status is not zero: ") <<  AtemSwitcher.getMacroRunStatusState() << F("\n");
+  } else {
+    Serial << F("Done, the macro played correctly, now deleting it...\n");
+    AtemSwitcher.setMacroAction(9, 5);  // Delete
+  }
+  AtemSwitcher.runLoop(1000);
+
+  if (AtemSwitcher.getMacroPropertiesIsUsed(9))  {
+    Serial << F("ERROR: No macro seems to be recorded!\n");
+  }
+  AtemSwitcher.setMacroRunChangePropertiesLooping(false);
+
+
+
 #endif
 
 

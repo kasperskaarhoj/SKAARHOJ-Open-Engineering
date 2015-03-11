@@ -40,6 +40,8 @@ class ATEMmax : public ATEMbase
 	ATEMmax();  
 	  
 	  
+	uint8_t getTallyFlags(uint16_t videoSource);
+
 
 
 
@@ -83,6 +85,7 @@ private:
 			uint8_t atemAudioMixerConfigAudioChannels;
 			bool atemAudioMixerConfigHasMonitor;
 			long atemVideoMixerConfigModes;
+			uint8_t atemMacroPoolBanks;
 			uint8_t atemPowerStatus;
 			uint8_t atemDownConverterMode;
 			uint8_t atemVideoModeFormat;
@@ -278,6 +281,13 @@ private:
 			char atemMediaPlayerAudioSourceFileName[3][17];
 			bool atemMediaPlayerStillFilesIsUsed[32];
 			char atemMediaPlayerStillFilesFileName[32][17];
+			uint8_t atemMacroRunStatusState;
+			bool atemMacroRunStatusIsLooping;
+			uint16_t atemMacroRunStatusIndex;
+			bool atemMacroPropertiesIsUsed[10];
+			char atemMacroPropertiesName[10][11];
+			bool atemMacroRecordingStatusIsRecording;
+			uint16_t atemMacroRecordingStatusIndex;
 			uint16_t atemSuperSourceFillSource;
 			uint16_t atemSuperSourceKeySource;
 			bool atemSuperSourceForeground;
@@ -372,6 +382,7 @@ public:
 			uint8_t getAudioMixerConfigAudioChannels();
 			bool getAudioMixerConfigHasMonitor();
 			long getVideoMixerConfigModes();
+			uint8_t getMacroPoolBanks();
 			uint8_t getPowerStatus();
 			uint8_t getDownConverterMode();
 			void setDownConverterMode(uint8_t mode);
@@ -721,6 +732,17 @@ public:
 			char *  getMediaPlayerAudioSourceFileName(uint8_t clipBank);
 			bool getMediaPlayerStillFilesIsUsed(uint8_t stillBank);
 			char *  getMediaPlayerStillFilesFileName(uint8_t stillBank);
+			uint8_t getMacroRunStatusState();
+			bool getMacroRunStatusIsLooping();
+			uint16_t getMacroRunStatusIndex();
+			void setMacroAction(uint16_t index, uint8_t action);
+			void setMacroRunChangePropertiesLooping(bool looping);
+			bool getMacroPropertiesIsUsed(uint8_t macroIndex);
+			char *  getMacroPropertiesName(uint8_t macroIndex);
+			void setMacroStartRecordingIndex(uint8_t index);
+			void setMacroAddPauseFrames(uint16_t frames);
+			bool getMacroRecordingStatusIsRecording();
+			uint16_t getMacroRecordingStatusIndex();
 			uint16_t getSuperSourceFillSource();
 			uint16_t getSuperSourceKeySource();
 			bool getSuperSourceForeground();
@@ -830,7 +852,6 @@ public:
 			uint8_t getLastStateChangeTimeCodeMinute();
 			uint8_t getLastStateChangeTimeCodeSecond();
 			uint8_t getLastStateChangeTimeCodeFrame();
-
 };
 
 #endif
