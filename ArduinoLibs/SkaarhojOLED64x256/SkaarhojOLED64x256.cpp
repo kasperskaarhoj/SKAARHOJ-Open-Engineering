@@ -8,7 +8,7 @@ open source code, so SKAARHOJ encourage you to support Adafruit and
 open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
-#include <avr/pgmspace.h>
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include <util/delay.h>
 #include <stdlib.h>
 

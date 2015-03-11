@@ -19,7 +19,7 @@
 #define SkaarhojSmartSwitch2_H
 
 #include "Arduino.h"
-#include "SkaarhojPgmspace.h"
+//  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include <Adafruit_GFX.h>
 #include <Wire.h>
 #include "MCP23017.h"
@@ -55,6 +55,7 @@ class SkaarhojSmartSwitch2: public Adafruit_GFX {
 
   public:
 	void drawPixel(int16_t x, int16_t y, uint16_t color);
+	bool getPixel(int16_t x, int16_t y);
 
 	SkaarhojSmartSwitch2();
 	void begin(uint8_t address);

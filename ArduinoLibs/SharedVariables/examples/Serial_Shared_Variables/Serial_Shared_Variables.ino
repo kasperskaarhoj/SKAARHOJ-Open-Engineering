@@ -13,6 +13,11 @@
  */
 
 
+#include <SPI.h>
+#include <Ethernet.h>
+#include <UDPmessenger.h>
+
+
 #include <SkaarhojBufferTools.h>
 #include <SkaarhojSerialServer.h>
 SkaarhojSerialServer SerialServer(Serial);
