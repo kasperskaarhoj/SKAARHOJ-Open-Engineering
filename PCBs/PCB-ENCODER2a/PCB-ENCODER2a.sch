@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1907,7 +1907,6 @@ Based on the following sources:
 <part name="C4" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="U$2" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
-<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="0R"/>
 <part name="U$20" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="SERIAL" library="SparkFun" deviceset="M04X2" device=""/>
@@ -1918,7 +1917,6 @@ Based on the following sources:
 <part name="C5" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C6" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
 <part name="C7" library="SparkFun" deviceset="CAP" device="0603-CAP" value="10nF"/>
-<part name="R13" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="0R"/>
 <part name="IC1" library="microchip" deviceset="MCP23017" device="SS">
 <attribute name="MPN" value="MCP23017-E/SS"/>
 <attribute name="OC_FARNELL" value="1467674"/>
@@ -1955,7 +1953,6 @@ Based on the following sources:
 <instance part="C4" gate="G$1" x="-86.36" y="111.76"/>
 <instance part="U$2" gate="G$1" x="162.56" y="106.68"/>
 <instance part="GND2" gate="1" x="162.56" y="93.98"/>
-<instance part="R2" gate="G$1" x="-53.34" y="144.78"/>
 <instance part="U$20" gate="G$1" x="147.32" y="73.66"/>
 <instance part="U$21" gate="G$1" x="175.26" y="73.66"/>
 <instance part="SERIAL" gate="G$1" x="165.1" y="132.08"/>
@@ -1967,7 +1964,6 @@ Based on the following sources:
 <instance part="C5" gate="G$1" x="38.1" y="111.76"/>
 <instance part="C6" gate="G$1" x="27.94" y="111.76"/>
 <instance part="C7" gate="G$1" x="17.78" y="111.76"/>
-<instance part="R13" gate="G$1" x="50.8" y="144.78"/>
 <instance part="IC1" gate="G$1" x="-167.64" y="124.46" rot="R180"/>
 <instance part="U$13" gate="G$1" x="-142.24" y="104.14"/>
 <instance part="C14" gate="G$1" x="-144.78" y="139.7"/>
@@ -2159,11 +2155,17 @@ Based on the following sources:
 <net name="N$1" class="0">
 <segment>
 <pinref part="SW1" gate="G$1" pin="B"/>
-<pinref part="R2" gate="G$1" pin="2"/>
 <wire x1="-48.26" y1="144.78" x2="-43.18" y2="144.78" width="0.1524" layer="91"/>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="-43.18" y1="144.78" x2="-20.32" y2="144.78" width="0.1524" layer="91"/>
 <junction x="-43.18" y="144.78"/>
+<pinref part="C2" gate="G$1" pin="1"/>
+<wire x1="-66.04" y1="116.84" x2="-66.04" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="-66.04" y1="144.78" x2="-58.42" y2="144.78" width="0.1524" layer="91"/>
+<junction x="-66.04" y="144.78"/>
+<pinref part="IC2" gate="A" pin="I"/>
+<wire x1="-78.74" y1="144.78" x2="-66.04" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="-43.18" y1="144.78" x2="-66.04" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="I2C_SDA" class="0">
@@ -2277,10 +2279,15 @@ Based on the following sources:
 <net name="N$6" class="0">
 <segment>
 <pinref part="SW2" gate="G$1" pin="B"/>
-<pinref part="R13" gate="G$1" pin="2"/>
-<wire x1="55.88" y1="144.78" x2="60.96" y2="144.78" width="0.1524" layer="91"/>
 <pinref part="R4" gate="G$1" pin="1"/>
 <wire x1="60.96" y1="144.78" x2="83.82" y2="144.78" width="0.1524" layer="91"/>
+<pinref part="C5" gate="G$1" pin="1"/>
+<wire x1="38.1" y1="116.84" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="38.1" y1="144.78" x2="45.72" y2="144.78" width="0.1524" layer="91"/>
+<junction x="38.1" y="144.78"/>
+<pinref part="IC2" gate="C" pin="I"/>
+<wire x1="27.94" y1="144.78" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="144.78" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
 <junction x="60.96" y="144.78"/>
 </segment>
 </net>
@@ -2318,28 +2325,6 @@ Based on the following sources:
 <pinref part="U$19" gate="G$1" pin="A2"/>
 <wire x1="-162.56" y1="63.5" x2="-160.02" y2="63.5" width="0.1524" layer="91"/>
 <label x="-160.02" y="63.5" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$124" class="0">
-<segment>
-<pinref part="C2" gate="G$1" pin="1"/>
-<wire x1="-66.04" y1="116.84" x2="-66.04" y2="144.78" width="0.1524" layer="91"/>
-<wire x1="-66.04" y1="144.78" x2="-58.42" y2="144.78" width="0.1524" layer="91"/>
-<pinref part="R2" gate="G$1" pin="1"/>
-<junction x="-66.04" y="144.78"/>
-<pinref part="IC2" gate="A" pin="I"/>
-<wire x1="-78.74" y1="144.78" x2="-66.04" y2="144.78" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$125" class="0">
-<segment>
-<pinref part="C5" gate="G$1" pin="1"/>
-<wire x1="38.1" y1="116.84" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
-<wire x1="38.1" y1="144.78" x2="45.72" y2="144.78" width="0.1524" layer="91"/>
-<pinref part="R13" gate="G$1" pin="1"/>
-<junction x="38.1" y="144.78"/>
-<pinref part="IC2" gate="C" pin="I"/>
-<wire x1="27.94" y1="144.78" x2="38.1" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

@@ -9655,6 +9655,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <text x="129.54" y="-5.08" size="3.81" layer="97">CONFIG</text>
 <text x="-99.06" y="-205.74" size="1.778" layer="91">ADR=Bxxx</text>
 <text x="-101.6" y="-218.44" size="3.81" layer="97">CONFIG</text>
+<text x="-106.68" y="-119.38" size="5.08" layer="91">Route the SPI_SCLK through schmitt triggers?</text>
 </plain>
 <instances>
 <instance part="SERIAL" gate="G$1" x="137.16" y="-73.66"/>

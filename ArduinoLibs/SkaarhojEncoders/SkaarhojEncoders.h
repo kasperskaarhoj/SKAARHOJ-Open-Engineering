@@ -29,7 +29,6 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "Arduino.h"
 #include "MCP23017.h"
 #include <Streaming.h>
-#include <SkaarhojPgmspace.h>
 
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -138,10 +138,10 @@
 </layers>
 <board>
 <plain>
-<text x="50.08" y="68.69" size="1.27" layer="122" rot="MR0">SKAARHOJ 2014</text>
-<text x="52.292" y="63.865" size="1.016" layer="122" rot="MR0">PCB-CMB-5-SHLD</text>
+<text x="50.08" y="68.69" size="1.27" layer="122" ratio="15" rot="MR0">SKAARHOJ 2015</text>
+<text x="52.292" y="63.865" size="1.016" layer="122" ratio="15" rot="MR0">PCB-CMB-5-SHLD</text>
 <text x="118.634" y="62.357" size="0.6096" layer="122" rot="MR270">I2C PullUps</text>
-<text x="17.78" y="67.961" size="0.7112" layer="121">SCL SDA</text>
+<text x="17.78" y="67.961" size="0.7112" layer="121" ratio="15">SCL SDA</text>
 <wire x1="0" y1="0" x2="0" y2="45.466" width="0" layer="20"/>
 <wire x1="0" y1="45.466" x2="18.05" y2="45.466" width="0" layer="20"/>
 <wire x1="18.05" y1="45.466" x2="18.05" y2="62.5" width="0" layer="20"/>
@@ -452,8 +452,8 @@
 <hole x="15.24" y="66.31" drill="3.2"/>
 <hole x="13.97" y="18.05" drill="3.2"/>
 <wire x1="0" y1="62.5" x2="18.05" y2="62.5" width="0" layer="20"/>
-<text x="38.292" y="63.865" size="1.016" layer="122" rot="MR0">v10-14</text>
-<text x="54.292" y="62.865" size="0.8128" layer="122" rot="MR0">GITHUB: SKAARHOJ-Open-Engineering</text>
+<text x="38.292" y="63.865" size="1.016" layer="122" ratio="15" rot="MR0">v04-15</text>
+<text x="54.292" y="62.865" size="0.8128" layer="122" ratio="15" rot="MR0">GITHUB: SKAARHOJ-Open-Engineering</text>
 </plain>
 <libraries>
 <library name="SKAARHOJ">
@@ -1476,7 +1476,7 @@ design rules under a new name.</description>
 </autorouter>
 <elements>
 <element name="K1" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="14" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="10.73" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="10.73" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="X1" library="con-subd" package="F25HP" value="DB25F" x="110.49" y="36.83" rot="MR90">
 <attribute name="OC_NEWARK" value="unknown" x="48.26" y="76.2" size="1.778" layer="28" rot="MR90" display="off"/>
@@ -1486,31 +1486,31 @@ design rules under a new name.</description>
 </element>
 <element name="IC1" library="uln-udn" package="SO18W" value="ULN2803A" x="88.7" y="65.38" smashed="yes" rot="MR90">
 <attribute name="VALUE" x="85.652" y="59.919" size="1.27" layer="28" ratio="10" rot="MR90"/>
-<attribute name="NAME" x="83.874" y="59.157" size="0.7112" layer="26" ratio="10" rot="MR180"/>
+<attribute name="NAME" x="83.874" y="59.157" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="K2" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="20.5" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="17.23" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="17.23" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="K3" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="27" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="23.73" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="23.73" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="K4" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="33.5" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="30.23" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="30.23" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="K5" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="40" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="36.73" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="36.73" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="K6" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="46.5" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="43.23" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="43.23" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="K7" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="59.5" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="56.23" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="56.23" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="K8" library="SKAARHOJ" package="DS2Y" value="RELAY5VIM03" x="86" y="53" smashed="yes" rot="MR180">
-<attribute name="NAME" x="87.11" y="49.73" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="87.11" y="49.73" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 </element>
 <element name="C1" library="SparkFun" package="0805" value="100nF" x="96.52" y="69.31" smashed="yes" rot="MR90">
-<attribute name="NAME" x="97.3455" y="68.294" size="0.7112" layer="26" rot="MR90"/>
+<attribute name="NAME" x="97.3455" y="68.294" size="0.7112" layer="26" ratio="15" rot="MR90"/>
 <attribute name="VALUE" x="96.393" y="67.024" size="0.4064" layer="28" rot="MR90"/>
 </element>
 <element name="IC2" library="microchip" package="SSOP28" value="MCP23017SS" x="71.39" y="64.73" smashed="yes" rot="MR180">
@@ -1518,7 +1518,7 @@ design rules under a new name.</description>
 <attribute name="MPN" value="MCP23017-E/SS" x="128.54" y="186.65" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="MICROCHIP" x="128.54" y="186.65" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="OC_FARNELL" value="1467674" x="128.54" y="186.65" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="NAME" x="65.559" y="63.7149" size="0.7112" layer="26" rot="MR270"/>
+<attribute name="NAME" x="65.559" y="63.7149" size="0.7112" layer="26" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="67.7441" y="65.41" size="0.889" layer="28" rot="MR180"/>
 </element>
 <element name="OK1" library="optocoupler" package="DIL8-SMD" value="LTV826S" x="76.67" y="7.9" rot="MR90">
@@ -1546,65 +1546,65 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="-55.98" y="28.22" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="C2" library="SparkFun" package="0603-CAP" value="100nF" x="72.81" y="70.349" smashed="yes" rot="MR0">
-<attribute name="NAME" x="73.572" y="71.111" size="0.7112" layer="26" font="vector" rot="MR0"/>
+<attribute name="NAME" x="73.572" y="71.111" size="0.7112" layer="26" font="vector" ratio="15" rot="MR0"/>
 <attribute name="VALUE" x="73.826" y="69.206" size="0.4064" layer="28" font="vector" rot="MR0"/>
 </element>
 <element name="GND" library="SparkFun" package="DUEMILANOVE_VIAS" value="ARDUINO_SHIELDNO_SILK" x="21.336" y="68.85" rot="R270"/>
 <element name="R1" library="SparkFun" package="0603-RES" value="1K5" x="22.765" y="62.15" smashed="yes" rot="MR270">
-<attribute name="NAME" x="22.003" y="63.039" size="0.7112" layer="26" font="vector" rot="MR270"/>
+<attribute name="NAME" x="22.003" y="63.039" size="0.7112" layer="26" font="vector" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="23.908" y="63.166" size="0.4064" layer="28" font="vector" rot="MR270"/>
 </element>
 <element name="R2" library="SparkFun" package="0603-RES" value="1K5" x="20.4028" y="62.15" smashed="yes" rot="MR270">
-<attribute name="NAME" x="19.6408" y="63.039" size="0.7112" layer="26" font="vector" rot="MR270"/>
+<attribute name="NAME" x="19.6408" y="63.039" size="0.7112" layer="26" font="vector" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="21.5458" y="63.166" size="0.4064" layer="28" font="vector" rot="MR270"/>
 </element>
 <element name="JP4" library="SparkFun" package="1X02" value="" x="21.336" y="66.31" smashed="yes" rot="R180">
 <attribute name="VALUE" x="22.606" y="69.485" size="1.27" layer="27" rot="R180"/>
 </element>
 <element name="R3" library="SparkFun" package="0603-RES" value="270" x="14.24" y="35.29" smashed="yes" rot="MR180">
-<attribute name="NAME" x="13.351" y="34.528" size="0.7112" layer="26" font="vector" rot="MR180"/>
+<attribute name="NAME" x="13.351" y="34.528" size="0.7112" layer="26" font="vector" ratio="15" rot="MR180"/>
 <attribute name="VALUE" x="13.224" y="36.433" size="0.4064" layer="28" font="vector" rot="MR180"/>
 </element>
 <element name="U$7" library="SKAARHOJ" package="LED5MM-BICOLOR" value="LEDBICOLOR-AKA" x="11.44" y="37.16" rot="MR90"/>
 <element name="R4" library="SparkFun" package="0603-RES" value="270" x="14.24" y="38.83" smashed="yes" rot="MR180">
-<attribute name="NAME" x="13.351" y="38.068" size="0.7112" layer="26" font="vector" rot="MR180"/>
+<attribute name="NAME" x="13.351" y="38.068" size="0.7112" layer="26" font="vector" ratio="15" rot="MR180"/>
 <attribute name="VALUE" x="13.224" y="39.973" size="0.4064" layer="28" font="vector" rot="MR180"/>
 </element>
 <element name="R13" library="SparkFun" package="0603-RES" value="330R" x="69.759" y="8.178" smashed="yes" rot="MR90">
-<attribute name="NAME" x="70.521" y="7.289" size="0.7112" layer="26" font="vector" rot="MR90"/>
+<attribute name="NAME" x="70.521" y="7.289" size="0.7112" layer="26" font="vector" ratio="15" rot="MR90"/>
 <attribute name="VALUE" x="68.616" y="7.162" size="0.4064" layer="28" font="vector" rot="MR90"/>
 </element>
 <element name="R14" library="SparkFun" package="0603-RES" value="330R" x="69.86" y="4.933" smashed="yes" rot="MR270">
-<attribute name="NAME" x="69.098" y="5.822" size="0.7112" layer="26" font="vector" rot="MR270"/>
+<attribute name="NAME" x="69.098" y="5.822" size="0.7112" layer="26" font="vector" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="71.003" y="5.949" size="0.4064" layer="28" font="vector" rot="MR270"/>
 </element>
 <element name="R15" library="SparkFun" package="0603-RES" value="330R" x="54.526" y="5.06" smashed="yes" rot="MR270">
-<attribute name="NAME" x="53.764" y="5.949" size="0.7112" layer="26" font="vector" rot="MR270"/>
+<attribute name="NAME" x="53.764" y="5.949" size="0.7112" layer="26" font="vector" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="55.669" y="6.076" size="0.4064" layer="28" font="vector" rot="MR270"/>
 </element>
 <element name="R16" library="SparkFun" package="0603-RES" value="330R" x="54.474" y="8.178" smashed="yes" rot="MR90">
-<attribute name="NAME" x="55.236" y="7.289" size="0.7112" layer="26" font="vector" rot="MR90"/>
+<attribute name="NAME" x="55.236" y="7.289" size="0.7112" layer="26" font="vector" ratio="15" rot="MR90"/>
 <attribute name="VALUE" x="53.331" y="7.162" size="0.4064" layer="28" font="vector" rot="MR90"/>
 </element>
 <element name="R17" library="SparkFun" package="0603-RES" value="330R" x="39.031" y="4.933" smashed="yes" rot="MR270">
-<attribute name="NAME" x="38.269" y="5.822" size="0.7112" layer="26" font="vector" rot="MR270"/>
+<attribute name="NAME" x="38.269" y="5.822" size="0.7112" layer="26" font="vector" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="40.174" y="5.949" size="0.4064" layer="28" font="vector" rot="MR270"/>
 </element>
 <element name="R18" library="SparkFun" package="0603-RES" value="330R" x="39.064" y="8.321" smashed="yes" rot="MR90">
-<attribute name="NAME" x="39.826" y="7.432" size="0.7112" layer="26" font="vector" rot="MR90"/>
+<attribute name="NAME" x="39.826" y="7.432" size="0.7112" layer="26" font="vector" ratio="15" rot="MR90"/>
 <attribute name="VALUE" x="37.921" y="7.305" size="0.4064" layer="28" font="vector" rot="MR90"/>
 </element>
 <element name="R19" library="SparkFun" package="0603-RES" value="330R" x="23.459" y="4.933" smashed="yes" rot="MR270">
-<attribute name="NAME" x="22.697" y="5.822" size="0.7112" layer="26" font="vector" rot="MR270"/>
+<attribute name="NAME" x="22.697" y="5.822" size="0.7112" layer="26" font="vector" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="24.602" y="5.949" size="0.4064" layer="28" font="vector" rot="MR270"/>
 </element>
 <element name="R20" library="SparkFun" package="0603-RES" value="330R" x="23.525" y="8.305" smashed="yes" rot="MR90">
-<attribute name="NAME" x="24.287" y="7.416" size="0.7112" layer="26" font="vector" rot="MR90"/>
+<attribute name="NAME" x="24.287" y="7.416" size="0.7112" layer="26" font="vector" ratio="15" rot="MR90"/>
 <attribute name="VALUE" x="22.382" y="7.289" size="0.4064" layer="28" font="vector" rot="MR90"/>
 </element>
 <element name="S1" library="SKAARHOJ" package="PUSHBUTTON" value="" x="10.668" y="27.194" rot="MR90"/>
 <element name="R21" library="SparkFun" package="0603-RES" value="10K" x="18.415" y="28.718" smashed="yes" rot="MR90">
-<attribute name="NAME" x="19.177" y="27.829" size="0.7112" layer="26" font="vector" rot="MR90"/>
+<attribute name="NAME" x="19.177" y="27.829" size="0.7112" layer="26" font="vector" ratio="15" rot="MR90"/>
 <attribute name="VALUE" x="17.272" y="27.702" size="0.4064" layer="28" font="vector" rot="MR90"/>
 </element>
 <element name="JP1" library="SparkFun" package="1X02" value="" x="27.686" y="18.05" smashed="yes">
@@ -1612,7 +1612,7 @@ design rules under a new name.</description>
 </element>
 <element name="S2" library="SKAARHOJ" package="PUSHBUTTON" value="" x="13.208" y="27.194" rot="MR90"/>
 <element name="IC3" library="wsmith" package="TSSOP28" value="PCA9685" x="49.21" y="28.12" smashed="yes" rot="MR180">
-<attribute name="NAME" x="44.0394" y="30.2028" size="0.7112" layer="26" ratio="10" rot="MR270"/>
+<attribute name="NAME" x="44.0394" y="30.2028" size="0.7112" layer="26" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="55.3712" y="30.2028" size="1.016" layer="28" ratio="10" rot="MR270"/>
 </element>
 <element name="IC4" library="microchip" package="SSOP28" value="MCP23017SS" x="28.97" y="49.12" smashed="yes" rot="MR180">
@@ -1620,67 +1620,67 @@ design rules under a new name.</description>
 <attribute name="MPN" value="MCP23017-E/SS" x="17.54" y="7.21" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="MICROCHIP" x="17.54" y="7.21" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="OC_FARNELL" value="1467674" x="17.54" y="7.21" size="1.778" layer="28" rot="MR180" display="off"/>
-<attribute name="NAME" x="23.494" y="51.7499" size="0.7112" layer="26" rot="MR270"/>
+<attribute name="NAME" x="23.494" y="51.7499" size="0.7112" layer="26" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="25.0701" y="49.8" size="1.27" layer="28" rot="MR180"/>
 </element>
 <element name="C4" library="SparkFun" package="0603-CAP" value="100nF" x="30.508" y="54.856" smashed="yes" rot="MR0">
-<attribute name="NAME" x="31.397" y="55.618" size="0.7112" layer="26" font="vector" rot="MR0"/>
+<attribute name="NAME" x="31.397" y="55.618" size="0.7112" layer="26" font="vector" ratio="15" rot="MR0"/>
 <attribute name="VALUE" x="31.524" y="53.713" size="0.4064" layer="28" font="vector" rot="MR0"/>
 </element>
 <element name="C5" library="SparkFun" package="0603-CAP" value="100nF" x="55.071" y="29.131" smashed="yes" rot="MR90">
-<attribute name="NAME" x="55.833" y="28.242" size="0.7112" layer="26" font="vector" rot="MR90"/>
+<attribute name="NAME" x="55.833" y="28.242" size="0.7112" layer="26" font="vector" ratio="15" rot="MR90"/>
 <attribute name="VALUE" x="53.928" y="28.115" size="0.4064" layer="28" font="vector" rot="MR90"/>
 </element>
 <element name="R22" library="SparkFun" package="0603-RES" value="100R" x="58.163" y="48.802" smashed="yes">
-<attribute name="NAME" x="57.274" y="49.564" size="0.7112" layer="25" font="vector"/>
+<attribute name="NAME" x="57.274" y="49.564" size="0.7112" layer="25" font="vector" ratio="15"/>
 <attribute name="VALUE" x="57.147" y="47.659" size="0.4064" layer="27" font="vector"/>
 </element>
 <element name="R23" library="SparkFun" package="0603-RES" value="100R" x="46.608" y="48.77" smashed="yes">
-<attribute name="NAME" x="45.719" y="49.532" size="0.7112" layer="25" font="vector"/>
+<attribute name="NAME" x="45.719" y="49.532" size="0.7112" layer="25" font="vector" ratio="15"/>
 <attribute name="VALUE" x="45.592" y="47.627" size="0.4064" layer="27" font="vector"/>
 </element>
 <element name="R24" library="SparkFun" package="0603-RES" value="100R" x="105.09" y="30.23" smashed="yes" rot="R180">
-<attribute name="NAME" x="105.979" y="29.468" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="105.979" y="29.468" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="106.106" y="31.373" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R25" library="SparkFun" package="0603-RES" value="100R" x="104.28" y="11.23" smashed="yes" rot="R180">
-<attribute name="NAME" x="105.169" y="10.468" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="105.169" y="10.468" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="105.296" y="12.373" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R26" library="SparkFun" package="0603-RES" value="100R" x="83.149" y="29.286" smashed="yes">
-<attribute name="NAME" x="82.26" y="30.048" size="0.7112" layer="25" font="vector"/>
+<attribute name="NAME" x="82.26" y="30.048" size="0.7112" layer="25" font="vector" ratio="15"/>
 <attribute name="VALUE" x="82.133" y="28.143" size="0.4064" layer="27" font="vector"/>
 </element>
 <element name="R27" library="SparkFun" package="0603-RES" value="100R" x="69.88" y="29.755" smashed="yes" rot="R180">
-<attribute name="NAME" x="70.769" y="28.993" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="70.769" y="28.993" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="70.896" y="30.898" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R28" library="SparkFun" package="0603-RES" value="100R" x="56.857" y="29.684" smashed="yes" rot="R180">
-<attribute name="NAME" x="57.746" y="28.922" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="57.746" y="28.922" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="57.873" y="30.827" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R29" library="SparkFun" package="0603-RES" value="100R" x="44.471" y="29.613" smashed="yes" rot="R180">
-<attribute name="NAME" x="45.36" y="28.851" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="45.36" y="28.851" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="45.487" y="30.756" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R30" library="SparkFun" package="0603-RES" value="100R" x="36.661" y="29.305" smashed="yes">
-<attribute name="NAME" x="35.772" y="30.067" size="0.7112" layer="25" font="vector"/>
+<attribute name="NAME" x="35.772" y="30.067" size="0.7112" layer="25" font="vector" ratio="15"/>
 <attribute name="VALUE" x="35.645" y="28.162" size="0.4064" layer="27" font="vector"/>
 </element>
 <element name="R31" library="SparkFun" package="0603-RES" value="100R" x="19.321" y="29.795" smashed="yes" rot="R180">
-<attribute name="NAME" x="20.21" y="29.033" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="20.21" y="29.033" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="20.337" y="30.938" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R32" library="SparkFun" package="0603-RES" value="100R" x="81.844" y="11.156" smashed="yes" rot="R180">
-<attribute name="NAME" x="82.733" y="10.394" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="82.733" y="10.394" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="82.86" y="12.299" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R33" library="SparkFun" package="0603-RES" value="100R" x="69.412" y="11.14" smashed="yes" rot="R180">
-<attribute name="NAME" x="70.301" y="10.378" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="70.301" y="10.378" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="70.428" y="12.283" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R34" library="SparkFun" package="0603-RES" value="100R" x="56.932" y="11.124" smashed="yes" rot="R180">
-<attribute name="NAME" x="57.821" y="10.362" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="57.821" y="10.362" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="57.948" y="12.267" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R35" library="SparkFun" package="0603-RES" value="100R" x="44.484" y="11.124" smashed="yes" rot="R180">
@@ -1688,11 +1688,11 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="45.5" y="12.267" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R36" library="SparkFun" package="0603-RES" value="100R" x="31.957" y="11.124" smashed="yes" rot="R180">
-<attribute name="NAME" x="32.846" y="10.362" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="32.846" y="10.362" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="32.973" y="12.267" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="R37" library="SparkFun" package="0603-RES" value="100R" x="18.807" y="11.004" smashed="yes" rot="R180">
-<attribute name="NAME" x="19.696" y="10.242" size="0.7112" layer="25" font="vector" rot="R180"/>
+<attribute name="NAME" x="19.696" y="10.242" size="0.7112" layer="25" font="vector" ratio="15" rot="R180"/>
 <attribute name="VALUE" x="19.823" y="12.147" size="0.4064" layer="27" font="vector" rot="R180"/>
 </element>
 <element name="U$19" library="SKAARHOJ" package="2BITADDR" value="2BITADDR" x="79.1" y="26.89" rot="MR0"/>
@@ -1718,7 +1718,7 @@ design rules under a new name.</description>
 <element name="B16" library="SKAARHOJ" package="NKK-NP01" value="NKK-NP01-SINGLECOLOR" x="55" y="56"/>
 <element name="POT1" library="SKAARHOJ" package="SLIDER20" value="10K Linear" x="90" y="56"/>
 <element name="C7" library="SparkFun" package="0603-CAP" value="10nF" x="76.73" y="55.71" smashed="yes" rot="MR180">
-<attribute name="NAME" x="75.841" y="54.948" size="0.7112" layer="26" font="vector" rot="MR180"/>
+<attribute name="NAME" x="75.841" y="54.948" size="0.7112" layer="26" font="vector" ratio="15" rot="MR180"/>
 <attribute name="VALUE" x="75.714" y="56.853" size="0.4064" layer="28" font="vector" rot="MR180"/>
 </element>
 <element name="RESETA" library="SKAARHOJ" package="PUSHBUTTON" value="" x="10.668" y="8.89" rot="MR90"/>
@@ -1728,57 +1728,73 @@ design rules under a new name.</description>
 <element name="U$4" library="SKAARHOJ" package="3.2MMPAD6MM" value="GNDPAD6MM" x="100" y="47.25"/>
 <element name="SERIAL1" library="SparkFun" package="2X4" value="M04X2" x="80" y="46" rot="MR0"/>
 <element name="JP6" library="SparkFun" package="1X02" value="" x="101.5" y="31" smashed="yes" rot="MR0">
-<attribute name="NAME" x="102.8462" y="32.8288" size="1.27" layer="26" ratio="10" rot="MR0"/>
+<attribute name="NAME" x="102.8462" y="32.8288" size="1.27" layer="26" ratio="15" rot="MR0"/>
 <attribute name="VALUE" x="102.77" y="27.825" size="1.27" layer="28" rot="MR0"/>
 </element>
 <element name="L4" library="SparkFun" package="0805" value="ILHB0805ER121V" x="36" y="25.9" smashed="yes" rot="MR180">
-<attribute name="NAME" x="35.238" y="25.0745" size="0.7112" layer="26" rot="MR180"/>
+<attribute name="NAME" x="35.238" y="25.0745" size="0.7112" layer="26" ratio="15" rot="MR180"/>
 <attribute name="VALUE" x="34.984" y="27.297" size="0.4064" layer="28" rot="MR180"/>
 </element>
 <element name="C6" library="SparkFun" package="0805" value="22uF" x="41.3" y="25.7" smashed="yes" rot="MR270">
-<attribute name="NAME" x="40.4745" y="26.462" size="0.7112" layer="26" rot="MR270"/>
+<attribute name="NAME" x="40.4745" y="26.462" size="0.7112" layer="26" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="42.697" y="26.716" size="0.4064" layer="28" rot="MR270"/>
 </element>
 <element name="C8" library="SparkFun" package="0603-CAP" value="100nF" x="39.1" y="25.7" smashed="yes" rot="MR270">
-<attribute name="NAME" x="38.338" y="26.589" size="0.7112" layer="26" font="vector" rot="MR270"/>
+<attribute name="NAME" x="38.338" y="26.589" size="0.7112" layer="26" font="vector" ratio="15" rot="MR270"/>
 <attribute name="VALUE" x="40.243" y="26.716" size="0.4064" layer="28" font="vector" rot="MR270"/>
 </element>
 <element name="C10" library="SparkFun" package="0603-CAP" value="100nF" x="104" y="19" smashed="yes" rot="MR0">
-<attribute name="NAME" x="104.889" y="19.762" size="0.7112" layer="26" font="vector" rot="MR0"/>
+<attribute name="NAME" x="104.889" y="19.762" size="0.7112" layer="26" font="vector" ratio="15" rot="MR0"/>
 <attribute name="VALUE" x="105.016" y="17.857" size="0.4064" layer="28" font="vector" rot="MR0"/>
 </element>
 <element name="C11" library="SparkFun" package="0603-CAP" value="100nF" x="45" y="57" smashed="yes" rot="MR0">
-<attribute name="NAME" x="45.889" y="57.762" size="0.7112" layer="26" font="vector" rot="MR0"/>
+<attribute name="NAME" x="45.889" y="57.762" size="0.7112" layer="26" font="vector" ratio="15" rot="MR0"/>
 <attribute name="VALUE" x="46.016" y="55.857" size="0.4064" layer="28" font="vector" rot="MR0"/>
 </element>
 <element name="C12" library="SparkFun" package="0603-CAP" value="100nF" x="20" y="19" smashed="yes" rot="MR0">
-<attribute name="NAME" x="20.889" y="19.762" size="0.7112" layer="26" font="vector" rot="MR0"/>
+<attribute name="NAME" x="20.889" y="19.762" size="0.7112" layer="26" font="vector" ratio="15" rot="MR0"/>
 <attribute name="VALUE" x="21.016" y="17.857" size="0.4064" layer="28" font="vector" rot="MR0"/>
 </element>
 <element name="C13" library="SparkFun" package="0603-CAP" value="100nF" x="19.5" y="38.5" rot="MR0"/>
-<element name="D1" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="21.5" y="10.5" rot="MR90">
+<element name="D1" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="21.5" y="10.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="21.5" y="10.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="22.516" y="9.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="20.103" y="9.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
-<element name="D2" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="21.5" y="5.5" rot="MR90">
+<element name="D2" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="21.5" y="5.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="21.5" y="5.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="22.516" y="4.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="20.103" y="4.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
-<element name="D3" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="37.5" y="10.5" rot="MR90">
+<element name="D3" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="37.5" y="10.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="37.5" y="10.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="38.516" y="9.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="36.103" y="9.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
-<element name="D4" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="37.5" y="5.5" rot="MR90">
+<element name="D4" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="37.5" y="5.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="37.5" y="5.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="38.516" y="4.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="36.103" y="4.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
-<element name="D5" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="53" y="10.5" rot="MR90">
+<element name="D5" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="53" y="10.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="53" y="10.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="54.016" y="9.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="51.603" y="9.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
-<element name="D6" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="53" y="5.5" rot="MR90">
+<element name="D6" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="53" y="5.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="53" y="5.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="54.016" y="4.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="51.603" y="4.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
-<element name="D7" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="68.5" y="10.5" rot="MR90">
+<element name="D7" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="68.5" y="10.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="68.5" y="10.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="69.516" y="9.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="67.103" y="9.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
-<element name="D8" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="68" y="5.5" rot="MR90">
+<element name="D8" library="SparkFun-DiscreteSemi" package="SOD-323" value="1N4148" x="68" y="5.5" smashed="yes" rot="MR90">
 <attribute name="PROD_ID" value="DIO-09646" x="68" y="5.5" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="NAME" x="69.016" y="4.611" size="0.7112" layer="26" ratio="15" rot="MR90"/>
+<attribute name="VALUE" x="66.603" y="4.484" size="0.4064" layer="28" rot="MR90"/>
 </element>
 <element name="PC2" library="rcl" package="PANASONIC_D" value="47u" x="30.8" y="28.9" rot="MR180"/>
 </elements>
