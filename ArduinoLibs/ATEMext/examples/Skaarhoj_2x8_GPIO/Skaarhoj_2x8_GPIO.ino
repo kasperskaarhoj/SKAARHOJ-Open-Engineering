@@ -1904,177 +1904,177 @@ void setTally()  {
       break;
       // Preview input
     case 1:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==1 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==1 ? HIGH:LOW);
       break;
     case 2:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==2 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==2 ? HIGH:LOW);
       break;
     case 3:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==3 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==3 ? HIGH:LOW);
       break;
     case 4:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==4 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==4 ? HIGH:LOW);
       break;
     case 5:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==5 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==5 ? HIGH:LOW);
       break;
     case 6:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==6 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==6 ? HIGH:LOW);
       break;
     case 7:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==7 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==7 ? HIGH:LOW);
       break;
     case 8:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==8 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==8 ? HIGH:LOW);
       break;
     case 9:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==9 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==9 ? HIGH:LOW);
       break;
     case 10:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==10 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==10 ? HIGH:LOW);
       break;
     case 11:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==11 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==11 ? HIGH:LOW);
       break;
     case 12:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==12 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==12 ? HIGH:LOW);
       break;
     case 13:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==13 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==13 ? HIGH:LOW);
       break;
     case 14:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==14 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==14 ? HIGH:LOW);
       break;
     case 15:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==15 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==15 ? HIGH:LOW);
       break;
     case 16:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==16 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==16 ? HIGH:LOW);
       break;
     case 17:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==17 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==17 ? HIGH:LOW);
       break;
     case 18:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==18 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==18 ? HIGH:LOW);
       break;
     case 19:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==19 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==19 ? HIGH:LOW);
       break;
     case 20:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==20 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==20 ? HIGH:LOW);
       break;
 
       // program input
     case 21:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==1 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==1 ? HIGH:LOW);
       break;
     case 22:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==2 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==2 ? HIGH:LOW);
       break;
     case 23:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==3 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==3 ? HIGH:LOW);
       break;
     case 24:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==4 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==4 ? HIGH:LOW);
       break;
     case 25:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==5 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==5 ? HIGH:LOW);
       break;
     case 26:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==6 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==6 ? HIGH:LOW);
       break;
     case 27:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==7 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==7 ? HIGH:LOW);
       break;
     case 28:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==8 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==8 ? HIGH:LOW);
       break;
     case 29:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==9 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==9 ? HIGH:LOW);
       break;
     case 30:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==10 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==10 ? HIGH:LOW);
       break;
     case 31:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==11 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==11 ? HIGH:LOW);
       break;
     case 32:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==12 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==12 ? HIGH:LOW);
       break;
     case 33:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==13 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==13 ? HIGH:LOW);
       break;
     case 34:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==14 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==14 ? HIGH:LOW);
       break;
     case 35:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==15 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==15 ? HIGH:LOW);
       break;
     case 36:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==16 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==16 ? HIGH:LOW);
       break;
     case 37:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==17 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==17 ? HIGH:LOW);
       break;
     case 38:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==18 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==18 ? HIGH:LOW);
       break;
     case 39:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==19 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==19 ? HIGH:LOW);
       break;
     case 40:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==20 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==20 ? HIGH:LOW);
       break;
 
       // Other inputs
     case 41:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==0 ? HIGH:LOW);      
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==0 ? HIGH:LOW);      
       break;
     case 42:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==0 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==0 ? HIGH:LOW);
       break;
     case 43:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==1000 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==1000 ? HIGH:LOW);
       break;
     case 44:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==1000 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==1000 ? HIGH:LOW);
       break;
     case 45:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==2001 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==2001 ? HIGH:LOW);
       break;
     case 46:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==2001 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==2001 ? HIGH:LOW);
       break;
     case 47:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==2002 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==2002 ? HIGH:LOW);
       break;
     case 48:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==2002 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==2002 ? HIGH:LOW);
       break;
     case 49:
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==3010 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==3010 ? HIGH:LOW);
       break;
     case 50:
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==3010 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==3010 ? HIGH:LOW);
       break;
     case 51 :
-      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPIATEM[i-1])==3020 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getPreviewInputVideoSource(GPOATEM[i-1])==3020 ? HIGH:LOW);
       break;
     case 52 :
-      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPIATEM[i-1])==3020 ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getProgramInputVideoSource(GPOATEM[i-1])==3020 ? HIGH:LOW);
       break;
       // USK 1-4
     case 53:
-      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPIATEM[i-1], 0) ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPOATEM[i-1], 0) ? HIGH:LOW);
       break;
     case 54:
-      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPIATEM[i-1], 1) ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPOATEM[i-1], 1) ? HIGH:LOW);
       break;
     case 55:
-      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPIATEM[i-1], 2) ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPOATEM[i-1], 2) ? HIGH:LOW);
       break;
     case 56:
-      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPIATEM[i-1], 3) ? HIGH:LOW);
+      GPIOboard.setOutput(i, AtemSwitcher.getKeyerOnAirEnabled(GPOATEM[i-1], 3) ? HIGH:LOW);
       break;
 
       // DSK 1-2
