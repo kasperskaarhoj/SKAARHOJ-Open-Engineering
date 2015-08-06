@@ -1,0 +1,83 @@
+/***************************************************************
+ *  (c) 2013-2015 SKAARHOJ K/S, www.skaarhoj.com
+ *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
+ *
+ *  This script is Open Source under GNU/GPL license. 
+ *  See bottom for more details.
+ *
+ *  Licensed to Schaeffer AG for inclusion with Front Panel Designer.
+ ***************************************************************/
+/*************************************************************
+ * This is a JavaScript program written for a software called 
+ * Front Panel Designer made by Schaeffer AG. 
+ * Front Panel Designer is a CAD application for design and 
+ * online ordering of aluminum panels and this script will allow
+ * you to rotate such panels.
+ *
+ * See http://skaarhoj.com/schaeffer/ for latest version, other
+ * tools and training resources published by SKAARHOJ K/S.
+ *
+ * - kasper
+ **************************************************************/
+
+
+
+
+
+function rotatePanel(fp,rotation)	{
+	var width = fp.Width();
+	var height = fp.Height();
+	
+	var els = fp.Elements();
+	switch(rotation)	{
+		case 1:	// 90 CW
+			fp.SetWidth(height);
+			fp.SetHeight(width);
+
+			els.forEach(function(el){
+				el.MoveTo(el.Y(),width-el.X());
+				el.Rotate(-90);
+			});
+		break;
+		case 2:	// 180
+			els.forEach(function(el){
+				el.MoveTo(width-el.X(),height-el.Y());
+				el.Rotate(180);
+			});
+		break;
+		case 3:	// 90 CCW
+			fp.SetWidth(height);
+			fp.SetHeight(width);
+		
+			els.forEach(function(el){
+				el.MoveTo(height-el.Y(),el.X());
+				el.Rotate(90);
+			});
+		break;
+	}
+}
+
+
+
+	var d = new Dialog("Rotate Panel",300,200); // create the dialog window
+	d.Newline().VSpacer(0).NewlineC();
+
+	var rotationType = new Param(0);
+	d.Spacer(25).Text("Rotation Panel:").NewlineC();
+	d.Spacer(25).Selection(" \n90 Degrees Clockwise\n180 Degrees\n90 Degrees Counter Clockwise",rotationType).Spacer(25).Newline();
+	d.VSpacer(0).NewlineC();
+
+	d.Divider().NewlineC();
+
+	// And an "Ok" button, which, when pressed, will close
+	// the dialog, returning 1 from Show().
+	d.Spacer(0).DlgButton(1, "Ok!").Spacer(0);
+	// Show dialog, pressed button is returned but not used
+	// in this example.
+	var b = d.Show();
+
+	
+
+	if (rotationType.get())	{
+		rotatePanel(frontpanel ,rotationType.get());
+	}

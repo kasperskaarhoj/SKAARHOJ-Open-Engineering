@@ -88,7 +88,7 @@ var C_rackEarsSideExtraWidth = 40;		// If you want to create a true 19" unit, ma
  * All measures in mm. (25.4 mm = 1 inch)
  ***************************************/
 
-// Demo case:
+// Demo case, "Box Test":
 var C_coordinates = [
 [-10,-10,[30,50]],
 [0,74,[],[],3],
@@ -226,6 +226,7 @@ var C_coordinates = [
 [177.5,0,[45,177-45],[-15,177-15]]
 ];
 
+
 */
 
 
@@ -300,17 +301,19 @@ var C_coordinates = [
 var C_depth = 100;
 var C_sideDefaultThickness = 2;
 var C_endsThickness = 3;
-var C_endsMode = 1;
+var C_endsMode = -1;
 var C_assemblySlotDepth = 1;
 var C_sideCornerRadius = 2;
-var C_sideColor = elox_natural;
-var C_endsColor = elox_natural;
+var C_sideColor = elox_red;
+var C_endsColor = elox_red;
+var C_assemblySlotDepth = 0;
+var C_sideCornerRadius = 0;
 
 var C_coordinates = [
-[0,0],
-[0,30,[60/2]],
-[60,30],
-[60,0,[60/2],[-10,60-10]]
+[0,0,[10,56-10]],
+[0,56],
+[100,56,[10,56-10]],
+[100,0,[],[-10,100-10]]
 ];
 
 */
@@ -321,11 +324,11 @@ var C_coordinates = [
 var C_depth = 150;
 var C_sideDefaultThickness = 2;
 var C_endsThickness = 3;
-var C_endsMode = 1;
+var C_endsMode = 2;
 var C_assemblySlotDepth = 1;
 var C_sideCornerRadius = 2;
-var C_sideColor = elox_natural;
-var C_endsColor = elox_natural;
+var C_sideColor = elox_gold;
+var C_endsColor = elox_gold;
 
 var C_coordinates = [
 [0,0,[40]],
@@ -361,9 +364,11 @@ var C_coordinates = [
 ];
 */
 
-// Test geometrical shapes:
-/*
 
+
+// Test geometrical shapes:
+
+/*
 
 var C_depth = 150;
 var C_sideDefaultThickness = 2.5;
@@ -389,7 +394,7 @@ var C_coordinates = [
 var C_coordinates = [
 [0,0],
 [0,30,[],[10]],
-[-30,30],
+[-30,30,[],[10]],
 [-30,60],
 [0,60],
 [0,90,[15]],

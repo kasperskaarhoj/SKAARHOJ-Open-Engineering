@@ -1,5 +1,5 @@
 /***************************************************************
- *  (c) 2013-2014 SKAARHOJ K/S, www.skaarhoj.com
+ *  (c) 2013-2015 SKAARHOJ K/S, www.skaarhoj.com
  *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
  *
  *  This script is Open Source under GNU/GPL license. 
@@ -144,7 +144,61 @@ var C_dryRun = false;		// If set, the script will render only the "Front" panel
 
 
 if (C_UI)	{
+		// The variables C_SchaefferHousings_UI_* hold the values for re-use in the interface box. Here they are given the initial value
+	if (typeof C_SchaefferHousings_UI_type === 'undefined') {
+		var C_SchaefferHousings_UI_type = C_type;
+	}
+	if (typeof C_SchaefferHousings_UI_width === 'undefined') {
+		var C_SchaefferHousings_UI_width = C_width;
+	}
+	if (typeof C_SchaefferHousings_UI_height === 'undefined') {
+		var C_SchaefferHousings_UI_height = C_height;
+	}
+	if (typeof C_SchaefferHousings_UI_depth === 'undefined') {
+		var C_SchaefferHousings_UI_depth = C_depth;
+	}
+	if (typeof C_SchaefferHousings_UI_color === 'undefined') {
+		var C_SchaefferHousings_UI_color = 0;
+	}
+	if (typeof C_SchaefferHousings_UI_sideSectionHeight === 'undefined') {
+		var C_SchaefferHousings_UI_sideSectionHeight = 0;
+	}
+	if (typeof C_SchaefferHousings_UI_rack === 'undefined') {
+		var C_SchaefferHousings_UI_rack = 0;
+	}
+	if (typeof C_SchaefferHousings_UI_thickness === 'undefined') {
+		var C_SchaefferHousings_UI_thickness = 0;
+	}
+	if (typeof C_SchaefferHousings_UI_kitcolor === 'undefined') {
+		var C_SchaefferHousings_UI_kitcolor = 0;
+	}
+	if (typeof C_SchaefferHousings_UI_housingBrackets === 'undefined') {
+		var C_SchaefferHousings_UI_housingBrackets = 0;
+	}
+	if (typeof C_SchaefferHousings_UI_guideObjects === 'undefined') {
+		var C_SchaefferHousings_UI_guideObjects = 1;
+	}
+	if (typeof C_SchaefferHousings_UI_dryRun === 'undefined') {
+		var C_SchaefferHousings_UI_dryRun = 1;
+	}
+	
+	
 	showUI();
+
+		// The variables C_SchaefferHousings_UI_* hold the values for re-use in the interface box. Here they are given the latest value
+	C_SchaefferHousings_UI_type = C_type;
+	C_SchaefferHousings_UI_width = C_width;
+	C_SchaefferHousings_UI_height = C_height;
+	C_SchaefferHousings_UI_depth = C_depth;
+	// C_SchaefferHousings_UI_color is set inside showUI();
+	// C_SchaefferHousings_UI_sideSectionHeight (same)
+	// C_SchaefferHousings_UI_rack (same)
+	// C_SchaefferHousings_UI_thickness (same)
+	// C_SchaefferHousings_UI_kitcolor (same)
+	// C_SchaefferHousings_UI_housingBrackets (same)
+	// C_SchaefferHousings_UI_guideObjects (same)
+	// C_SchaefferHousings_UI_dryRun (same)
+	
 }
 
 
@@ -163,91 +217,86 @@ if (C_UI)	{
 
 function showUI()	{
 
-	var first = true;
-	do {
-		var d = new Dialog("Enclosure Type",300,200); // create the dialog window
-		d.Newline().VSpacer(0).NewlineC();
-	
-		var enclosureType = new Param(0);
-		if (!first)	{
-			d.Spacer(25).Text("ERROR: You must choose a value!").NewlineC();
-		}
-		d.Spacer(25).Text("Choose type of enclosure:").NewlineC();
-		d.Spacer(25).Selection(" \nHousing with side profiles\nHousing with enclosure profiles", enclosureType).Spacer(25).Newline();
-		d.VSpacer(0).NewlineC();
-	
-		d.Divider().NewlineC();
+	var d = new Dialog("Enclosure Type",300,200); // create the dialog window
+	d.Newline().VSpacer(0).NewlineC();
 
-		// And an "Ok" button, which, when pressed, will close
-		// the dialog, returning 1 from Show().
-		d.Spacer(0).DlgButton(1, "Ok!").Spacer(0);
-		// Show dialog, pressed button is returned but not used
-		// in this example.
-		var b = d.Show();
-		
-		first = false;
-	} while(enclosureType.get()==0);
-	
-	C_type = enclosureType.get(); 
+	var enclosureType = new Param(C_SchaefferHousings_UI_type-1);
+	d.Spacer(25).Text("Choose type of enclosure:").NewlineC();
+	d.Spacer(25).RadioBox(enclosureType, " \nHousing with side profiles\nHousing with enclosure profiles").Spacer(25).Newline();
+	d.VSpacer(0).NewlineC();
 
-	if (enclosureType.get()==1)	{
+	d.Divider().NewlineC();
+
+	// And an "Ok" button, which, when pressed, will close
+	// the dialog, returning 1 from Show().
+	d.Spacer(0).DlgButton(1, "Ok!").Spacer(0);
+	// Show dialog, pressed button is returned but not used
+	// in this example.
+	var b = d.Show();
+
+	
+	
+	
+	C_type = enclosureType.get()+1; 
+
+	if (enclosureType.get()+1==1)	{
 		var d = new Dialog("Housing with side profiles",500,100); // create the dialog window
 		d.Newline().VSpacer(0).NewlineC();
 	
-		var sideSectionHeight = new Param(0);
+		var sideSectionHeight = new Param(C_SchaefferHousings_UI_sideSectionHeight);
 		d.Spacer(25).Text("Height:");
-		d.Spacer(6).Selection("Side Section 1 (42 mm)\nSide Section 2 (56mm)", sideSectionHeight).Spacer(0).NewlineC();
-	} else if (enclosureType.get()==2)	{
+		d.Spacer(6).RadioBox(sideSectionHeight, " \nSide Section 1 (42 mm)\nSide Section 2 (56mm)").Spacer(0).NewlineC();
+	} else if (enclosureType.get()+1==2)	{
 		var d = new Dialog("Housing with enclosure profiles",500,100); // create the dialog window
 		d.Newline().VSpacer(0).NewlineC();
 	
-		var height = new Param("50.0");
+		var height = new Param(C_SchaefferHousings_UI_height.toString());
 		d.Spacer(25).Text("Height:");
 		d.Spacer(10).TextEntry(1, height).Spacer(5).Text("mm").Spacer(0).NewlineC();
 	}
 
-	var width = new Param("100.0");
+	var width = new Param(C_SchaefferHousings_UI_width.toString());
 	d.Spacer(25).Text("Width:");
 	d.Spacer(13).TextEntry(1, width).Spacer(5).Text("mm").Spacer(0).NewlineC();
 
-	var rack = new Param(0);
-	if (enclosureType.get()==1)	{
+	var rack = new Param(C_SchaefferHousings_UI_rack);
+	if (enclosureType.get()+1==1)	{
 		d.Spacer(25).Spacer(25).Spacer(25).CheckBox(rack, "Make it a Rack Unit? (overrides Width)").Spacer(5).NewlineC();
-	} else if (enclosureType.get()==2)	{
-		d.Spacer(25).Spacer(25).Spacer(25).Text("Rack Unit:").Spacer(5).Selection(" \n1U Rack Unit\n2U Rack Unit\n3U Rack Unit",rack).Spacer(5).Text("(Overrides width/height)").Spacer(0).NewlineC();
+	} else if (enclosureType.get()+1==2)	{
+		d.Spacer(25).Spacer(25).Spacer(25).Text("Rack Unit:").Spacer(5).RadioBox(rack," \nNone\n1U Rack Unit\n2U Rack Unit\n3U Rack Unit").Spacer(5).Text("(Overrides width/height)").Spacer(0).NewlineC();
 	}
 	
-	var depth = new Param("150.0");
+	var depth = new Param(C_SchaefferHousings_UI_depth.toString());
 	d.Spacer(25).Text("Depth:");
 	d.Spacer(10).TextEntry(1, depth).Spacer(5).Text("mm").Spacer(0).NewlineC();
 
 	d.VSpacer(10).Newline();
 
-	var thickness = new Param(0);
+	var thickness = new Param(C_SchaefferHousings_UI_thickness);
 	d.Spacer(25).Text("Thickness of panels:").NewlineC();
-	d.Spacer(25).Selection("2 mm\n2.5 mm\n3 mm\n4 mm", thickness).Spacer(0).NewlineC();
+	d.Spacer(25).RadioBox(thickness, " \n2 mm\n2.5 mm\n3 mm\n4 mm").Spacer(0).NewlineC();
 	var thicknessCodes = new Array(2,2.5,3,4);
 	
 	d.VSpacer(20).Newline();
-	var color = new Param(0);
+	var color = new Param(C_SchaefferHousings_UI_color);
 	d.Spacer(25).Text("Color of panels:").NewlineC();
 	d.Spacer(25).RadioBox(color, " \nNatural\nGold\nRed\nBlue\nGreen\nBlack").Spacer(25).NewlineC();
 	var colorCodes = new Array(elox_natural,elox_gold,elox_red,elox_blue,elox_green,elox_black);
 
 	d.VSpacer(20).Newline();
-	var kitcolor = new Param(0);
+	var kitcolor = new Param(C_SchaefferHousings_UI_kitcolor);
 	d.Spacer(25).Text("Color of screws/profiles:").NewlineC();
 	d.Spacer(25).RadioBox(kitcolor, " \n(No kit)\nNatural\nBlack").Spacer(25).NewlineC();
 
 	d.VSpacer(20).Newline();
 
-	var housingBrackets = new Param(0);
+	var housingBrackets = new Param(C_SchaefferHousings_UI_housingBrackets);
 	d.Spacer(25).CheckBox(housingBrackets, "Add housing brackets?").NewlineC();
 
-	var guideObjects = new Param(1);
+	var guideObjects = new Param(C_SchaefferHousings_UI_guideObjects);
 	d.Spacer(25).CheckBox(guideObjects, "Add guide engravings?").NewlineC();
 
-	var dryRun = new Param(1);
+	var dryRun = new Param(C_SchaefferHousings_UI_dryRun);
 	d.Spacer(25).CheckBox(dryRun, "Test run (Only Front panel rendered)").NewlineC();
 
 	d.Divider().NewlineC();
@@ -259,6 +308,19 @@ function showUI()	{
 	// in this example.
 	var b = d.Show();
 	
+	
+	
+	
+	C_SchaefferHousings_UI_color = color.get();
+	if (typeof sideSectionHeight !== 'undefined') {
+		C_SchaefferHousings_UI_sideSectionHeight = sideSectionHeight.get();
+	}
+	C_SchaefferHousings_UI_rack = rack.get();
+	C_SchaefferHousings_UI_thickness = thickness.get();
+	C_SchaefferHousings_UI_kitcolor = kitcolor.get();
+	C_SchaefferHousings_UI_housingBrackets = housingBrackets.get();
+	C_SchaefferHousings_UI_guideObjects = guideObjects.get();
+	C_SchaefferHousings_UI_dryRun = dryRun.get();
 	
 	// Transferring values from UI to global variables:
 	Print("\n\nConfiguration values:\n")
@@ -1874,7 +1936,7 @@ if (!C_dryRun)	{
 
 
 /***************************************************************
-*  (c) 2013-2014 SKAARHOJ K/S, www.skaarhoj.com
+*  (c) 2013-2015 SKAARHOJ K/S, www.skaarhoj.com
 *  Author: Kasper Skårhøj <kasper@skaarhoj.com>
 *  All rights reserved
 *

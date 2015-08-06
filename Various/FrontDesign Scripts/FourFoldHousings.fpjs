@@ -28,7 +28,7 @@
 
 
 // Set this to "false" if you want to manually adjust parameters below:
-var C_UI = false;
+var C_UI = true;
 
 
 /***************************************
@@ -74,8 +74,42 @@ var C_addEdgeGrinding = true;
 
 var C_roundedCorners = true;
 
+
+
+
+
+
+
+
 if (C_UI)	{
+
+	if (typeof C_FourFoldHousings_UI_width === 'undefined') {
+		var C_FourFoldHousings_UI_width = C_width;
+	}
+	if (typeof C_FourFoldHousings_UI_height === 'undefined') {
+		var C_FourFoldHousings_UI_height = C_height;
+	}
+	if (typeof C_FourFoldHousings_UI_depth === 'undefined') {
+		var C_FourFoldHousings_UI_depth = C_depth;
+	}
+	if (typeof C_FourFoldHousings_UI_thickness === 'undefined') {
+		var C_FourFoldHousings_UI_thickness = 0;
+	}
+	if (typeof C_FourFoldHousings_UI_color === 'undefined') {
+		var C_FourFoldHousings_UI_color = 0;
+	}
+	if (typeof C_FourFoldHousings_UI_guideObjects === 'undefined') {
+		var C_FourFoldHousings_UI_guideObjects = 1;
+	}
+	if (typeof C_FourFoldHousings_UI_createOrder === 'undefined') {
+		var C_FourFoldHousings_UI_createOrder = 0;
+	}
+	
 	showUI();
+	
+	C_FourFoldHousings_UI_width = C_width;
+	C_FourFoldHousings_UI_height = C_height;
+	C_FourFoldHousings_UI_depth = C_depth;
 }
 
 
@@ -99,37 +133,37 @@ function showUI()	{
 	var d = new Dialog("Four Fold-box - a housing based on a top panel with bends and a bottom",500,100); // create the dialog window
 	d.Newline().VSpacer(0).NewlineC();
 
-	var height = new Param("50.0");
+	var height = new Param(C_FourFoldHousings_UI_height.toString());
 	d.Spacer(25).Text("Height:");
 	d.Spacer(10).TextEntry(1, height).Spacer(5).Text("mm").Spacer(0).NewlineC();
 
-	var width = new Param("100.0");
+	var width = new Param(C_FourFoldHousings_UI_width.toString());
 	d.Spacer(25).Text("Width:");
 	d.Spacer(13).TextEntry(1, width).Spacer(5).Text("mm").Spacer(0).NewlineC();
 
-	var depth = new Param("150.0");
+	var depth = new Param(C_FourFoldHousings_UI_depth.toString());
 	d.Spacer(25).Text("Depth:");
 	d.Spacer(10).TextEntry(1, depth).Spacer(5).Text("mm").Spacer(0).NewlineC();
 
 	d.VSpacer(10).Newline();
 
-	var thickness = new Param(0);
+	var thickness = new Param(C_FourFoldHousings_UI_thickness);
 	d.Spacer(25).Text("Thickness of panels:").NewlineC();
-	d.Spacer(25).Selection("2 mm\n2.5 mm\n3 mm\n4 mm", thickness).Spacer(0).NewlineC();
+	d.Spacer(25).RadioBox(thickness," \n2 mm\n2.5 mm\n3 mm\n4 mm").Spacer(0).NewlineC();
 	var thicknessCodes = new Array(2,2.5,3,4);
 	
 	d.VSpacer(20).Newline();
-	var color = new Param(0);
+	var color = new Param(C_FourFoldHousings_UI_color);
 	d.Spacer(25).Text("Color of panels:").NewlineC();
 	d.Spacer(25).RadioBox(color, " \nNatural\nGold\nRed\nBlue\nGreen\nBlack").Spacer(25).NewlineC();
 	var colorCodes = new Array(elox_natural,elox_gold,elox_red,elox_blue,elox_green,elox_black);
 
 	d.VSpacer(20).Newline();
 
-	var guideObjects = new Param(1);
+	var guideObjects = new Param(C_FourFoldHousings_UI_guideObjects);
 	d.Spacer(25).CheckBox(guideObjects, "Add guide engravings?").NewlineC();
 
-	var createOrder = new Param(0);
+	var createOrder = new Param(C_FourFoldHousings_UI_createOrder);
 	d.Spacer(25).CheckBox(createOrder, "Create order with housing brackets?").NewlineC();
 
 	d.Divider().NewlineC();
@@ -141,6 +175,11 @@ function showUI()	{
 	// in this example.
 	var b = d.Show();
 	
+	
+	C_FourFoldHousings_UI_thickness = thickness.get();
+	C_FourFoldHousings_UI_color = color.get();
+	C_FourFoldHousings_UI_guideObjects = guideObjects.get();
+	C_FourFoldHousings_UI_createOrder = createOrder.get();
 	
 	// Transferring values from UI to global variables:
 	Print("\n\nConfiguration values:\n")
