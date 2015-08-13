@@ -89,10 +89,13 @@ bool SkaarhojSmartSwitch2::getPixel(int16_t x, int16_t y) {
 SkaarhojSmartSwitch2::SkaarhojSmartSwitch2() : Adafruit_GFX(SKAARHOJSMARTSWITCH_LCDWIDTH, SKAARHOJSMARTSWITCH_LCDHEIGHT) {}	
 
 void SkaarhojSmartSwitch2::begin(uint8_t address) {
-	// NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
-	
+	// NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())	
 	_boardAddress = (address & B111);	// 0-3
 
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPI.begin();
+#endif
+	
 	// Initializing:
 	_buttonStatus = 0;
 	_lastButtonStatus = 0;
@@ -244,6 +247,18 @@ void SkaarhojSmartSwitch2::clearDisplay(void) {
   memset(buffer, 0, (SKAARHOJSMARTSWITCH_LCDWIDTH * SKAARHOJSMARTSWITCH_LCDHEIGHT/8));
 }
 void SkaarhojSmartSwitch2::display(uint8_t cs) {
+
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE1));
+	_chipSelect(cs);
+  	SPI.transfer(0x55);
+
+	for (uint16_t i=0; i<(SKAARHOJSMARTSWITCH_LCDWIDTH * SKAARHOJSMARTSWITCH_LCDHEIGHT/8); i++) {
+	    SPI.transfer(buffer[i]);
+    }
+    _chipSelect(0);
+    SPI.endTransaction();
+#else
 	_chipSelect(cs);
 
 	shiftOut(_dataPin, _clockPin, MSBFIRST, 0x55);
@@ -253,7 +268,11 @@ void SkaarhojSmartSwitch2::display(uint8_t cs) {
     }
 
     _chipSelect(0);
+#endif
+
 }
+
+
 
 
 
@@ -277,12 +296,25 @@ bool SkaarhojSmartSwitch2::_validButtonNumber(uint8_t buttonNumber)	{	// Checks 
  * Writing command to switch:
  */
 int SkaarhojSmartSwitch2::_writeCommand(int address, int value, uint8_t cs) {
+
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE1));
+  	_chipSelect(cs);
+
+	    SPI.transfer(address);
+		SPI.transfer(value);
+	  
+  	_chipSelect(0);
+    SPI.endTransaction();
+#else
   	_chipSelect(cs);
 
     shiftOut(_dataPin, _clockPin, MSBFIRST, address);   
     shiftOut(_dataPin, _clockPin, MSBFIRST, value);   
 
   	_chipSelect(0);
+#endif
+
 }
 void SkaarhojSmartSwitch2::_chipSelect(uint8_t cs)	{
 	_buttonMux.digitalWordWrite(255-cs);

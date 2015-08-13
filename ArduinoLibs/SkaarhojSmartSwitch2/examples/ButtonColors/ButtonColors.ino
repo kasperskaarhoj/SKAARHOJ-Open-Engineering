@@ -6,6 +6,7 @@
 
 
 #include <Wire.h>
+#include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <MCP23017.h>
 #include <SkaarhojPgmspace.h>

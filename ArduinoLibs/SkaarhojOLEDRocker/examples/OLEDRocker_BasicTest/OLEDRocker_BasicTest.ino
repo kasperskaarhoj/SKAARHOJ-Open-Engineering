@@ -12,6 +12,7 @@ open-source hardware by purchasing products from Adafruit as well!
 #include <Adafruit_GFX.h>
 #include <SkaarhojOLEDRocker.h>
 #include <SkaarhojPgmspace.h>
+#include <SPI.h>
 
 SkaarhojOLEDRocker display;
 

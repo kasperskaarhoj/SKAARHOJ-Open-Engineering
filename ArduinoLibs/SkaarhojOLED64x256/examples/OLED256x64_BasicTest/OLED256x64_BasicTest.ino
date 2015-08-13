@@ -9,6 +9,7 @@ open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
 #include <Wire.h>
+#include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <SkaarhojOLED64x256.h>
 
@@ -16,7 +17,7 @@ SkaarhojOLED64x256 display;
 
 #define LOGO16_GLCD_HEIGHT 16 
 #define LOGO16_GLCD_WIDTH  16 
-static unsigned char PROGMEM logo16_glcd_bmp[] =
+static const unsigned char PROGMEM logo16_glcd_bmp[] =
 { B11111111, B11000000,
   B00000001, B11000000,
   B00000001, B11000000,
@@ -145,5 +146,4 @@ void loop() {
     display.sendData(k, 1);  
   }
 }
-
 

@@ -14,6 +14,9 @@ open-source hardware by purchasing products from Adafruit as well!
 #include <Adafruit_GFX.h>
 #include <Wire.h>
 
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	#include <SPI.h>
+#endif
 
 #define BLACK 0
 #define WHITE 1

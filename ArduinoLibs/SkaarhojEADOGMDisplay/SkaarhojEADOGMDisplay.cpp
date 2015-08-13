@@ -46,6 +46,8 @@ void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardT
 	_dataPin = 49;
 	pinMode(_clockPin, OUTPUT);
 	pinMode(_dataPin, OUTPUT);
+	digitalWrite(_clockPin, LOW);
+	digitalWrite(_dataPin, LOW);
 
 	_chipLowerByte = 255;
 	_chipUpperByte = 255;

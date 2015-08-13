@@ -9,6 +9,7 @@ open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
 #include <Wire.h>
+#include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <SkaarhojDisplayArray.h>
 #include <SkaarhojPgmspace.h>
