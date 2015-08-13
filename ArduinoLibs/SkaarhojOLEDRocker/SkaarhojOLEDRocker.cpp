@@ -53,6 +53,9 @@ void SkaarhojOLEDRocker::begin(uint8_t address) {
 	// NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
 
 	_boardAddress = 88 | (address & B111);	// 0-7
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPI.begin();
+#endif
 
   	// Set SPI pins up:
 	_clockPin = 48;
@@ -63,11 +66,13 @@ void SkaarhojOLEDRocker::begin(uint8_t address) {
 	pinMode(_clockPin, OUTPUT);
 	pinMode(_dataPin, OUTPUT);
 
+#if !defined(ARDUINO_SKAARDUINO_V1)  
     clkport     = portOutputRegister(digitalPinToPort(_clockPin));
     clkpinmask  = digitalPinToBitMask(_clockPin);
     mosiport    = portOutputRegister(digitalPinToPort(_dataPin));
     mosipinmask = digitalPinToBitMask(_dataPin);
-
+#endif
+	
 	// Control pins:
 	_cs = 0;
 	_dc = false;
@@ -214,12 +219,19 @@ void SkaarhojOLEDRocker::display(uint8_t cs) {
 }
 
 inline void SkaarhojOLEDRocker::fastSPIwrite(uint8_t d) {
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPISettings settingsA(10000000, MSBFIRST, SPI_MODE0); 
+	SPI.beginTransaction(settingsA);
+    SPI.transfer(d);
+	SPI.endTransaction();
+#else
   for(uint8_t bit = 0x80; bit; bit >>= 1) {
     *clkport &= ~clkpinmask;
     if(d & bit) *mosiport |=  mosipinmask;
     else        *mosiport &= ~mosipinmask;
     *clkport |=  clkpinmask;
   }
+#endif
 }
 
 void SkaarhojOLEDRocker::chipSelect(uint8_t cs) {

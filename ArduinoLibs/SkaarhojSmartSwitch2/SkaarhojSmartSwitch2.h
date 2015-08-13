@@ -24,6 +24,9 @@
 #include <Wire.h>
 #include "MCP23017.h"
 
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	#include <SPI.h>
+#endif
 
 #define BLACK 0
 #define WHITE 1

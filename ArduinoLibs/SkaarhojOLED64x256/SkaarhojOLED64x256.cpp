@@ -56,6 +56,10 @@ SkaarhojOLED64x256::SkaarhojOLED64x256() : Adafruit_GFX(SKAARHOJOLED64x256_LCDWI
 void SkaarhojOLED64x256::begin(uint8_t address) {
 	// NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
 
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPI.begin();
+#endif
+
 	_boardAddress = 88 | (address & B111);	// 0-7
 
   	// Set SPI pins up:
@@ -65,11 +69,13 @@ void SkaarhojOLED64x256::begin(uint8_t address) {
 	pinMode(_clockPin, OUTPUT);
 	pinMode(_dataPin, OUTPUT);
 
+#if !defined(ARDUINO_SKAARDUINO_V1)  
     clkport     = portOutputRegister(digitalPinToPort(_clockPin));
     clkpinmask  = digitalPinToBitMask(_clockPin);
     mosiport    = portOutputRegister(digitalPinToPort(_dataPin));
     mosipinmask = digitalPinToBitMask(_dataPin);
-
+#endif
+	
 	// Control pins:
 	_cs = 0;
 	_dc = false;
@@ -242,12 +248,21 @@ void SkaarhojOLED64x256::display(uint8_t cs) {
 }
 
 inline void SkaarhojOLED64x256::fastSPIwrite(uint8_t d) {
-  for(uint8_t bit = 0x80; bit; bit >>= 1) {
-    *clkport &= ~clkpinmask;
-    if(d & bit) *mosiport |=  mosipinmask;
-    else        *mosiport &= ~mosipinmask;
-    *clkport |=  clkpinmask;
-  }
+	
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPISettings settingsA(1000000, MSBFIRST, SPI_MODE0); 
+	SPI.beginTransaction(settingsA);
+    SPI.transfer(d);
+	SPI.endTransaction();
+#else
+    for(uint8_t bit = 0x80; bit; bit >>= 1) {
+      *clkport &= ~clkpinmask;
+      if(d & bit) *mosiport |=  mosipinmask;
+      else        *mosiport &= ~mosipinmask;
+      *clkport |=  clkpinmask;
+    }	
+#endif  
+
 }
 
 void SkaarhojOLED64x256::chipSelect(uint8_t cs) {
