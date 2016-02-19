@@ -435,19 +435,17 @@ bool SkaarhojBI8::_validPercentage(uint8_t percentage)	{	// Checks if a value is
 
 void SkaarhojBI8::testProgramme(uint16_t buttonMask)	{
 
-	static uint8_t color = 0;
-	static uint8_t button = 0;
-	
 	while(true)	{
-		button = (button+1)%16;
-		if (!button)	{
-			color = (color+1)%6;
+		test_button = (test_button+1)%16;
+		if (!test_button)	{
+			test_color = (test_color+1)%6;
 		}
-		if (buttonMask & (B1 << button))	{
-			if (buttonDown(button+1))	{
-				_writeButtonLed(button+1,2);	// red
+
+		if ((buttonMask & ((uint16_t)B1 << test_button)) > 0)	{
+			if (buttonDown(test_button+1))	{
+				_writeButtonLed(test_button+1,2);	// red
 			} else {
-				_writeButtonLed(button+1,color);
+				_writeButtonLed(test_button+1,test_color);
 			}
 			break;
 		}

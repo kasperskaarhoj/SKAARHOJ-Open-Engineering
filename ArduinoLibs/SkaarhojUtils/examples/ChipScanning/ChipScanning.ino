@@ -7,16 +7,16 @@
 #include <Wire.h>
 #include <MCP23017.h>
 #include <PCA9685.h>
-
+#include <Streaming.h>
 
 // no-cost stream operator as described at 
 // http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+//template<class T>
+//inline Print &operator <<(Print &obj, T arg)
+//{  
+//  obj.print(arg); 
+//  return obj; 
+//}
 
 MCP23017 GPIOchipArray[] = {
   MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017()}; 
@@ -28,7 +28,7 @@ bool PCA9685_states[64];
 
 void setup()
 {
-  Serial.begin(9600); // set up serial
+  Serial.begin(115200); // set up serial
   Serial << F("\n- - - - - - - -\nSerial Started\n");
   delay(500);
 

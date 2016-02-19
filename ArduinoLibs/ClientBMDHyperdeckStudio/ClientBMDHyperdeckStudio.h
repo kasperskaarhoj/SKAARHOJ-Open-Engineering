@@ -102,6 +102,10 @@ class ClientBMDHyperdeckStudio : public SkaarhojTCPClient
 	uint8_t _Hyperdeck_clipCount;
 	uint8_t _Hyperdeck_fileidlist[ClientBMDHyperdeckStudio_CLIPS];
 	char _Hyperdeck_filelist[ClientBMDHyperdeckStudio_CLIPS][ClientBMDHyperdeckStudio_CLIPNAMELEN];
+	uint8_t _Hyperdeck_filelen_hh[ClientBMDHyperdeckStudio_CLIPS];
+	uint8_t _Hyperdeck_filelen_mm[ClientBMDHyperdeckStudio_CLIPS];
+	uint8_t _Hyperdeck_filelen_ss[ClientBMDHyperdeckStudio_CLIPS];
+	uint8_t _Hyperdeck_filelen_ff[ClientBMDHyperdeckStudio_CLIPS];
 	
   public:
     ClientBMDHyperdeckStudio();

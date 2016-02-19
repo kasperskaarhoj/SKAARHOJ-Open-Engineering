@@ -1,22 +1,4 @@
-/*****************
- * Example: Master (and slave) for Basic Shared Variables with UDP messenger (and TCP Telnet server)
- * With this example, the Arduino becomes a UDP messenger server/slave (and Telnet Server as an extra feature, not mandatory) on 192.168.10.99 through which you can get and set values of the shared variables
- * The sketch also implements Master/Client features which actively set up relations to slaves and set/get values to/from them. This is different from the pure slave which will only respond to incoming requests.
- *
- * The sketch assumes there are slaves to talk to on the same network. (Use example sketch "UDPMessenger_SV_Slave" for create such a slave on x.x.x.slaveAddr)
- *
- * - kasper
- */
-/*****************
- * TO MAKE THIS EXAMPLE WORK:
- * - You must have an Arduino with Ethernet Shield (or compatible such as "Arduino Ethernet", http://arduino.cc/en/Main/ArduinoBoardEthernet)
- * - You must make specific set ups in the below lines where the comment "// SETUP" is found!
- */
-/*
-	IMPORTANT: If you want to use this library in your own projects and/or products,
- 	please play a fair game and heed the license rules! See our web page for a Q&A so
- 	you can keep a clear conscience: http://skaarhoj.com/about/licenses/
- */
+
 
 // Including libraries: 
 #include <SPI.h>
@@ -31,7 +13,7 @@ byte mac[] = {
   0x90, 0xA1, 0xDA, 0xDF, 0x6E, 0x79 };      // <= SETUP!  MAC address of the Arduino
 IPAddress ip(192, 168, 10, 80);              // <= SETUP!  IP address of the Arduino
 
-uint8_t slaveAddr = 147;   // The slave we talk to in this sketch
+uint8_t slaveAddr = 2;   // The Test Rig slave we talk to in this sketch
 
 #include <SkaarhojBufferTools.h>
 #include <SkaarhojTCPServer.h>
@@ -49,11 +31,10 @@ SharedVariables shareObj(4);  // Number of shared variables we allocate memory t
 
 
 // Test shared variables (slave function of this device):
-bool previewTally = false;
-uint16_t irisValue = 65535;
-
-
-
+bool someBoolean = false;
+uint16_t someWord = 65535;
+long someLong = 65535;
+char someString[60];
 
 
 
@@ -74,13 +55,6 @@ void handleTelnetIncoming()  {
  */
 void UDPmessengerReceivedCommand(const uint8_t cmd, const uint8_t from, const uint8_t dataLength, const uint8_t *dataArray)  {
   shareObj.incomingBinBuffer(messenger, cmd, from, dataLength, dataArray);
-  /*        // This will display the incoming data:
-   Serial << ip[0] << "." << ip[1] << "." << ip[2] << "." << from << F(": CMD=") << _HEXPADL(cmd,2,"0") << F(", DATA=");
-   for(uint8_t i=0; i<dataLength; i++)  {
-   Serial << _HEXPADL(dataArray[i],2,"0") << (dataLength>i+1?F(","):F(""));
-   }
-   Serial.println();
-   */
 }
 
 /**
@@ -187,9 +161,11 @@ void setup() {
 
   // Initialize serial communication at 9600 bits per second:
   Serial.begin(115200);
-  Serial.println("\n\n******* START ********");
-  Serial.println("UDP MASTER on port 8765\n**********************");
-
+  Serial << F("\n\n******** SKAARDUINO TEST RIG START ********\n");
+  Serial << F("Ethernet IP: ") << ip << F("\n");
+  Serial << F("UDP Shared Variables server/slave on port 8765\n");
+  Serial << F("Telnet server on port 8899\n");
+  
   W5100.setRetransmissionTime(0xD0);  // Milli seconds
   W5100.setRetransmissionCount(1);
 

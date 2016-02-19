@@ -28,7 +28,6 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "Arduino.h"
 #include "SkaarhojSerialClient.h"
 
-
 /**
  * Constructor
  */
@@ -44,7 +43,11 @@ void SkaarhojSerialClient::begin(long baudRate) {
 }
 void SkaarhojSerialClient::begin(long baudRate, uint8_t cfg) {
 
+#ifdef __arm__	/* Arduino DUE */
+	_HardSerial.begin(baudRate);	// SERIAL_8N1, default! Couldn't figure how to set right type for Ard. Due... (6/7 2015)
+#else
 	_HardSerial.begin(baudRate, cfg);	// SERIAL_8N1 is default, see
+#endif
 
 	_resetDeviceStateVariables();
 }

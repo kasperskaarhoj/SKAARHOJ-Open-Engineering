@@ -30,7 +30,7 @@ SkaarhojEADOGMDisplay Disp163;
  **********************************************************/
 
 void setup() { 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
 

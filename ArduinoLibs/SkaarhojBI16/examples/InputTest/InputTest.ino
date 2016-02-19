@@ -18,7 +18,7 @@ SkaarhojBI16 board;
 
 
 void setup() { 
-  Serial.begin(9600); // set up serial
+  Serial.begin(115200); // set up serial
   Serial.println("Serial Started");
   
   // Always initialize Wire before setting up the SkaarhojBI16 class!

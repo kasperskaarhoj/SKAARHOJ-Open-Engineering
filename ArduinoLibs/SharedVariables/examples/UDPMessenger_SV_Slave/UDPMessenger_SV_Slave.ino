@@ -16,6 +16,8 @@
  	you can keep a clear conscience: http://skaarhoj.com/about/licenses/
  */
 
+
+
 // Including libraries: 
 #include <SPI.h>
 #include <Ethernet.h>
@@ -25,11 +27,12 @@
 // MAC address and IP address for this *particular* Arduino / Ethernet Shield!
 // The MAC address is printed on a label on the shield or on the back of your device
 byte mac[] = { 
-  0x90, 0xA2, 0xDA, 0xDE, 0x6E, 0x79 };      // <= SETUP!  MAC address of the Arduino
-IPAddress ip(192, 168, 0, 147);              // <= SETUP!  IP address of the Arduino
+  0x10, 0xA2, 0xDA, 0xDE, 0x6E, 0x79 };      // <= SETUP!  MAC address of the Arduino
+IPAddress ip(192, 168, 10, 2);              // <= SETUP!  IP address of the Arduino
 
 
 #include <SkaarhojBufferTools.h>
+
 #include <SkaarhojTCPServer.h>
 SkaarhojTCPServer TCPServer(8899);  // Port 8899 used for telnet server
 
@@ -67,9 +70,6 @@ uint16_t test_uint16_t_array[] = {1000, 2000, 3000, 4000};  // Used to just pass
  */
 void handleTelnetIncoming()  {
   shareObj.incomingASCIILine(TCPServer, TCPServer._server);
-  
-  Serial << F("Values:\n");
-  shareObj.printValues(Serial);  
 }
 
 /**
@@ -78,14 +78,6 @@ void handleTelnetIncoming()  {
  */
 void UDPmessengerReceivedCommand(const uint8_t cmd, const uint8_t from, const uint8_t dataLength, const uint8_t *dataArray)  {
   shareObj.incomingBinBuffer(messenger, cmd, from, dataLength, dataArray);
-
-/*        // This will display the incoming data:
-      Serial << ip[0] << "." << ip[1] << "." << ip[2] << "." << from << F(": CMD=") << _HEXPADL(cmd,2,"0") << F(", DATA=");
-      for(uint8_t i=0; i<dataLength; i++)  {
-        Serial << _HEXPADL(dataArray[i],2,"0") << (dataLength>i+1?F(","):F(""));
-      }
-      Serial.println();
-      */
 }
 
 /**
@@ -95,11 +87,11 @@ void handleExternalChangeOfValue(uint8_t idx)  {
   Serial << F("Value idx=") << idx << F(" changed: ");
   shareObj.printSingleValue(Serial, idx);
   Serial << F("\n");
+
+  if (idx==0)   {   // Values of idx 0 is incremented immediately.
+    test_int++;
+  }
 }
-
-
-
-
 
 
 
@@ -107,6 +99,7 @@ void handleExternalChangeOfValue(uint8_t idx)  {
 #include <MemoryFree.h>
 
 void setup() {
+    
   // Start the Ethernet:
   Ethernet.begin(mac,ip);
   delay(1000);
@@ -115,7 +108,6 @@ void setup() {
   Serial.begin(115200);
   Serial.println("\n\n******* START ********");
   Serial.println("UDP SLAVE on port 8765\n**********************");
-
 
 
   // Initialize Telnet Server and connect to shareObj through callback:

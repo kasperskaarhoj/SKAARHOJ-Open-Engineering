@@ -1,4 +1,4 @@
-/*  SkaarhojAudioControl Arduino library for the AC boards from SKAARHOJ.com
+/*  SkaarhojAudioControl2 Arduino library for the AC boards from SKAARHOJ.com
     Copyright (C) 2013 Kasper Skårhøj    <kasperskaarhoj@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
@@ -14,8 +14,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef SkaarhojAudioControl_H
-#define SkaarhojAudioControl_H
+#ifndef SkaarhojAudioControl2_H
+#define SkaarhojAudioControl2_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -24,7 +24,6 @@
 #endif
 
 #include "Wire.h"
-#include "MCP23017.h"
 #include "PCA9685.h"
 
 /**
@@ -32,20 +31,20 @@
 	(Semantic Versioning)
 **/
 
-class SkaarhojAudioControl
+class SkaarhojAudioControl2
 {
   private:
 	uint8_t _boardAddress;
-	MCP23017 _buttonMux;
 	PCA9685 _VUledDriver;
 	uint8_t _buttonStatus;
 	uint8_t _buttonStatusLastUp;
 	uint8_t _buttonStatusLastDown;
 	uint8_t _ledFlags;
+	uint8_t _chipAddress;
 	bool _isMaster;
 
   public:
-	SkaarhojAudioControl();
+	SkaarhojAudioControl2();
 	void begin(int address);
 	void setIsMasterBoard();
 	
@@ -63,6 +62,7 @@ class SkaarhojAudioControl
 	void VUmeter(uint16_t leftValue, uint16_t rightValue);
 	void VUmeterDB(int leftValue, int rightValue);
 	void VUmeterRaw(uint8_t leftValue, uint8_t rightValue);
+	uint16_t PCA9671digitalWordRead();
 		
   private:
 	void _readButtonStatus();
