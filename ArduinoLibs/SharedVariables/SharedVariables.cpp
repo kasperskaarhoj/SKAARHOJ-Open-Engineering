@@ -190,7 +190,33 @@ void SharedVariables::shareLocalVariable(uint8_t idx, const int * variableRef, u
 	if (idx < _numberOfVars)	{
 		shareLocalVariable(idx, (void *)variableRef, name, descr);
 		_varType[idx] = 10 | (rw << 6);
-		_varSize[idx] = theSize/2;	// two bytes per integer
+		#ifdef __arm__	/* Arduino DUE */
+			_varSize[idx] = theSize/4;	// two bytes per integer	TODO: On Arduino DUE (ARM), the int is 4 bytes, so we shall divide by 4 instead! There are other places to do this for integers on Arduino DUE!!!
+		#else
+			_varSize[idx] = theSize/2;	// two bytes per integer
+		#endif
+	}
+}
+
+/**
+ * Associate a variable for sharing, arrays of uint16_t
+ */
+void SharedVariables::shareLocalVariable(uint8_t idx, const uint16_t * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr) {
+	if (idx < _numberOfVars)	{
+		shareLocalVariable(idx, (void *)variableRef, name, descr);
+		_varType[idx] = 11 | (rw << 6);
+		_varSize[idx] = theSize/2;	// two bytes per 16-bit word
+	}
+}
+
+/**
+ * Associate a variable for sharing, arrays of longs
+ */
+void SharedVariables::shareLocalVariable(uint8_t idx, const long * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr) {
+	if (idx < _numberOfVars)	{
+		shareLocalVariable(idx, (void *)variableRef, name, descr);
+		_varType[idx] = 12 | (rw << 6);
+		_varSize[idx] = theSize/4;	// four bytes per long
 	}
 }
 
@@ -298,6 +324,16 @@ void SharedVariables::test(uint8_t idx) {
 					((int *)_varReferences[idx])[i] += i+1;
 				}
 				break;
+			case 11: 	// uint16_t array
+				for(uint8_t i=0; i<_varSize[idx]; i++)	{
+					((uint16_t *)_varReferences[idx])[i] += i+1;
+				}
+				break;
+			case 12: 	// long array
+				for(uint8_t i=0; i<_varSize[idx]; i++)	{
+					((long *)_varReferences[idx])[i] += i+1;
+				}
+				break;
 			default:
 				break;
 		}
@@ -351,6 +387,12 @@ void SharedVariables::printOverview(Print &output)	{
 					break;
 				case 10: 	// int array
 					output << F("int array  ");
+					break;
+				case 11: 	// uint16_t array
+					output << F("uint16_t ar");
+					break;
+				case 12: 	// long array
+					output << F("long array ");
 					break;
 				default:
 					break;
@@ -470,6 +512,20 @@ void SharedVariables::printSingleValue(Print &output, uint8_t idx)	{
 			}
 			output << F("}");
 			break;
+		case 11: 	// uint16_t array
+			output << F("{");
+			for(uint8_t i=0; i<_varSize[idx]; i++)	{
+				output << ((uint16_t *)_varReferences[idx])[i] << (_varSize[idx]==i+1?F(""):F(","));
+			}
+			output << F("}");
+			break;
+		case 12: 	// long array
+			output << F("{");
+			for(uint8_t i=0; i<_varSize[idx]; i++)	{
+				output << ((long *)_varReferences[idx])[i] << (_varSize[idx]==i+1?F(""):F(","));
+			}
+			output << F("}");
+			break;
 		default:
 			break;
 	}
@@ -562,6 +618,8 @@ void SharedVariables::incomingASCIILine(SkaarhojBufferTools &bufferObj, Print &o
 									break;
 								case 9: 	// uint8_t array
 								case 10: 	// int array
+								case 11: 	// int array
+								case 12: 	// int array
 									if (bufferObj.isNextPartOfBuffer_P(PSTR("{")))	{
 										for(uint8_t i=0; i<_varSize[idx]; i++)	{
 											if ((_varType[idx]&0xF)==9)	{
@@ -569,6 +627,12 @@ void SharedVariables::incomingASCIILine(SkaarhojBufferTools &bufferObj, Print &o
 											} else
 											if ((_varType[idx]&0xF)==10)	{
 												((int *)_varReferences[idx])[i] = bufferObj.parseInt();
+											} else
+											if ((_varType[idx]&0xF)==11)	{
+												((uint16_t *)_varReferences[idx])[i] = bufferObj.parseInt();
+											} else
+											if ((_varType[idx]&0xF)==12)	{
+												((long *)_varReferences[idx])[i] = bufferObj.parseInt();
 											}
 											if (!bufferObj.isNextPartOfBuffer_P(PSTR(",")))	{
 												if (!bufferObj.isNextPartOfBuffer_P(PSTR("}")))	{
@@ -822,6 +886,12 @@ void SharedVariables::sendBinaryReadResponse(UDPmessenger &UDPmessengerObj, cons
 				case 10: 	// int array
 					dLen = _varSize[idx]*2;
 					break;
+				case 11: 	// uint16_t array
+					dLen = _varSize[idx]*2;
+					break;
+				case 12: 	// long array
+					dLen = _varSize[idx]*4;
+					break;
 				default:
 				break;
 			}
@@ -831,7 +901,18 @@ void SharedVariables::sendBinaryReadResponse(UDPmessenger &UDPmessengerObj, cons
 				}
 			
 				for(uint8_t i=0; i<dLen; i++)	{
-					UDPmessengerObj.addValueToDataBuffer(((uint8_t *)_varReferences[idx])[i], i);
+					#ifdef __arm__	/* Arduino DUE */
+						/*if ((_varType[idx] & 0xF) == 12)	{	 	// integer array, is 32 bit on Due, LSB first, 4 bytes
+							UDPmessengerObj.addValueToDataBuffer(((uint8_t *)_varReferences[idx])[i+4*(i>>2)], i);
+						} else*/
+						if ((_varType[idx] & 0xF) == 10)	{	 	// integer array, is 32 bit on Due, LSB first, 4 bytes
+							UDPmessengerObj.addValueToDataBuffer(((uint8_t *)_varReferences[idx])[i+2*(i>>1)], i);
+						} else {
+							UDPmessengerObj.addValueToDataBuffer(((uint8_t *)_varReferences[idx])[i], i);
+						}
+					#else
+						UDPmessengerObj.addValueToDataBuffer(((uint8_t *)_varReferences[idx])[i], i);
+					#endif
 				}
 				UDPmessengerObj.addCommand(idx, dLen);
 			}
@@ -886,7 +967,13 @@ void SharedVariables::storeBinaryValue(UDPmessenger &UDPmessengerObj, const uint
 					varLen = true;
 					break;
 				case 10: 	// int array
+				case 11: 	// uint16_t array
 					dLen = _varSize[idx]*2;
+					dLen = dataLength < dLen ? dataLength : dLen;
+					varLen = true;
+					break;
+				case 12: 	// long array
+					dLen = _varSize[idx]*4;
 					dLen = dataLength < dLen ? dataLength : dLen;
 					varLen = true;
 					break;
@@ -895,7 +982,20 @@ void SharedVariables::storeBinaryValue(UDPmessenger &UDPmessengerObj, const uint
 			}
 			if ((dLen > 0 && dLen==dataLength) || varLen)	{
 				for(uint8_t i=0; i<dLen; i++)	{
-					((uint8_t *)_varReferences[idx])[i] = dataArray[i];
+					#ifdef __arm__	/* Arduino DUE */
+					/*	if ((_varType[idx] & 0xF) == 12)	{	 	// integer array, is 32 bit on Due, LSB first, 4 bytes
+							((uint8_t *)_varReferences[idx])[i+4*(i>>2)] = dataArray[i];
+							((uint8_t *)_varReferences[idx])[i+4+4*(i>>2)] = dataArray[4*(i>>2)+3] & 0x80 ? 0xFF : 0x00;
+						} else */
+						if ((_varType[idx] & 0xF) == 10)	{	 	// integer array, is 32 bit on Due, LSB first, 4 bytes
+							((uint8_t *)_varReferences[idx])[i+2*(i>>1)] = dataArray[i];
+							((uint8_t *)_varReferences[idx])[i+2+2*(i>>1)] = dataArray[2*(i>>1)+1] & 0x80 ? 0xFF : 0x00;
+						} else {
+							((uint8_t *)_varReferences[idx])[i] = dataArray[i];
+						}
+					#else
+						((uint8_t *)_varReferences[idx])[i] = dataArray[i];
+					#endif
 				}
 				if ((_varType[idx] & 0xF) == 8)	{	 	// char array
 					((uint8_t *)_varReferences[idx])[dLen-1] = 0;	// Make sure its nul terminated if string
@@ -1101,7 +1201,7 @@ void SharedVariables::UDPautoExchange(uint16_t period)	{
 				if (!positionsProcessed[i] && currentAddress == _attachments[i][1])	{
 					if (_attachments[i][3])	{	// Push value
 						if (validIdx(_attachments[i][0]))	{
-							setRemoteVariableOverUDP((void *)_varReferences[_attachments[i][0]], _varSize[_attachments[i][0]]*((_varType[_attachments[i][0]] & 0xF) == 10?2:1), _attachments[i][1], _attachments[i][2]);
+							setRemoteVariableOverUDP((void *)_varReferences[_attachments[i][0]], _varSize[_attachments[i][0]]*bytesPerElement(_varType[_attachments[i][0]] & 0xF), _attachments[i][1], _attachments[i][2]);
 						}
 					} else {	// Pull value
 						getRemoteVariableOverUDP(_attachments[i][1], _attachments[i][2]);
@@ -1116,7 +1216,17 @@ void SharedVariables::UDPautoExchange(uint16_t period)	{
 //		Serial << F("UDPautoExchange end\n");
 	}
 }
-
+uint8_t SharedVariables::bytesPerElement(uint8_t type)	{
+	switch(type)	{
+		case 10:
+		case 11:
+			return 2;
+		case 12:
+			return 4;
+		default:
+			return 1;
+	}
+}
 
 
 	  

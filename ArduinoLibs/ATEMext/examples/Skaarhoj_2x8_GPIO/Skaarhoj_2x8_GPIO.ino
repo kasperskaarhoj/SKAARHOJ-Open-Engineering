@@ -20,6 +20,7 @@
 #include "WebServer.h"  // For web interface
 #include <EEPROM.h>      // For storing IP numbers
 #include <SkaarhojPgmspace.h>
+#include <Streaming.h>
 
 // Include ATEM library and make an instance:
 #include <ATEMbase.h>
@@ -37,14 +38,14 @@ uint8_t mac[6];    // Will hold the Arduino Ethernet shield/board MAC address (l
 
 
 
-// No-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+//// No-cost stream operator as described at 
+//// http://arduiniana.org/libraries/streaming/
+//template<class T>
+//inline Print &operator <<(Print &obj, T arg)
+//{  
+//  obj.print(arg); 
+//  return obj; 
+//}
 
 
 

@@ -48,6 +48,14 @@ class SkaarhojAnalog
 	bool _joystick_buttonStatusLastUp;
 	bool _joystick_buttonStatusLastDown;
 	
+	uint8_t _uniDirectionalSlider_pinIndex;
+	int _uniDirectionalSlider_sliderTolerance;
+    int _uniDirectionalSlider_sliderLowEndOffset;
+    int _uniDirectionalSlider_sliderHighEndOffset;
+	int _uniDirectionalSlider_previousSliderValue;
+	int _uniDirectionalSlider_previousTransitionPosition;
+	bool _uniDirectionalSlider_sliderDirectionUp;
+	bool _uniDirectionalSlider_disableUnidirectionality;
 	
   public:
 	SkaarhojAnalog();
@@ -61,5 +69,13 @@ class SkaarhojAnalog
 	bool joystick_buttonDown();
 	bool joystick_buttonIsPressed();	
 	int joystick_AnalogRead(uint8_t index);
+	
+	
+		// Slider functions:
+	void uniDirectionalSlider_init(int sliderTolerance, int sliderLowEndOffset, int sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex);
+	void uniDirectionalSlider_disableUnidirectionality(bool disable);
+	bool uniDirectionalSlider_hasMoved();
+	int uniDirectionalSlider_position();
+	bool uniDirectionalSlider_isAtEnd();	
 };
 #endif 

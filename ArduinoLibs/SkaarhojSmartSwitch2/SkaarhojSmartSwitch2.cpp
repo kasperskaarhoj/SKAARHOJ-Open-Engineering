@@ -168,7 +168,7 @@ bool SkaarhojSmartSwitch2::buttonDown(uint8_t buttonNumber) {
 bool SkaarhojSmartSwitch2::buttonIsPressed(uint8_t buttonNumber) {
 	if (_validButtonNumber(buttonNumber))	{
 		_readButtonStatus();
-		return (SkaarhojSmartSwitch2::buttonIsPressedAll() >> (buttonNumber-1)) ? true : false;
+		return (SkaarhojSmartSwitch2::buttonIsPressedAll() >> (buttonNumber-1)) & 1  ? true : false;
 	} else return false;
 }
 bool SkaarhojSmartSwitch2::buttonIsHeldFor(uint8_t buttonNumber, uint16_t timeout) {
@@ -369,27 +369,27 @@ void SkaarhojSmartSwitch2::testProgramme(uint8_t buttonMask)	{
         display(B1 << i);
 
 
-        if (buttonDown(i))  {
+        if (buttonDown(i+1))  {
           Serial.print(F("Button #"));
-          Serial.print(i);
+          Serial.print(i+1);
           Serial.print(F(" was pressed down"));
 
           setButtonColor(random(0, 3), random(0, 3), random(0, 3), B1 << i);
         }
-        if (buttonUp(i))  {
+        if (buttonUp(i+1))  {
           Serial.print(F("Button #"));
-          Serial.print(i);
+          Serial.print(i+1);
           Serial.println(F(" was released"));
         }
 
-        if (buttonIsHeldFor(i, 1000))  {
+        if (buttonIsHeldFor(i+1, 1000))  {
           Serial.print(F("Button #"));
-          Serial.print(i);
+          Serial.print(i+1);
           Serial.println(F(" was held for 1000 ms"));
         }
-        if (buttonIsReleasedAgo(i, 1000))  {
+        if (buttonIsReleasedAgo(i+1, 1000))  {
           Serial.print(F("Button #"));
-          Serial.print(i);
+          Serial.print(i+1);
           Serial.println(F(" was released 1000 ms ago"));
         }
 

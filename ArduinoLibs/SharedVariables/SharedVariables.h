@@ -123,7 +123,9 @@ class SharedVariables
 	  void shareLocalVariable(uint8_t idx, const char * variableRef, uint8_t theSize, uint8_t rw, const char *name, const char *descr);
 	  void shareLocalVariable(uint8_t idx, const uint8_t * variableRef, uint8_t theSize, uint8_t rw, const char *name, const char *descr);
 	  void shareLocalVariable(uint8_t idx, const int * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
-
+	  void shareLocalVariable(uint8_t idx, const uint16_t * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
+	  void shareLocalVariable(uint8_t idx, const long * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
+	  
 	  void addWidget(uint8_t idx, const char *label, const char *category, uint8_t sortOrder, uint8_t widgetType, uint8_t flags, const char *parameters, int pinCode=0, uint8_t cmdVariable=255);
 				
 	  void test(uint8_t idx);
@@ -161,6 +163,7 @@ class SharedVariables
 
 	  bool attachLocalVariableToRemoteVariable(const uint8_t localIdx, const uint8_t slaveAddress, const uint8_t slaveIdx, bool push);
 	  void UDPautoExchange(uint16_t period);
+	  uint8_t bytesPerElement(uint8_t type);
 
 	  void sendUDPPing(const uint8_t slaveAddress);
 

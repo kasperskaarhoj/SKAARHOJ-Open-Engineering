@@ -29,7 +29,7 @@
 // IP address is an available address you choose on your subnet where the Hyperdeck Studio is also present:
 byte mac[] = { 
   0x90, 0xA2, 0xDA, 0x00, 0xE8, 0xE9 };		// <= SETUP
-IPAddress ip(192, 168, 10, 99);				// <= SETUP (Arduino IP)
+IPAddress ip(192, 168, 177, 99);				// <= SETUP (Arduino IP)
 
 
 // No-cost stream operator as described at 
@@ -41,6 +41,7 @@ inline Print &operator <<(Print &obj, T arg)
   return obj; 
 }
 
+#include <SkaarhojPgmspace.h>
 #include <SkaarhojBufferTools.h>
 #include <SkaarhojASCIIClient.h>
 #include <SkaarhojTCPClient.h>
@@ -75,7 +76,7 @@ void setup() {
   delay(1000);
 
   // Start Hyperdeck connection:
-  hyperDeck.begin(IPAddress(192, 168, 10, 230));	 // <= SETUP (the IP address of the Hyperdeck Studio)
+  hyperDeck.begin(IPAddress(192, 168, 177, 239));	 // <= SETUP (the IP address of the Hyperdeck Studio)
   hyperDeck.serialOutput(3);  // 1= normal, 2= medium verbose, 3=Super verbose
   hyperDeck.connect();  // For some reason the first connection attempt seems to fail, but in the runloop it will try to reconnect.
 }
@@ -86,5 +87,4 @@ void loop() {
 
   Serial << F("freeMemory()=") << freeMemory() << "\n";
 }
-
 

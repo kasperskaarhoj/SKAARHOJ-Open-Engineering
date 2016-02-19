@@ -37,18 +37,23 @@ SkaarhojEADOGMDisplay::SkaarhojEADOGMDisplay() {}
 void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardType) {
 	// NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
 
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPI.begin();
+#endif
+
 	_boardAddress = 88 | (address & B111);	// 0-7
 	_boardType = boardType;	// 1=DOGM81, 2=DOGM162, 3=DOGM163
 	_index = index;	// which display on the board (0-3)
 
   	// Set SPI pins up:
-	_clockPin = 48;
-	_dataPin = 49;
+	_clockPin = 7;
+	_dataPin = 5;
+
 	pinMode(_clockPin, OUTPUT);
 	pinMode(_dataPin, OUTPUT);
 	digitalWrite(_clockPin, LOW);
 	digitalWrite(_dataPin, LOW);
-
+	
 	_chipLowerByte = 255;
 	_chipUpperByte = 255;
 
@@ -56,6 +61,52 @@ void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardT
     _sendData(false);
 
     _selectDisplay(_index, true);
+
+
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPISettings settingsA(SkaarhojEADOGMDisplay_SPI_SPEED, MSBFIRST, SPI_MODE0); 
+	switch(_boardType)	{
+		case 1:
+			SPI.beginTransaction(settingsA);
+		    SPI.transfer(0x31);
+		    SPI.transfer(0x1C);
+		    SPI.transfer(0x51);
+		    SPI.transfer(0x6A);
+		    SPI.transfer(0x74);
+		    SPI.transfer(0x30);
+		    SPI.transfer(0x0C);
+		    SPI.transfer(0x01);
+		    SPI.transfer(0x06);
+			SPI.endTransaction();
+		break;
+		case 2:
+			SPI.beginTransaction(settingsA);
+		    SPI.transfer(0x39);
+		    SPI.transfer(0x1C);
+		    SPI.transfer(0x52);
+		    SPI.transfer(0x69);
+		    SPI.transfer(0x74);
+		    SPI.transfer(0x38);
+		    SPI.transfer(0x0C);
+		    SPI.transfer(0x01);
+		    SPI.transfer(0x06);
+			SPI.endTransaction();
+		break;
+		case 3:
+			SPI.beginTransaction(settingsA);
+		    SPI.transfer(0x39);
+		    SPI.transfer(0x1D);
+		    SPI.transfer(0x50);
+		    SPI.transfer(0x6C);
+		    SPI.transfer(0x78);
+		    SPI.transfer(0x38);
+		    SPI.transfer(0x0C);
+		    SPI.transfer(0x01);
+		    SPI.transfer(0x06);
+			SPI.endTransaction();
+		break;
+	}
+#else
 	switch(_boardType)	{
 		case 1:
 		      // Init sequence for a DOG081, 5V:
@@ -93,7 +144,12 @@ void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardT
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x01);   
 		    shiftOut(_dataPin, _clockPin, MSBFIRST, 0x06);   
 		break;
-	}
+	}	
+#endif
+
+
+
+
     _selectDisplay(_index,false);
 	
 	clearDisplay();
@@ -107,7 +163,14 @@ void SkaarhojEADOGMDisplay::clearDisplay(void) {
 
     _sendData(false);
     _selectDisplay(_index, true);
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPISettings settingsA(SkaarhojEADOGMDisplay_SPI_SPEED, MSBFIRST, SPI_MODE0); 
+	SPI.beginTransaction(settingsA);
+    SPI.transfer(0x01);
+	SPI.endTransaction();
+#else
     shiftOut(_dataPin, _clockPin, MSBFIRST, 0x01);
+#endif
     _selectDisplay(_index,false);
 }
 
@@ -117,7 +180,14 @@ void SkaarhojEADOGMDisplay::clearDisplay(void) {
 void SkaarhojEADOGMDisplay::cursor(bool enable) {
     _sendData(false);
     _selectDisplay(_index, true);
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPISettings settingsA(SkaarhojEADOGMDisplay_SPI_SPEED, MSBFIRST, SPI_MODE0); 
+	SPI.beginTransaction(settingsA);
+    SPI.transfer(enable ? 0x0F : 0x0C);
+	SPI.endTransaction();
+#else
     shiftOut(_dataPin, _clockPin, MSBFIRST, enable ? 0x0F : 0x0C);
+#endif
     _selectDisplay(_index,false);
 }
 
@@ -129,10 +199,18 @@ void SkaarhojEADOGMDisplay::contrast(uint8_t contrast) {
     _selectDisplay(_index, true);
 	
 //	Serial.println(_boardType!=1);
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPISettings settingsA(SkaarhojEADOGMDisplay_SPI_SPEED, MSBFIRST, SPI_MODE0); 
+	SPI.beginTransaction(settingsA);
+    SPI.transfer(_boardType!=1 ? 0x39 : 0x31);
+    SPI.transfer(0x70 | (contrast & 0xF));
+    SPI.transfer(_boardType!=1 ? 0x38 : 0x30);
+	SPI.endTransaction();
+#else
     shiftOut(_dataPin, _clockPin, MSBFIRST, _boardType!=1 ? 0x39 : 0x31);   
     shiftOut(_dataPin, _clockPin, MSBFIRST, 0x70 | (contrast & 0xF));
     shiftOut(_dataPin, _clockPin, MSBFIRST, _boardType!=1 ? 0x38 : 0x30);   
-	
+#endif	
     _selectDisplay(_index,false);
 }
 
@@ -163,7 +241,14 @@ void SkaarhojEADOGMDisplay::gotoRowCol(uint8_t row, uint8_t col) {
 
     _sendData(false);
     _selectDisplay(_index, true);
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	SPISettings settingsA(SkaarhojEADOGMDisplay_SPI_SPEED, MSBFIRST, SPI_MODE0); 
+	SPI.beginTransaction(settingsA);
+    SPI.transfer(B10000000 | (_DDRAMaddr & B1111111));
+	SPI.endTransaction();
+#else
     shiftOut(_dataPin, _clockPin, MSBFIRST, B10000000 | (_DDRAMaddr & B1111111));
+#endif
 /*	for(uint8_t a=0;a<8;a++)	{
 		digitalWrite(_dataPin, (B10000000 | (_DDRAMaddr & B1111111)) & (B1<<(7-a)));
 		digitalWrite(_clockPin, HIGH);
@@ -245,7 +330,14 @@ size_t SkaarhojEADOGMDisplay::write(uint8_t character) {
 		newline();
 	} else if (character==13)	{
 	} else {
+#if defined(ARDUINO_SKAARDUINO_V1)  
+		SPISettings settingsA(SkaarhojEADOGMDisplay_SPI_SPEED, MSBFIRST, SPI_MODE0); 
+		SPI.beginTransaction(settingsA);
+	    SPI.transfer(character);
+		SPI.endTransaction();
+#else
 	    shiftOut(_dataPin, _clockPin, MSBFIRST, character);
+#endif
 		_incDDRAMaddr();
 	}
     _selectDisplay(_index,false);
@@ -264,7 +356,14 @@ size_t SkaarhojEADOGMDisplay::write(const uint8_t *buffer, size_t size) {
 			_selectDisplay(_index,true);
 		} else if (buffer[0]==13)	{
 		} else {
+#if defined(ARDUINO_SKAARDUINO_V1)  
+			SPISettings settingsA(SkaarhojEADOGMDisplay_SPI_SPEED, MSBFIRST, SPI_MODE0); 
+			SPI.beginTransaction(settingsA);
+		    SPI.transfer(buffer[0]);
+			SPI.endTransaction();
+#else
 			shiftOut(_dataPin, _clockPin, MSBFIRST, buffer[0]);   
+#endif
 			_incDDRAMaddr();
 		}
 		buffer++;

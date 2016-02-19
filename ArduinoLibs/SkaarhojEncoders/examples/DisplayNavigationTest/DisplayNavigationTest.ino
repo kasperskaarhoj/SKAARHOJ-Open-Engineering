@@ -19,44 +19,6 @@ SkaarhojEADOGMDisplay Disp163;
 
 
 
-/*************************************************************
- *
- *
- *                     MENU SYSTEM
- *
- *
- **********************************************************/
-
-uint8_t userButtonMode = 0;  // 0-3
-uint8_t setMenuValues = 0;  // The value of this variable determines what the function "menuValues()" prints to the displays second line.
-
-// Configuration of the menu items and hierarchi plus call-back functions:
-MenuBackend menu = MenuBackend(menuUseEvent,menuChangeEvent);
-// Beneath is list of menu items needed to build the menu
-// First argument: the "menu" object (created above), second argument: The text string, third argument: Menu level
-MenuItem menu_UP1       = MenuItem(menu, "< Exit", 1);
-MenuItem menu_mediab1   = MenuItem(menu, "Media Bank 1", 1);    // On Change: Show selected item/Value (2nd encoder rotates). On Use: N/A
-MenuItem menu_mediab2   = MenuItem(menu, "Media Bank 2", 1);    // (As Media Bank 1)
-MenuItem menu_userbut   = MenuItem(menu, "User Buttons", 1);    // On Change: N/A. On Use: Show active configuration
-MenuItem menu_usrcfg1 = MenuItem(menu, "DSK1     VGA+PIPAUTO         PIP", 2);  // On Change: Use it (and se as default)! On Use: Exit
-MenuItem menu_usrcfg2 = MenuItem(menu, "DSK1        DSK2AUTO         PIP", 2);  // (As above)
-MenuItem menu_usrcfg3 = MenuItem(menu, "KEY1        KEY2KEY3        KEY4", 2);  // (As above)
-MenuItem menu_usrcfg4 = MenuItem(menu, "COLOR1    COLOR2BLACK       BARS", 2);  // (As above)
-MenuItem menu_usrcfg5 = MenuItem(menu, "AUX1        AUX2AUX3     PROGRAM", 2);  // (As above)
-MenuItem menu_trans     = MenuItem(menu, "Transitions", 1);    // (As User Buttons)
-MenuItem menu_trtype  = MenuItem(menu, "Type", 2);  // (As Media Bank 1)
-MenuItem menu_trtime  = MenuItem(menu, "Trans. Time", 2);  // (As Media Bank 1)
-MenuItem menu_ftb       = MenuItem(menu, "Fade To Black", 1);
-MenuItem menu_ftbtime = MenuItem(menu, "FTB Time", 2);
-MenuItem menu_ftbexec = MenuItem(menu, "Do Fade to Black", 2);
-MenuItem menu_aux1      = MenuItem(menu, "AUX 1", 1);    // (As Media Bank 1)
-MenuItem menu_aux2      = MenuItem(menu, "AUX 2", 1);    // (As Media Bank 1)
-MenuItem menu_aux3      = MenuItem(menu, "AUX 3", 1);    // (As Media Bank 1)
-MenuItem menu_UP2       = MenuItem(menu, "< Exit", 1);
-
-
-
-
 
 
 
@@ -75,7 +37,7 @@ MenuItem menu_UP2       = MenuItem(menu, "< Exit", 1);
  **********************************************************/
 
 void setup() { 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
 
@@ -120,6 +82,44 @@ void loop() {
 
 
 
+
+
+
+
+/*************************************************************
+ *
+ *
+ *                     MENU SYSTEM
+ *
+ *
+ **********************************************************/
+
+uint8_t userButtonMode = 0;  // 0-3
+uint8_t setMenuValues = 0;  // The value of this variable determines what the function "menuValues()" prints to the displays second line.
+
+// Configuration of the menu items and hierarchi plus call-back functions:
+MenuBackend menu = MenuBackend(menuUseEvent,menuChangeEvent);
+// Beneath is list of menu items needed to build the menu
+// First argument: the "menu" object (created above), second argument: The text string, third argument: Menu level
+MenuItem menu_UP1       = MenuItem(menu, "< Exit", 1);
+MenuItem menu_mediab1   = MenuItem(menu, "Media Bank 1", 1);    // On Change: Show selected item/Value (2nd encoder rotates). On Use: N/A
+MenuItem menu_mediab2   = MenuItem(menu, "Media Bank 2", 1);    // (As Media Bank 1)
+MenuItem menu_userbut   = MenuItem(menu, "User Buttons", 1);    // On Change: N/A. On Use: Show active configuration
+MenuItem menu_usrcfg1 = MenuItem(menu, "DSK1     VGA+PIPAUTO         PIP", 2);  // On Change: Use it (and se as default)! On Use: Exit
+MenuItem menu_usrcfg2 = MenuItem(menu, "DSK1        DSK2AUTO         PIP", 2);  // (As above)
+MenuItem menu_usrcfg3 = MenuItem(menu, "KEY1        KEY2KEY3        KEY4", 2);  // (As above)
+MenuItem menu_usrcfg4 = MenuItem(menu, "COLOR1    COLOR2BLACK       BARS", 2);  // (As above)
+MenuItem menu_usrcfg5 = MenuItem(menu, "AUX1        AUX2AUX3     PROGRAM", 2);  // (As above)
+MenuItem menu_trans     = MenuItem(menu, "Transitions", 1);    // (As User Buttons)
+MenuItem menu_trtype  = MenuItem(menu, "Type", 2);  // (As Media Bank 1)
+MenuItem menu_trtime  = MenuItem(menu, "Trans. Time", 2);  // (As Media Bank 1)
+MenuItem menu_ftb       = MenuItem(menu, "Fade To Black", 1);
+MenuItem menu_ftbtime = MenuItem(menu, "FTB Time", 2);
+MenuItem menu_ftbexec = MenuItem(menu, "Do Fade to Black", 2);
+MenuItem menu_aux1      = MenuItem(menu, "AUX 1", 1);    // (As Media Bank 1)
+MenuItem menu_aux2      = MenuItem(menu, "AUX 2", 1);    // (As Media Bank 1)
+MenuItem menu_aux3      = MenuItem(menu, "AUX 3", 1);    // (As Media Bank 1)
+MenuItem menu_UP2       = MenuItem(menu, "< Exit", 1);
 
 
 

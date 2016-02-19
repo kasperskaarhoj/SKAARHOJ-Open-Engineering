@@ -181,35 +181,14 @@ bool ClientPanaAWHExTCP::isReady()	{
 	return !_activeHTTPRequest;
 }
 void ClientPanaAWHExTCP::_sendPtzRequest(const String command) {
-
-  _activeHTTPRequestTime = millis();
-  if (_client.connect(_cameraIP, 80)) {
-    if (_serialOutput) Serial.println("connecting...");
-    // send the HTTP PUT request:
-	if (_serialOutput) Serial.println(command);
-
-	String inputString = String("GET /cgi-bin/aw_ptz?cmd=%23") +
-						String(command) +
-						String("&res=1 HTTP/1.1\r\n") + 
-						String("Host: 192.168.10.25\r\n") +
-						String("\r\n");
-	char charBuf[128];
-	inputString.toCharArray(charBuf, 128);
-	_client.print(charBuf);
-
-	_activeHTTPRequest = true;
-  } 
-  else {
-    // if you couldn't make a connection:
-    if (_serialOutput) Serial.println("connection failed");
-    if (_serialOutput) Serial.println("disconnecting.");
-    _client.stop();
-	_activeHTTPRequest = false;
-  }
-
+	_sendRequest(command, false);
 }
 
 void ClientPanaAWHExTCP::_sendCamRequest(const String command) {
+	_sendRequest(command, true);
+}
+
+void ClientPanaAWHExTCP::_sendRequest(const String command, bool camRequest) {
 
   _activeHTTPRequestTime = millis();
   if (_client.connect(_cameraIP, 80)) {
@@ -217,16 +196,41 @@ void ClientPanaAWHExTCP::_sendCamRequest(const String command) {
     // send the HTTP PUT request:
 	if (_serialOutput) Serial.println(command);
 
-	String inputString = String("GET /cgi-bin/aw_cam?cmd=") +
-						String(command) +
-						String("&res=1 HTTP/1.1\r\n") + 
-						String("Host: 192.168.10.25\r\n") +
-						String("\r\n");
-	char charBuf[128];
-	inputString.toCharArray(charBuf, 128);
-	_client.print(charBuf);
+	uint8_t charIdx = 0;
 
-	_activeHTTPRequest = true;
+	memset(_charBuf,0,128);
+
+	if (command.length()<=34)	{
+		if (camRequest)	{
+			strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_cam?cmd="));	// 24 chars
+			charIdx+=strlen_P("GET /cgi-bin/aw_cam?cmd=");
+		} else {
+			strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_ptz?cmd=%23"));	// 27 chars
+			charIdx+=strlen_P("GET /cgi-bin/aw_ptz?cmd=%23");
+		}
+
+		command.toCharArray(_charBuf+charIdx, command.length()+1);	// total chars = 61 + NULL + length of command (max 34)
+		charIdx+=command.length();
+	
+		strcpy_P(_charBuf+charIdx, PSTR("&res=1 HTTP/1.1\r\n"));	// 17 chars
+		charIdx+=strlen_P("&res=1 HTTP/1.1\r\n");
+
+		strcpy_P(_charBuf+charIdx, PSTR("Host: 1.2.3.4\r\n"));	// 15 chars
+		charIdx+=strlen_P("Host: 1.2.3.4\r\n");
+
+		strcpy_P(_charBuf+charIdx, PSTR("\r\n"));	// 2 chars
+		charIdx+=strlen_P("\r\n");
+		/*
+		if (_serialOutput) Serial.println("*");
+		if (_serialOutput) Serial.println(_charBuf);
+		if (_serialOutput) Serial.println("*");
+		*/
+		_client.print(_charBuf);
+
+		_activeHTTPRequest = true;
+	} else {
+	    if (_serialOutput) Serial.println("Command too long (>34 chars)");
+	}
   } 
   else {
     // if you couldn't make a connection:

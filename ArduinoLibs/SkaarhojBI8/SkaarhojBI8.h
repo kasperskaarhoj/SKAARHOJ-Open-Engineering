@@ -63,6 +63,9 @@ class SkaarhojBI8
 	bool _RGBbuttons;
 	bool _disableColorCache;
 
+	uint8_t test_color = 0;
+	uint8_t test_button = 0;
+
   public:
 	SkaarhojBI8();
 	bool begin(uint8_t address);

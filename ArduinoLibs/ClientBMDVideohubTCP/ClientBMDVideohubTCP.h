@@ -38,7 +38,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "SkaarhojTCPClient.h"
 
 #include <Ethernet.h>
-//  #include "SkaarhojPgmspace.h"  - 23/2 2014
+#include "SkaarhojPgmspace.h"  - 23/2 2014
 
 
 

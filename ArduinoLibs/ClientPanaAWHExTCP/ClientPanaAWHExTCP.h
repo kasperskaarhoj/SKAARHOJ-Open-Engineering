@@ -46,6 +46,8 @@ class ClientPanaAWHExTCP
 	bool _activeHTTPRequest;
 	unsigned long _activeHTTPRequestTime;
 	
+	char _charBuf[96];
+	
   public:
 
     ClientPanaAWHExTCP();
@@ -74,7 +76,7 @@ class ClientPanaAWHExTCP
   private:
 	void _sendPtzRequest(const String command);
 	void _sendCamRequest(const String command);
-
+	void _sendRequest(const String command, bool camRequest);
 
 };
 

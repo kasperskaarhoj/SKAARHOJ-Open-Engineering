@@ -10,29 +10,29 @@
 
 #include "SkaarhojUtils.h"
 SkaarhojUtils utils;
-
+#include <Streaming.h>
 //#include <MemoryFree.h>
 
 // no-cost stream operator as described at 
 // http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+//template<class T>
+//inline Print &operator <<(Print &obj, T arg)
+//{  
+//  obj.print(arg); 
+//  return obj; 
+//}
 
 
 
 void setup() { 
 
   // Start the Serial (debugging) and UDP:
-  Serial.begin(9600);  
+  Serial.begin(115200);  
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   // Initializing the slider:
   utils.uniDirectionalSlider_init(10, 35, 35, A0);  // These 4 arguments are the default arguments given, if you call the function without any. See the library SkaarhojUtils for more info on what they are for.
-  
+  utils.uniDirectionalSlider_hasMoved();
     // Shows free memory:  
 //  Serial << F("freeMemory()=") << freeMemory() << "\n";
 }

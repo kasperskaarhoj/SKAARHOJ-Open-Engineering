@@ -89,7 +89,7 @@ void ATEMbase::connect(const boolean useFixedPortNumber) {
 		Serial.print(F(" from port "));
 		Serial.println(portNumber);
 	}
-	
+
 	_wipeCleanPacketBuffer();
 	_createCommandHeader(ATEM_headerCmd_HelloPacket, 12+8);
 	_packetBuffer[12] = 0x01;	// This seems to be what the client should send upon first request. 

@@ -42,7 +42,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 class SkaarhojSerialClient : public SkaarhojASCIIClient
 {
   public:
-	HardwareSerial _HardSerial;
+	HardwareSerial &_HardSerial;
 	
 		
   public:

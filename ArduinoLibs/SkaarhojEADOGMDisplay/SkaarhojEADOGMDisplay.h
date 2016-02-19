@@ -28,6 +28,12 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #include "Arduino.h"
 
+#if defined(ARDUINO_SKAARDUINO_V1)  
+	#include <SPI.h>
+#endif
+
+#define SkaarhojEADOGMDisplay_SPI_SPEED 500000
+
 class SkaarhojEADOGMDisplay : public Print  {
 
   private:

@@ -9,12 +9,7 @@ open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
 
-#if ARDUINO >= 100
- #include "Arduino.h"
-#else
- #include "WProgram.h"
-#endif
-
+#include "Arduino.h"
 #include <Adafruit_GFX.h>
 
 #if defined(ARDUINO_SKAARDUINO_V1)  

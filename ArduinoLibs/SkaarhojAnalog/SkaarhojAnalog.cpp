@@ -132,3 +132,79 @@ int SkaarhojAnalog::joystick_AnalogRead(uint8_t index)	{
 		break;
 	}
 }
+
+
+
+
+
+
+
+/**
+ * Slider functions:
+ */
+void SkaarhojAnalog::uniDirectionalSlider_init(int sliderTolerance, int sliderLowEndOffset, int sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex)	{
+
+	ADS7828 analogConv; // Address
+	_analogConv = analogConv;
+	_analogConv.init(i2cAddress);
+	
+		// Configuration constants, should have setter-methods:
+	_uniDirectionalSlider_pinIndex = pinIndex;
+	_uniDirectionalSlider_sliderTolerance = sliderTolerance;  // >0. How much it should be moved before it counts as a change.
+    _uniDirectionalSlider_sliderLowEndOffset = sliderLowEndOffset;  // >0. How far the slider is moved in the low end before we start registering the value range: The starting position.
+    _uniDirectionalSlider_sliderHighEndOffset = sliderHighEndOffset;  // >0. How far the slider is moved in the high end before we start registering the value range: The ending position.
+	
+		// Internal variables during operation:
+	_uniDirectionalSlider_previousSliderValue=-1;
+	_uniDirectionalSlider_previousTransitionPosition=-1;
+	_uniDirectionalSlider_sliderDirectionUp = false;
+	_uniDirectionalSlider_disableUnidirectionality = false;
+	
+	uniDirectionalSlider_hasMoved();	// Make sure the _uniDirectionalSlider_previousSliderValue is set correctly.
+}
+
+void SkaarhojAnalog::uniDirectionalSlider_disableUnidirectionality(bool disable)	{
+	_uniDirectionalSlider_disableUnidirectionality = disable;
+	_uniDirectionalSlider_sliderDirectionUp = false;
+}
+
+bool SkaarhojAnalog::uniDirectionalSlider_hasMoved()	{
+	int sliderValue = _analogConv.analogRead(_uniDirectionalSlider_pinIndex)>>2;
+	if (sliderValue >= _uniDirectionalSlider_previousSliderValue+_uniDirectionalSlider_sliderTolerance || sliderValue <= _uniDirectionalSlider_previousSliderValue-_uniDirectionalSlider_sliderTolerance)  {
+
+		// Find direction:
+		if (!_uniDirectionalSlider_disableUnidirectionality && sliderValue >= _uniDirectionalSlider_previousSliderValue+_uniDirectionalSlider_sliderTolerance && (_uniDirectionalSlider_previousSliderValue==-1 || _uniDirectionalSlider_previousSliderValue<_uniDirectionalSlider_sliderLowEndOffset))  {
+			_uniDirectionalSlider_sliderDirectionUp = true;
+		}
+		if (!_uniDirectionalSlider_disableUnidirectionality && sliderValue <= _uniDirectionalSlider_previousSliderValue-_uniDirectionalSlider_sliderTolerance && (_uniDirectionalSlider_previousSliderValue==-1 || _uniDirectionalSlider_previousSliderValue>1024-_uniDirectionalSlider_sliderHighEndOffset))  {
+			_uniDirectionalSlider_sliderDirectionUp = false;
+		}
+
+		_uniDirectionalSlider_previousSliderValue = sliderValue;
+
+		int transitionPosition = (long)1000*(long)(sliderValue-_uniDirectionalSlider_sliderLowEndOffset)/(long)(1024-_uniDirectionalSlider_sliderLowEndOffset-_uniDirectionalSlider_sliderHighEndOffset);
+		if (transitionPosition>1000) transitionPosition=1000;
+		if (transitionPosition<0) transitionPosition=0;
+		if (!_uniDirectionalSlider_sliderDirectionUp)  transitionPosition = 1000-transitionPosition;
+		if (_uniDirectionalSlider_previousTransitionPosition!=transitionPosition)  {
+			bool returnValue = true;
+			if ((_uniDirectionalSlider_previousTransitionPosition==0 || _uniDirectionalSlider_previousTransitionPosition==1000) && 
+				(transitionPosition==0 || transitionPosition==1000)) {
+					returnValue = false;
+				}
+			_uniDirectionalSlider_previousTransitionPosition=transitionPosition;
+			return returnValue;
+		}
+	}
+	return false;
+}
+
+int SkaarhojAnalog::uniDirectionalSlider_position()	{
+	return _uniDirectionalSlider_previousTransitionPosition;
+}
+
+bool SkaarhojAnalog::uniDirectionalSlider_isAtEnd()	{
+	return (_uniDirectionalSlider_previousTransitionPosition==1000 || _uniDirectionalSlider_previousTransitionPosition==0);
+}
+
+

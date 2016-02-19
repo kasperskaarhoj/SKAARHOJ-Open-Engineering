@@ -191,6 +191,16 @@ void ClientBMDHyperdeckStudio::_parseline()	{
 						strncpy(_Hyperdeck_filelist[clipIndex], 
 								_buffer+_bufferReadIndex+2, 
 								nameLen<(ClientBMDHyperdeckStudio_CLIPNAMELEN-1)?nameLen:(ClientBMDHyperdeckStudio_CLIPNAMELEN-1));
+						
+						_bufferReadIndex+=2+nameLen+8+3+1+1;
+						_Hyperdeck_filelen_hh[clipIndex] = parseInt();
+						_bufferReadIndex++;
+						_Hyperdeck_filelen_mm[clipIndex] = parseInt();
+						_bufferReadIndex++;
+						_Hyperdeck_filelen_ss[clipIndex] = parseInt();
+						_bufferReadIndex++;
+						_Hyperdeck_filelen_ff[clipIndex] = parseInt();
+
 						clipIndex++;
 					}
 				}
