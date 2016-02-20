@@ -398,10 +398,10 @@ function addHousingBrackets(fp, baselineX, baselineY, orientation, number, disti
 					var oSet = baselineY-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
 					fp.AddElement(el, baselineX+6.5, oSet);
 					if (C_addGuideEngravings)	{
-						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 						baselineX+5, oSet);
 						if (!noNumbering)	{
-							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetHelpElement(true),
 							baselineX+1, oSet-4);
 						}
 					}
@@ -410,10 +410,10 @@ function addHousingBrackets(fp, baselineX, baselineY, orientation, number, disti
 					var oSet = baselineY-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
 					fp.AddElement(el, baselineX-6.5, oSet);
 					if (C_addGuideEngravings)	{
-						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 						baselineX-5, oSet);
 						if (!noNumbering)	{
-							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetHelpElement(true),
 							baselineX-9, oSet-4);
 						}
 					}
@@ -422,10 +422,10 @@ function addHousingBrackets(fp, baselineX, baselineY, orientation, number, disti
 					var oSet = baselineX-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
 					fp.AddElement(el, oSet, baselineY-6.5);
 					if (C_addGuideEngravings)	{
-						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 						oSet, baselineY-5);
 						if (!noNumbering)	{
-							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetHelpElement(true),
 							oSet-4, baselineY-9);
 						}
 					}
@@ -434,10 +434,10 @@ function addHousingBrackets(fp, baselineX, baselineY, orientation, number, disti
 					var oSet = baselineX-(housingBracketStartOffset-housingBracketDist*a)*(reverseNumbering?-1:1);
 					fp.AddElement(el, oSet, baselineY+6.5);
 					if (C_addGuideEngravings)	{
-						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 						oSet, baselineY+5);
 						if (!noNumbering)	{
-							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+							fp.AddElement(new TextEngraving("el", globalHousingBracketCount).SetTextHeight(1.5).SetHelpElement(true),
 							oSet-4, baselineY+1);
 						}
 					}
@@ -694,18 +694,18 @@ function createTop(name) {
 		var center = getFaceCenterCoordinates(1);	// Front
 		var dims = getFaceBoxDimensions(1);		// Front
 		fp.AddElement(	// "Box" outer area
-			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 
 		fp.AddElement(	// Inner free area (mounting)
-			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]-C_thickness[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]-C_thickness[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]-(C_thickness[0]-C_thickness[1])/2
 		);
 		fp.AddElement(
-			new TextEngraving("el", "Front mounting area").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			new TextEngraving("el", "Front mounting area").SetAlignment(align_center).SetTextHeight(1.5).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
@@ -714,18 +714,18 @@ function createTop(name) {
 		var center = getFaceCenterCoordinates(2);	// Top
 		var dims = getFaceBoxDimensions(2);		// Top
 		fp.AddElement(	// "Box" outer area
-			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 
 		fp.AddElement(	// Inner free area (mounting)
-			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 		fp.AddElement(
-			new TextEngraving("el", "Top mounting area").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			new TextEngraving("el", "Top mounting area").SetAlignment(align_center).SetTextHeight(1.5).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
@@ -734,18 +734,18 @@ function createTop(name) {
 		var center = getFaceCenterCoordinates(3);	// Back
 		var dims = getFaceBoxDimensions(3);		// Back
 		fp.AddElement(	// "Box" outer area
-			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 
 		fp.AddElement(	// Inner free area (mounting)
-			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]-C_thickness[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]-C_thickness[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]+(C_thickness[0]-C_thickness[1])/2
 		);
 		fp.AddElement(
-			new TextEngraving("el", "Back mounting area").SetAlignment(align_center).SetAngle(180).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			new TextEngraving("el", "Back mounting area").SetAlignment(align_center).SetAngle(180).SetTextHeight(1.5).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
@@ -754,18 +754,18 @@ function createTop(name) {
 		var center = getFaceCenterCoordinates(5);	// Left
 		var dims = getFaceBoxDimensions(5);		// Left
 		fp.AddElement(	// "Box" outer area
-			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 
 		fp.AddElement(	// Inner free area (mounting)
-			new Rectangle("el", dims[0]-C_thickness[0]-C_thickness[1], dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			new Rectangle("el", dims[0]-C_thickness[0]-C_thickness[1], dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0]-(C_thickness[0]-C_thickness[1])/2, 
 			center[1]
 		);
 		fp.AddElement(
-			new TextEngraving("el", "Left\nmounting\narea").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			new TextEngraving("el", "Left\nmounting\narea").SetAlignment(align_center).SetTextHeight(1.5).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
@@ -774,18 +774,18 @@ function createTop(name) {
 		var center = getFaceCenterCoordinates(6);	// Right
 		var dims = getFaceBoxDimensions(6);		// Right
 		fp.AddElement(	// "Box" outer area
-			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 
 		fp.AddElement(	// Inner free area (mounting)
-			new Rectangle("el", dims[0]-C_thickness[0]-C_thickness[1], dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			new Rectangle("el", dims[0]-C_thickness[0]-C_thickness[1], dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0]+(C_thickness[0]-C_thickness[1])/2, 
 			center[1]
 		);
 		fp.AddElement(
-			new TextEngraving("el", "Right\nmounting\narea").SetAlignment(align_center).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			new TextEngraving("el", "Right\nmounting\narea").SetAlignment(align_center).SetTextHeight(1.5).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
@@ -843,18 +843,18 @@ function createBottom(name) {
 		var center = getFaceCenterCoordinates(4);	// Bottom
 		var dims = getFaceBoxDimensions(4);		// Bottom
 		fp.AddElement(	// "Box" outer area
-			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", dims[0], dims[1]).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 
 		fp.AddElement(	// Inner free area (mounting)
-			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_ochre_brown),
+			new Rectangle("el", dims[0]-C_thickness[0]*2, dims[1]-C_thickness[0]*2).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
 		fp.AddElement(
-			new TextEngraving("el", "Bottom mounting area").SetAlignment(align_center).SetAngle(-90).SetTextHeight(1.5).SetColor(engrave_ochre_brown),
+			new TextEngraving("el", "Bottom mounting area").SetAlignment(align_center).SetAngle(-90).SetTextHeight(1.5).SetHelpElement(true),
 			center[0], 
 			center[1]
 		);
@@ -862,26 +862,26 @@ function createBottom(name) {
 
 			// Labeling sides:
 		fp.AddElement(
-			new TextEngraving("el", "Back").SetAlignment(align_center).SetAngle(180).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			new TextEngraving("el", "Back").SetAlignment(align_center).SetAngle(180).SetTextHeight(1.5).SetHelpElement(true),
 			getPanelWidth(2)/2,
 			-C_thickness[0]/2*(!C_internalBottom?-1:1)
 		);
 			// Labeling sides:
 		fp.AddElement(
-			new TextEngraving("el", "Front").SetAlignment(align_center).SetAngle(0).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			new TextEngraving("el", "Front").SetAlignment(align_center).SetAngle(0).SetTextHeight(1.5).SetHelpElement(true),
 			getPanelWidth(2)/2,
 			getPanelHeight(2)+C_thickness[0]/2*(!C_internalBottom?-1:1)
 		);
 		
 			// Labeling sides:
 		fp.AddElement(
-			new TextEngraving("el", "Left").SetAlignment(align_center).SetAngle(90).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			new TextEngraving("el", "Left").SetAlignment(align_center).SetAngle(90).SetTextHeight(1.5).SetHelpElement(true),
 			-C_thickness[0]/2*(!C_internalBottom?-1:1), 
 			getPanelHeight(2)/2
 		);
 			// Labeling sides:
 		fp.AddElement(
-			new TextEngraving("el", "Right").SetAlignment(align_center).SetAngle(-90).SetTextHeight(1.5).SetColor(engrave_pastel_orange),
+			new TextEngraving("el", "Right").SetAlignment(align_center).SetAngle(-90).SetTextHeight(1.5).SetHelpElement(true),
 			getPanelWidth(2)+C_thickness[0]/2*(!C_internalBottom?-1:1), 
 			getPanelHeight(2)/2
 		);

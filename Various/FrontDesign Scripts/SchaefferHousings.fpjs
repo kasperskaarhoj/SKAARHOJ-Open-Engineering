@@ -1321,7 +1321,7 @@ function createHPGLGuideEngravingOfSide(sideNum)	{
 		}
 	}
 	
-	return hpglFromCoordinates(mergeFwdRevCoordinates(coords[1],coords[0]));
+	return hpglFromCoordinates(mergeFwdRevCoordinates(coords[1],coords[0])).SetHelpElement(true);
 }
 
 
@@ -1498,12 +1498,12 @@ function createEnds(name, sideNum) {
 				if (i<2)	{	// Top/bottom
 					fp.AddElement(el, centerX-housingBracketStartOffset+housingBracketDist*a, centerY+housingBracketOffset*(i&1?-1:1));
 					if (C_addGuideEngravings)	{
-						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),centerX-housingBracketStartOffset+housingBracketDist*a, centerY+(housingBracketOffset+1.5)*(i&1?-1:1));
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),centerX-housingBracketStartOffset+housingBracketDist*a, centerY+(housingBracketOffset+1.5)*(i&1?-1:1));
 					}
 				} else {	// Left/Right
 					fp.AddElement(el, centerX+housingBracketOffset*(i&1?-1:1)*(sideNum==3?-1:1), centerY-housingBracketStartOffset+housingBracketDist*a);	//(sideNum==3?-1:1) => Makes sure to mirror left/right on the BACK panel!
 					if (C_addGuideEngravings)	{
-						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),centerX+(housingBracketOffset+1.5)*(i&1?-1:1)*(sideNum==3?-1:1), centerY-housingBracketStartOffset+housingBracketDist*a);
+						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetHelpElement(true),centerX+(housingBracketOffset+1.5)*(i&1?-1:1)*(sideNum==3?-1:1), centerY-housingBracketStartOffset+housingBracketDist*a);
 					}
 				}
 			}
@@ -1523,7 +1523,7 @@ function createEnds(name, sideNum) {
 					);
 
 					fp.AddElement(
-						new TextEngraving("el", i==0?"Top":"Bottom").SetAlignment(align_center).SetTextHeight(1).SetColor(engrave_pastel_orange),
+						new TextEngraving("el", i==0?"Top":"Bottom").SetHelpElement(true).SetAlignment(align_center).SetTextHeight(1),
 						centerX, 
 						centerY+(getFrontSideOffset(sideIndex[i])-getThickness(sideIndex[i])/2)*(i&1?-1:1)+(i==1?lowerRightOffset/2:0)
 					);
@@ -1538,7 +1538,7 @@ function createEnds(name, sideNum) {
 					);
 					
 					fp.AddElement(
-						new TextEngraving("el", i==2?"Right":"Left").SetAlignment(align_center).SetTextHeight(1).SetColor(engrave_pastel_orange).SetAngle(90),
+						new TextEngraving("el", i==2?"Right":"Left").SetHelpElement(true).SetAlignment(align_center).SetTextHeight(1).SetAngle(90),
 						centerX+(getFrontSideOffset(sideIndex[i])-getThickness(sideIndex[i])/2)*(i&1?-1:1)*(sideNum==3?-1:1), 
 						centerY+(i==2?lowerRightOffset/2:0)
 					);
@@ -1554,7 +1554,7 @@ function createEnds(name, sideNum) {
 				for(var i=0;i<2;i++)	{	// 0=Right, 1=Left
 					var hpgl = hpglFromCoordinates(scaleCoordinates(profileCoordinates,i==0?-1:1,1));
 					fp.AddElement(
-						hpgl,
+						hpgl.SetHelpElement(true),
 						centerX+getPerimeterOffset(5)*(i==0?-1:1), 
 						centerY+getPerimeterOffset(2)
 					);
@@ -1599,7 +1599,7 @@ function createEnds(name, sideNum) {
 
 					var hpgl = hpglFromCoordinates(scaleCoordinates(profileCoordinates,((i==0||i==3)?-1:1)*(sideNum==3?-1:1),((i==2||i==3)?-1:1)));
 					fp.AddElement(
-						hpgl,
+						hpgl.SetHelpElement(true),
 						centerX+getPerimeterOffset(5)*((i==0||i==3)?-1:1)*(sideNum==3?-1:1), 
 						centerY+getPerimeterOffset(2)*((i==2||i==3)?-1:1)+(i==2?lowerRightOffset:0)
 					);
@@ -1742,7 +1742,7 @@ function createSides(name, sideNum)	{
 					el.SetCountersink(sink_74A_M3);
 					fp.AddElement(el, centerX-housingBracketStartOffset+housingBracketDist*a, centerY+housingBracketOffset*(i&1?1:-1));	// (i&1?1:-1) is "reversed" compared to createSides() but this is on purpose to make sure the "top" side of the panel matches the "back" of the enclosure.
 					if (C_addGuideEngravings)	{
-						fp.AddElement(new Rectangle("el", 10, 10).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),centerX-housingBracketStartOffset+housingBracketDist*a, centerY+(housingBracketOffset+1.5)*(i&1?1:-1));
+						fp.AddElement(new Rectangle("el", 10, 10).SetHelpElement(true).SetCornerRadius(0).SetTool(engraver_0_2mm),centerX-housingBracketStartOffset+housingBracketDist*a, centerY+(housingBracketOffset+1.5)*(i&1?1:-1));
 					}
 				}
 			}
@@ -1753,24 +1753,24 @@ function createSides(name, sideNum)	{
 		
 			// Front:
 		fp.AddElement(
-			new Rectangle("el", sideNum>=5?getPanelHeight(1):getPanelWidth(1), getThickness(1)).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", sideNum>=5?getPanelHeight(1):getPanelWidth(1), getThickness(1)).SetHelpElement(true).SetCornerRadius(0).SetTool(engraver_0_2mm),
 			centerX,
 			centerY-(centerY-assemblySlotDepth(sideNum, false)+getThickness(1)/2)
 		);
 		fp.AddElement(
-			new TextEngraving("el","Front").SetAlignment(align_center).SetTextHeight(1).SetColor(engrave_pastel_orange),
+			new TextEngraving("el","Front").SetHelpElement(true).SetAlignment(align_center).SetTextHeight(1),
 			centerX,
 			centerY-(centerY-assemblySlotDepth(sideNum, false)+getThickness(1)/2)+5
 		);
 		
 			// Back:
 		fp.AddElement(
-			new Rectangle("el", sideNum>=5?getPanelHeight(3):getPanelWidth(3), getThickness(3)).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+			new Rectangle("el", sideNum>=5?getPanelHeight(3):getPanelWidth(3), getThickness(3)).SetHelpElement(true).SetCornerRadius(0).SetTool(engraver_0_2mm),
 			centerX,
 			centerY+(centerY-assemblySlotDepth(sideNum, true)+getThickness(3)/2)
 		);
 		fp.AddElement(
-			new TextEngraving("el","Back").SetAlignment(align_center).SetTextHeight(1).SetColor(engrave_pastel_orange),
+			new TextEngraving("el","Back").SetAlignment(align_center).SetHelpElement(true).SetTextHeight(1),
 			centerX,
 			centerY+(centerY-assemblySlotDepth(sideNum, true)+getThickness(3)/2)-5
 		);
@@ -1786,7 +1786,7 @@ function createSides(name, sideNum)	{
 		}
 		for(var i=0;i<2;i++)	{	// 0=Right, 1=Left
 			fp.AddElement(
-				new Rectangle("el", profileSideWidth, height-assemblySlotDepth(sideNum,false)-assemblySlotDepth(sideNum,true)).SetCornerRadius(0).SetTool(engraver_0_2mm).SetColor(engrave_pastel_orange),
+				new Rectangle("el", profileSideWidth, height-assemblySlotDepth(sideNum,false)-assemblySlotDepth(sideNum,true)).SetHelpElement(true).SetCornerRadius(0).SetTool(engraver_0_2mm),
 				centerX+(centerX+edgeProfileData[2]-profileSideWidth/2)*(i&1?-1:1), 
 				centerY+(assemblySlotDepth(sideNum,false)-assemblySlotDepth(sideNum,true))/2
 			);
