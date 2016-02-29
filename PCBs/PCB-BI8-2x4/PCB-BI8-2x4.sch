@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="7.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -3258,32 +3258,18 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <label x="5.08" y="5.08" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="SDI_SCLK" class="0">
+<net name="SPI_SCLK" class="0">
 <segment>
 <pinref part="SERIAL" gate="G$1" pin="7"/>
 <wire x1="53.34" y1="7.62" x2="43.18" y2="7.62" width="0.1524" layer="91"/>
 <label x="43.18" y="7.62" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
-<net name="SDI_MOSI" class="0">
+<net name="SPI_MOSI" class="0">
 <segment>
 <pinref part="SERIAL" gate="G$1" pin="8"/>
 <wire x1="68.58" y1="7.62" x2="78.74" y2="7.62" width="0.1524" layer="91"/>
 <label x="78.74" y="7.62" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="DISP_DATA_OUT" class="0">
-<segment>
-<pinref part="SERIAL" gate="G$1" pin="6"/>
-<wire x1="68.58" y1="10.16" x2="78.74" y2="10.16" width="0.1524" layer="91"/>
-<label x="78.74" y="10.16" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="SLIDER_IN" class="0">
-<segment>
-<pinref part="SERIAL" gate="G$1" pin="5"/>
-<wire x1="53.34" y1="10.16" x2="43.18" y2="10.16" width="0.1524" layer="91"/>
-<label x="43.18" y="10.16" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="I2C_SDA" class="0">
@@ -3331,6 +3317,13 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <junction x="104.14" y="15.24"/>
 </segment>
 </net>
+<net name="ANALOG0" class="0">
+<segment>
+<pinref part="SERIAL" gate="G$1" pin="5"/>
+<wire x1="53.34" y1="10.16" x2="43.18" y2="10.16" width="0.1524" layer="91"/>
+<label x="43.18" y="10.16" size="1.778" layer="95" rot="R180"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -3348,10 +3341,9 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/21952a.pdf</description>
 <approved hash="104,1,0,109.22,IC2,VDD,5V,,,"/>
 <approved hash="104,1,99.06,58.42,IC1,VDD,5V,,,"/>
 <approved hash="104,1,99.06,99.06,IC1,VSS,GND,,,"/>
-<approved hash="106,1,68.58,10.16,DISP_DATA_OUT,,,,,"/>
-<approved hash="106,1,68.58,7.62,SDI_MOSI,,,,,"/>
-<approved hash="106,1,53.34,7.62,SDI_SCLK,,,,,"/>
-<approved hash="106,1,53.34,10.16,SLIDER_IN,,,,,"/>
+<approved hash="106,1,53.34,10.16,ANALOG0,,,,,"/>
+<approved hash="106,1,68.58,7.62,SPI_MOSI,,,,,"/>
+<approved hash="106,1,53.34,7.62,SPI_SCLK,,,,,"/>
 </errors>
 </schematic>
 </drawing>
