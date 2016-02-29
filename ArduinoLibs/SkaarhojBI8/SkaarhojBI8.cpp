@@ -47,9 +47,7 @@ bool SkaarhojBI8::begin(uint8_t address, bool reverseButtons, bool extendedBicol
 	setButtonType(0);	// Assuming NKK buttons as default
 	
 		// Used to track last used color in order to NOT write colors to buttons if they already have that color (writing same color subsequently will make the LED blink weirdly because each time a new timing scheme is randomly created in the PCA9685)
-	for(uint8_t i=0; i<16;i++)	{
-		_buttonColorCache[i] = 255;
-	}
+	clearButtonColorCache();
 	
 	_defaultColorNumber = 5;
 		
@@ -451,3 +449,9 @@ void SkaarhojBI8::testProgramme(uint16_t buttonMask)	{
 		}
 	}
 }
+
+void SkaarhojBI8::clearButtonColorCache()	{
+	for(uint8_t i=0; i<16;i++)	{
+		_buttonColorCache[i] = 255;
+	}
+}	
