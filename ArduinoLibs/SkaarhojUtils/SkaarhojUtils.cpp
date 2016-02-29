@@ -56,7 +56,7 @@ void SkaarhojUtils::uniDirectionalSlider_disableUnidirectionality(bool disable)	
 
 bool SkaarhojUtils::uniDirectionalSlider_hasMoved()	{
 	int sliderValue = analogRead(_uniDirectionalSlider_analogInputPin);
-
+	//Serial.println(sliderValue);
 	if (sliderValue >= _uniDirectionalSlider_previousSliderValue+_uniDirectionalSlider_sliderTolerance || sliderValue <= _uniDirectionalSlider_previousSliderValue-_uniDirectionalSlider_sliderTolerance)  {
 
 		// Find direction:

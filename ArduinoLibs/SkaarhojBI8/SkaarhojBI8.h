@@ -98,7 +98,7 @@ class SkaarhojBI8
 	uint16_t buttonIsPressedAll();
 	bool isButtonIn(uint8_t buttonNumber, uint16_t allButtonsState);
 	void testProgramme(uint16_t buttonMask);
-	
+	void clearButtonColorCache();
 	
   private:
 	void _writeButtonLed(uint8_t buttonNumber, uint8_t color);

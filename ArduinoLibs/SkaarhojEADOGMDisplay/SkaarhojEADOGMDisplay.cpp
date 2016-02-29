@@ -46,8 +46,8 @@ void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardT
 	_index = index;	// which display on the board (0-3)
 
   	// Set SPI pins up:
-	_clockPin = 7;
-	_dataPin = 5;
+	_clockPin = 48;
+	_dataPin = 49;
 
 	pinMode(_clockPin, OUTPUT);
 	pinMode(_dataPin, OUTPUT);
