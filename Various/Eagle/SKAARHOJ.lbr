@@ -6282,6 +6282,34 @@ EC12E series with push-on switch</description>
 <smd name="P$4" x="-0.36" y="0.425" dx="0.45" dy="0.33" layer="1" rot="R90"/>
 <text x="-1" y="0.9" size="1.27" layer="21" ratio="12">&gt;NAME</text>
 </package>
+<package name="4PINTS">
+<smd name="4" x="0.3778" y="-1.5" dx="0.5" dy="2" layer="1" rot="R270"/>
+<smd name="3" x="0.3778" y="-0.5" dx="0.5" dy="2" layer="1" rot="R270"/>
+<smd name="2" x="0.3778" y="0.5" dx="0.5" dy="2" layer="1" rot="R270"/>
+<smd name="1" x="0.3778" y="1.5" dx="0.5" dy="2" layer="1" rot="R270"/>
+</package>
+<package name="LED-TRICOLOR-SMD-LTBR">
+<smd name="P$1" x="-1.15" y="-1.2" dx="1.1" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$2" x="0" y="-1.2" dx="1.1" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$3" x="1.15" y="-1.2" dx="1.1" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$4" x="1.15" y="1.2" dx="1.1" dy="0.8" layer="1" rot="R90"/>
+<text x="-2.27" y="2.17" size="1.27" layer="21" ratio="12">&gt;NAME</text>
+<smd name="P$5" x="0" y="1.2" dx="1.1" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$6" x="-1.15" y="1.2" dx="1.1" dy="0.8" layer="1" rot="R90"/>
+<circle x="-2.54" y="-1.27" radius="0.635" width="0.127" layer="21"/>
+</package>
+<package name="ZIP-8-0.5">
+<smd name="P$1" x="-1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$2" x="-1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$3" x="-0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$4" x="-0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$5" x="0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$6" x="0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$7" x="1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$8" x="1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="GND$9" x="-3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
+<smd name="GND$1" x="3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
+</package>
 </packages>
 <symbols>
 <symbol name="LP11ESWITCH">
@@ -12297,6 +12325,21 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <technology name=""/>
 </technologies>
 </device>
+<device name="ZIF-0.5" package="ZIP-8-0.5">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
 </devices>
 </deviceset>
 <deviceset name="M03X2">
@@ -12792,6 +12835,17 @@ Proven layout and schematic for triple color LED in SMD package - common anode. 
 <connect gate="G$1" pin="A" pad="P$1"/>
 <connect gate="G$1" pin="BLU" pad="P$3"/>
 <connect gate="G$1" pin="GRN" pad="P$4"/>
+<connect gate="G$1" pin="RED" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LTBR" package="LED-TRICOLOR-SMD-LTBR">
+<connects>
+<connect gate="G$1" pin="A" pad="P$4 P$5 P$6"/>
+<connect gate="G$1" pin="BLU" pad="P$3"/>
+<connect gate="G$1" pin="GRN" pad="P$1"/>
 <connect gate="G$1" pin="RED" pad="P$2"/>
 </connects>
 <technologies>
@@ -13295,6 +13349,24 @@ Proven layout and schematic for triple color LED in SMD package - common anode. 
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 <connect gate="G$1" pin="3" pad="C1 C2 C3 C4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="TOUCHSC">
+<gates>
+<gate name="G$1" symbol="M02X2" x="0" y="-5.08"/>
+</gates>
+<devices>
+<device name="" package="4PINTS">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
 </connects>
 <technologies>
 <technology name=""/>
