@@ -198,7 +198,7 @@ void ClientPanaAWHExTCP::_sendRequest(const String command, bool camRequest) {
 
 	uint8_t charIdx = 0;
 
-	memset(_charBuf,0,128);
+	memset(_charBuf,0,96);
 
 	if (command.length()<=34)	{
 		if (camRequest)	{
