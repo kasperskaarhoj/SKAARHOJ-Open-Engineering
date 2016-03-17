@@ -34,11 +34,11 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "EthernetUdp.h"
 #include <SkaarhojPgmspace.h>
 
-#define ATEM_headerCmd_AckRequest 0x1
-#define ATEM_headerCmd_HelloPacket 0x2
-#define ATEM_headerCmd_Resend 0x4
-#define ATEM_headerCmd_RequestNextAfter 0x8
-#define ATEM_headerCmd_Ack 0x10
+#define ATEM_headerCmd_AckRequest 0x1	// Please acknowledge reception of this package...
+#define ATEM_headerCmd_HelloPacket 0x2	
+#define ATEM_headerCmd_Resend 0x4			// This is a resent information
+#define ATEM_headerCmd_RequestNextAfter 0x8	// I'm requesting you to resend something to me.
+#define ATEM_headerCmd_Ack 0x10		// This package is an acknowledge to package id (byte 4-5) ATEM_headerCmd_AckRequest
 
 #define ATEM_maxInitPackageCount 40		// The maximum number of initialization packages. By observation on a 2M/E 4K can be up to (not fixed!) 32. We allocate a f more then...
 #define ATEM_packetBufferLength 96		// Size of packet buffer
@@ -51,7 +51,7 @@ class ATEMbase
 	EthernetUDP _Udp;					// UDP object for communication, see constructor.
 	uint16_t _localPort; 				// Default local port to send from. Preferably it's chosen randomly inside the class.
 	IPAddress _switcherIP;				// IP address of the switcher
-	boolean _serialOutput;				// If set, the library will print status/debug information to the Serial object
+	uint8_t _serialOutput;				// If set, the library will print status/debug information to the Serial object
 
 	// ATEM Connection Basics
 	uint16_t _localPacketIdCounter;  	// This is our counter for the command packages we might like to send to ATEM

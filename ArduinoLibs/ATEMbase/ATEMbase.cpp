@@ -187,8 +187,23 @@ void ATEMbase::runLoop(uint16_t delayTime) {
 						#endif
 						if (_serialOutput>1)	{
 							Serial.print(F("rpID: "));
-				        	Serial.println(_lastRemotePacketID, DEC);
+				        	Serial.print(_lastRemotePacketID, DEC);
+							Serial.println(F(" - ACK!"));
 						} 
+					} else if(_initPayloadSent && (headerBitmask & ATEM_headerCmd_RequestNextAfter) && _hasInitialized) {	// ATEM is requesting a previously sent package which must have dropped out of the order. We return an empty one so the ATEM doesnt' crash (which some models will, if it doesn't get an answer before another 63 commands gets sent from the controller.)
+						uint8_t b1 = _packetBuffer[6];
+						uint8_t b2 = _packetBuffer[7];
+						_wipeCleanPacketBuffer();
+						_createCommandHeader(ATEM_headerCmd_Ack, 12, 0);
+						_packetBuffer[0] = ATEM_headerCmd_AckRequest << 3;	// Overruling this. A small trick because createCommandHeader shouldn't increment local package ID counter
+						_packetBuffer[10] = b1;
+						_packetBuffer[11] = b2;
+						_sendPacketBuffer(12); 
+
+						if (_serialOutput>1)	{
+							Serial.print(F("ATEM asking to resend "));
+				        	Serial.println((b1<<8)|b2, DEC);
+						}
 					} else {
 						#if ATEM_debug 
 				        if (_serialOutput & 0x80) {
@@ -322,6 +337,8 @@ void ATEMbase::_createCommandHeader(const uint8_t headerCmd, const uint16_t leng
 		
     if(!(headerCmd & (ATEM_headerCmd_HelloPacket | ATEM_headerCmd_Ack | ATEM_headerCmd_RequestNextAfter))) {
         _localPacketIdCounter++;
+
+//		if ((_localPacketIdCounter & 0xF) == 0xF) _localPacketIdCounter++;	// Uncommenting this line will jump the local package ID counter every 15 command - thereby introducing a stress test of the robustness of the "resent package" function from the ATEM switcher.
 
 	    _packetBuffer[10] = highByte(_localPacketIdCounter);  // Local Packet ID, MSB
 	    _packetBuffer[11] = lowByte(_localPacketIdCounter);  // Local Packet ID, LSB
