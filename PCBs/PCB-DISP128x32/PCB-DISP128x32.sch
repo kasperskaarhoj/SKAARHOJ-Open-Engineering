@@ -2422,7 +2422,7 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <part name="C6" library="SparkFun" deviceset="CAP" device="0603-CAP" value="1.0uF"/>
 <part name="U$3" library="microbuilder" deviceset="GND" device=""/>
 <part name="C7" library="SparkFun" deviceset="CAP" device="0603-CAP" value="1.0uF"/>
-<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="390K"/>
+<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="560K"/>
 <part name="C8" library="SparkFun" deviceset="CAP" device="0603-CAP" value="2.2uF"/>
 <part name="C9" library="SparkFun" deviceset="CAP" device="0603-CAP" value="2.2uF"/>
 <part name="U1" library="SKAARHOJ" deviceset="74HC4050D" device="TSSOP16" value="74HC4050D"/>

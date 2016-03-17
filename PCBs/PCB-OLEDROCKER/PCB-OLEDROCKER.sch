@@ -9900,7 +9900,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
 <part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="12K5"/>
 <part name="U$2" library="microbuilder" deviceset="GND" device=""/>
-<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="470pF"/>
+<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="1nF"/>
 <part name="C4" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="OLED1" library="SKAARHOJ" deviceset="NKK-OLED-ROCKER" device=""/>
 <part name="DC-DC" library="SparkFun" deviceset="M04X2" device=""/>

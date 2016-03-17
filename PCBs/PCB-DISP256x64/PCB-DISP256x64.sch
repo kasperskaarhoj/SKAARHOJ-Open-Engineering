@@ -3859,7 +3859,7 @@ chip</description>
 <part name="C13" library="SparkFun" deviceset="CAP" device="0805" value="4.7uF/25V"/>
 <part name="C14" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
-<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="680K"/>
+<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="560K"/>
 <part name="U$9" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="C15" library="SparkFun" deviceset="CAP" device="0805" value="4.7uF"/>
 <part name="C16" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
