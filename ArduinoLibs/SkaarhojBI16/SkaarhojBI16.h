@@ -52,6 +52,9 @@ class SkaarhojBI16
 	uint8_t _buttonColorCache[16];	// 16 buttons
 	bool _debugMode;
 
+	uint8_t test_color = 0;
+	uint8_t test_button = 0;
+
   public:
 	SkaarhojBI16();
 	bool begin(uint8_t address);
@@ -73,7 +76,8 @@ class SkaarhojBI16
 	uint16_t buttonDownAll();
 	uint16_t buttonIsPressedAll();
 	bool isButtonIn(uint8_t buttonNumber, uint16_t allButtonsState);
-	
+	void testProgramme(uint16_t buttonMask);
+		
   private:
 	void _writeButtonLed(uint8_t buttonNumber, uint8_t color);
 	void _readButtonStatus();

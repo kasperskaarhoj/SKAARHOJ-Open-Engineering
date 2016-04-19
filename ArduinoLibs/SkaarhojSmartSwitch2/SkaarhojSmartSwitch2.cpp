@@ -325,12 +325,21 @@ void SkaarhojSmartSwitch2::testProgramme(uint8_t buttonMask)	{
   static uint16_t lastTime;
   static uint8_t hasSetBackgroundColor = 0;
   static uint8_t bgColor = 0;
+  static unsigned long buttonColorTimer = 0;
 
   for (int i = 0; i < 8; i++)  {
     if (buttonMask & (B1 << i)) {
 
-      if ((millis() & 0x3000) == 0x3000)	{
-        if (!(hasSetBackgroundColor & (B1 << i)))	{
+      if ((millis() & 0x1000) == 0x1000 || (millis()-buttonColorTimer < 5000))	{
+		bool newColor = false;
+		if (buttonDown(i+1))	{
+	        Serial.print(F("Button #"));
+	        Serial.print(i+1);
+	        Serial.print(F(" pressed\n"));
+			buttonColorTimer = millis();
+			newColor = true;
+		}
+        if (newColor || !(hasSetBackgroundColor & (B1 << i)))	{
           hasSetBackgroundColor |= (B1 << i);
 		  bgColor = random(0,63);
           setButtonColor(bgColor>>4, bgColor>>2, bgColor, B1 << i);
@@ -339,13 +348,13 @@ void SkaarhojSmartSwitch2::testProgramme(uint8_t buttonMask)	{
           setTextColor(WHITE);
           setCursor(0, 0);
           setTextSize(1);
-          print("Display #");
+          print(F("Display #"));
           println(i+1);
-          print("Col=");
+          print(F("Col="));
           print((bgColor>>4)&B11);
-          print(",");
+          print(F(","));
           print((bgColor>>2)&B11);
-          print(",");
+          print(F(","));
           print((bgColor)&B11);
 		  display(B1 << i);
         }
@@ -367,32 +376,6 @@ void SkaarhojSmartSwitch2::testProgramme(uint8_t buttonMask)	{
         setTextSize(2);
         print((uint8_t)millis(), BIN);
         display(B1 << i);
-
-
-        if (buttonDown(i+1))  {
-          Serial.print(F("Button #"));
-          Serial.print(i+1);
-          Serial.print(F(" was pressed down"));
-
-          setButtonColor(random(0, 3), random(0, 3), random(0, 3), B1 << i);
-        }
-        if (buttonUp(i+1))  {
-          Serial.print(F("Button #"));
-          Serial.print(i+1);
-          Serial.println(F(" was released"));
-        }
-
-        if (buttonIsHeldFor(i+1, 1000))  {
-          Serial.print(F("Button #"));
-          Serial.print(i+1);
-          Serial.println(F(" was held for 1000 ms"));
-        }
-        if (buttonIsReleasedAgo(i+1, 1000))  {
-          Serial.print(F("Button #"));
-          Serial.print(i+1);
-          Serial.println(F(" was released 1000 ms ago"));
-        }
-
       }
     }
   }

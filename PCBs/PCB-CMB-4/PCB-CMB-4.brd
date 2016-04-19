@@ -143,9 +143,6 @@
 <wire x1="135" y1="39" x2="0" y2="39" width="0" layer="20"/>
 <wire x1="0" y1="39" x2="0" y2="0" width="0" layer="20"/>
 <text x="104.648" y="36.068" size="1.778" layer="122" rot="MR0">SKAARHOJ 2015</text>
-<text x="36.83" y="34.29" size="1.016" layer="122" rot="MR0">BI8-2x4RGB</text>
-<text x="20.32" y="34.29" size="0.8128" layer="122" rot="MR0">v07-01-13</text>
-<text x="42.164" y="37.846" size="0.8128" layer="122" rot="MR0">GITHUB: SKAARHOJ-Open-Engineering</text>
 <text x="105.029" y="34.798" size="0.8128" layer="122" rot="MR0">PCB-CMB-4</text>
 <text x="96.139" y="34.798" size="0.8128" layer="122" rot="MR0">v11-15</text>
 <rectangle x1="86.18743125" y1="36.194896875" x2="88.04925" y2="36.279734375" layer="200"/>

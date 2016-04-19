@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.3.0">
+<eagle version="7.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -1443,6 +1443,14 @@ Manufacturer: TECONNECTIVITY</description>
 <sheet>
 <plain>
 <text x="109.22" y="17.78" size="3.81" layer="97">POWER</text>
+<text x="149.86" y="78.74" size="1.778" layer="91">1=O/  (GND)
+2=O   (12V)
+3=G/  (Red, Lamp 1)
+4=BL  (Green, Lamp 1)
+5=BL/  (Red, Lamp 2)
+6=G     (Green, Lamp 2)
+7=BR/    (Red, Lamp 3)
+8=BR      (Green, Lamp 3)</text>
 </plain>
 <instances>
 <instance part="LED1" gate="G$1" x="-17.78" y="60.96"/>
@@ -1825,4 +1833,10 @@ Manufacturer: TECONNECTIVITY</description>
 </errors>
 </schematic>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>

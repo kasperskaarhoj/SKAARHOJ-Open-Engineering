@@ -16,9 +16,11 @@
 */
 #include "SkaarhojAudioControl2.h"
 
-SkaarhojAudioControl2::SkaarhojAudioControl2(){}	// Empty constructor.
+SkaarhojAudioControl2::SkaarhojAudioControl2(){
+	_oldI2CAddr = false;
+}	// Empty constructor.
 
-void SkaarhojAudioControl2::begin(int address) {
+void SkaarhojAudioControl2::begin(int address, int addressVU) {
 	// NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
 	
 	_boardAddress = (address & B111);	// 0-7
@@ -35,12 +37,16 @@ void SkaarhojAudioControl2::begin(int address) {
 	PCA9685 VUledDriver; 
 	_VUledDriver = VUledDriver;
 	  // VU meter: 
-    _VUledDriver.begin(B110000 | _boardAddress);
+    _VUledDriver.begin(B110000 | (addressVU==-1 ? _boardAddress : (addressVU & B111)));
     _VUledDriver.init();
 
 	// Create object for reading button presses
-	_chipAddress = B100000 | _boardAddress;
+	_chipAddress = (_oldI2CAddr ? B100000 : B1011000) | _boardAddress;
 	_writeOutputs(_ledFlags);
+}
+
+void SkaarhojAudioControl2::oldI2CAddr(bool oldI2CAddr)	{
+	_oldI2CAddr = oldI2CAddr;
 }
 
 void SkaarhojAudioControl2::setIsMasterBoard()	{

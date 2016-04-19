@@ -433,6 +433,15 @@ bool SkaarhojBI8::_validPercentage(uint8_t percentage)	{	// Checks if a value is
 
 void SkaarhojBI8::testProgramme(uint16_t buttonMask)	{
 
+	uint16_t allButtons = buttonDownAll();
+	for(uint16_t i=0; i<16;i++)	{
+		if ((allButtons >> i & 1) > 0)	{
+	        Serial.print(F("Button #"));
+	        Serial.print(i+1);
+	        Serial.print(F(" pressed\n"));
+		}
+	}
+
 	while(true)	{
 		test_button = (test_button+1)%16;
 		if (!test_button)	{
@@ -440,11 +449,7 @@ void SkaarhojBI8::testProgramme(uint16_t buttonMask)	{
 		}
 
 		if ((buttonMask & ((uint16_t)B1 << test_button)) > 0)	{
-			if (buttonDown(test_button+1))	{
-				_writeButtonLed(test_button+1,2);	// red
-			} else {
-				_writeButtonLed(test_button+1,test_color);
-			}
+			_writeButtonLed(test_button+1,test_color);
 			break;
 		}
 	}

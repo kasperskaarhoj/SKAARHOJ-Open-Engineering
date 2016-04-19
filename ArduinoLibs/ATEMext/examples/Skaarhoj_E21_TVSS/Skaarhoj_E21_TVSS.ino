@@ -17,7 +17,11 @@
 #include <SPI.h>         // needed for Arduino versions later than 0018
 #include <Ethernet.h>
 #include <EEPROM.h>      // For storing IP numbers
+
+#include <SkaarhojTools.h>
 #include <SkaarhojPgmspace.h>
+
+SkaarhojTools sTools(1);    // 0=No runtime serial logging, 1=Moderate runtime serial logging, 2=more verbose... etc.
 
 // Include ATEM library and make an instance:
 #include <ATEMbase.h>
@@ -32,16 +36,8 @@ uint8_t atem_ip[4];  // Will hold the ATEM IP address
 uint8_t mac[6];    // Will hold the Arduino Ethernet shield/board MAC address (loaded from EEPROM memory, set with ConfigEthernetAddresses example sketch)
 
 
-
-// No-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
-
+#include <Streaming.h>
+#include <MemoryFree.h>
 
 
 // All related to library "SkaarhojBI8":
@@ -365,8 +361,22 @@ void slider()  {
   // "T-bar" slider:
   if (utils.uniDirectionalSlider_hasMoved())  {
     AtemSwitcher.setTransitionPosition(0, 10*utils.uniDirectionalSlider_position());
+    lDelay(20);
     if (utils.uniDirectionalSlider_isAtEnd())  {
       AtemSwitcher.setTransitionPosition(0, 0);
+      lDelay(5);
     }
   }
+}
+
+/**
+   Local delay function
+*/
+void lDelay(unsigned long timeout)  {
+  unsigned long thisTime = millis();
+  do {
+    AtemSwitcher.runLoop();
+    //Serial << F(".");
+  }
+  while (!sTools.hasTimedOut(thisTime, timeout));
 }

@@ -161,7 +161,7 @@
 <wire x1="98.54" y1="0" x2="98.54" y2="35.56" width="0" layer="20"/>
 <wire x1="98.54" y1="35.56" x2="0" y2="35.56" width="0" layer="20"/>
 <wire x1="0" y1="35.56" x2="0" y2="0" width="0" layer="20"/>
-<text x="70.358" y="32.258" size="0.8128" layer="122" ratio="12" rot="MR0">PCB-AC4, v02-16
+<text x="70.358" y="32.258" size="0.8128" layer="122" ratio="12" rot="MR0">PCB-AC4, v03-16
 SKAARHOJ</text>
 <rectangle x1="41.35643125" y1="33.019896875" x2="43.21825" y2="33.104734375" layer="200"/>
 <rectangle x1="43.98025" y1="33.019896875" x2="44.48825" y2="33.104734375" layer="200"/>
@@ -656,8 +656,8 @@ MAX3223-MAX3243.pdf</description>
 <rectangle x1="-3.175" y1="2.54" x2="0" y2="5.715" layer="21"/>
 </package>
 <package name="2BITADDR_SMALL">
-<pad name="A1" x="0" y="0" drill="0.5"/>
-<pad name="A0" x="-1.565" y="0" drill="0.5"/>
+<pad name="A1" x="0" y="0" drill="0.4"/>
+<pad name="A0" x="-1.565" y="0" drill="0.4"/>
 <text x="-2.159" y="1.651" size="0.7112" layer="21">A0</text>
 <text x="-0.635" y="1.651" size="0.7112" layer="21">A1</text>
 <text x="-3.965" y="0.635" size="0.7112" layer="21">ON</text>
@@ -667,13 +667,13 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="0.841" y1="1.524" x2="0.841" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="0.841" y1="-1.524" x2="-2.365" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="-2.365" y1="-1.524" x2="-2.365" y2="1.524" width="0.127" layer="21"/>
-<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
+<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H1" x="0" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
 <text x="0" y="-0.1001" size="0.02" layer="27" rot="R90">&gt;VALUE</text>
-<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H0" x="-1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
 </package>
 </packages>
 </library>
