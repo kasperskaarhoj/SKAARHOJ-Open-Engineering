@@ -769,7 +769,7 @@ design rules under a new name.</description>
 <element name="IC5" library="linear" package="SO08" value="LM358D" x="27.94" y="15.24" rot="MR0"/>
 <element name="C7" library="SparkFun" package="0603-CAP" value="100nF" x="33.59" y="17.445" rot="MR270"/>
 <element name="C15" library="SparkFun" package="0805" value="10uF/25V" x="31.496" y="17.526" rot="MR270"/>
-<element name="R9" library="SparkFun" package="0603-RES" value="12K5" x="29.083" y="9.271" rot="MR270"/>
+<element name="R9" library="SparkFun" package="0603-RES" value="22K" x="29.083" y="9.271" rot="MR270"/>
 <element name="R10" library="SparkFun" package="0603-RES" value="22K" x="26.924" y="9.271" rot="MR270"/>
 <element name="LED1" library="SKAARHOJ" package="LEDBICOLOR-SMD" value="LEDBICOLOR-SMD" x="4.5" y="15.59" rot="R270"/>
 <element name="R15" library="SparkFun" package="0603-RES" value="820" x="37.407" y="15.984" rot="MR0"/>

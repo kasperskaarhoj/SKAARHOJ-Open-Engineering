@@ -344,9 +344,9 @@ MAX3223-MAX3243.pdf</description>
 <rectangle x1="-4.69" y1="2" x2="-4.2" y2="3.1" layer="51"/>
 </package>
 <package name="3BITADDR_SMALL">
-<pad name="A1" x="0" y="0" drill="0.5"/>
-<pad name="A0" x="-1.565" y="0" drill="0.5"/>
-<pad name="A2" x="1.565" y="0" drill="0.5"/>
+<pad name="A1" x="0" y="0" drill="0.4"/>
+<pad name="A0" x="-1.565" y="0" drill="0.4"/>
+<pad name="A2" x="1.565" y="0" drill="0.4"/>
 <text x="-2.159" y="1.651" size="0.7112" layer="21">A0</text>
 <text x="-0.635" y="1.651" size="0.7112" layer="21">A1</text>
 <text x="1.016" y="1.651" size="0.7112" layer="21">A2</text>
@@ -358,16 +358,16 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="2.365" y1="1.524" x2="2.365" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="2.365" y1="-1.524" x2="-2.365" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="-2.365" y1="-1.524" x2="-2.365" y2="1.524" width="0.127" layer="21"/>
-<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
+<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H1" x="0" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
 <text x="0" y="-0.1001" size="0.02" layer="27" rot="R90">&gt;VALUE</text>
-<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS2" x="1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
+<smd name="AS2" x="1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H0" x="-1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
 <smd name="H2" x="1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L2" x="1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L2" x="1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
 </package>
 <package name="4.5MMPAD6MM">
 <pad name="P$1" x="0" y="0" drill="4.5" diameter="7"/>
@@ -514,6 +514,18 @@ MAX3223-MAX3243.pdf</description>
 <pad name="8" x="1" y="-3" drill="0.8" rot="R270"/>
 <text x="-2.544" y="-3.072" size="0.4064" layer="25" rot="R90">&gt;NAME</text>
 <text x="-2.544" y="-0.274" size="0.4064" layer="27" font="vector" rot="R90">&gt;VALUE</text>
+</package>
+<package name="ZIP-8-0.5">
+<smd name="P$1" x="-1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$2" x="-1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$3" x="-0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$4" x="-0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$5" x="0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$6" x="0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$7" x="1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$8" x="1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="GND$9" x="-3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
+<smd name="GND$1" x="3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
 </package>
 </packages>
 <symbols>
@@ -863,6 +875,21 @@ MAX3223-MAX3243.pdf</description>
 <connect gate="G$1" pin="6" pad="6"/>
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="ZIF-0.5" package="ZIP-8-0.5">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -2448,6 +2475,7 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <part name="C3" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C12" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$24" library="SparkFun" deviceset="5V" device=""/>
+<part name="U$2" library="SKAARHOJ" deviceset="M04X2" device="ZIF-0.5"/>
 </parts>
 <sheets>
 <sheet>
@@ -2496,6 +2524,7 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <instance part="C3" gate="G$1" x="203.2" y="-76.2"/>
 <instance part="C12" gate="G$1" x="182.88" y="-76.2"/>
 <instance part="U$24" gate="G$1" x="215.9" y="-66.04"/>
+<instance part="U$2" gate="G$1" x="137.16" y="-109.22"/>
 </instances>
 <busses>
 </busses>
@@ -2554,9 +2583,14 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <wire x1="203.2" y1="-83.82" x2="215.9" y2="-83.82" width="0.1524" layer="91"/>
 <wire x1="215.9" y1="-83.82" x2="215.9" y2="-78.74" width="0.1524" layer="91"/>
 <junction x="203.2" y="-83.82"/>
-<wire x1="182.88" y1="-83.82" x2="124.46" y2="-83.82" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-83.82" x2="127" y2="-83.82" width="0.1524" layer="91"/>
 <junction x="182.88" y="-83.82"/>
 <junction x="124.46" y="-83.82"/>
+<pinref part="U$2" gate="G$1" pin="1"/>
+<wire x1="127" y1="-83.82" x2="124.46" y2="-83.82" width="0.1524" layer="91"/>
+<wire x1="129.54" y1="-104.14" x2="127" y2="-104.14" width="0.1524" layer="91"/>
+<wire x1="127" y1="-104.14" x2="127" y2="-83.82" width="0.1524" layer="91"/>
+<junction x="127" y="-83.82"/>
 </segment>
 <segment>
 <wire x1="-152.4" y1="2.54" x2="-172.72" y2="2.54" width="0.1524" layer="91"/>
@@ -2640,6 +2674,11 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <wire x1="142.24" y1="-15.24" x2="144.78" y2="-15.24" width="0.1524" layer="91"/>
 <label x="144.78" y="-15.24" size="1.778" layer="95"/>
 </segment>
+<segment>
+<wire x1="129.54" y1="-106.68" x2="119.38" y2="-106.68" width="0.1524" layer="91"/>
+<label x="119.38" y="-106.68" size="1.778" layer="95" rot="R180"/>
+<pinref part="U$2" gate="G$1" pin="3"/>
+</segment>
 </net>
 <net name="I2C_SCL" class="0">
 <segment>
@@ -2656,6 +2695,11 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <pinref part="U$19" gate="G$1" pin="GND"/>
 <wire x1="142.24" y1="-17.78" x2="144.78" y2="-17.78" width="0.1524" layer="91"/>
 <label x="144.78" y="-17.78" size="1.778" layer="95"/>
+</segment>
+<segment>
+<wire x1="144.78" y1="-106.68" x2="154.94" y2="-106.68" width="0.1524" layer="91"/>
+<label x="154.94" y="-106.68" size="1.778" layer="95"/>
+<pinref part="U$2" gate="G$1" pin="4"/>
 </segment>
 </net>
 <net name="A0" class="0">
@@ -2775,6 +2819,11 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <wire x1="129.54" y1="-76.2" x2="119.38" y2="-76.2" width="0.1524" layer="91"/>
 <label x="119.38" y="-76.2" size="1.778" layer="95" rot="R180"/>
 </segment>
+<segment>
+<wire x1="129.54" y1="-111.76" x2="119.38" y2="-111.76" width="0.1524" layer="91"/>
+<label x="119.38" y="-111.76" size="1.778" layer="95" rot="R180"/>
+<pinref part="U$2" gate="G$1" pin="7"/>
+</segment>
 </net>
 <net name="N$28" class="0">
 <segment>
@@ -2890,6 +2939,11 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <wire x1="144.78" y1="-76.2" x2="154.94" y2="-76.2" width="0.1524" layer="91"/>
 <label x="154.94" y="-76.2" size="1.778" layer="95"/>
 </segment>
+<segment>
+<wire x1="144.78" y1="-111.76" x2="154.94" y2="-111.76" width="0.1524" layer="91"/>
+<label x="154.94" y="-111.76" size="1.778" layer="95"/>
+<pinref part="U$2" gate="G$1" pin="8"/>
+</segment>
 </net>
 <net name="N$1" class="0">
 <segment>
@@ -2915,7 +2969,12 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <wire x1="182.88" y1="-68.58" x2="182.88" y2="-71.12" width="0.1524" layer="91"/>
 <junction x="182.88" y="-68.58"/>
 <pinref part="SERIAL" gate="G$1" pin="2"/>
-<wire x1="144.78" y1="-68.58" x2="182.88" y2="-68.58" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="-68.58" x2="170.18" y2="-68.58" width="0.1524" layer="91"/>
+<pinref part="U$2" gate="G$1" pin="2"/>
+<wire x1="170.18" y1="-68.58" x2="182.88" y2="-68.58" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="-104.14" x2="170.18" y2="-104.14" width="0.1524" layer="91"/>
+<wire x1="170.18" y1="-104.14" x2="170.18" y2="-68.58" width="0.1524" layer="91"/>
+<junction x="170.18" y="-68.58"/>
 </segment>
 </net>
 </nets>

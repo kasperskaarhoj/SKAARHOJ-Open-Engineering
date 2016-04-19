@@ -1682,10 +1682,10 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <hole x="-1.27" y="-3.81" drill="1.6"/>
 </package>
 <package name="LEDBICOLOR-SMD">
-<smd name="P$2" x="-1.6" y="0.925" dx="1.9" dy="1.5" layer="1"/>
-<smd name="P$4" x="-1.6" y="-0.925" dx="1.9" dy="1.5" layer="1"/>
-<smd name="P$1" x="1.6" y="0.925" dx="1.9" dy="1.5" layer="1"/>
-<smd name="P$3" x="1.6" y="-0.925" dx="1.9" dy="1.5" layer="1"/>
+<smd name="P$2" x="-1.3" y="0.725" dx="1" dy="1.2" layer="1"/>
+<smd name="P$4" x="-1.3" y="-0.725" dx="1" dy="1.2" layer="1"/>
+<smd name="P$1" x="1.3" y="0.725" dx="1" dy="1.2" layer="1"/>
+<smd name="P$3" x="1.3" y="-0.725" dx="1" dy="1.2" layer="1"/>
 </package>
 <package name="3.2MMPAD">
 <pad name="P$1" x="0" y="0" drill="3.2" shape="octagon"/>
@@ -1780,9 +1780,9 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="-3" y1="-2.794" x2="-3" y2="2.794" width="0.127" layer="21"/>
 </package>
 <package name="3BITADDR_SMALL">
-<pad name="A1" x="0" y="0" drill="0.5"/>
-<pad name="A0" x="-1.565" y="0" drill="0.5"/>
-<pad name="A2" x="1.565" y="0" drill="0.5"/>
+<pad name="A1" x="0" y="0" drill="0.4"/>
+<pad name="A0" x="-1.565" y="0" drill="0.4"/>
+<pad name="A2" x="1.565" y="0" drill="0.4"/>
 <text x="-2.159" y="1.651" size="0.7112" layer="21">A0</text>
 <text x="-0.635" y="1.651" size="0.7112" layer="21">A1</text>
 <text x="1.016" y="1.651" size="0.7112" layer="21">A2</text>
@@ -1794,53 +1794,16 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="2.365" y1="1.524" x2="2.365" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="2.365" y1="-1.524" x2="-2.365" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="-2.365" y1="-1.524" x2="-2.365" y2="1.524" width="0.127" layer="21"/>
-<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
+<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H1" x="0" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
 <text x="0" y="-0.1001" size="0.02" layer="27" rot="R90">&gt;VALUE</text>
-<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS2" x="1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
+<smd name="AS2" x="1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H0" x="-1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
 <smd name="H2" x="1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L2" x="1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-</package>
-<package name="2BITADDR">
-<pad name="A1" x="0" y="0" drill="0.6"/>
-<pad name="H2" x="0" y="2" drill="0.6"/>
-<pad name="H3" x="2.2" y="2" drill="0.6"/>
-<pad name="A2" x="2.2" y="0" drill="0.6"/>
-<pad name="L3" x="2.2" y="-2" drill="0.6"/>
-<pad name="L2" x="0" y="-2" drill="0.6"/>
-<text x="-0.635" y="2.921" size="0.8128" layer="21">A1</text>
-<text x="1.397" y="2.921" size="0.8128" layer="21">A2</text>
-<text x="-2.695" y="1.651" size="0.8128" layer="21">ON</text>
-<text x="-3.195" y="-2.413" size="0.8128" layer="21">OFF</text>
-<wire x1="1.016" y1="2.54" x2="1.016" y2="-2.54" width="0.127" layer="21"/>
-<wire x1="-1.095" y1="2.794" x2="3" y2="2.794" width="0.127" layer="21"/>
-<wire x1="3" y1="2.794" x2="3" y2="-2.794" width="0.127" layer="21"/>
-<wire x1="3" y1="-2.794" x2="-1.095" y2="-2.794" width="0.127" layer="21"/>
-<wire x1="-1.095" y1="-2.794" x2="-1.095" y2="2.794" width="0.127" layer="21"/>
-</package>
-<package name="2BITADDR_SMALL">
-<pad name="A1" x="0" y="0" drill="0.5"/>
-<pad name="A0" x="-1.565" y="0" drill="0.5"/>
-<text x="-2.159" y="1.651" size="0.7112" layer="21">A0</text>
-<text x="-0.635" y="1.651" size="0.7112" layer="21">A1</text>
-<text x="-3.965" y="0.635" size="0.7112" layer="21">ON</text>
-<text x="-4.465" y="-1.397" size="0.7112" layer="21">OFF</text>
-<wire x1="-0.762" y1="1.524" x2="-0.762" y2="-1.524" width="0.127" layer="21"/>
-<wire x1="-2.365" y1="1.524" x2="0.841" y2="1.524" width="0.127" layer="21"/>
-<wire x1="0.841" y1="1.524" x2="0.841" y2="-1.524" width="0.127" layer="21"/>
-<wire x1="0.841" y1="-1.524" x2="-2.365" y2="-1.524" width="0.127" layer="21"/>
-<wire x1="-2.365" y1="-1.524" x2="-2.365" y2="1.524" width="0.127" layer="21"/>
-<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="H1" x="0" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<text x="0" y="-0.1001" size="0.02" layer="27" rot="R90">&gt;VALUE</text>
-<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="H0" x="-1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L2" x="1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
 </package>
 <package name="M2X4SMALLER">
 <wire x1="-1.905" y1="5.08" x2="-2.54" y2="4.445" width="0.1524" layer="21"/>
@@ -1983,6 +1946,22 @@ MAX3223-MAX3243.pdf</description>
 <pad name="8" x="1" y="-3" drill="0.8" rot="R270"/>
 <text x="-2.544" y="-3.072" size="0.4064" layer="25" rot="R90">&gt;NAME</text>
 <text x="-2.544" y="-0.274" size="0.4064" layer="27" font="vector" rot="R90">&gt;VALUE</text>
+</package>
+<package name="4.5MMPAD6MM">
+<pad name="P$1" x="0" y="0" drill="4.5" diameter="7"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+</package>
+<package name="ZIP-8-0.5">
+<smd name="P$1" x="-1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$2" x="-1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$3" x="-0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$4" x="-0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$5" x="0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$6" x="0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$7" x="1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$8" x="1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="GND$9" x="-3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
+<smd name="GND$1" x="3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
 </package>
 </packages>
 <symbols>
@@ -2138,22 +2117,6 @@ MAX3223-MAX3243.pdf</description>
 <pin name="GND" x="7.62" y="5.08" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 <pin name="VCC" x="7.62" y="7.62" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 </symbol>
-<symbol name="2BITADDR">
-<wire x1="3.81" y1="-7.62" x2="-2.54" y2="-7.62" width="0.4064" layer="94"/>
-<wire x1="1.27" y1="-2.54" x2="2.54" y2="-2.54" width="0.6096" layer="94"/>
-<wire x1="1.27" y1="-5.08" x2="2.54" y2="-5.08" width="0.6096" layer="94"/>
-<wire x1="-2.54" y1="7.62" x2="-2.54" y2="-7.62" width="0.4064" layer="94"/>
-<wire x1="3.81" y1="-7.62" x2="3.81" y2="7.62" width="0.4064" layer="94"/>
-<wire x1="-2.54" y1="7.62" x2="3.81" y2="7.62" width="0.4064" layer="94"/>
-<wire x1="1.27" y1="5.08" x2="2.54" y2="5.08" width="0.6096" layer="94"/>
-<wire x1="1.27" y1="2.54" x2="2.54" y2="2.54" width="0.6096" layer="94"/>
-<text x="-2.54" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
-<text x="-2.54" y="8.382" size="1.778" layer="95">&gt;NAME</text>
-<pin name="A1" x="7.62" y="-5.08" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
-<pin name="A2" x="7.62" y="-2.54" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
-<pin name="GND" x="7.62" y="2.54" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
-<pin name="VCC" x="7.62" y="5.08" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
-</symbol>
 <symbol name="M04X2">
 <wire x1="3.81" y1="-5.08" x2="-3.81" y2="-5.08" width="0.4064" layer="94"/>
 <wire x1="1.27" y1="0" x2="2.54" y2="0" width="0.6096" layer="94"/>
@@ -2216,7 +2179,7 @@ MAX3223-MAX3243.pdf</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="GNDPAD">
+<deviceset name="GNDPAD" prefix="P">
 <gates>
 <gate name="G$1" symbol="SINGLEPAD" x="0" y="0"/>
 </gates>
@@ -2230,6 +2193,14 @@ MAX3223-MAX3243.pdf</description>
 </technologies>
 </device>
 <device name="6MM" package="3.2MMPAD6MM">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="4.5MM" package="4.5MMPAD6MM">
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
@@ -2308,35 +2279,6 @@ MAX3223-MAX3243.pdf</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="2BITADDR">
-<gates>
-<gate name="G$1" symbol="2BITADDR" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="2BITADDR">
-<connects>
-<connect gate="G$1" pin="A1" pad="A1"/>
-<connect gate="G$1" pin="A2" pad="A2"/>
-<connect gate="G$1" pin="GND" pad="L2 L3"/>
-<connect gate="G$1" pin="VCC" pad="H2 H3"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="SMALL" package="2BITADDR_SMALL">
-<connects>
-<connect gate="G$1" pin="A1" pad="A0 AS0"/>
-<connect gate="G$1" pin="A2" pad="A1 AS1"/>
-<connect gate="G$1" pin="GND" pad="L0 L1"/>
-<connect gate="G$1" pin="VCC" pad="H0 H1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="M04X2">
 <gates>
 <gate name="G$1" symbol="M04X2" x="0" y="0"/>
@@ -2382,6 +2324,21 @@ MAX3223-MAX3243.pdf</description>
 <connect gate="G$1" pin="6" pad="6"/>
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="ZIF-0.5" package="ZIP-8-0.5">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -2764,7 +2721,7 @@ Source: www.ti.com .. ADS7828.pdf</description>
 <part name="C11" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C12" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="U$19" library="SKAARHOJ" deviceset="3BITADDR" device="SMALL" value="3BITADDRSMALL"/>
-<part name="U$7" library="SKAARHOJ" deviceset="2BITADDR" device="SMALL"/>
+<part name="U$7" library="SKAARHOJ" deviceset="3BITADDR" device="SMALL"/>
 </parts>
 <sheets>
 <sheet>
@@ -2777,7 +2734,7 @@ Source: www.ti.com .. ADS7828.pdf</description>
 <text x="284.48" y="-25.4" size="3.81" layer="97" rot="R90">LEFT CHANNEL</text>
 <text x="284.48" y="40.64" size="3.81" layer="97" rot="R90">RIGHT CHANNEL</text>
 <text x="-43.18" y="93.98" size="3.81" layer="97">BUTTON ARRAY</text>
-<text x="180.34" y="20.32" size="1.778" layer="91">ADR=B100xxx</text>
+<text x="180.34" y="20.32" size="1.778" layer="91">ADR=B1011xxx</text>
 <text x="152.4" y="10.16" size="3.81" layer="97">CONFIG</text>
 </plain>
 <instances>
@@ -2865,7 +2822,7 @@ Source: www.ti.com .. ADS7828.pdf</description>
 <instance part="C11" gate="G$1" x="251.46" y="-83.82"/>
 <instance part="C12" gate="G$1" x="261.62" y="-83.82"/>
 <instance part="U$19" gate="G$1" x="157.48" y="-7.62"/>
-<instance part="U$7" gate="G$1" x="157.48" y="-38.1"/>
+<instance part="U$7" gate="G$1" x="157.48" y="-40.64"/>
 </instances>
 <busses>
 </busses>
@@ -3345,11 +3302,6 @@ Source: www.ti.com .. ADS7828.pdf</description>
 </net>
 <net name="A0" class="0">
 <segment>
-<pinref part="IC2" gate="G$1" pin="A0"/>
-<wire x1="419.1" y1="-2.54" x2="419.1" y2="-5.08" width="0.1524" layer="91"/>
-<label x="419.1" y="-5.08" size="1.778" layer="95" rot="R270"/>
-</segment>
-<segment>
 <pinref part="U$23" gate="G$1" pin="AD0"/>
 <wire x1="190.5" y1="30.48" x2="190.5" y2="27.94" width="0.1524" layer="91"/>
 <label x="190.5" y="27.94" size="1.778" layer="95" rot="R270"/>
@@ -3362,11 +3314,6 @@ Source: www.ti.com .. ADS7828.pdf</description>
 </net>
 <net name="A1" class="0">
 <segment>
-<pinref part="IC2" gate="G$1" pin="A1"/>
-<wire x1="416.56" y1="-2.54" x2="416.56" y2="-5.08" width="0.1524" layer="91"/>
-<label x="416.56" y="-5.08" size="1.778" layer="95" rot="R270"/>
-</segment>
-<segment>
 <pinref part="U$23" gate="G$1" pin="AD1"/>
 <wire x1="187.96" y1="30.48" x2="187.96" y2="27.94" width="0.1524" layer="91"/>
 <label x="187.96" y="27.94" size="1.778" layer="95" rot="R270"/>
@@ -3378,11 +3325,6 @@ Source: www.ti.com .. ADS7828.pdf</description>
 </segment>
 </net>
 <net name="A2" class="0">
-<segment>
-<pinref part="IC2" gate="G$1" pin="A2"/>
-<wire x1="414.02" y1="-2.54" x2="414.02" y2="-5.08" width="0.1524" layer="91"/>
-<label x="414.02" y="-5.08" size="1.778" layer="95" rot="R270"/>
-</segment>
 <segment>
 <pinref part="U$23" gate="G$1" pin="AD2"/>
 <wire x1="185.42" y1="30.48" x2="185.42" y2="27.94" width="0.1524" layer="91"/>
@@ -3912,26 +3854,48 @@ Source: www.ti.com .. ADS7828.pdf</description>
 </net>
 <net name="AA0" class="0">
 <segment>
-<pinref part="U$7" gate="G$1" pin="A1"/>
-<wire x1="165.1" y1="-43.18" x2="167.64" y2="-43.18" width="0.1524" layer="91"/>
-<label x="167.64" y="-43.18" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="IC1" gate="G$1" pin="A0"/>
 <wire x1="233.68" y1="-71.12" x2="236.22" y2="-71.12" width="0.1524" layer="91"/>
 <label x="236.22" y="-71.12" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="IC2" gate="G$1" pin="A0"/>
+<wire x1="419.1" y1="-2.54" x2="419.1" y2="-5.08" width="0.1524" layer="91"/>
+<label x="419.1" y="-5.08" size="1.778" layer="95" rot="R270"/>
+</segment>
+<segment>
+<pinref part="U$7" gate="G$1" pin="A0"/>
+<wire x1="165.1" y1="-45.72" x2="167.64" y2="-45.72" width="0.1524" layer="91"/>
+<label x="167.64" y="-45.72" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="AA1" class="0">
-<segment>
-<pinref part="U$7" gate="G$1" pin="A2"/>
-<wire x1="165.1" y1="-40.64" x2="167.64" y2="-40.64" width="0.1524" layer="91"/>
-<label x="167.64" y="-40.64" size="1.778" layer="95"/>
-</segment>
 <segment>
 <pinref part="IC1" gate="G$1" pin="A1"/>
 <wire x1="233.68" y1="-73.66" x2="236.22" y2="-73.66" width="0.1524" layer="91"/>
 <label x="236.22" y="-73.66" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="IC2" gate="G$1" pin="A1"/>
+<wire x1="416.56" y1="-2.54" x2="416.56" y2="-5.08" width="0.1524" layer="91"/>
+<label x="416.56" y="-5.08" size="1.778" layer="95" rot="R270"/>
+</segment>
+<segment>
+<pinref part="U$7" gate="G$1" pin="A1"/>
+<wire x1="165.1" y1="-43.18" x2="167.64" y2="-43.18" width="0.1524" layer="91"/>
+<label x="167.64" y="-43.18" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="AA2" class="0">
+<segment>
+<pinref part="IC2" gate="G$1" pin="A2"/>
+<wire x1="414.02" y1="-2.54" x2="414.02" y2="-5.08" width="0.1524" layer="91"/>
+<label x="414.02" y="-5.08" size="1.778" layer="95" rot="R270"/>
+</segment>
+<segment>
+<pinref part="U$7" gate="G$1" pin="A2"/>
+<wire x1="165.1" y1="-40.64" x2="167.64" y2="-40.64" width="0.1524" layer="91"/>
+<label x="167.64" y="-40.64" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>

@@ -34,6 +34,7 @@
 class SkaarhojAudioControl2
 {
   private:
+	  bool _oldI2CAddr;
 	uint8_t _boardAddress;
 	PCA9685 _VUledDriver;
 	uint8_t _buttonStatus;
@@ -45,8 +46,9 @@ class SkaarhojAudioControl2
 
   public:
 	SkaarhojAudioControl2();
-	void begin(int address);
+	void begin(int address, int addressVU=-1);
 	void setIsMasterBoard();
+	void oldI2CAddr(bool oldI2CAddr);
 	
 	bool buttonUp(int buttonNumber);
 	bool buttonDown(int buttonNumber);

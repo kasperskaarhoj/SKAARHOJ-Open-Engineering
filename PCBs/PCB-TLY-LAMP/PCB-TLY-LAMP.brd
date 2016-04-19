@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.3.0">
+<eagle version="7.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -130,10 +130,8 @@
 <wire x1="9" y1="0" x2="41" y2="0" width="0" layer="20"/>
 <wire x1="50" y1="9" x2="50" y2="25" width="0" layer="20"/>
 <wire x1="41" y1="33" x2="9" y2="33" width="0" layer="20"/>
-<text x="20.32" y="24.13" size="1.016" layer="121">Tally lights</text>
 <hole x="25" y="17" drill="11"/>
-<text x="13.32" y="26.4" size="1" layer="121">v27-01-13</text>
-<text x="12.78" y="27.67" size="1.27" layer="121">SKAARHOJ 2013</text>
+<text x="18.495" y="25.13" size="0.8128" layer="121">SKAARHOJ 2016</text>
 <wire x1="0" y1="25" x2="0" y2="9" width="0" layer="20"/>
 <wire x1="0" y1="9" x2="9" y2="9" width="0" layer="20"/>
 <wire x1="9" y1="9" x2="9" y2="0" width="0" layer="20"/>
@@ -147,8 +145,7 @@
 <text x="28" y="30" size="1.778" layer="121">K</text>
 <text x="6" y="16" size="1.778" layer="122" rot="MR0">OUT</text>
 <text x="39.37" y="1.27" size="0.8128" layer="121" rot="R180">PCB-TLY-LAMP</text>
-<text x="17" y="1" size="0.8128" layer="121" rot="R180">v13-05-13</text>
-<text x="20" y="32" size="0.8128" layer="121" rot="R180">SKAARHOJ 2013</text>
+<text x="18.905" y="23.73" size="0.8128" layer="121">PCB-TLY-LAMP, v03-16</text>
 </plain>
 <libraries>
 <library name="SparkFun">
