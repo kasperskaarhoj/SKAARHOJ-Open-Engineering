@@ -255,19 +255,19 @@ bool loadSerialCommandToCRNL()  {  // Call in loop() to check for commands
  */
 bool checkIncomingSerial()  {
   if (loadSerialCommandToCRNL())  {
-    if (!strncmp(serialBuffer, "IP=", 3))  {
-      char *tmp;
-      int i = 0;
-      tmp = strtok(serialBuffer + 3, ".");
-      while (tmp && i < 4) {
-        EEPROM.write(i + 2, atoi(tmp));
-        i++;
-        tmp = strtok(NULL, ".");
-      }
-      Serial << F("IP address updated to: ");
-      for (uint8_t i = 0; i < 4; i++) {
-        Serial << EEPROM.read(i + 2) << (i != 3 ? F(".") : F("\n"));
-      }
+      if (!strncmp(serialBuffer, "IP=", 3))  {
+        char *tmp;
+        int i = 0;
+        tmp = strtok(serialBuffer + 3, ".");
+        while (tmp && i < 4) {
+          EEPROM.write(i + 2, atoi(tmp));
+          i++;
+          tmp = strtok(NULL, ".");
+        }
+        Serial << F("IP address updated to: ");
+        for (uint8_t i = 0; i < 4; i++) {
+          Serial << EEPROM.read(i + 2) << (i != 3 ? F(".") : F("\n"));
+        }
     } else if (!strncmp(serialBuffer, "Subnet=", 7))  {
       char *tmp;
       int i = 0;
@@ -280,6 +280,17 @@ bool checkIncomingSerial()  {
       Serial << F("Subnet mask updated to: ");
       for (uint8_t i = 0; i < 4; i++) {
         Serial << EEPROM.read(i + 6) << (i != 3 ? F(".") : F("\n"));
+      }
+    } else if (!strncmp(serialBuffer, "newmac", 6))  {
+		EEPROM.write(10, 0x90);
+		EEPROM.write(11, 0xA1);
+		EEPROM.write(12, 0xDA);
+		for(uint8_t i=0; i<3;i++)	{
+			EEPROM.write(13+i, random(0, 256));
+		}
+      Serial << F("MAC address updated to: ");
+      for (uint8_t i = 0; i < 6; i++) {
+        Serial << _HEXPADL(EEPROM.read(i + 10), 2, "0") << (i != 5 ? F(":") : F("\n"));
       }
     } else if (!strncmp(serialBuffer, "debug", 5))  {
       EEPROM.write(1, true);
@@ -1076,6 +1087,190 @@ uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const 
 
 
 
+
+
+
+
+
+
+// Preset memory: [NumberofPresets][CurrentPreset][PresetStoreLen-MSB][PresetStoreLen-LSB][CSC of previous 4 bytes + token][Preset1][Preset2][Preset...][PresetX], where [PresetX] = [Len-MSB][Len-LSB][Byte1][Byte2][Byte...][ByteX][CSC of bytes + token]
+// On a global level, we can verify the preset store by checking if a traversal of the presets and lengths will match the global length
+// On an individual level, presets validity is confirmed by the xor-checksum byte stored prior to the preset data
+#define EEPROM_PRESET_START 100
+#define EEPROM_PRESET_TOKEN 0xf3	// Just some random value that is used for a checksum offset. Change this and existing configuration will be invalidated and has to be rewritten.
+void loadDefaultConfig()	{
+    // Copy default controller configuration to the global Config memory.
+    memcpy_P(globalConfigMem, defaultControllerConfig, sizeof(defaultControllerConfig));
+}
+void moveEEPROMMemoryBlock(uint16_t from, uint16_t to, int offset)	{	// From is inclusive, To is exclusive, To>From, offset>0 = move forward
+//	Serial << "moveEEPROMMemoryBlock (" << from << "," << to << "," << offset << " )\n";
+	if (offset>0)	{
+		for(uint16_t a=to; a>from; a--)	{
+			EEPROM.write(a-1+offset,EEPROM.read(a-1));
+		}
+	} else if (offset<0) {
+		for(uint16_t a=from; a<to; a++)	{
+			EEPROM.write(a+offset,EEPROM.read(a));
+		}
+	}
+}
+uint16_t getPresetOffsetAddress(uint8_t presetNum)	{
+	uint16_t offset = 0;
+	for(uint8_t a=1; a<presetNum; a++)	{
+		offset+= ((uint16_t)EEPROM.read(EEPROM_PRESET_START+5+offset)<<8) | EEPROM.read(EEPROM_PRESET_START+6+offset) + 2;	// Length of stored preset + 2 for addressing
+	}
+	return offset;
+}
+void updatePresetChecksum()	{
+	uint8_t csc = EEPROM_PRESET_TOKEN;
+	for(uint8_t a=0; a<4; a++)	{
+		csc^=EEPROM.read(EEPROM_PRESET_START+a);
+	}
+//	Serial << "Writing CSC:" << csc << "\n";
+	EEPROM.write(EEPROM_PRESET_START+4, csc);
+}
+void setNumberOfPresets(uint8_t n)	{
+	EEPROM.write(EEPROM_PRESET_START,n);	// Number of...
+//	Serial << "setNumberOfPresets:" << n << "\n";
+	updatePresetChecksum();
+}
+void setCurrentPreset(uint8_t n)	{
+	EEPROM.write(EEPROM_PRESET_START+1,n);	// Current
+//	Serial << "setCurrentPreset:" << n << "\n";
+	updatePresetChecksum();
+}
+void setPresetStoreLength(uint16_t len)	{
+	EEPROM.write(EEPROM_PRESET_START+2,highByte(len));
+	EEPROM.write(EEPROM_PRESET_START+3,lowByte(len));
+//	Serial << "setPresetStoreLength:" << len << "\n";
+	updatePresetChecksum();
+}
+uint8_t getNumberOfPresets()	{
+	uint8_t csc = EEPROM_PRESET_TOKEN;
+	for(uint8_t a=0; a<5; a++)	{
+		csc^=EEPROM.read(EEPROM_PRESET_START+a);
+	}
+	if (csc!=0)	{
+//		Serial << "CSC mismatch:"<<csc<<"\n";
+		setNumberOfPresets(0);
+		setCurrentPreset(0);
+		setPresetStoreLength(0);
+	}
+
+	return EEPROM.read(EEPROM_PRESET_START);
+}
+bool loadPreset(uint8_t presetNum=0)	{
+//	Serial << "Load preset: " << presetNum << "\n";
+	if (getNumberOfPresets()>0)	{	// If there are valid presets, consider to load one...
+//		Serial << "There are valid presets, in fact "<< getNumberOfPresets() << " are found.\n";
+		if (presetNum==0)	{	// Load current preset if nothing is given
+			presetNum = EEPROM.read(EEPROM_PRESET_START+1);
+//			Serial << "Current preset: "<< presetNum << "\n";
+		}
+//		Serial << "Preset: "<< presetNum << "\n";
+		if (presetNum>0 && presetNum<=getNumberOfPresets())	{	// preset num must be equal to or less than the total number
+			uint16_t presetOffset = getPresetOffsetAddress(presetNum);
+//			Serial << "presetOffset: "<< presetOffset << "\n";
+			uint16_t presetLen = ((uint16_t)EEPROM.read(EEPROM_PRESET_START+5+presetOffset)<<8) | EEPROM.read(EEPROM_PRESET_START+6+presetOffset);
+//			Serial << "presetLen: "<< presetLen << "\n";
+			uint8_t csc = EEPROM_PRESET_TOKEN;
+			for(uint16_t a=0; a<presetLen; a++)	{
+				if (a>=SK_CONFIG_MEMORY_SIZE)	break;	// ERROR!
+				globalConfigMem[a] = EEPROM.read(EEPROM_PRESET_START+7+presetOffset+a);	// Loading memory with preset, byte by byte.
+				csc^=globalConfigMem[a];
+			}
+			if (csc==0)	{
+//				Serial << "All good...\n";
+				// All is good, exit with the new config in memory!
+				return true;
+			}
+		}
+	}
+//	Serial << "Load default config...";
+	loadDefaultConfig();
+	return false;
+}
+uint16_t getPresetStoreLength()	{
+	return ((uint16_t)EEPROM.read(EEPROM_PRESET_START+2)<<8) | EEPROM.read(EEPROM_PRESET_START+3);
+}
+void savePreset(uint8_t presetNum, uint16_t len)	{	// Len is excluding CSC byte. presetNum=255 to make new preset.
+//		Serial << "savePreset() \n";
+	if (getNumberOfPresets()>0)	{
+		if (presetNum==0)	{	// Load current preset if nothing is given
+			presetNum = EEPROM.read(EEPROM_PRESET_START+1);
+		}
+	} else {
+		presetNum = 255;	// New preset initiated
+	}
+	uint16_t presetOffset;
+	if (presetNum > getNumberOfPresets())	{
+		if (len>0)	{
+			presetNum = getNumberOfPresets()+1;	// New preset
+		//				Serial << "New preset: " << presetNum << "\n";
+			setNumberOfPresets(presetNum);
+			setCurrentPreset(presetNum);
+			presetOffset = getPresetOffsetAddress(presetNum);
+		//				Serial << "New presetOffset: " << presetOffset << "\n";
+
+			setPresetStoreLength(presetOffset+len+1+2);
+		//	Serial << "getPresetStoreLength(): " << getPresetStoreLength() << "\n";
+		}
+	} else {
+		setCurrentPreset(presetNum);
+//		Serial << "Existing preset: " << presetNum << "\n";
+		presetOffset = getPresetOffsetAddress(presetNum);
+//		Serial << "New presetOffset: " << presetOffset << "\n";
+		uint16_t nextPresetOffset = getPresetOffsetAddress(presetNum+1);
+//		Serial << "nextPresetOffset: " << nextPresetOffset << "\n";
+		uint16_t presetLen = ((uint16_t)EEPROM.read(EEPROM_PRESET_START+5+presetOffset)<<8) | EEPROM.read(EEPROM_PRESET_START+6+presetOffset);	// Includes CSC byte
+		if (len>0)	{
+			moveEEPROMMemoryBlock(EEPROM_PRESET_START+5+nextPresetOffset, EEPROM_PRESET_START+5+getPresetStoreLength(), (len+1)-presetLen);
+			setPresetStoreLength(getPresetStoreLength()+(len+1)-presetLen);
+		} else {
+//			Serial << "Deleting a preset \n";
+			moveEEPROMMemoryBlock(EEPROM_PRESET_START+5+nextPresetOffset, EEPROM_PRESET_START+5+getPresetStoreLength(), -presetLen-2);
+			setPresetStoreLength(getPresetStoreLength()-presetLen-2);
+			setNumberOfPresets(getNumberOfPresets()-1);
+			setCurrentPreset(presetNum-1);
+		}
+	}
+	if (len>0)	{
+		// Store memory:
+		uint8_t csc = EEPROM_PRESET_TOKEN;
+		for(uint16_t a=0; a<len; a++)	{
+			EEPROM.write(EEPROM_PRESET_START+7+presetOffset+a,globalConfigMem[a]);	// Loading memory with preset, byte by byte.
+			csc^=globalConfigMem[a];
+		}
+		EEPROM.write(EEPROM_PRESET_START+7+presetOffset+len,csc);	// Checksum byte
+		EEPROM.write(EEPROM_PRESET_START+5+presetOffset,highByte(len+1));
+		EEPROM.write(EEPROM_PRESET_START+6+presetOffset,lowByte(len+1));
+	}
+}
+/*
+void presetCheck()	{
+	Serial << "Number of presets: " << EEPROM.read(EEPROM_PRESET_START+0) << "\n";
+	Serial << "Current preset: " << EEPROM.read(EEPROM_PRESET_START+1) << "\n";
+	uint16_t accumLength = 0;
+	for(uint8_t a=0; a<EEPROM.read(EEPROM_PRESET_START+0); a++)	{
+		Serial << "Preset: " << (a+1)<< "\n";
+		uint16_t presetOffset = getPresetOffsetAddress(a+1);
+		Serial << "Preset offset: " << presetOffset << "\n";
+		uint16_t length = ((EEPROM.read(EEPROM_PRESET_START+5+presetOffset)<<8)|EEPROM.read(EEPROM_PRESET_START+6+presetOffset));
+		Serial << "Length " << length << ":\n";
+		accumLength+=length+2;
+		
+		uint8_t csc=EEPROM_PRESET_TOKEN;
+		for(uint16_t b=0; b<length;b++)	{
+			csc^=EEPROM.read(EEPROM_PRESET_START+7+presetOffset+b);
+		}
+		Serial << "csc: 0=" << csc << "\n";
+	}
+	Serial << "Pointer at: " << accumLength << "\n";
+	Serial << "Total Length of preset store: " << getPresetStoreLength() << "\n";
+}
+*/
+
+
 /**
  * First thing to call in setup() is the device initialization:
  */
@@ -1171,11 +1366,11 @@ void initController()  {
   }
 
 
-	
 
-  // Copy default controller configuration to the global Config memory. Should be overridden later by EEPROM configuraiton.
-  memcpy_P(globalConfigMem, defaultControllerConfig, sizeof(defaultControllerConfig));
-
+	loadPreset(0);	// Current preset
+//  Serial << "sizeof: " << sizeof(defaultControllerConfig) << "\n";
+//  presetCheck();
+  
   // Setting IP:
   if (configMode != 2)  {
     ip[0] = globalConfigMem[getConfigMemIPIndex()];
@@ -1207,17 +1402,18 @@ void initController()  {
   mac[3] = EEPROM.read(13);
   mac[4] = EEPROM.read(14);
   mac[5] = EEPROM.read(15);
-  if (getConfigMode())  {
+//  if (getConfigMode())  {
     Serial << F("MAC address: ");
     for (uint8_t i = 0; i < 6; i++) {
       Serial << _HEXPADL(mac[i], 2, "0") << (i != 5 ? F(":") : F("\n"));
     }
-  }
+//  }
 
   // TODO: Add subnet - but only if it's valid!!
   Ethernet.begin(mac, ip);
   statusLED(QUICKBLANK);
-
+  delay(500);
+  
   // Check if debug mode is on, if so reset it for next reset:
   if (EEPROM.read(1) != 0)  {
     Serial << F("Debug Mode=1\n");
@@ -1227,3 +1423,4 @@ void initController()  {
   
   initActionCache();
 }
+

@@ -1,7 +1,5 @@
 /**
- * Universal Sketch for standard SKAARHOJ controllers
- * This software is Open Source under GNU GPL License (see license.txt)
- * Copyright SKAARHOJ K/S, 2016
+ * Universal Sketch for generic SKAARHOJ devices
  *
  * By configuration you can compile software for various SKAARHOJ devices
  * as well as target broadcast devices
@@ -19,7 +17,7 @@
 #define SK_HWCONF_SSWBUTTONS 0
 #define SK_HWCONF_ACM 0
 #define SK_HWCONF_GPIO 1
-#define SK_MODELVAR 1
+#define SK_MODELVAR 0
 
 
 

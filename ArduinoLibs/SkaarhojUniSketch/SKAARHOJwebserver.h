@@ -167,6 +167,8 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
 	  }
 	  
     } while (repeat);
+	
+	savePreset(0,globalConfigMemPtr+8+1+SK_DEVICES*5+2 + globalConfigMem[globalConfigMemPtr+8+1+SK_DEVICES*5]);
   }
 
   P(htmlHead) = 
