@@ -516,8 +516,8 @@
 <pad name="1" x="-19.05" y="2.54" drill="0.9" shape="octagon"/>
 <pad name="3" x="-19.05" y="0" drill="0.9" shape="octagon"/>
 <pad name="P$1" x="-19.0119" y="5.461" drill="0.9" shape="square"/>
-<pad name="P$2" x="19.0119" y="4.191" drill="0.9" shape="square"/>
-<pad name="P$3" x="18.9484" y="-4.191" drill="0.9" shape="square"/>
+<pad name="P$2" x="16.4719" y="5.461" drill="0.9" shape="square"/>
+<pad name="P$3" x="16.4084" y="-5.461" drill="0.9" shape="square"/>
 <pad name="P$4" x="-18.9484" y="-5.461" drill="0.9" shape="square"/>
 </package>
 </packages>

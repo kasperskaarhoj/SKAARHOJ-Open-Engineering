@@ -542,10 +542,11 @@ void setup() {
   // Test display:
   display.clearDisplay();
   display.drawBitmap(0, 0, SKAARHOJ_Logo, 128, 13, WHITE);
-  display.setCursor(0, 18);
+  display.setCursor(0, 17);
   display.setTextColor(WHITE);
   display.setTextSize(1);
   display.println("#5 Ethernet Test");
+  display << F("IP: ") << ip;
   display.display(B1);
 
 
@@ -689,6 +690,8 @@ void loop() {
   display << F("Error Instances:") << errorInstances << F("\n");
   display.setTextSize(2);
   display << millis();
+  display.setTextSize(1);
+  display << " A:" << analogRead(0);
   display.display(B1);
 
 
