@@ -915,9 +915,9 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
 </package>
 <package name="3BITADDR_SMALL">
-<pad name="A1" x="0" y="0" drill="0.5"/>
-<pad name="A0" x="-1.565" y="0" drill="0.5"/>
-<pad name="A2" x="1.565" y="0" drill="0.5"/>
+<pad name="A1" x="0" y="0" drill="0.4"/>
+<pad name="A0" x="-1.565" y="0" drill="0.4"/>
+<pad name="A2" x="1.565" y="0" drill="0.4"/>
 <text x="-2.159" y="1.651" size="0.7112" layer="21">A0</text>
 <text x="-0.635" y="1.651" size="0.7112" layer="21">A1</text>
 <text x="1.016" y="1.651" size="0.7112" layer="21">A2</text>
@@ -929,16 +929,16 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <wire x1="2.365" y1="1.524" x2="2.365" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="2.365" y1="-1.524" x2="-2.365" y2="-1.524" width="0.127" layer="21"/>
 <wire x1="-2.365" y1="-1.524" x2="-2.365" y2="1.524" width="0.127" layer="21"/>
-<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L1" x="0" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
+<smd name="AS1" x="0" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H1" x="0" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
 <text x="0" y="-0.1001" size="0.02" layer="27" rot="R90">&gt;VALUE</text>
-<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="AS2" x="1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="AS0" x="-1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
+<smd name="AS2" x="1.565" y="0" dx="1" dy="1.27" layer="1" rot="R90"/>
 <smd name="H0" x="-1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L0" x="-1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
 <smd name="H2" x="1.565" y="1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
-<smd name="L2" x="1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90" cream="no"/>
+<smd name="L2" x="1.565" y="-1" dx="0.635" dy="1.27" layer="1" rot="R90"/>
 </package>
 <package name="M2X4SMALLER">
 <wire x1="-1.905" y1="5.08" x2="-2.54" y2="4.445" width="0.1524" layer="21"/>
@@ -1096,8 +1096,8 @@ EC12E series with push-on switch</description>
 <pad name="B" x="2.5" y="-7.5" drill="1" shape="square"/>
 <pad name="D" x="-2.5" y="7" drill="1" shape="square"/>
 <pad name="E" x="2.5" y="7" drill="1" shape="square"/>
-<pad name="GND1" x="-6.1" y="0" drill="1.7"/>
-<pad name="GND2" x="6.1" y="0" drill="1.7"/>
+<pad name="GND1" x="-6.1" y="0" drill="2"/>
+<pad name="GND2" x="6.1" y="0" drill="2"/>
 <text x="-2.5" y="8.5" size="1.27" layer="25">&gt;NAME</text>
 <text x="3.5" y="-9" size="1.27" layer="27" rot="R180">&gt;VALUE</text>
 </package>
@@ -1117,6 +1117,18 @@ EC12E series with push-on switch</description>
 <text x="3.5" y="-9" size="1.27" layer="27" rot="R180">&gt;VALUE</text>
 <pad name="GND1" x="1.27" y="3.175" drill="0.9" shape="square"/>
 <pad name="GND2" x="1.27" y="0.635" drill="0.9" shape="square" rot="R90"/>
+</package>
+<package name="ZIP-8-0.5">
+<smd name="P$1" x="-1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$2" x="-1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$3" x="-0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$4" x="-0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$5" x="0.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$6" x="0.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$7" x="1.25" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="P$8" x="1.75" y="0" dx="0.96" dy="0.3" layer="1" rot="R90"/>
+<smd name="GND$9" x="-3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
+<smd name="GND$1" x="3.68" y="-1.8" dx="3" dy="2.7" layer="1" rot="R90"/>
 </package>
 </packages>
 <symbols>
@@ -1353,6 +1365,21 @@ EC12E series with push-on switch</description>
 <connect gate="G$1" pin="6" pad="6"/>
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="ZIF-0.5" package="ZIP-8-0.5">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
 </connects>
 <technologies>
 <technology name=""/>
