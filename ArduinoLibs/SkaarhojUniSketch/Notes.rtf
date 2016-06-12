@@ -1,0 +1,95 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14020\viewh12700\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\b\fs24 \cf0 HW Component types:
+\b0 \
+	0 = All\
+	Binary inputs (buttons, GPI triggers; actDown/actUp); 1 [bit0]\
+	Pulse inputs (encoders; +/- pulses w/fine/coarse bit + actDown&actUp as \'93hold for 1 s\'94); 2 [bit 1]\
+	Analog inputs (audio controls, sliders, binary dips; 0-1000); 4 [bit 2]\
+	Binary Outputs (GPOs,Bicolor LEDs; bit5 = 0x20); 8 [bit3]\
+	Complex Outputs (VUs; 2xbyte): 16 [bit4]\
+	Complex inputs (Joystick); 32 [bit 5]
+\b \
+\
+Value List definitions\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b0 \cf0 	0 = (not used)\
+	-int	 = reference to a value list\
+	int = a list of values from 0 to int, inclusive\
+	[-int, [string, string, \'85],string] = reference to value list, extra options as strings, final string is prefix string\
+	[int, int] = value list from first int to last int\
+	[int, int, [string, string, \'85], string] = value list from first int to last int, extra options as strings, final string is prefix string\
+	[string, string, \'85, string] = value list from strings
+\b \
+\
+
+\b0 	
+\i There can be a max of 7 values
+\i0\b \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i\b0 \cf0 HW component -> State (possible states with fall back to normal behaviour) -> State Behaviour (a collection of device actions) -> Device Actions (includes function + values) -> dev/func + value(s)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\i0\b \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b0 \cf0 TCP access to any function? or any button?\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf0 actionDispatch
+\b0 \
+- Input values: button up and down is passed as booleans, pulses are passed as pulses +/- but shifted left 1 and with the fine flag added on bit 0. Values are passed as different from 0x8000 (-32768) and with button down set. Button-up doesn\'92t necessarily follow button-down (only for real buttons is this likely to be the case and encoders!). Press and hold encoder for 1 seconds sends actDown+actUp simultaneously. (Potentially we could separate down and up if the encoder library was modified to support giving the up signal)\
+- Output values: Returns zero if a button is disabled or a display should be blanked. Most often (by default) 4 / 5 is returned (to make a button light up when pressed, not necessarily reflecting any other state). If Bit 4 (B10000) is set, it instructs mono color buttons to blink. If Bit 5 (B100000) is set, its the binary output value. Colors can normally be forwarded to setButtonColor functions with a \'93& 0xF\'94 filter.\
+\
+\
+
+\b Compile sizes:
+\b0 \
+\
+
+\b - Sketch basic: 
+\b0 Using the SK_DUMMY device and commenting out the webserver, this comes down to 10782 Flash and 2239 RAM. Adding the webserver in, we hit 28714 / 2807 (but this excludes the around 5K5 PROGMEM of Javasscript, so it fits the estimate that webserver is 24K flash/400 bytes RAM). Adding this (for E21-TVS) we hit 
+\b 35222 flash / 2807 RAM
+\b0 \
+\
+
+\b - Web server: 
+\b0 Disabling all calls to the web server functions included inclusion of the skaarhojwebserver.h file and webserver.h library resulted in a saving of 
+\b 24K flash / 400 bytes RAM
+\b0 . The PROGMEM js code was automatically not compiled in when it was not used, so that is included in these numbers. The test was done with two different types of hardware\
+\
+- E21_TVS: No devices added; 43250 flash / 3110 ram (+8000 / + 300 = hardware)\
+- E201_M16: No devices added; 52930 flash / 3874 ram (+17.7K / + 1.1K = hardware)\
+- C10: No devices added; 42892 flash / 2928 ram (+7.6K / + 121 = hardware)\
+- CMB6: No devices added; 54658 flash / 4175 ram (+19.5K / + 1400 = hardware)\
+\
+
+\b - Defining interface elements:
+\b0  This mostly affects ram for holding the cache variables (but also some ROM for the configuration. A CMB6 with hw definitions for buttons (going from 1 to 30 instead and from 1 to 13 shift levels): Ram: 4175->6120 which is approx 5 bytes pr. interface component pr. shift state. (Pending change from long to int and reduction in shift states will help too).\
+\
+
+\b Devices:
+\b0 \
+- Generally, adding an extra device if the first is already configured will add around 300 bytes in Flash and then full amount of additional memory\
+
+\b - SmartScope:
+\b0  11,2K flash / 350 bytes RAM\
+- 
+\b VideoHub: 
+\b0 8K9 Flash / 1910 bytes RAM\
+- 
+\b HyperDeck:
+\b0  14K5 Flash / 650 bytes RAM\
+- 
+\b ATEMext:
+\b0  17.5K Flash / 3000 bytes RAM\
+(These numbers should increase depending on how many hardware functions we have implemented)\
+}

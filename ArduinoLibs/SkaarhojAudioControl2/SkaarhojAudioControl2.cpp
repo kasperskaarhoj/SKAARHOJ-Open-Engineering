@@ -232,7 +232,7 @@ uint16_t SkaarhojAudioControl2::PCA9671digitalWordRead()	{
 	uint8_t byte1 = 0;
 	uint8_t byte2 = 0;
 	
-	Wire.requestFrom(_chipAddress, 2);  // asking for two bytes - could ask for more, would just get the same data again.
+	Wire.requestFrom(_chipAddress, (uint8_t)2);  // asking for two bytes - could ask for more, would just get the same data again.
 	while(Wire.available())	{
 		byte1 = Wire.read();	// LSB
 		byte2 = Wire.read();

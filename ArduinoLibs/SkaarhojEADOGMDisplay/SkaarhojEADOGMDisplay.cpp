@@ -55,7 +55,7 @@ void SkaarhojEADOGMDisplay::begin(uint8_t address, uint8_t index, uint8_t boardT
 	digitalWrite(_dataPin, LOW);
 	
 	_chipLowerByte = 255;
-	_chipUpperByte = 255;
+	_chipUpperByte = 255;	// bit 6 (64) = 0 => red, bit 5 (32) = 0 => blue, bit 4 (16) = 0 => green
 
     _selectDisplay(_index,false);
     _sendData(false);
@@ -267,6 +267,10 @@ void SkaarhojEADOGMDisplay::newline() {
 	//Serial << _DDRAMaddr << " / " << (_DDRAMaddr >> (_boardType==1?3:4)) << "\n";
 	gotoRowCol((_DDRAMaddr >> (_boardType==1?3:4))+1, 0);
 }
+void SkaarhojEADOGMDisplay::setBacklight(bool red, bool green, bool blue)	{
+	_chipUpperByte = (_chipUpperByte & B10001111) | (red ? 0 : B01000000) | (blue ? 0 : B00100000) | (green ? 0 : B00010000);	// bit 6 (64) = 0 => red, bit 5 (32) = 0 => blue, bit 4 (16) = 0 => green
+	_sendData(false);
+}
 
 void SkaarhojEADOGMDisplay::_incDDRAMaddr()	{
 	_DDRAMaddr++;
@@ -294,7 +298,7 @@ void SkaarhojEADOGMDisplay::_incDDRAMaddr()	{
  */
 void SkaarhojEADOGMDisplay::_sendData(bool enable)  {
 
-  _chipUpperByte = enable ? B11111111 : B01111111;
+  _chipUpperByte = enable ? (_chipUpperByte | B10000000) : (_chipUpperByte & B01111111);
 
   Wire.beginTransmission(_boardAddress);
   Wire.write(_chipLowerByte);

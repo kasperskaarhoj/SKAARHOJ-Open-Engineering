@@ -21,13 +21,15 @@
 #include <EEPROM.h>      // For storing IP numbers
 #include <SkaarhojPgmspace.h>
 #include <Streaming.h>
+#include <SkaarhojTools.h>
+SkaarhojTools sTools(1);    // 0=No runtime serial logging, 1=Moderate runtime serial logging, 2=more verbose... etc.
 
 // Include ATEM library and make an instance:
 #include <ATEMbase.h>
 #include <ATEMext.h>
 ATEMext AtemSwitcher;
 
-//#include <MemoryFree.h>
+#include <MemoryFree.h>
 
 static uint8_t default_ip[] = {     // IP for Configuration Mode (192.168.10.99)
   192, 168, 10, 99
@@ -330,82 +332,82 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   server.httpSuccess();
   server.printP(htmlHead);
 
-  server << "<div style='width:660px; margin-left:10px;'><form action='" PREFIX "/form' method='post'>";
+  server << F("<div style='width:660px; margin-left:10px;'><form action='") << PREFIX << F("/form' method='post'>");
 
   // Panel IP:
-  server << "<h1>SKAARHOJ Device IP Address:</h1><p>";
+  server << F("<h1>SKAARHOJ Device IP Address:</h1><p>");
   for (i = 0; i <= 3; ++i)
   {
-    server << "<input type='text' name='IP" << i << "' value='" << EEPROM.read(i + 2) << "' id='IP" << i << "' size='4'>";
-    if (i < 3)  server << '.';
+    server << F("<input type='text' name='IP") << i << F("' value='") << EEPROM.read(i + 2) << F("' id='IP") << i << F("' size='4'>");
+    if (i < 3)  server << F(".");
   }
-  server << "<hr/>";
+  server << F("<hr/>");
 
   // ATEM Switcher Panel IP:
-  server << "<h1>ATEM Switcher IP Address:</h1><p>";
+  server << F("<h1>ATEM Switcher IP Address:</h1><p>");
   for (i = 0; i <= 3; ++i)
   {
-    server << "<input type='text' name='ATEM_IP" << i << "' value='" << EEPROM.read(i + 2 + 4) << "' id='ATEM_IP" << i << "' size='4'>";
-    if (i < 3)  server << '.';
+    server << F("<input type='text' name='ATEM_IP") << i << F("' value='") << EEPROM.read(i + 2 + 4) << F("' id='ATEM_IP") << i << F("' size='4'>");
+    if (i < 3)  server << F(".");
   }
-  server << "<hr/>";
+  server << F("<hr/>");
 
   ////////////////////////////////////////////////////////
 
   // Set first routing for Top buttons
   server << F("<h1>Set functions for 2 top buttons:</h1><table border=0 cellspacing=3><tr>");
-  server << "<td><p>Left Button" <<  ":</p>";
-  server << "<td><p>Right Button" << ":</p>";
+  server << F("<td><p>Left Button") << F(":</p>");
+  server << F("<td><p>Right Button") << F(":</p>");
   server << F("</tr></n>");
   for (i = 1; i <= 2; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons1A1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons1A1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(614 + i) == 0 ? " selected='selected'" : "") << ">ATEM1ME" << "</option>";
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(614 + i) == 1 ? " selected='selected'" : "") << ">ATEM2ME" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(614 + i) == 0 ? F(" selected='selected'") : F("")) << F(">ATEM1ME") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(614 + i) == 1 ? F(" selected='selected'") : F("")) << F(">ATEM2ME") << F("</option>");
     server << F("</select></td>");
   }
   server << F("</tr></n>");
   for (i = 1; i <= 2; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons1F1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons1F1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(414 + i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(414 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // Preview bus inputs 1-20
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j << "'" << (EEPROM.read(414 + i) == j ? " selected='selected'" : "") << ">PVW " << j << "</option>";
+      server << F("<option value='") << j << F("'") << (EEPROM.read(414 + i) == j ? F(" selected='selected'") : F("")) << F(">PVW ") << j << F("</option>");
     }
     // Program bus inputs 1-20
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j + 20 << "'" << (EEPROM.read(414 + i) == j + 20 ? " selected='selected'" : "") << ">PGM " << j << "</option>";
+      server << F("<option value='") << j + 20 << F("'") << (EEPROM.read(414 + i) == j + 20 ? F(" selected='selected'") : F("")) << F(">PGM ") << j << F("</option>");
     }
 
     // Other input sources
-    server << F("<option value='") << 41 << "'" << (EEPROM.read(414 + i) == 41 ? " selected='selected'" : "") << ">PvwBlack" << "</option>";
-    server << F("<option value='") << 42 << "'" << (EEPROM.read(414 + i) == 42 ? " selected='selected'" : "") << ">PgmBlack" << "</option>";
-    server << F("<option value='") << 43 << "'" << (EEPROM.read(414 + i) == 43 ? " selected='selected'" : "") << ">PvwBars" << "</option>";
-    server << F("<option value='") << 44 << "'" << (EEPROM.read(414 + i) == 44 ? " selected='selected'" : "") << ">PgmBars" << "</option>";
-    server << F("<option value='") << 45 << "'" << (EEPROM.read(414 + i) == 45 ? " selected='selected'" : "") << ">PvwColor1" << "</option>";
-    server << F("<option value='") << 46 << "'" << (EEPROM.read(414 + i) == 46 ? " selected='selected'" : "") << ">PgmColor1" << "</option>";
-    server << F("<option value='") << 47 << "'" << (EEPROM.read(414 + i) == 47 ? " selected='selected'" : "") << ">PvwColor2" << "</option>";
-    server << F("<option value='") << 48 << "'" << (EEPROM.read(414 + i) == 48 ? " selected='selected'" : "") << ">PgmColor2" << "</option>";
-    server << F("<option value='") << 49 << "'" << (EEPROM.read(414 + i) == 49 ? " selected='selected'" : "") << ">PvwMedia1" << "</option>";
-    server << F("<option value='") << 50 << "'" << (EEPROM.read(414 + i) == 50 ? " selected='selected'" : "") << ">PgmMedia1" << "</option>";
-    server << F("<option value='") << 51 << "'" << (EEPROM.read(414 + i) == 51 ? " selected='selected'" : "") << ">PvwMedia2" << "</option>";
-    server << F("<option value='") << 52 << "'" << (EEPROM.read(414 + i) == 52 ? " selected='selected'" : "") << ">PgmMedia2" << "</option>";
-    server << F("<option value='") << 53 << "'" << (EEPROM.read(414 + i) == 53 ? " selected='selected'" : "") << ">PvwSSource" << "</option>";
-    server << F("<option value='") << 54 << "'" << (EEPROM.read(414 + i) == 54 ? " selected='selected'" : "") << ">PgmSSource" << "</option>";
+    server << F("<option value='") << 41 << F("'") << (EEPROM.read(414 + i) == 41 ? F(" selected='selected'") : F("")) << F(">PvwBlack") << F("</option>");
+    server << F("<option value='") << 42 << F("'") << (EEPROM.read(414 + i) == 42 ? F(" selected='selected'") : F("")) << F(">PgmBlack") << F("</option>");
+    server << F("<option value='") << 43 << F("'") << (EEPROM.read(414 + i) == 43 ? F(" selected='selected'") : F("")) << F(">PvwBars") << F("</option>");
+    server << F("<option value='") << 44 << F("'") << (EEPROM.read(414 + i) == 44 ? F(" selected='selected'") : F("")) << F(">PgmBars") << F("</option>");
+    server << F("<option value='") << 45 << F("'") << (EEPROM.read(414 + i) == 45 ? F(" selected='selected'") : F("")) << F(">PvwColor1") << F("</option>");
+    server << F("<option value='") << 46 << F("'") << (EEPROM.read(414 + i) == 46 ? F(" selected='selected'") : F("")) << F(">PgmColor1") << F("</option>");
+    server << F("<option value='") << 47 << F("'") << (EEPROM.read(414 + i) == 47 ? F(" selected='selected'") : F("")) << F(">PvwColor2") << F("</option>");
+    server << F("<option value='") << 48 << F("'") << (EEPROM.read(414 + i) == 48 ? F(" selected='selected'") : F("")) << F(">PgmColor2") << F("</option>");
+    server << F("<option value='") << 49 << F("'") << (EEPROM.read(414 + i) == 49 ? F(" selected='selected'") : F("")) << F(">PvwMedia1") << F("</option>");
+    server << F("<option value='") << 50 << F("'") << (EEPROM.read(414 + i) == 50 ? F(" selected='selected'") : F("")) << F(">PgmMedia1") << F("</option>");
+    server << F("<option value='") << 51 << F("'") << (EEPROM.read(414 + i) == 51 ? F(" selected='selected'") : F("")) << F(">PvwMedia2") << F("</option>");
+    server << F("<option value='") << 52 << F("'") << (EEPROM.read(414 + i) == 52 ? F(" selected='selected'") : F("")) << F(">PgmMedia2") << F("</option>");
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(414 + i) == 53 ? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(414 + i) == 54 ? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
 
-    //server << F("<option value='") << 23 << "'" << (EEPROM.read(400+i)==23?" selected='selected'":"") << ">Cut" << "</option>";
-    //server << F("<option value='") << 24 << "'" << (EEPROM.read(400+i)==24?" selected='selected'":"") << ">Auto" << "</option>";
-    //server << F("<option value='") << 25 << "'" << (EEPROM.read(400+i)==25?" selected='selected'":"") << ">FTB" << "</option>";
+    //server << F("<option value='") << 23 << F("'") << (EEPROM.read(400+i)==23?" selected='selected'":"") << F(">Cut") << F("</option>");
+    //server << F("<option value='") << 24 << F("'") << (EEPROM.read(400+i)==24?" selected='selected'":"") << F(">Auto") << F("</option>");
+    //server << F("<option value='") << 25 << F("'") << (EEPROM.read(400+i)==25?" selected='selected'":"") << F(">FTB") << F("</option>");
 
-    server << F("<option value='") << 255 << "'" << (EEPROM.read(414 + i) == 255 ? " selected='selected'" : "") << ">Default" << "</option>";
+    server << F("<option value='") << 255 << F("'") << (EEPROM.read(414 + i) == 255 ? F(" selected='selected'") : F("")) << F(">Default") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -414,27 +416,29 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   // Set second routing for Top buttons
   for (i = 1; i <= 2; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons1F2" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons1F2") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(514 + i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(514 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // USK 1-4 on/off
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(514 + i) == 1 ? " selected='selected'" : "") << ">USK1" << "</option>";
-    server << F("<option value='") << 2 << "'" << (EEPROM.read(514 + i) == 2 ? " selected='selected'" : "") << ">USK2" << "</option>";
-    server << F("<option value='") << 3 << "'" << (EEPROM.read(514 + i) == 3 ? " selected='selected'" : "") << ">USK3" << "</option>";
-    server << F("<option value='") << 4 << "'" << (EEPROM.read(514 + i) == 4 ? " selected='selected'" : "") << ">USK4" << "</option>";
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(514 + i) == 1 ? F(" selected='selected'") : F("")) << F(">USK1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(514 + i) == 2 ? F(" selected='selected'") : F("")) << F(">USK2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(514 + i) == 3 ? F(" selected='selected'") : F("")) << F(">USK3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(514 + i) == 4 ? F(" selected='selected'") : F("")) << F(">USK4") << F("</option>");
 
     // DSK 1-2 on/off
-    server << F("<option value='") << 5 << "'" << (EEPROM.read(514 + i) == 5 ? " selected='selected'" : "") << ">DSK1" << "</option>";
-    server << F("<option value='") << 6 << "'" << (EEPROM.read(514 + i) == 6 ? " selected='selected'" : "") << ">DSK2" << "</option>";
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(514 + i) == 5 ? F(" selected='selected'") : F("")) << F(">DSK1") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(514 + i) == 6 ? F(" selected='selected'") : F("")) << F(">DSK1Auto") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(514 + i) == 7 ? F(" selected='selected'") : F("")) << F(">DSK2") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(514 + i) == 8 ? F(" selected='selected'") : F("")) << F(">DSK2Auto") << F("</option>");
 
     // Others
-    server << F("<option value='") << 7 << "'" << (EEPROM.read(514 + i) == 7 ? " selected='selected'" : "") << ">Cut" << "</option>";
-    server << F("<option value='") << 8 << "'" << (EEPROM.read(514 + i) == 8 ? " selected='selected'" : "") << ">Auto" << "</option>";
-    server << F("<option value='") << 9 << "'" << (EEPROM.read(514 + i) == 9 ? " selected='selected'" : "") << ">FTB" << "</option>";
-    server << F("<option value='") << 10 << "'" << (EEPROM.read(514 + i) == 10 ? " selected='selected'" : "") << ">Keys Off" << "</option>";
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(514 + i) == 9 ? F(" selected='selected'") : F("")) << F(">Cut") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(514 + i) == 10 ? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(514 + i) == 11 ? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(514 + i) == 12 ? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -443,59 +447,59 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   ////////////////////////////////////////////////////
   // Set first routing for Side buttons
   server << F("<h1>Set functions for 2 side buttons:</h1><table border=0 cellspacing=3><tr>");
-  server << "<td><p>Top Button" <<  ":</p>";
-  server << "<td><p>Bottom Button" << ":</p>";
+  server << F("<td><p>Top Button") << F(":</p>");
+  server << F("<td><p>Bottom Button") << F(":</p>");
   server << F("</tr></n>");
   for (i = 1; i <= 2; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons2A1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons2A1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(615 - i) == 0 ? " selected='selected'" : "") << ">ATEM1ME" << "</option>";
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(615 - i) == 1 ? " selected='selected'" : "") << ">ATEM2ME" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(615 - i) == 0 ? F(" selected='selected'") : F("")) << F(">ATEM1ME") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(615 - i) == 1 ? F(" selected='selected'") : F("")) << F(">ATEM2ME") << F("</option>");
 
     server << F("</select></td>");
   }
   server << F("</tr></n>");
   for (i = 1; i <= 2; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons2F1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons2F1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(415 - i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(415 - i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // Preview bus inputs 1-20
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j << "'" << (EEPROM.read(415 - i) == j ? " selected='selected'" : "") << ">PVW " << j << "</option>";
+      server << F("<option value='") << j << F("'") << (EEPROM.read(415 - i) == j ? F(" selected='selected'") : F("")) << F(">PVW ") << j << F("</option>");
     }
     // Program bus inputs 1-16
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j + 20 << "'" << (EEPROM.read(415 - i) == j + 20 ? " selected='selected'" : "") << ">PGM " << j << "</option>";
+      server << F("<option value='") << j + 20 << F("'") << (EEPROM.read(415 - i) == j + 20 ? F(" selected='selected'") : F("")) << F(">PGM ") << j << F("</option>");
     }
 
     // Other input sources
-    server << F("<option value='") << 41 << "'" << (EEPROM.read(415 - i) == 41 ? " selected='selected'" : "") << ">PvwBlack" << "</option>";
-    server << F("<option value='") << 42 << "'" << (EEPROM.read(415 - i) == 42 ? " selected='selected'" : "") << ">PgmBlack" << "</option>";
-    server << F("<option value='") << 43 << "'" << (EEPROM.read(415 - i) == 43 ? " selected='selected'" : "") << ">PvwBars" << "</option>";
-    server << F("<option value='") << 44 << "'" << (EEPROM.read(415 - i) == 44 ? " selected='selected'" : "") << ">PgmBars" << "</option>";
-    server << F("<option value='") << 45 << "'" << (EEPROM.read(415 - i) == 45 ? " selected='selected'" : "") << ">PvwColor1" << "</option>";
-    server << F("<option value='") << 46 << "'" << (EEPROM.read(415 - i) == 46 ? " selected='selected'" : "") << ">PgmColor1" << "</option>";
-    server << F("<option value='") << 47 << "'" << (EEPROM.read(415 - i) == 47 ? " selected='selected'" : "") << ">PvwColor2" << "</option>";
-    server << F("<option value='") << 48 << "'" << (EEPROM.read(415 - i) == 48 ? " selected='selected'" : "") << ">PgmColor2" << "</option>";
-    server << F("<option value='") << 49 << "'" << (EEPROM.read(415 - i) == 49 ? " selected='selected'" : "") << ">PvwMedia1" << "</option>";
-    server << F("<option value='") << 50 << "'" << (EEPROM.read(415 - i) == 50 ? " selected='selected'" : "") << ">PgmMedia1" << "</option>";
-    server << F("<option value='") << 51 << "'" << (EEPROM.read(415 - i) == 51 ? " selected='selected'" : "") << ">PvwMedia2" << "</option>";
-    server << F("<option value='") << 52 << "'" << (EEPROM.read(415 - i) == 52 ? " selected='selected'" : "") << ">PgmMedia2" << "</option>";
-    server << F("<option value='") << 53 << "'" << (EEPROM.read(415 - i) == 53 ? " selected='selected'" : "") << ">PvwSSource" << "</option>";
-    server << F("<option value='") << 54 << "'" << (EEPROM.read(415 - i) == 54 ? " selected='selected'" : "") << ">PgmSSource" << "</option>";
+    server << F("<option value='") << 41 << F("'") << (EEPROM.read(415 - i) == 41 ? F(" selected='selected'") : F("")) << F(">PvwBlack") << F("</option>");
+    server << F("<option value='") << 42 << F("'") << (EEPROM.read(415 - i) == 42 ? F(" selected='selected'") : F("")) << F(">PgmBlack") << F("</option>");
+    server << F("<option value='") << 43 << F("'") << (EEPROM.read(415 - i) == 43 ? F(" selected='selected'") : F("")) << F(">PvwBars") << F("</option>");
+    server << F("<option value='") << 44 << F("'") << (EEPROM.read(415 - i) == 44 ? F(" selected='selected'") : F("")) << F(">PgmBars") << F("</option>");
+    server << F("<option value='") << 45 << F("'") << (EEPROM.read(415 - i) == 45 ? F(" selected='selected'") : F("")) << F(">PvwColor1") << F("</option>");
+    server << F("<option value='") << 46 << F("'") << (EEPROM.read(415 - i) == 46 ? F(" selected='selected'") : F("")) << F(">PgmColor1") << F("</option>");
+    server << F("<option value='") << 47 << F("'") << (EEPROM.read(415 - i) == 47 ? F(" selected='selected'") : F("")) << F(">PvwColor2") << F("</option>");
+    server << F("<option value='") << 48 << F("'") << (EEPROM.read(415 - i) == 48 ? F(" selected='selected'") : F("")) << F(">PgmColor2") << F("</option>");
+    server << F("<option value='") << 49 << F("'") << (EEPROM.read(415 - i) == 49 ? F(" selected='selected'") : F("")) << F(">PvwMedia1") << F("</option>");
+    server << F("<option value='") << 50 << F("'") << (EEPROM.read(415 - i) == 50 ? F(" selected='selected'") : F("")) << F(">PgmMedia1") << F("</option>");
+    server << F("<option value='") << 51 << F("'") << (EEPROM.read(415 - i) == 51 ? F(" selected='selected'") : F("")) << F(">PvwMedia2") << F("</option>");
+    server << F("<option value='") << 52 << F("'") << (EEPROM.read(415 - i) == 52 ? F(" selected='selected'") : F("")) << F(">PgmMedia2") << F("</option>");
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(415 - i) == 53 ? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(415 - i) == 54 ? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
 
-    //server << F("<option value='") << 23 << "'" << (EEPROM.read(420+i)==23?" selected='selected'":"") << ">Cut" << "</option>";
-    //server << F("<option value='") << 24 << "'" << (EEPROM.read(420+i)==24?" selected='selected'":"") << ">Auto" << "</option>";
-    //server << F("<option value='") << 25 << "'" << (EEPROM.read(420+i)==25?" selected='selected'":"") << ">FTB" << "</option>";
+    //server << F("<option value='") << 23 << F("'") << (EEPROM.read(420+i)==23?" selected='selected'":"") << F(">Cut") << F("</option>");
+    //server << F("<option value='") << 24 << F("'") << (EEPROM.read(420+i)==24?" selected='selected'":"") << F(">Auto") << F("</option>");
+    //server << F("<option value='") << 25 << F("'") << (EEPROM.read(420+i)==25?" selected='selected'":"") << F(">FTB") << F("</option>");
 
-    server << F("<option value='") << 255 << "'" << (EEPROM.read(415 - i) == 255 ? " selected='selected'" : "") << ">Default" << "</option>";
+    server << F("<option value='") << 255 << F("'") << (EEPROM.read(415 - i) == 255 ? F(" selected='selected'") : F("")) << F(">Default") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -504,27 +508,29 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   // Set second routing for Side buttons
   for (i = 1; i <= 2; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons2F2" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons2F2") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(515 - i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(515 - i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // USK 1-4 on/off
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(515 - i) == 1 ? " selected='selected'" : "") << ">USK1" << "</option>";
-    server << F("<option value='") << 2 << "'" << (EEPROM.read(515 - i) == 2 ? " selected='selected'" : "") << ">USK2" << "</option>";
-    server << F("<option value='") << 3 << "'" << (EEPROM.read(515 - i) == 3 ? " selected='selected'" : "") << ">USK3" << "</option>";
-    server << F("<option value='") << 4 << "'" << (EEPROM.read(515 - i) == 4 ? " selected='selected'" : "") << ">USK4" << "</option>";
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(515 - i) == 1 ? F(" selected='selected'") : F("")) << F(">USK1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(515 - i) == 2 ? F(" selected='selected'") : F("")) << F(">USK2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(515 - i) == 3 ? F(" selected='selected'") : F("")) << F(">USK3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(515 - i) == 4 ? F(" selected='selected'") : F("")) << F(">USK4") << F("</option>");
 
     // DSK 1-2 on/off
-    server << F("<option value='") << 5 << "'" << (EEPROM.read(515 - i) == 5 ? " selected='selected'" : "") << ">DSK1" << "</option>";
-    server << F("<option value='") << 6 << "'" << (EEPROM.read(515 - i) == 6 ? " selected='selected'" : "") << ">DSK2" << "</option>";
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(515 - i) == 5 ? F(" selected='selected'") : F("")) << F(">DSK1") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(515 - i) == 6 ? F(" selected='selected'") : F("")) << F(">DSK1Auto") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(515 - i) == 7 ? F(" selected='selected'") : F("")) << F(">DSK2") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(515 - i) == 8 ? F(" selected='selected'") : F("")) << F(">DSK2Auto") << F("</option>");
 
     // Others
-    server << F("<option value='") << 7 << "'" << (EEPROM.read(515 - i) == 7 ? " selected='selected'" : "") << ">Cut" << "</option>";
-    server << F("<option value='") << 8 << "'" << (EEPROM.read(515 - i) == 8 ? " selected='selected'" : "") << ">Auto" << "</option>";
-    server << F("<option value='") << 9 << "'" << (EEPROM.read(515 - i) == 9 ? " selected='selected'" : "") << ">FTB" << "</option>";
-    server << F("<option value='") << 10 << "'" << (EEPROM.read(515 - i) == 10 ? " selected='selected'" : "") << ">Keys Off" << "</option>";
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(515 - i) == 9 ? F(" selected='selected'") : F("")) << F(">Cut") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(515 - i) == 10 ? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(515 - i) == 11 ? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(515 - i) == 12 ? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -535,54 +541,54 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   server << F("<h1>Set functions for 6 top row buttons:</h1><table border=0 cellspacing=3><tr>");
   for (i = 1; i <= 6; ++i)
   {
-    server << "<td><p>Button " << i << ":</p>";
-    server << "<select name='Buttons3A1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td><p>Button ") << i << F(":</p>");
+    server << F("<select name='Buttons3A1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(606 + i) == 0 ? " selected='selected'" : "") << ">ATEM1ME" << "</option>";
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(606 + i) == 1 ? " selected='selected'" : "") << ">ATEM2ME" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(606 + i) == 0 ? F(" selected='selected'") : F("")) << F(">ATEM1ME") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(606 + i) == 1 ? F(" selected='selected'") : F("")) << F(">ATEM2ME") << F("</option>");
 
     server << F("</select></td>");
   }
   server << F("</tr></n>");
   for (i = 1; i <= 6; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons3F1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons3F1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(406 + i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(406 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // Preview bus inputs 1-16
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j << "'" << (EEPROM.read(406 + i) == j ? " selected='selected'" : "") << ">PVW " << j << "</option>";
+      server << F("<option value='") << j << F("'") << (EEPROM.read(406 + i) == j ? F(" selected='selected'") : F("")) << F(">PVW ") << j << F("</option>");
     }
     // Program bus inputs 1-16
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j + 20 << "'" << (EEPROM.read(406 + i) == j + 20 ? " selected='selected'" : "") << ">PGM " << j << "</option>";
+      server << F("<option value='") << j + 20 << F("'") << (EEPROM.read(406 + i) == j + 20 ? F(" selected='selected'") : F("")) << F(">PGM ") << j << F("</option>");
     }
 
     // Other input sources
-    server << F("<option value='") << 41 << "'" << (EEPROM.read(406 + i) == 41 ? " selected='selected'" : "") << ">PvwBlack" << "</option>";
-    server << F("<option value='") << 42 << "'" << (EEPROM.read(406 + i) == 42 ? " selected='selected'" : "") << ">PgmBlack" << "</option>";
-    server << F("<option value='") << 43 << "'" << (EEPROM.read(406 + i) == 43 ? " selected='selected'" : "") << ">PvwBars" << "</option>";
-    server << F("<option value='") << 44 << "'" << (EEPROM.read(406 + i) == 44 ? " selected='selected'" : "") << ">PgmBars" << "</option>";
-    server << F("<option value='") << 45 << "'" << (EEPROM.read(406 + i) == 45 ? " selected='selected'" : "") << ">PvwColor1" << "</option>";
-    server << F("<option value='") << 46 << "'" << (EEPROM.read(406 + i) == 46 ? " selected='selected'" : "") << ">PgmColor1" << "</option>";
-    server << F("<option value='") << 47 << "'" << (EEPROM.read(406 + i) == 47 ? " selected='selected'" : "") << ">PvwColor2" << "</option>";
-    server << F("<option value='") << 48 << "'" << (EEPROM.read(406 + i) == 48 ? " selected='selected'" : "") << ">PgmColor2" << "</option>";
-    server << F("<option value='") << 49 << "'" << (EEPROM.read(406 + i) == 49 ? " selected='selected'" : "") << ">PvwMedia1" << "</option>";
-    server << F("<option value='") << 50 << "'" << (EEPROM.read(406 + i) == 50 ? " selected='selected'" : "") << ">PgmMedia1" << "</option>";
-    server << F("<option value='") << 51 << "'" << (EEPROM.read(406 + i) == 51 ? " selected='selected'" : "") << ">PvwMedia2" << "</option>";
-    server << F("<option value='") << 52 << "'" << (EEPROM.read(406 + i) == 52 ? " selected='selected'" : "") << ">PgmMedia2" << "</option>";
-    server << F("<option value='") << 53 << "'" << (EEPROM.read(406 + i) == 53 ? " selected='selected'" : "") << ">PvwSSource" << "</option>";
-    server << F("<option value='") << 54 << "'" << (EEPROM.read(406 + i) == 54 ? " selected='selected'" : "") << ">PgmSSource" << "</option>";
+    server << F("<option value='") << 41 << F("'") << (EEPROM.read(406 + i) == 41 ? F(" selected='selected'") : F("")) << F(">PvwBlack") << F("</option>");
+    server << F("<option value='") << 42 << F("'") << (EEPROM.read(406 + i) == 42 ? F(" selected='selected'") : F("")) << F(">PgmBlack") << F("</option>");
+    server << F("<option value='") << 43 << F("'") << (EEPROM.read(406 + i) == 43 ? F(" selected='selected'") : F("")) << F(">PvwBars") << F("</option>");
+    server << F("<option value='") << 44 << F("'") << (EEPROM.read(406 + i) == 44 ? F(" selected='selected'") : F("")) << F(">PgmBars") << F("</option>");
+    server << F("<option value='") << 45 << F("'") << (EEPROM.read(406 + i) == 45 ? F(" selected='selected'") : F("")) << F(">PvwColor1") << F("</option>");
+    server << F("<option value='") << 46 << F("'") << (EEPROM.read(406 + i) == 46 ? F(" selected='selected'") : F("")) << F(">PgmColor1") << F("</option>");
+    server << F("<option value='") << 47 << F("'") << (EEPROM.read(406 + i) == 47 ? F(" selected='selected'") : F("")) << F(">PvwColor2") << F("</option>");
+    server << F("<option value='") << 48 << F("'") << (EEPROM.read(406 + i) == 48 ? F(" selected='selected'") : F("")) << F(">PgmColor2") << F("</option>");
+    server << F("<option value='") << 49 << F("'") << (EEPROM.read(406 + i) == 49 ? F(" selected='selected'") : F("")) << F(">PvwMedia1") << F("</option>");
+    server << F("<option value='") << 50 << F("'") << (EEPROM.read(406 + i) == 50 ? F(" selected='selected'") : F("")) << F(">PgmMedia1") << F("</option>");
+    server << F("<option value='") << 51 << F("'") << (EEPROM.read(406 + i) == 51 ? F(" selected='selected'") : F("")) << F(">PvwMedia2") << F("</option>");
+    server << F("<option value='") << 52 << F("'") << (EEPROM.read(406 + i) == 52 ? F(" selected='selected'") : F("")) << F(">PgmMedia2") << F("</option>");
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(406 + i) == 53 ? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(406 + i) == 54 ? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
 
-    //server << F("<option value='") << 23 << "'" << (EEPROM.read(440+i)==23?" selected='selected'":"") << ">Cut" << "</option>";
-    //server << F("<option value='") << 24 << "'" << (EEPROM.read(440+i)==24?" selected='selected'":"") << ">Auto" << "</option>";
-    //server << F("<option value='") << 25 << "'" << (EEPROM.read(440+i)==25?" selected='selected'":"") << ">FTB" << "</option>";
+    //server << F("<option value='") << 23 << F("'") << (EEPROM.read(440+i)==23?" selected='selected'":"") << F(">Cut") << F("</option>");
+    //server << F("<option value='") << 24 << F("'") << (EEPROM.read(440+i)==24?" selected='selected'":"") << F(">Auto") << F("</option>");
+    //server << F("<option value='") << 25 << F("'") << (EEPROM.read(440+i)==25?" selected='selected'":"") << F(">FTB") << F("</option>");
 
-    server << F("<option value='") << 255 << "'" << (EEPROM.read(406 + i) == 255 ? " selected='selected'" : "") << ">Default" << "</option>";
+    server << F("<option value='") << 255 << F("'") << (EEPROM.read(406 + i) == 255 ? F(" selected='selected'") : F("")) << F(">Default") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -591,27 +597,29 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   // Set second routing for Top row buttons
   for (i = 1; i <= 6; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons3F2" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons3F2") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(506 + i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(506 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // USK 1-4 on/off
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(506 + i) == 1 ? " selected='selected'" : "") << ">USK1" << "</option>";
-    server << F("<option value='") << 2 << "'" << (EEPROM.read(506 + i) == 2 ? " selected='selected'" : "") << ">USK2" << "</option>";
-    server << F("<option value='") << 3 << "'" << (EEPROM.read(506 + i) == 3 ? " selected='selected'" : "") << ">USK3" << "</option>";
-    server << F("<option value='") << 4 << "'" << (EEPROM.read(506 + i) == 4 ? " selected='selected'" : "") << ">USK4" << "</option>";
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(506 + i) == 1 ? F(" selected='selected'") : F("")) << F(">USK1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(506 + i) == 2 ? F(" selected='selected'") : F("")) << F(">USK2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(506 + i) == 3 ? F(" selected='selected'") : F("")) << F(">USK3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(506 + i) == 4 ? F(" selected='selected'") : F("")) << F(">USK4") << F("</option>");
 
     // DSK 1-2 on/off
-    server << F("<option value='") << 5 << "'" << (EEPROM.read(506 + i) == 5 ? " selected='selected'" : "") << ">DSK1" << "</option>";
-    server << F("<option value='") << 6 << "'" << (EEPROM.read(506 + i) == 6 ? " selected='selected'" : "") << ">DSK2" << "</option>";
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(506 + i) == 5 ? F(" selected='selected'") : F("")) << F(">DSK1") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(506 + i) == 6 ? F(" selected='selected'") : F("")) << F(">DSK1Auto") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(506 + i) == 7 ? F(" selected='selected'") : F("")) << F(">DSK2") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(506 + i) == 8 ? F(" selected='selected'") : F("")) << F(">DSK2Auto") << F("</option>");
 
     // Others
-    server << F("<option value='") << 7 << "'" << (EEPROM.read(506 + i) == 7 ? " selected='selected'" : "") << ">Cut" << "</option>";
-    server << F("<option value='") << 8 << "'" << (EEPROM.read(506 + i) == 8 ? " selected='selected'" : "") << ">Auto" << "</option>";
-    server << F("<option value='") << 9 << "'" << (EEPROM.read(506 + i) == 9 ? " selected='selected'" : "") << ">FTB" << "</option>";
-    server << F("<option value='") << 10 << "'" << (EEPROM.read(506 + i) == 10 ? " selected='selected'" : "") << ">Keys Off" << "</option>";
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(506 + i) == 9 ? F(" selected='selected'") : F("")) << F(">Cut") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(506 + i) == 10 ? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(506 + i) == 11 ? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(506 + i) == 12 ? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -623,54 +631,54 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   server << F("<h1>Set functions for 6 bottom row buttons:</h1><table border=0 cellspacing=3><tr>");
   for (i = 1; i <= 6; ++i)
   {
-    server << "<td><p>Button " << i << ":</p>";
-    server << "<select name='Buttons4A1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td><p>Button ") << i << F(":</p>");
+    server << F("<select name='Buttons4A1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(600 + i) == 0 ? " selected='selected'" : "") << ">ATEM1ME" << "</option>";
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(600 + i) == 1 ? " selected='selected'" : "") << ">ATEM2ME" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(600 + i) == 0 ? F(" selected='selected'") : F("")) << F(">ATEM1ME") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(600 + i) == 1 ? F(" selected='selected'") : F("")) << F(">ATEM2ME") << F("</option>");
 
     server << F("</select></td>");
   }
   server << F("</tr></n>");
   for (i = 1; i <= 6; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons4F1" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons4F1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(400 + i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(400 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // Preview bus inputs 1-20
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j << "'" << (EEPROM.read(400 + i) == j ? " selected='selected'" : "") << ">PVW " << j << "</option>";
+      server << F("<option value='") << j << F("'") << (EEPROM.read(400 + i) == j ? F(" selected='selected'") : F("")) << F(">PVW ") << j << F("</option>");
     }
     // Program bus inputs 1-20
     for (uint8_t j = 1; j <= 20; j++)  {
-      server << F("<option value='") << j + 20 << "'" << (EEPROM.read(400 + i) == j + 20 ? " selected='selected'" : "") << ">PGM " << j << "</option>";
+      server << F("<option value='") << j + 20 << F("'") << (EEPROM.read(400 + i) == j + 20 ? F(" selected='selected'") : F("")) << F(">PGM ") << j << F("</option>");
     }
 
     // Other input sources
-    server << F("<option value='") << 41 << "'" << (EEPROM.read(400 + i) == 41 ? " selected='selected'" : "") << ">PvwBlack" << "</option>";
-    server << F("<option value='") << 42 << "'" << (EEPROM.read(400 + i) == 42 ? " selected='selected'" : "") << ">PgmBlack" << "</option>";
-    server << F("<option value='") << 43 << "'" << (EEPROM.read(400 + i) == 43 ? " selected='selected'" : "") << ">PvwBars" << "</option>";
-    server << F("<option value='") << 44 << "'" << (EEPROM.read(400 + i) == 44 ? " selected='selected'" : "") << ">PgmBars" << "</option>";
-    server << F("<option value='") << 45 << "'" << (EEPROM.read(400 + i) == 45 ? " selected='selected'" : "") << ">PvwColor1" << "</option>";
-    server << F("<option value='") << 46 << "'" << (EEPROM.read(400 + i) == 46 ? " selected='selected'" : "") << ">PgmColor1" << "</option>";
-    server << F("<option value='") << 47 << "'" << (EEPROM.read(400 + i) == 47 ? " selected='selected'" : "") << ">PvwColor2" << "</option>";
-    server << F("<option value='") << 48 << "'" << (EEPROM.read(400 + i) == 48 ? " selected='selected'" : "") << ">PgmColor2" << "</option>";
-    server << F("<option value='") << 49 << "'" << (EEPROM.read(400 + i) == 49 ? " selected='selected'" : "") << ">PvwMedia1" << "</option>";
-    server << F("<option value='") << 50 << "'" << (EEPROM.read(400 + i) == 50 ? " selected='selected'" : "") << ">PgmMedia1" << "</option>";
-    server << F("<option value='") << 51 << "'" << (EEPROM.read(400 + i) == 51 ? " selected='selected'" : "") << ">PvwMedia2" << "</option>";
-    server << F("<option value='") << 52 << "'" << (EEPROM.read(400 + i) == 52 ? " selected='selected'" : "") << ">PgmMedia2" << "</option>";
-    server << F("<option value='") << 53 << "'" << (EEPROM.read(400 + i) == 53 ? " selected='selected'" : "") << ">PvwSSource" << "</option>";
-    server << F("<option value='") << 54 << "'" << (EEPROM.read(400 + i) == 54 ? " selected='selected'" : "") << ">PgmSSource" << "</option>";
+    server << F("<option value='") << 41 << F("'") << (EEPROM.read(400 + i) == 41 ? F(" selected='selected'") : F("")) << F(">PvwBlack") << F("</option>");
+    server << F("<option value='") << 42 << F("'") << (EEPROM.read(400 + i) == 42 ? F(" selected='selected'") : F("")) << F(">PgmBlack") << F("</option>");
+    server << F("<option value='") << 43 << F("'") << (EEPROM.read(400 + i) == 43 ? F(" selected='selected'") : F("")) << F(">PvwBars") << F("</option>");
+    server << F("<option value='") << 44 << F("'") << (EEPROM.read(400 + i) == 44 ? F(" selected='selected'") : F("")) << F(">PgmBars") << F("</option>");
+    server << F("<option value='") << 45 << F("'") << (EEPROM.read(400 + i) == 45 ? F(" selected='selected'") : F("")) << F(">PvwColor1") << F("</option>");
+    server << F("<option value='") << 46 << F("'") << (EEPROM.read(400 + i) == 46 ? F(" selected='selected'") : F("")) << F(">PgmColor1") << F("</option>");
+    server << F("<option value='") << 47 << F("'") << (EEPROM.read(400 + i) == 47 ? F(" selected='selected'") : F("")) << F(">PvwColor2") << F("</option>");
+    server << F("<option value='") << 48 << F("'") << (EEPROM.read(400 + i) == 48 ? F(" selected='selected'") : F("")) << F(">PgmColor2") << F("</option>");
+    server << F("<option value='") << 49 << F("'") << (EEPROM.read(400 + i) == 49 ? F(" selected='selected'") : F("")) << F(">PvwMedia1") << F("</option>");
+    server << F("<option value='") << 50 << F("'") << (EEPROM.read(400 + i) == 50 ? F(" selected='selected'") : F("")) << F(">PgmMedia1") << F("</option>");
+    server << F("<option value='") << 51 << F("'") << (EEPROM.read(400 + i) == 51 ? F(" selected='selected'") : F("")) << F(">PvwMedia2") << F("</option>");
+    server << F("<option value='") << 52 << F("'") << (EEPROM.read(400 + i) == 52 ? F(" selected='selected'") : F("")) << F(">PgmMedia2") << F("</option>");
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(400 + i) == 53 ? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(400 + i) == 54 ? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
 
-    //server << F("<option value='") << 23 << "'" << (EEPROM.read(460+i)==23?" selected='selected'":"") << ">Cut" << "</option>";
-    //server << F("<option value='") << 24 << "'" << (EEPROM.read(460+i)==24?" selected='selected'":"") << ">Auto" << "</option>";
-    //server << F("<option value='") << 25 << "'" << (EEPROM.read(460+i)==25?" selected='selected'":"") << ">FTB" << "</option>";
+    //server << F("<option value='") << 23 << F("'") << (EEPROM.read(460+i)==23?" selected='selected'":"") << F(">Cut") << F("</option>");
+    //server << F("<option value='") << 24 << F("'") << (EEPROM.read(460+i)==24?" selected='selected'":"") << F(">Auto") << F("</option>");
+    //server << F("<option value='") << 25 << F("'") << (EEPROM.read(460+i)==25?" selected='selected'":"") << F(">FTB") << F("</option>");
 
-    server << F("<option value='") << 255 << "'" << (EEPROM.read(400 + i) == 255 ? " selected='selected'" : "") << ">Default" << "</option>";
+    server << F("<option value='") << 255 << F("'") << (EEPROM.read(400 + i) == 255 ? F(" selected='selected'") : F("")) << F(">Default") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -679,27 +687,29 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   // Set second routing for Bottom row buttons
   for (i = 1; i <= 6; ++i)
   {
-    server << "<td></p>";
-    server << "<select name='Buttons4F2" << i << ":'div style='width:78px;>";
-    server << "<option value='0'></option>";
+    server << F("<td></p>");
+    server << F("<select name='Buttons4F2") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
 
-    server << F("<option value='") << 0 << "'" << (EEPROM.read(500 + i) == 0 ? " selected='selected'" : "") << "> \t" << "</option>";
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(500 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
 
     // USK 1-4 on/off
-    server << F("<option value='") << 1 << "'" << (EEPROM.read(500 + i) == 1 ? " selected='selected'" : "") << ">USK1" << "</option>";
-    server << F("<option value='") << 2 << "'" << (EEPROM.read(500 + i) == 2 ? " selected='selected'" : "") << ">USK2" << "</option>";
-    server << F("<option value='") << 3 << "'" << (EEPROM.read(500 + i) == 3 ? " selected='selected'" : "") << ">USK3" << "</option>";
-    server << F("<option value='") << 4 << "'" << (EEPROM.read(500 + i) == 4 ? " selected='selected'" : "") << ">USK4" << "</option>";
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(500 + i) == 1 ? F(" selected='selected'") : F("")) << F(">USK1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(500 + i) == 2 ? F(" selected='selected'") : F("")) << F(">USK2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(500 + i) == 3 ? F(" selected='selected'") : F("")) << F(">USK3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(500 + i) == 4 ? F(" selected='selected'") : F("")) << F(">USK4") << F("</option>");
 
     // DSK 1-2 on/off
-    server << F("<option value='") << 5 << "'" << (EEPROM.read(500 + i) == 5 ? " selected='selected'" : "") << ">DSK1" << "</option>";
-    server << F("<option value='") << 6 << "'" << (EEPROM.read(500 + i) == 6 ? " selected='selected'" : "") << ">DSK2" << "</option>";
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(500 + i) == 5 ? F(" selected='selected'") : F("")) << F(">DSK1") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(500 + i) == 6 ? F(" selected='selected'") : F("")) << F(">DSK1Auto") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(500 + i) == 7 ? F(" selected='selected'") : F("")) << F(">DSK2") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(500 + i) == 8 ? F(" selected='selected'") : F("")) << F(">DSK2Auto") << F("</option>");
 
     // Others
-    server << F("<option value='") << 7 << "'" << (EEPROM.read(500 + i) == 7 ? " selected='selected'" : "") << ">Cut" << "</option>";
-    server << F("<option value='") << 8 << "'" << (EEPROM.read(500 + i) == 8 ? " selected='selected'" : "") << ">Auto" << "</option>";
-    server << F("<option value='") << 9 << "'" << (EEPROM.read(500 + i) == 9 ? " selected='selected'" : "") << ">FTB" << "</option>";
-    server << F("<option value='") << 10 << "'" << (EEPROM.read(500 + i) == 10 ? " selected='selected'" : "") << ">Keys Off" << "</option>";
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(500 + i) == 9 ? F(" selected='selected'") : F("")) << F(">Cut") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(500 + i) == 10 ? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(500 + i) == 11 ? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(500 + i) == 12 ? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
 
     server << F("</select></td>");
   }
@@ -709,26 +719,26 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   // Slider:
   server << F("<h1>Slider:</h1><table border=0 cellspacing=3><tr>");
-  server << "<td></p>";
-  server << "<select name='slider" << ":'div style='width:78px;>";
-  server << "<option value='0'></option>";
+  server << F("<td></p>");
+  server << F("<select name='slider") << F(":'div style='width:78px;>");
+  server << F("<option value='0'></option>");
 
-  server << F("<option value='") << 0 << "'" << (EEPROM.read(99)==0?" selected='selected'":"") << ">ATEM1ME" << "</option>";
-  server << F("<option value='") << 1 << "'" << (EEPROM.read(99)==1?" selected='selected'":"") << ">ATEM2ME" << "</option>";
+  server << F("<option value='") << 0 << F("'") << (EEPROM.read(99) == 0 ? " selected='selected'" : "") << F(">ATEM1ME") << F("</option>");
+  server << F("<option value='") << 1 << F("'") << (EEPROM.read(99) == 1 ? " selected='selected'" : "") << F(">ATEM2ME") << F("</option>");
 
   server << F("</select></td>");
   server << F("</tr></n>");
 
   server << F("</tr></table><hr/>");
 
-  
+
   //////////////////////////////////////////////////
 
 
   // End form and page:
-  server << "<input type='submit' value='Submit'/></form></div>";
-  server << "<br><i>(Reset / Pull the power after submitting the form successfully)</i>";
-  server << "</body></html>";
+  server << F("<input type='submit' value='Submit'/></form></div>");
+  server << F("<br><i>(Reset / Pull the power after submitting the form successfully)</i>");
+  server << F("</body></html>");
 }
 
 void formCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, bool tail_complete)
@@ -1049,6 +1059,11 @@ void setup() {
     webserver.addCommand("logo.png", &logoCmd);
   }
   else {
+
+    // Set Bi-color LED orange - indicates "connecting...":
+    digitalWrite(redled, false);
+    digitalWrite(greenled, false);
+
     // read buttons functions
     for (uint8_t i = 1; i <= 16; i++) {
       buttonsATEM[i - 1] = (EEPROM.read(600 + i));
@@ -1101,7 +1116,7 @@ void loop() {
         // Set Bi-color LED to red or green depending on mode:
         digitalWrite(redled, false);
         digitalWrite(greenled, true);
-        Serial << F("Turning on buttons\n");
+        Serial << F("Connected\n");
 
         buttons.setDefaultColor(3);  // Dimmed by default
         buttons.setButtonColorsToDefault();
@@ -1115,11 +1130,11 @@ void loop() {
       if (AtemOnline)  {
         AtemOnline = false;
 
-        // Set Bi-color LED off = "no connection"
+        // Set Bi-color LED red - indicates "connecting...":
         digitalWrite(redled, true);
         digitalWrite(greenled, false);
 
-        Serial << F("Turning off buttons light\n");
+        Serial << F("Connection lost\n");
         buttons.setDefaultColor(0);  // Off by default
         buttons.setButtonColorsToDefault();
       }
@@ -1137,10 +1152,10 @@ void commandDispatch() {
   // "T-bar" slider:
   if (utils.uniDirectionalSlider_hasMoved())  {
     AtemSwitcher.setTransitionPosition(slider, 10 * utils.uniDirectionalSlider_position());
-    //AtemSwitcher.delay(20);
+    lDelay(20);
     if (utils.uniDirectionalSlider_isAtEnd())  {
       AtemSwitcher.setTransitionPosition(slider, 0);
-      //AtemSwitcher.delay(5);
+      lDelay(5);
     }
   }
 
@@ -1385,28 +1400,34 @@ void commandDispatch() {
           AtemSwitcher.setKeyerOnAirEnabled(0, 1, !AtemSwitcher.getKeyerOnAirEnabled(0, 1)); // Toggle USK 2
           break;
         case 3:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 0, !AtemSwitcher.getKeyerOnAirEnabled(0, 2)); // Toggle USK 3
+          AtemSwitcher.setKeyerOnAirEnabled(0, 2, !AtemSwitcher.getKeyerOnAirEnabled(0, 2)); // Toggle USK 3
           break;
         case 4:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 0, !AtemSwitcher.getKeyerOnAirEnabled(0, 3)); // Toggle USK 4
+          AtemSwitcher.setKeyerOnAirEnabled(0, 3, !AtemSwitcher.getKeyerOnAirEnabled(0, 3)); // Toggle USK 4
           break;
         case 5:
           AtemSwitcher.setDownstreamKeyerOnAir(0, !AtemSwitcher.getDownstreamKeyerOnAir(0)); // Toggle DSK 1
           break;
         case 6:
-          AtemSwitcher.setDownstreamKeyerOnAir(1, !AtemSwitcher.getDownstreamKeyerOnAir(1)); // Toggle DSK 2
+          AtemSwitcher.performDownstreamKeyerAutoKeyer(0); // Auto DSK 1
           break;
         case 7:
+          AtemSwitcher.setDownstreamKeyerOnAir(1, !AtemSwitcher.getDownstreamKeyerOnAir(1)); // Toggle DSK 2
+          break;
+        case 8:
+          AtemSwitcher.performDownstreamKeyerAutoKeyer(1); // Auto DSK 2
+          break;
+        case 9:
           AtemSwitcher.performCutME(buttonsATEM[i - 1]);
           buttons.setButtonColor(i, 1);   // Highlight CUT button
           break;
-        case 8:
+        case 10:
           AtemSwitcher.performAutoME(buttonsATEM[i - 1]);
           break;
-        case 9:
+        case 11:
           AtemSwitcher.performFadeToBlackME(buttonsATEM[i - 1]);
           break;
-        case 10:
+        case 12:
           for (int j = 1; j <= 4; j++) {
             AtemSwitcher.setKeyerOnAirEnabled(buttonsATEM[i - 1], j - 1, 0);
           }
@@ -1441,39 +1462,41 @@ void setButtonColors() {
             buttons.setButtonColor(i, AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 3) ? 1 : 3);
             break;
           case 5:
+          case 6:
             buttons.setButtonColor(i, AtemSwitcher.getDownstreamKeyerOnAir(0) ? 1 : 3);
             break;
-          case 6:
+          case 7:
+          case 8:
             buttons.setButtonColor(i, AtemSwitcher.getDownstreamKeyerOnAir(1) ? 1 : 3);
             break;
-          case 7:
+          case 9:
             if (!buttons.buttonIsPressed(i))  {
               buttons.setButtonColor(i, 3);   // de-highlight CUT button
             }
             break;
-          case 8:
+          case 10:
             buttons.setButtonColor(i, AtemSwitcher.getTransitionInTransition(buttonsATEM[i - 1]) > 0 ? 1 : 3); // Auto button
             break;
-          case 9:
+          case 11:
             if (AtemSwitcher.getFadeToBlackStateInTransition(buttonsATEM[i - 1]))  { // Setting button color. This is a more complex example which includes blinking during execution:
               if (!AtemSwitcher.getFadeToBlackStateFullyBlack(buttonsATEM[i - 1]) && (AtemSwitcher.getFadeToBlackStateFramesRemaining(buttonsATEM[i - 1]) != AtemSwitcher.getFadeToBlackRate(buttonsATEM[i - 1])))  { // It's important to test if fadeToBlack time is more than zero because it's the kind of state from the ATEM which is usually not captured during initialization. Hopefull this will be solved in the future.
                 // Blinking with AMBER color if Fade To Black is executing:
-                if ((unsigned long)millis() & B10000000)  {
-                  buttons.setButtonColor(i, 1);
-                }
-                else {
-                  buttons.setButtonColor(i, 2);
-                }
+                buttons.setButtonColor(i, 1);  // Sets color of button to RED (2) if Fade To Black is activated
               }
             }
             else if (AtemSwitcher.getFadeToBlackStateFullyBlack(buttonsATEM[i - 1])) {
-              buttons.setButtonColor(i, 1);  // Sets color of button to RED (2) if Fade To Black is activated
+              if ((unsigned long)millis() & B10000000)  {
+                buttons.setButtonColor(i, 1);
+              }
+              else {
+                buttons.setButtonColor(i, 2);
+              }
             }
             else {
               buttons.setButtonColor(i, 3);  // Dimmed background if no fade to black
             }
             break;
-          case 10:
+          case 12:
             if (AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 0) || AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 1) || AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 2) || AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 3) || AtemSwitcher.getDownstreamKeyerOnAir(0) || AtemSwitcher.getDownstreamKeyerOnAir(1)) {
               buttons.setButtonColor(i, 1);
             }
@@ -1682,13 +1705,13 @@ void setButtonColors() {
 
 void chipScan() {
   if (firstTime)  Serial << "----\nMCP23017::\n";
-  for(uint8_t i=0;i<=7;i++)  {  
+  for (uint8_t i = 0; i <= 7; i++)  {
     word buttonStatus = GPIOchipArray[i].digitalWordRead();
     if (firstTime)  {
       Serial << "Board #" << i << ": ";
       Serial.println(buttonStatus, BIN);
       MCP23017_states[i] = buttonStatus;
-    } 
+    }
     else {
       if (MCP23017_states[i] != buttonStatus)  {
         Serial << "Iter." << counter << ": MCP23017, Board #" << i << ": ";
@@ -1703,8 +1726,8 @@ void chipScan() {
 
 
   if (firstTime)  Serial << "\n\nPCA9685::\n";
-  for(uint8_t i=0;i<=63;i++)  {  
-    if (i!=48)  {  // Don't address the broadcast address.
+  for (uint8_t i = 0; i <= 63; i++)  {
+    if (i != 48)  { // Don't address the broadcast address.
       // Set up each board:
       ledDriver.begin(i);  // Address pins A5-A0 set to B111000
 
@@ -1712,59 +1735,72 @@ void chipScan() {
         if (ledDriver.init())  {
           Serial << "\nBoard #" << i << " found\n";
           PCA9685_states[i] = true;
-        } 
+        }
         else {
           Serial << ".";
           PCA9685_states[i] = false;
         }
       }
-      else{
+      else {
         bool ledDriverState = ledDriver.init();
-        if (ledDriverState!=PCA9685_states[i])  {
-          Serial << "Iter." << counter << ": PCA9685, Board #" << i << " " << (ledDriver.init()?"found":"missing");
+        if (ledDriverState != PCA9685_states[i])  {
+          Serial << "Iter." << counter << ": PCA9685, Board #" << i << " " << (ledDriver.init() ? "found" : "missing");
           Serial << "\n";
           deviation = true;
           theSpeed = 3;
-        } 
+        }
         if (ledDriverState)  {
           if (deviation)  {  // Blinks if there has been a deviation from expected:
-            for (uint8_t ii=0; ii<16; ii++)  {
-              ledDriver.setLEDDimmed(ii,counter%2 ? 100 : 0);
-            } 
-          } 
-          else {
-            if (counter%20 < 3)  {   // 100% color: (3 seconds)
-              for (uint8_t ii=0; ii<16; ii++)  {
-                ledDriver.setLEDDimmed(ii,(counter%20)*50);
-              } 
+            for (uint8_t ii = 0; ii < 16; ii++)  {
+              ledDriver.setLEDDimmed(ii, counter % 2 ? 100 : 0);
             }
-            else if (counter%20 < 15)  {  // The random color programme:
-              for (uint8_t ii=0; ii<16; ii++)  {
-                ledDriver.setLEDDimmed(ii,random(0,6)*20);
-              } 
-            } 
+          }
+          else {
+            if (counter % 20 < 3)  { // 100% color: (3 seconds)
+              for (uint8_t ii = 0; ii < 16; ii++)  {
+                ledDriver.setLEDDimmed(ii, (counter % 20) * 50);
+              }
+            }
+            else if (counter % 20 < 15)  { // The random color programme:
+              for (uint8_t ii = 0; ii < 16; ii++)  {
+                ledDriver.setLEDDimmed(ii, random(0, 6) * 20);
+              }
+            }
             else {  // Same intensity for all LEDs:
-              int randColor1 = random(0,3)*50;
-              int randColor2 = random(0,3)*50;
-              for (uint8_t ii=0; ii<16; ii++)  {
-                ledDriver.setLEDDimmed(ii,ii%2 ? randColor1 : randColor2);
-              } 
+              int randColor1 = random(0, 3) * 50;
+              int randColor2 = random(0, 3) * 50;
+              for (uint8_t ii = 0; ii < 16; ii++)  {
+                ledDriver.setLEDDimmed(ii, ii % 2 ? randColor1 : randColor2);
+              }
             }
           }
         }
       }
     }
     delay(theSpeed);
-  }  
-  if (counter%20 < 3)  {
-    delay(3000); 
+  }
+  if (counter % 20 < 3)  {
+    delay(3000);
   }
 
 
   if (firstTime)  Serial << "\n\n----\nWaiting for Deviations:";
-  if (counter%(30*60)==0)  Serial << "\n" << counter << " ";
-  if (counter%30==0)  Serial << ".";
+  if (counter % (30 * 60) == 0)  Serial << "\n" << counter << " ";
+  if (counter % 30 == 0)  Serial << ".";
 
   counter++;
   firstTime = false;
+}
+
+
+/**
+   Local delay function
+*/
+void lDelay(unsigned long timeout)  {
+  unsigned long thisTime = millis();
+  do {
+    AtemSwitcher.runLoop();
+    //Serial << F(".");
+  }
+  while (!sTools.hasTimedOut(thisTime, timeout));
 }

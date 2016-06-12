@@ -179,11 +179,11 @@ void SkaarhojBI8::setButtonType(uint8_t type)	{
 		_colorBalanceRed[9] = 100;
 
 		_colorBalanceGreen[0] = 0;
-		_colorBalanceGreen[1] = 70;
+		_colorBalanceGreen[1] = 70*0.8;	// Most recent batch of buttons require this - maybe find another way to create this balance?
 		_colorBalanceGreen[2] = 0;
 		_colorBalanceGreen[3] = 70;
-		_colorBalanceGreen[4] = 30;
-		_colorBalanceGreen[5] = 5;
+		_colorBalanceGreen[4] = 30*0.8;	// Most recent batch of buttons require this - maybe find another way to create this balance?
+		_colorBalanceGreen[5] = 5*0.8;	// Most recent batch of buttons require this - maybe find another way to create this balance?
 		_colorBalanceGreen[6] = 0;
 		_colorBalanceGreen[7] = 0;
 		_colorBalanceGreen[8] = 0;

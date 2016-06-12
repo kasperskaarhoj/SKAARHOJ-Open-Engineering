@@ -58,6 +58,9 @@ class Adafruit_GFX : public Print {
     setTextSize(uint8_t s),
     setTextWrap(boolean w),
     setRotation(uint8_t r);
+	
+    virtual void clearDisplay(void);
+    virtual void display(uint8_t cs);
 
 #if ARDUINO >= 100
   virtual size_t write(uint8_t);
@@ -70,16 +73,23 @@ class Adafruit_GFX : public Print {
     width(void);
 
   uint8_t getRotation(void);
+  void setBoundingBox(uint8_t x,uint8_t y,uint8_t w,uint8_t h);
+  uint16_t getBWidth();
 
  protected:
   const int16_t
     WIDTH, HEIGHT;   // This is the 'raw' display w/h - never changes
   int16_t
     _width, _height, // Display w/h as modified by current rotation
-    cursor_x, cursor_y;
+  cursor_x, cursor_y;
   uint16_t
     textcolor, textbgcolor;
   uint8_t
+  	bbox_width, 
+	bbox_height,  
+	bbox_x,
+	bbox_y,
+	  
     textsize,
     rotation;
   boolean

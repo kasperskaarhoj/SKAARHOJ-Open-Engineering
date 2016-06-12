@@ -46,7 +46,7 @@ uint8_t SkaarhojDueEEPROM::read(uint16_t address) {
   Wire.write(address >> 8); // MSB
   Wire.write(address & 0xFF); // LSB
   Wire.endTransmission();
-  Wire.requestFrom(_deviceaddress, 1);
+  Wire.requestFrom(_deviceaddress, (uint8_t)1);
   if (Wire.available()) {
     return Wire.read();
   } else return 0xFF;
@@ -71,7 +71,7 @@ void SkaarhojDueEEPROM::readPage(uint16_t address, uint8_t * valueArray) {	// 30
   Wire.write(address & 0xE0); // LSB
   Wire.endTransmission();
 
-  Wire.requestFrom(_deviceaddress, 30);
+  Wire.requestFrom(_deviceaddress, (uint8_t)30);
 
   for(uint8_t i=0; i<30; i++)	{
 	  valueArray[i] = Wire.read();

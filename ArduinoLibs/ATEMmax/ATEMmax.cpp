@@ -46,6 +46,14 @@ uint8_t ATEMmax::getTallyFlags(uint16_t videoSource)  {
   }
   return 0;
 }
+uint8_t ATEMmax::getAudioTallyFlags(uint16_t audioSource)  {
+  for (uint8_t a = 0; a < getAudioMixerTallySources(); a++)  {
+    if (getAudioMixerTallyAudioSource(a) == audioSource)  {
+    	return getAudioMixerTallyIsMixedIn(a);
+    }
+  }
+  return 0;
+}
 
 
 

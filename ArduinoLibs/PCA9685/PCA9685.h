@@ -45,7 +45,7 @@ class PCA9685
     //so i2cAddress should be between 0 and 63
     PCA9685();
     void begin(int i2cAddress);
-    bool init();
+    bool init(bool reverseDrive=false);
 
 	void setLEDOn(int ledNumber);
 	void setLEDOff(int ledNumber);
