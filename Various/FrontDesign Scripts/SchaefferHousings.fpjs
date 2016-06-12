@@ -112,7 +112,7 @@ var C_panelNamesPrefix = "";		// A panel name prefix
 var C_panelNamesSuffix = "";		// A panel name suffix
 
 // Exotic features:
-var C_sideExpansionOffset = new Array(0,0,0,0); // (Top, Bottom, Left, Right). This offsets the top, bottom, left and right plates outwards if positive. By default the top and bottom plates are placed so their outer surface is flush with the side/housing profiles. When used with housing profile 1 this value should probably be -1!
+var C_sideExpansionOffset = new Array(-1.2,-1.2,-1.2,-1.2); // (Top, Bottom, Left, Right). This offsets the top, bottom, left and right plates outwards if positive. By default the top and bottom plates are placed so their outer surface is flush with the side/housing profiles. When used with housing profile 1 this value should probably be -1!
 var C_housingProfileRightHeight = 0;	// Must be less than C_height. If zero = off. Imposes various restrictions on the bottom plate, among other that it has to be bent a bit. So this is a special case. Also, cannot be used with housing brackets on the bottom plate (front and back). 
 
 var C_dryRun = false;		// If set, the script will render only the "Front" panel
@@ -181,6 +181,7 @@ if (C_UI)	{
 	if (typeof C_SchaefferHousings_UI_dryRun === 'undefined') {
 		var C_SchaefferHousings_UI_dryRun = 1;
 	}
+	
 	
 	
 	showUI();

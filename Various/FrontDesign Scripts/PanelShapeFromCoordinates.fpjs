@@ -105,15 +105,22 @@ fp.AddElement(
 	offset[1] 
 );
 
-// Adding a shrunken version as a cutout:
+// Adding a shrunken version as a cavity:
+var el = shapeFromCoordinates(expandCoordinateSet(C_coordinates, -10,0)).SetTool(cutter_2_4mm).SetAsCavity(true).SetDepth(1.2);
 fp.AddElement(
-	shapeFromCoordinates(expandCoordinateSet(C_coordinates, -10,0)),
+	el,
 	offset[0],
 	offset[1] 
 );
 
 
-
+// Adding a shrunken version as a cutout:
+var el = shapeFromCoordinates(expandCoordinateSet(C_coordinates, -15,0)).SetTool(cutter_1_0mm);
+fp.AddElement(
+	el,
+	offset[0],
+	offset[1] 
+);
 
 fp.UnsetModified();
 

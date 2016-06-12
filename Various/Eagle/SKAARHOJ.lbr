@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -6142,8 +6142,8 @@ EC12E series with push-on switch</description>
 <pad name="B" x="2.5" y="-7.5" drill="1" shape="square"/>
 <pad name="D" x="-2.5" y="7" drill="1" shape="square"/>
 <pad name="E" x="2.5" y="7" drill="1" shape="square"/>
-<pad name="GND1" x="-6.1" y="0" drill="1.7"/>
-<pad name="GND2" x="6.1" y="0" drill="1.7"/>
+<pad name="GND1" x="-6.1" y="0" drill="2"/>
+<pad name="GND2" x="6.1" y="0" drill="2"/>
 <text x="-2.5" y="8.5" size="1.27" layer="25">&gt;NAME</text>
 <text x="3.5" y="-9" size="1.27" layer="27" rot="R180">&gt;VALUE</text>
 </package>
@@ -6319,8 +6319,8 @@ EC12E series with push-on switch</description>
 <pad name="1" x="-19.05" y="2.54" drill="0.9" shape="octagon"/>
 <pad name="3" x="-19.05" y="0" drill="0.9" shape="octagon"/>
 <pad name="P$1" x="-19.0119" y="5.461" drill="0.9" shape="square"/>
-<pad name="P$2" x="19.0119" y="4.191" drill="0.9" shape="square"/>
-<pad name="P$3" x="18.9484" y="-4.191" drill="0.9" shape="square"/>
+<pad name="P$2" x="16.4719" y="5.461" drill="0.9" shape="square"/>
+<pad name="P$3" x="16.4084" y="-5.461" drill="0.9" shape="square"/>
 <pad name="P$4" x="-18.9484" y="-5.461" drill="0.9" shape="square"/>
 </package>
 <package name="M2X1SMALLER">
