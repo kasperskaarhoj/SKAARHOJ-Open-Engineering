@@ -30,7 +30,7 @@ class SkaarhojDisplayArray : public Adafruit_GFX {
   void drawPixel(int16_t x, int16_t y, uint16_t color);
 
   SkaarhojDisplayArray();
-  void begin(uint8_t address, uint8_t boardType);
+  void begin(uint8_t address, uint8_t boardType, uint8_t cs = B1111, bool initReset=true, bool vccDefault=false);
 
   void sendCommand(uint8_t c, uint8_t cs);
 

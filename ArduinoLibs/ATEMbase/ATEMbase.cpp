@@ -107,6 +107,13 @@ void ATEMbase::runLoop() {
 	runLoop(0);
 }
 void ATEMbase::runLoop(uint16_t delayTime) {
+	
+	static bool neverConnected = true;
+	if (neverConnected)	{
+		neverConnected = false;
+		connect();
+//		Serial.println("Connecting first time...");
+	}
 
 	unsigned long enterTime = millis();
 	
@@ -271,7 +278,6 @@ void ATEMbase::runLoop(uint16_t delayTime) {
 				}
 			}
 		}
-
 	} while (delayTime>0 && !hasTimedOut(enterTime,delayTime));
 	
 

@@ -59,9 +59,10 @@ class SkaarhojEncoders
 	void runLoop();
 	
 		// Encoder functions:
+	bool reset(uint8_t encNum);
 	int state(uint8_t encNum);
 	int state(uint8_t encNum, unsigned int buttonPushTriggerDelay);
-	int lastCount(uint8_t encNum);
+	int lastCount(uint8_t encNum,uint8_t boost=0);
 	int totalCount(uint8_t encNum);
 	
 	bool hasTimedOut(unsigned long time, unsigned long timeout);

@@ -47,6 +47,7 @@ class SkaarhojEADOGMDisplay : public Print  {
   void cursor(bool enable);
   void gotoRowCol(uint8_t row, uint8_t col);
   void newline();
+  void setBacklight(bool red, bool green, bool blue);
 
   virtual size_t write(uint8_t);	// Overloading
   virtual size_t write(const uint8_t *buffer, size_t size);	// Overloading

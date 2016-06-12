@@ -41,7 +41,7 @@ class ATEMmax : public ATEMbase
 	  
 	  
 	uint8_t getTallyFlags(uint16_t videoSource);
-
+	uint8_t getAudioTallyFlags(uint16_t audioSource);
 
 
 

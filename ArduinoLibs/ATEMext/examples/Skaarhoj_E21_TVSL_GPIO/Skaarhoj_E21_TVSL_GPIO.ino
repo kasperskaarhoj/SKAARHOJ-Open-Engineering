@@ -2127,10 +2127,10 @@ void commandDispatch() {
           AtemSwitcher.setKeyerOnAirEnabled(0, 1, !AtemSwitcher.getKeyerOnAirEnabled(0, 1)); // Toggle USK 2
           break;
         case 3:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 0, !AtemSwitcher.getKeyerOnAirEnabled(0, 2)); // Toggle USK 3
+          AtemSwitcher.setKeyerOnAirEnabled(0, 2, !AtemSwitcher.getKeyerOnAirEnabled(0, 2)); // Toggle USK 3
           break;
         case 4:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 0, !AtemSwitcher.getKeyerOnAirEnabled(0, 3)); // Toggle USK 4
+          AtemSwitcher.setKeyerOnAirEnabled(0, 3, !AtemSwitcher.getKeyerOnAirEnabled(0, 3)); // Toggle USK 4
           break;
         case 5:
           AtemSwitcher.setDownstreamKeyerOnAir(0, !AtemSwitcher.getDownstreamKeyerOnAir(0)); // Toggle DSK 1
