@@ -9,6 +9,7 @@ open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
 #include "Arduino.h"
+#include "Wire.h"
 #include <Adafruit_GFX.h>
 
 #if defined(ARDUINO_SKAARDUINO_V1)

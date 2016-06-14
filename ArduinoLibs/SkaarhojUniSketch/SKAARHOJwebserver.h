@@ -294,12 +294,19 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
   server << F("]];var states=[[\"");
   ptr = getConfigMemStateIndex();
   uint8_t nStates = globalConfigMem[ptr + 1];
-  //  Serial << nStates << "\n";
-  //  Serial << ptr << "\n";
-  //  Serial << globalConfigMem[ptr] << "\n";
+    //Serial << nStates << "\n";
+	//Serial << ptr << "\n";
+	//Serial << globalConfigMem[ptr] << "\n";
+  /*
+		for(uint8_t a=0; a<20; a++)	{
+		    Serial << ":" << globalConfigMem[ptr+a] << "\n";
+		}
+	*/	
+		
   for (uint8_t a = 0; a < nStates; a++) {
-    server << (char *)&globalConfigMem[ptr + 1] << (a + 1 < nStates ? F("\"],[\"") : F(""));
-    ptr += strlen((char *)&globalConfigMem[ptr + 1]) + 1;
+//	Serial << F("'") << ((char *)&globalConfigMem[ptr + 2]) << F("'");
+    server << (char *)&globalConfigMem[ptr + 2] << (a + 1 < nStates ? F("\"],[\"") : F(""));
+    ptr += strlen((char *)&globalConfigMem[ptr + 2]) + 1;
   }
   server << F("\"]];</script>");
 
@@ -311,15 +318,14 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
   server << F("<input type=\"submit\" name=\"prS\" value=\"Delete\">");
   server << F("<select name=\"prN\">");
   server << F("<option value=\"0\">(Default)</option>");
-  char buf[22];
   for (uint8_t a = 1; a <= getNumberOfPresets(); a++) {
-    getPresetName(buf, a);
-    server << F("<option value=\"") << a << F("\"") << (a == EEPROM.read(EEPROM_PRESET_START + 1) ? F(" selected") : F("")) << F(">") << buf << F("</option>");
+    getPresetName(_strCache, a);
+    server << F("<option value=\"") << a << F("\"") << (a == EEPROM.read(EEPROM_PRESET_START + 1) ? F(" selected") : F("")) << F(">") << _strCache << F("</option>");
   }
   server << F("<option value=\"") << (getNumberOfPresets() + 1) << F("\">(New)</option>");
   server << F("</select>");
-  getPresetName(buf, EEPROM.read(EEPROM_PRESET_START + 1));
-  server << F("<input name=\"prTl\" value=\"") << buf << F("\">");
+  getPresetName(_strCache, EEPROM.read(EEPROM_PRESET_START + 1));
+  server << F("<input name=\"prTl\" value=\"") << _strCache << F("\">");
 
   server << F(" - Memory used: ") << ((float)getPresetStoreLength() / (4096 - EEPROM_PRESET_START) * 100) << F("% <hr/><br/>");
 

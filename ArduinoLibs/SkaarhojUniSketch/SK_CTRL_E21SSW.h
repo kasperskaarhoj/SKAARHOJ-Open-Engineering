@@ -79,6 +79,9 @@ void HWrunLoop() {
 
 #if (SK_HWEN_SSWMENU)
   lDelay(10); // This makes sure we spend MUCH more time outside this section where we check for the button press of button 5 - that check is pretty bad for the encoder interrupts, so reducing it's relative time in the runloop is important.
+  SSWmenuEnc.runLoop();
+  lDelay(10); // This makes sure we spend MUCH more time outside this section where we check for the button press of button 5 - that check is pretty bad for the encoder interrupts, so reducing it's relative time in the runloop is important.
+  SSWmenuEnc.runLoop();
   HWrunLoop_SSWMenu(8);
 #endif
 

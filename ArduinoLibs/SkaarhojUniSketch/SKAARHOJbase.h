@@ -388,7 +388,7 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     memset(_strCache, 0, 11);
     switch (_extRetFormat & 0xF) {
     case 1:
-      dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache);
+      dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache); // Need to find alternative for Due Platform.
       break;
     default:
       itoa(_extRetValue[a], _strCache, 10);
@@ -790,6 +790,20 @@ void getPresetName(char *buf, uint8_t preset) {
     }
   }
 }
+void getStateName(char *buf, uint8_t state) {
+  buf[0] = 0;
+
+  uint16_t ptr = getConfigMemStateIndex();
+  uint8_t nStates = globalConfigMem[ptr + 1];
+
+  for (uint8_t a = 0; a < nStates; a++) {
+    if (state == a) {
+      strncpy(buf, ((char *)&globalConfigMem[ptr + 2]), 21);
+      break;
+    }
+    ptr += strlen((char *)&globalConfigMem[ptr + 2]) + 1;
+  }
+}
 bool loadPreset(uint8_t presetNum = 0) {
   //	Serial << "Load preset: " << presetNum << "\n";
   if (getNumberOfPresets() > 0) { // If there are valid presets, consider to load one...
@@ -1157,7 +1171,7 @@ uint8_t HWsetup() {
   Serial << F("Init Audio Master Control\n");
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
-#elif (SK_MODEL == SK_MICROLEVELS)
+#elif(SK_MODEL == SK_MICROLEVELS)
 //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
@@ -1515,7 +1529,6 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
 
 #if SK_HWEN_SLIDER
 void HWrunLoop_slider(const uint8_t HWc) {
-
   // Slider:
   bool hasMoved = slider.uniDirectionalSlider_hasMoved();
   actionDispatch(HWc, hasMoved, hasMoved && slider.uniDirectionalSlider_isAtEnd(), 0, slider.uniDirectionalSlider_position());
@@ -1717,210 +1730,374 @@ long pulsesHelper(long inValue, const long lower, const long higher, const bool 
   }
   return constrain(inValue, lower, higher);
 }
+void storeMemory(uint8_t memPtr) {
+  EEPROM.write(16 + memPtr, _systemMem[memPtr]);
+  EEPROM.write(20, 193 ^ EEPROM.read(16) ^ EEPROM.read(17) ^ EEPROM.read(18) ^ EEPROM.read(19));
+  if (debugMode)
+    Serial << F("Memory ") << char(65 + memPtr) << F(" saved\n");
+}
+uint8_t cycleMemHelper(uint8_t actionPtr, uint8_t idx = 255) {
+  int values;
+  values += (globalConfigMem[actionPtr + 3] != 0 || abs((int)globalConfigMem[actionPtr + 2] - (int)globalConfigMem[actionPtr + 3])) ? abs((int)globalConfigMem[actionPtr + 2] - (int)globalConfigMem[actionPtr + 3]) + 1 : 0;
+  if (idx < values) {
+    return (globalConfigMem[actionPtr + 2] < globalConfigMem[actionPtr + 3] ? globalConfigMem[actionPtr + 3] - (values - idx - 1) : globalConfigMem[actionPtr + 3] + (values - idx - 1));
+  }
+  values += (globalConfigMem[actionPtr + 5] != 0 || abs((int)globalConfigMem[actionPtr + 4] - (int)globalConfigMem[actionPtr + 5])) ? abs((int)globalConfigMem[actionPtr + 4] - (int)globalConfigMem[actionPtr + 5]) + 1 : 0;
+  if (idx < values) {
+    return (globalConfigMem[actionPtr + 4] < globalConfigMem[actionPtr + 5] ? globalConfigMem[actionPtr + 5] - (values - idx - 1) : globalConfigMem[actionPtr + 5] + (values - idx - 1));
+  }
+  values += (globalConfigMem[actionPtr + 6] != 0) ? 1 : 0;
+  if (idx < values) {
+    return globalConfigMem[actionPtr + 6];
+  }
+
+  return values; // Count of values
+}
 
 /**
  * Evaluates System Actions
  */
-uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const int pulses = 0, const int value = -32768) {
+uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
   if (debugMode && (actDown || actUp)) {
     Serial << F("System action ") << globalConfigMem[actionPtr] << F("\n");
   }
   uint8_t temp;
+  uint16_t retVal = 0;
+
   switch (globalConfigMem[actionPtr]) {
-  case 0: // Cycle States
+  case 0: // Set Shift
     if (actDown) {
-      _systemState = (_systemState + 1) % (sTools.shapeInt(globalConfigMem[actionPtr + 1], 1, 9) + 1);
-      initActionCache();
-      if (debugMode)
-        Serial << F("State: ") << _systemState << F("\n");
-    }
-    if (_systemState == 0) {
-      return 5;
-    } else {
-      if ((millis() & 256) > 0) {
-        if (!_systemHWcActionCacheFlag[HWc][actIdx]) {
-          _systemHWcActionCache[HWc][actIdx] = (_systemHWcActionCache[HWc][actIdx] + 1) % (_systemState + 1);
-        }
-        _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        return _systemHWcActionCache[HWc][actIdx] > 0 ? 4 : 5;
+      if (value != 0x8000) { // Value input
+        _systemShift = sTools.shapeInt(constrain(map(value, 0, 1000, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1) + 1), 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1)), 0, SK_MAXACTIONS - 1);
       } else {
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-        return 5;
+        if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
+          _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
+          pulses = (globalConfigMem[actionPtr + 2] == 3 ? 1 : -1) << 1;
+        } else if (globalConfigMem[actionPtr + 2] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+          _systemHWcActionCache[HWc][actIdx] = _systemShift;
+          _systemShift = sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1);
+        } else {
+          _systemShift = sTools.shapeInt(_systemHWcActionCache[HWc][actIdx], 0, SK_MAXACTIONS - 1);
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
       }
     }
+    if (actUp && globalConfigMem[actionPtr + 2] == 1) { // "Hold Down"
+      _systemShift = sTools.shapeInt(_systemHWcActionCache[HWc][actIdx], 0, SK_MAXACTIONS - 1);
+    }
+    if (actUp && (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) { // "Cycle"
+      _systemHWcActionCacheFlag[HWc][actIdx] = false;
+    }
+    if (pulses & 0xFFFE) {
+      _systemShift = pulsesHelper(_systemShift, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1), true, pulses, 1, 1);
+    }
+    if (debugMode && (actDown || (pulses & 0xFFFE)))
+      Serial << F("SHIFT: ") << _systemShift << F("\n");
+
+    retVal = (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (_systemShift == globalConfigMem[actionPtr + 1] ? (4 | 0x20) : 5);
+
+    if (extRetValIsWanted()) {
+      temp = (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) ? globalConfigMem[actionPtr + 1] : _systemShift;
+
+      extRetVal(temp, temp == 0 || (temp == 1 && globalConfigMem[actionPtr + 1] < 2) ? 7 : 0); // , pulses&B1 - not using this because it has no significance for this type of action.
+      extRetValShortLabel(PSTR("Shift"));
+      extRetValLongLabel(PSTR("Shift Level"));
+
+      if (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) {
+        extRetValColor(retVal & 0x20 ? B100110 : B101010);
+        extRetValSetLabel(true);
+      } else {
+        extRetValColor(B100110);
+      }
+
+      if (temp == 0) {
+        extRetValTxt_P(PSTR("Off"), 0);
+      } else if (temp == 1 && globalConfigMem[actionPtr + 1] < 2) {
+        extRetValTxt_P(PSTR("On"), 0);
+      }
+    }
+    return retVal;
     break;
   case 1: // Set State
     if (actDown) {
-      temp = sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, 9);
-      if (globalConfigMem[actionPtr + 2] == 2 && _systemState == temp) { // Toggle
-        _systemState = _systemPrevState;
+      if (value != 0x8000) { // Value input
+        _systemState = sTools.shapeInt(constrain(map(value, 0, 1000, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1) + 1), 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1)), 0, SK_MAXSTATES - 1);
       } else {
-        _systemPrevState = _systemState;
-        _systemState = temp;
+        if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
+          _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
+          pulses = (globalConfigMem[actionPtr + 2] == 3 ? 1 : -1) << 1;
+        } else if (globalConfigMem[actionPtr + 2] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+          _systemPrevState = _systemState;
+          _systemState = sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1);
+        } else {
+          _systemState = sTools.shapeInt(_systemPrevState, 0, SK_MAXSTATES - 1);
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
       }
-      initActionCache();
-      if (debugMode)
-        Serial << F("State: ") << _systemState << F("\n");
     }
-    if (actUp && globalConfigMem[actionPtr + 2] == 1) { // globalConfigMem[actionPtr + 1] == "Hold Down"
-      _systemState = _systemPrevState;
-      if (debugMode)
-        Serial << F("State: ") << _systemState << F("\n");
+    if (actUp && globalConfigMem[actionPtr + 2] == 1) { // "Hold Down"
+      _systemState = sTools.shapeInt(_systemPrevState, 0, SK_MAXSTATES - 1);
     }
-    return _systemState == globalConfigMem[actionPtr + 1] ? 4 : 5;
-    break;
-  case 2: // Cycle Shift
-    if (actDown) {
-      _systemShift = (_systemShift + 1) % (sTools.shapeInt(globalConfigMem[actionPtr + 1], 1, SK_MAXACTIONS - 1) + 1);
-      if (debugMode)
-        Serial << F("Shift: ") << _systemShift << F("\n");
+    if (actUp && (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) { // "Cycle"
+      _systemHWcActionCacheFlag[HWc][actIdx] = false;
     }
-    break;
-  case 3: // Set Shift
-    if (actDown) {
-      temp = sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1);
-      if (globalConfigMem[actionPtr + 2] == 2 && _systemShift == temp) { // Toggle
-        _systemShift = _systemHWcActionCache[HWc][actIdx];
+    if (pulses & 0xFFFE) {
+      _systemState = pulsesHelper(_systemState, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1), true, pulses, 1, 1);
+    }
+    if (debugMode && (actDown || (pulses & 0xFFFE)))
+      Serial << F("STATE: ") << _systemState << F("\n");
+
+    retVal = (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (_systemState == globalConfigMem[actionPtr + 1] ? (4 | 0x20) : 5);
+
+    if (extRetValIsWanted()) {
+      temp = (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) ? globalConfigMem[actionPtr + 1] : _systemState;
+
+      extRetVal(temp, 7); // , pulses&B1 - not using this because it has no significance for this type of action.
+      extRetValShortLabel(PSTR("State "), temp);
+      extRetValLongLabel(PSTR("State Level"), temp);
+
+      if (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) {
+        extRetValColor(retVal & 0x20 ? B010111 : B101010);
+        extRetValSetLabel(true);
       } else {
-        _systemHWcActionCache[HWc][actIdx] = _systemShift;
-        _systemShift = temp;
+        extRetValColor(B010111);
       }
-      if (debugMode)
-        Serial << F("Shift: ") << _systemShift << F("\n");
-    }
-    if (actUp && globalConfigMem[actionPtr + 2] == 1) { // globalConfigMem[actionPtr + 1] == "Hold Down"
-      _systemShift = _systemHWcActionCache[HWc][actIdx];
-      if (debugMode)
-        Serial << F("Shift: ") << _systemShift << F("\n");
-    }
-    return _systemShift == globalConfigMem[actionPtr + 1] ? 4 : 5;
-    break;
-  case 4: // Set Memory
-    if (actDown) {
-      if (globalConfigMem[actionPtr + 1] < 4) {
-        _systemMem[globalConfigMem[actionPtr + 1]] = sTools.shapeInt(globalConfigMem[actionPtr + 2], 0, 100);
-        if (debugMode)
-          Serial << F("Mem ") << globalConfigMem[actionPtr + 1] << F(": ") << _systemMem[globalConfigMem[actionPtr + 1]] << F("\n");
+
+      getStateName(_strCache, temp);
+      char *item = strtok(_strCache, "|");
+      if (strlen(item)) {
+        extRetValTxt(item, 0);
+        if (strlen(item) > 5)
+          extRetVal2(0);
+        item = strtok(NULL, "|");
+        if (item != NULL) {
+          extRetValTxt(item, 1);
+          extRetVal2(0);
+        }
+      } else {
+        _extRetFormat = 0;
       }
     }
-    return _systemMem[globalConfigMem[actionPtr + 1]] == globalConfigMem[actionPtr + 2] ? 4 : 5;
+    return retVal;
     break;
-  case 5: // Cycle Memory
+  case 2: // Set Memory
     if (globalConfigMem[actionPtr + 1] < 4) {
       if (actDown) {
+        if (value != 0x8000) { // Value input
+          _systemMem[globalConfigMem[actionPtr + 1]] = constrain(map(value, 0, 1000, 0, globalConfigMem[actionPtr + 2] + 1), 0, globalConfigMem[actionPtr + 2]);
+        } else {
+          if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) { // Cycle up/down
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
+            pulses = (globalConfigMem[actionPtr + 3] == 3 ? 1 : -1) << 1;
+          } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+            _systemHWcActionCache[HWc][actIdx] = _systemMem[globalConfigMem[actionPtr + 1]];
+            _systemMem[globalConfigMem[actionPtr + 1]] = globalConfigMem[actionPtr + 2];
+          } else {
+            _systemMem[globalConfigMem[actionPtr + 1]] = _systemHWcActionCache[HWc][actIdx];
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+          }
+        }
+      }
+      if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
+        _systemMem[globalConfigMem[actionPtr + 1]] = _systemHWcActionCache[HWc][actIdx];
+      }
+      if (actUp && (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4)) { // "Cycle"
+        _systemHWcActionCacheFlag[HWc][actIdx] = false;
+      }
+      if (pulses & 0xFFFE) {
+        _systemMem[globalConfigMem[actionPtr + 1]] = pulsesHelper(_systemMem[globalConfigMem[actionPtr + 1]], 0, globalConfigMem[actionPtr + 2], true, pulses, 1, constrain(globalConfigMem[actionPtr + 2] / 10, 1, 10));
+      }
+      if (actDown || actUp || (pulses & 0xFFFE)) {
+        if (globalConfigMem[actionPtr + 4])
+          storeMemory(globalConfigMem[actionPtr + 1]);
+        if (debugMode)
+          Serial << F("Mem ") << char(globalConfigMem[actionPtr + 1] + 65) << F(": ") << _systemMem[globalConfigMem[actionPtr + 1]] << F("\n");
+      }
+
+      retVal = (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (_systemMem[globalConfigMem[actionPtr + 1]] == globalConfigMem[actionPtr + 2] ? (4 | 0x20) : 5);
+
+      if (extRetValIsWanted()) {
+        temp = (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4)) ? globalConfigMem[actionPtr + 2] : _systemMem[globalConfigMem[actionPtr + 1]];
+
+        extRetVal(temp, 0, pulses & B1);
+        extRetValShortLabel(PSTR("Memory "), globalConfigMem[actionPtr + 1]);
+        extRetValLongLabel(PSTR("Memory "), globalConfigMem[actionPtr + 1]);
+        _extRetShort[7] = _extRetLong[7] = char(globalConfigMem[actionPtr + 1] + 65);
+
+        if (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4)) {
+          extRetValColor(retVal & 0x20 ? B010111 : B101010);
+          extRetValSetLabel(true);
+        } else {
+          extRetValColor(B010111);
+        }
+      }
+    }
+    return retVal;
+    break;
+  case 3: // Cycle Memory
+    if (globalConfigMem[actionPtr + 1] < 4) {
+      uint8_t numValues = cycleMemHelper(actionPtr);
+
+      if (actDown) {
         if (value == 0x8000) { // Binary
-          _systemMem[globalConfigMem[actionPtr + 1]] = pulsesHelper(_systemMem[globalConfigMem[actionPtr + 1]], globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 3], true, 1 << 1);
+          _systemHWcActionCache[HWc][actIdx] = pulsesHelper(_systemHWcActionCache[HWc][actIdx], 0, numValues - 1, true, 1 << 1);
         } else { // Value:
-          _systemMem[globalConfigMem[actionPtr + 1]] = constrain(value, globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 3]);
+          _systemHWcActionCache[HWc][actIdx] = constrain(map(value, 0, 1000, 0, numValues), 0, numValues - 1);
         }
       }
       if (pulses & 0xFFFE) { // Encoder:
-        _systemMem[globalConfigMem[actionPtr + 1]] = pulsesHelper(_systemMem[globalConfigMem[actionPtr + 1]], globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 3], true, pulses, 1, 5);
+        _systemHWcActionCache[HWc][actIdx] = pulsesHelper(_systemHWcActionCache[HWc][actIdx], 0, numValues - 1, true, pulses, 1, 1);
       }
+      if (actDown || (pulses & 0xFFFE)) {
+        _systemMem[globalConfigMem[actionPtr + 1]] = cycleMemHelper(actionPtr, _systemHWcActionCache[HWc][actIdx]);
+        if (debugMode)
+          Serial << F("Mem ") << char(globalConfigMem[actionPtr + 1] + 65) << F(": (") << _systemHWcActionCache[HWc][actIdx] << F("/") << numValues << F(") ") << _systemMem[globalConfigMem[actionPtr + 1]] << F("\n");
+        if (globalConfigMem[actionPtr + 7])
+          storeMemory(globalConfigMem[actionPtr + 1]);
+      }
+
       if (extRetValIsWanted()) {
         extRetVal(_systemMem[globalConfigMem[actionPtr + 1]]);
-        extRetValShortLabel(PSTR("Mem "));
-        extRetValLongLabel(PSTR("Memory "));
-        _extRetShort[4] = globalConfigMem[actionPtr + 1] + 65;
-        _extRetLong[7] = globalConfigMem[actionPtr + 1] + 65;
+        extRetValShortLabel(PSTR("Memory "), globalConfigMem[actionPtr + 1]);
+        extRetValLongLabel(PSTR("Memory "), globalConfigMem[actionPtr + 1]);
+        _extRetShort[7] = _extRetLong[7] = char(globalConfigMem[actionPtr + 1] + 65);
+        extRetValColor(B010111);
       }
     }
     break;
-  case 6: // Flip bit, array(9, "Flip bit", array(1,64,"Bit"), array("","Set", "Clear", "Toggle", "Hold Down"), array("","1ms","10ms","100ms","500ms","1s","2s"), array(1,64,"Feedback")),
-    if (actDown) {
-      _systemHWcActionCacheFlag[HWc][actIdx] = true;
-      _systemHWcActionCache[HWc][actIdx] = (unsigned long)millis();
+  case 4: // Flag bit, array(9, "Flip bit", array(1,64,"Bit"), array("","Set", "Clear", "Toggle", "Hold Down"), array("","1ms","10ms","100ms","500ms","1s","2s"), array(1,64,"Feedback")),
+          // array(1+2+8, "Flag", array(0,63,"Flag"), array("Set","Hold Down","Toggle"), array("","Invert"), array("","1ms","10ms","100ms","500ms","1s","2s"), array(0,63,"Feedback Flag"), array("","Invert")),
+    if (actDown || (pulses & 0xFFFE)) {
       if (globalConfigMem[actionPtr + 1] < 64) {
+        _systemHWcActionCacheFlag[HWc][actIdx] = true;
+        _systemHWcActionCache[HWc][actIdx] = (unsigned long)millis();
         switch (globalConfigMem[actionPtr + 2]) {
+        case 0:
         case 1:
-        case 4:
-          setSystemBit(globalConfigMem[actionPtr + 1], true);
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          setSystemBit(globalConfigMem[actionPtr + 1], (!globalConfigMem[actionPtr + 3]) ^ ((value == 0x8000) ? false : (value < 500)));
+          //   Serial << "BIT A: " << ((!globalConfigMem[actionPtr + 3]) ^ ((value == 0x8000) ? false : (value < 500))) << "\n";
           break;
         case 2:
-          setSystemBit(globalConfigMem[actionPtr + 1], false);
-          break;
-        case 3:
           setSystemBit(globalConfigMem[actionPtr + 1], !getSystemBit(globalConfigMem[actionPtr + 1]));
+          //    Serial << "BIT B: " << !getSystemBit(globalConfigMem[actionPtr + 1]) << "\n";
           break;
         }
-        if (debugMode)
-          Serial << F("Bit ") << globalConfigMem[actionPtr + 1] << F(": ") << getSystemBit(globalConfigMem[actionPtr + 1]) << F("\n");
       }
     }
-    if (globalConfigMem[actionPtr + 3] > 0 && globalConfigMem[actionPtr + 3] <= 6 && _systemHWcActionCacheFlag[HWc][actIdx]) { // Fall back timer, works for set and clear
+
+    if (globalConfigMem[actionPtr + 4] > 0 && globalConfigMem[actionPtr + 4] <= 6 && _systemHWcActionCacheFlag[HWc][actIdx] && globalConfigMem[actionPtr + 1] < 64) { // Fall back timer, works for set and clear
       uint16_t millisArray[] = {0, 1, 10, 100, 500, 1000, 2000};
-      if (millis() - (unsigned long)_systemHWcActionCache[HWc][actIdx] > millisArray[globalConfigMem[actionPtr + 3]]) {
+      if ((uint16_t)millis() - (unsigned long)_systemHWcActionCache[HWc][actIdx] > millisArray[globalConfigMem[actionPtr + 4]]) {
         _systemHWcActionCacheFlag[HWc][actIdx] = false;
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 1:
-          setSystemBit(globalConfigMem[actionPtr + 1], false);
-          break;
-        case 2:
-          setSystemBit(globalConfigMem[actionPtr + 1], true);
-          break;
-        }
-        if (debugMode)
-          Serial << F("Bit ") << globalConfigMem[actionPtr + 1] << F(": ") << getSystemBit(globalConfigMem[actionPtr + 1]) << F("\n");
+        setSystemBit(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+        // Serial << "Timer bit" << (bool)globalConfigMem[actionPtr + 3] << "\n";
       }
     }
-    if (actUp && globalConfigMem[actionPtr + 2] == 4) { // "Hold Down"
-      setSystemBit(globalConfigMem[actionPtr + 1], false);
-      if (debugMode)
-        Serial << F("Bit ") << globalConfigMem[actionPtr + 1] << F(": ") << getSystemBit(globalConfigMem[actionPtr + 1]) << F("\n");
+
+    if (actUp && globalConfigMem[actionPtr + 2] == 1) { // "Hold Down"
+      setSystemBit(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+      //  Serial << "Hold Down" << (bool)globalConfigMem[actionPtr + 3] << "\n";
     }
-    return getSystemBit(globalConfigMem[actionPtr + 4]);
+
+    if (actDown || actUp || (pulses & 0xFFFE)) {
+      if (debugMode)
+        Serial << F("Flag ") << globalConfigMem[actionPtr + 1] << F(": ") << getSystemBit(globalConfigMem[actionPtr + 1]) << F("\n");
+    }
+
+    retVal = (getSystemBit(globalConfigMem[actionPtr + 5]) ^ globalConfigMem[actionPtr + 6]) ? (4 | 0x20) : 5;
+
+    if (extRetValIsWanted()) {
+      extRetVal(0, 7);
+      extRetValShortLabel(PSTR("Flag "), globalConfigMem[actionPtr + 1]);
+      extRetValLongLabel(PSTR("Flag "), globalConfigMem[actionPtr + 1]);
+
+      extRetValColor(retVal & 0x20 ? B011100 : B101010);
+      if (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 2)) {
+        extRetValSetLabel(true);
+        extRetValTxt_P(!globalConfigMem[actionPtr + 3] ? PSTR("On") : PSTR("Off"), 0);
+      } else {
+        extRetValTxt_P(retVal & 0x20 ? PSTR("On") : PSTR("Off"), 0);
+      }
+    }
+
+    return retVal;
     break;
-  case 7: // Wait
-    if (actDown)
-      lDelay(sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, 20) * 100);
-    break;
-  case 8: // Custom function
-    return customActionHandler(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
-    break;
-  case 9: // No action
+  case 5: // Mirrow #HWC
+    actionMirror = globalConfigMem[actionPtr + 1];
     return 0;
     break;
-  case 10: // System info
+  case 6: // System info
     if (extRetValIsWanted()) {
       extRetVal(0, 7);
       extRetValShortLabel(PSTR("SysInfo"));
       extRetValLongLabel(PSTR("System Info"));
       extRetVal2(0);
       if (getDevUnconnected()) {
-        extRetValTxt_P(PSTR("! Unconnected"), 0);
+        extRetValTxt_P(PSTR(" ! Unconnected"), 0);
+        _extRetTxt[0][0] = getDevUnconnected() + 48;
       } else {
         extRetValTxt_P(PSTR("OK Connections"), 0);
       }
     }
     break;
-  case 11: // Inactivate
+  case 7: // No action
+    return 0;
+    break;
+  case 8: // Wait
+    if (actDown || (pulses & 0xFFFE))
+      lDelay(sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, 20) * 100);
+    break;
+  case 9: // Custom function
+    return customActionHandler(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
+    break;
+  case 10: // Inactivate
     if (_inactivePanel_actDown)
       _inactivePanel = !_inactivePanel;
-    return _inactivePanel ? (((millis() & 512) > 0 ? 2 : 0) | B10000) : 3;
+
+    retVal = _inactivePanel ? ((((millis() & 512) > 0 ? 2 : 0) | B10000) | 0x20) : 3;
+
+    if (extRetValIsWanted()) {
+      extRetVal(0, 7);
+      extRetValShortLabel(PSTR("Inactivate"));
+      extRetValLongLabel(PSTR("Inactivate Panel"));
+      extRetValColor((retVal & 0xF) == 2 ? B110000 : ((retVal & 0xF) == 3 ? B011101 : B101000));
+      extRetValTxt_P(_inactivePanel ? PSTR("Inactive") : PSTR("Active"), 0);
+      extRetValTxtShort_P(_inactivePanel ? PSTR("Inact") : PSTR("Activ"));
+    }
+
+    return retVal;
     break;
-  case 12: // Stop connect
-    if (actDown) {
+  case 11: // Stop connect
+    if (actDown || (pulses & 0xFFFE)) {
       for (uint8_t a = 1; a < sizeof(deviceArray); a++) {
         if (deviceEn[a] && !deviceReady[a])
           deviceEn[a] = false; // Simply disable non-connected devices...
         devicesStopped = true;
       }
     }
-    return devicesStopped ? (((millis() & 0x500) == 0x400) > 0 ? 4 : 5) : 5;
-    break;
-  case 13: // Panel Brightness
-           //??
-    break;
-  case 14: // Mirrow #HWC
-    actionMirror = globalConfigMem[actionPtr + 1];
-    return 0;
-    break;
-  case 15: // Limits #HWC
-           //??
-    break;
-  case 16: // Fine range #HWC
-           //??
+
+    retVal = getDevUnconnected() ? (((millis() & 0x200) > 0 ? 1 : 0) | 0x20) : (devicesStopped ? (2 | 0x20) : 3);
+
+    if (extRetValIsWanted()) {
+      extRetVal(0, 7);
+      extRetValShortLabel(PSTR("Stop Conn."));
+      extRetValLongLabel(PSTR("Stop Connections"));
+      extRetValColor((retVal & 0xF) == 2 ? B110000 : ((retVal & 0xF) == 3 ? B011101 : B101000));
+
+      if (_systemHWcActionPrefersLabel[HWc]) {
+        extRetValSetLabel(true);
+        extRetValTxt(PSTR("Stop"), 0);
+      } else {
+        extRetVal2(0);
+        extRetValTxt_P(!devicesStopped ? PSTR("Will keep") : PSTR("Will not"), 0);
+        extRetValTxt_P(!devicesStopped ? PSTR("connecting") : PSTR("connect"), 1);
+      }
+    }
+
+    return retVal;
     break;
   }
 
@@ -2205,4 +2382,17 @@ void initController() {
   }
 
   initActionCache();
+
+  // Memory:
+  if ((193 ^ EEPROM.read(16) ^ EEPROM.read(17) ^ EEPROM.read(18) ^ EEPROM.read(19)) == EEPROM.read(20)) {
+    for (uint8_t i = 0; i < 4; i++) {
+      _systemMem[i] = EEPROM.read(16 + i);
+    }
+    Serial << F("Memory A-D restored\n");
+  } else {
+    for (uint8_t i = 0; i < 4; i++) {
+      storeMemory(i);
+    }
+    Serial << F("Memory A-D initialized\n");
+  }
 }

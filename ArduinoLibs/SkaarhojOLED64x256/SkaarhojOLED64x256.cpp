@@ -9,13 +9,11 @@ open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
 //  #include "SkaarhojPgmspace.h"  - 23/2 2014
-#include <util/delay.h>
-#include <stdlib.h>
-
-#include <Wire.h>
-
-#include "Adafruit_GFX.h"
 #include "SkaarhojOLED64x256.h"
+
+#ifdef __arm__ // Arduino Due:
+#define _BV(bit) (1 << (bit))
+#endif
 
 // The memory buffer for the LCD
 static uint8_t buffer64256[SKAARHOJOLED64x256_LCDHEIGHT * SKAARHOJOLED64x256_LCDWIDTH / 8];

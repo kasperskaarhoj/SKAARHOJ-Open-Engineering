@@ -1,7 +1,7 @@
 /**
  * Hardware setup, config mode and preset settings
  */
-void HWcfgDisplay() { Serial << F("SK_MODEL=SK_E21GPIO\n"); }
+void HWcfgDisplay() { Serial << F("SK_MODEL=SK_TALLY\n"); }
 
 /**
  * Hardware setup, config mode and preset settings

@@ -10,6 +10,10 @@ open-source hardware by purchasing products from Adafruit as well!
 
 #include "SkaarhojDisplayArray.h"
 
+#ifdef __arm__ // Arduino Due:
+#define _BV(bit) (1 << (bit))
+#endif
+
 // The memory buffer for the LCD
 static uint8_t buffer12832[SKAARHOJDISPARRAY_LCDHEIGHT * SKAARHOJDISPARRAY_LCDWIDTH / 8];
 
