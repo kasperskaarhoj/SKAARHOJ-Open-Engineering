@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21TVS
+#define SK_MODEL SK_C90SM
 
 
 
@@ -279,6 +279,7 @@ SkaarhojGPIO2x8 GPIOboard;
 
  ****************************************/
 #define SK_CONFIG_MEMORY_SIZE 1500
+#define SK_MAXSTATES 10 // 0-9
 uint8_t globalConfigMem[SK_CONFIG_MEMORY_SIZE];
 uint8_t _systemState = 0;
 uint8_t _systemShift = 0;
@@ -335,7 +336,7 @@ uint8_t _extRetShortPtr = 0;
 char _extRetTxtShort[6];
 char _extRetTxt[2][17];
 uint8_t _extRetColor = B010101;
-char _strCache[11]; // Used for number to string conversions
+char _strCache[22]; // Used for number to string conversions
 
 void extRetValPrefersLabel(uint8_t HWc) {
   if (HWc > 0 && HWc <= SK_HWCCOUNT)
@@ -462,8 +463,16 @@ void extRetValTxtShort(const char *txt)  {
 */
 void extRetValTxt_P(const char *txt, uint8_t i)  {
   strncpy_P(_extRetTxt[i], txt, 17 - 1);
+  extRetValTxtShort_P(txt);
+}
+
+/**
+    Alternative Prefix labels for values in case of 64 pixels wide displays
+*/
+void extRetValTxtShort_P(const char *txt)  {
   strncpy_P(_extRetTxtShort, txt, 5);
 }
+
 
 /**
     Button color (if RGB SmartSwitch)

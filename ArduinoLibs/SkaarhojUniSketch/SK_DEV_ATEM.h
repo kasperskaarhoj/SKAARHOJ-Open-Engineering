@@ -534,6 +534,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       if (actUp && globalConfigMem[actionPtr + 2] == 3) {
         AtemSwitcher[devIndex].setDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1], false);
       }
+      if (pulses & 0xFFFE) {
+        AtemSwitcher[devIndex].setDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1], !AtemSwitcher[devIndex].getDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1]));
+      }
     } else {
       if (actDown) {
         AtemSwitcher[devIndex].performDownstreamKeyerAutoKeyer(globalConfigMem[actionPtr + 1]);
@@ -669,7 +672,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       extRetVal(0, 7);
       extRetValShortLabel(PSTR("MPlayer "), (globalConfigMem[actionPtr + 1]) + 1);
       extRetValLongLabel(PSTR("Media Player "), (globalConfigMem[actionPtr + 2]) + 1);
-      memset(_strCache, 0, 11);
+      memset(_strCache, 0, 22);
       strcpy_P(_strCache, PSTR("Index "));
 
       if (_systemHWcActionPrefersLabel[HWc] && globalConfigMem[actionPtr + 3] != 3) {
@@ -1803,7 +1806,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           extRetValTxt_P(PSTR("MP2"), 0);
           break;
         default:
-          memset(_strCache, 0, 11);
+          memset(_strCache, 0, 22);
           strcpy_P(_strCache, PSTR("Ch "));
           itoa(constrain(globalConfigMem[actionPtr + 1], 1, 20), _strCache + 3, 10);
           extRetValTxt(_strCache, 0);
