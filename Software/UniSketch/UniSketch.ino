@@ -89,7 +89,7 @@
 #include "utility/w5100.h"
 #include "Streaming.h"
 #ifdef __arm__  /* Arduino DUE */
-#include "SkaarhojDueEEPROM.h"
+#include "SkaarhojDueEEPROM.h_________"
 SkaarhojDueEEPROM EEPROM;
 #else
 #include "EEPROM.h"
@@ -444,6 +444,13 @@ void extRetValShortLabel(const char *shortLabel, const int number = 0) {
 }
 
 /**
+    Alternative Prefix labels for values in case of 64 pixels wide displays
+*/
+void extRetValTxtShort(const char *txt)  {
+  strncpy(_extRetTxtShort, txt, 5);
+}
+
+/**
     Prefix labels for values
 */
 void extRetValTxt(const char *txt, uint8_t i)  {
@@ -454,8 +461,8 @@ void extRetValTxt(const char *txt, uint8_t i)  {
 /**
     Alternative Prefix labels for values in case of 64 pixels wide displays
 */
-void extRetValTxtShort(const char *txt)  {
-  strncpy(_extRetTxtShort, txt, 5);
+void extRetValTxtShort_P(const char *txt)  {
+  strncpy_P(_extRetTxtShort, txt, 5);
 }
 
 /**
@@ -464,13 +471,6 @@ void extRetValTxtShort(const char *txt)  {
 void extRetValTxt_P(const char *txt, uint8_t i)  {
   strncpy_P(_extRetTxt[i], txt, 17 - 1);
   extRetValTxtShort_P(txt);
-}
-
-/**
-    Alternative Prefix labels for values in case of 64 pixels wide displays
-*/
-void extRetValTxtShort_P(const char *txt)  {
-  strncpy_P(_extRetTxtShort, txt, 5);
 }
 
 

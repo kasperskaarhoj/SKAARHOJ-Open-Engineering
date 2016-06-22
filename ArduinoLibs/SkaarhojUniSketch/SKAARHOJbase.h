@@ -1401,7 +1401,6 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
     if (SSWmenu.buttonDown(5)) {
       SSWMenuItemPtr = (SSWMenuItemPtr + 1) % getNumOfActions(HWc);
     }
-    SSWmenuEnc.runLoop();
 
     static bool voidVar = SSWmenuEnc.reset(0);
 
@@ -1432,11 +1431,14 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
     static uint8_t prevColor = 0;
     if (prevHash != extRetValHash()) {
       prevHash = extRetValHash();
-      writeDisplayTile(SSWmenu, 0, 0, B10000);
+      writeDisplayTile(SSWmenu, 0, 0, 0);
+      SSWmenuEnc.runLoop();
+	  SSWmenu.display(B10000);
       Serial << F("Write SSWmenu gfx!\n");
     }
     if (prevColor != _extRetColor) {
       prevColor = _extRetColor;
+      SSWmenuEnc.runLoop();
       SSWmenu.setButtonColor((_extRetColor >> 4) & 3, (_extRetColor >> 2) & 3, _extRetColor & 3, B10000);
       if (debugMode)
         Serial << F("Write SSWmenu color\n");
