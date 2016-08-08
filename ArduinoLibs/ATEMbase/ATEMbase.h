@@ -47,13 +47,13 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 class ATEMEthernetUDP {
 public:
-    virtual void begin(uint16_t);
-    virtual int beginPacket(IPAddress ip, uint16_t port);
-    virtual int endPacket();
-    virtual size_t write(const uint8_t *buffer, size_t size);
-    virtual int parsePacket();
-    virtual int available();
-    virtual int read(unsigned char* buffer, size_t len);
+    virtual void begin(uint16_t) {};
+    virtual int beginPacket(IPAddress ip, uint16_t port) {};
+    virtual int endPacket() {};
+    virtual size_t write(const uint8_t *buffer, size_t size) {};
+    virtual int parsePacket() {};
+    virtual int available() {};
+    virtual int read(unsigned char* buffer, size_t len) {};
 };
 
 class ATEMbase
