@@ -319,6 +319,27 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   server.httpSuccess();
   server.printP(htmlHead);
 
+<<<<<<< HEAD
+  server << F("<div style='width:660px; margin-left:10px;'><form action='") << PREFIX << F("/form' method='post'>");
+
+  // Panel IP:
+  server << F("<h1>SKAARHOJ Device IP Address:</h1><p>");
+  for (i = 0; i <= 3; ++i)
+  {
+    server << F("<input type='text' name='IP") << i << F("' value='") << EEPROM.read(i+2) << F("' id='IP") << i << F("' size='4'>");
+    if (i<3)  server << F(".");
+  }
+  server << F("<hr/>");
+
+  // ATEM Switcher Panel IP:
+  server << F("<h1>ATEM Switcher IP Address:</h1><p>");
+  for (i = 0; i <= 3; ++i)
+  {
+    server << F("<input type='text' name='ATEM_IP") << i << F("' value='") << EEPROM.read(i+2+4) << F("' id='ATEM_IP") << i << F("' size='4'>");
+    if (i<3)  server << F(".");
+  }
+  server << F("<hr/>");
+=======
   server << "<div style='width:660px; margin-left:10px;'><form action='" PREFIX "/form' method='post'>";
 
   // Panel IP:
@@ -338,6 +359,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     if (i<3)  server << '.';
   }
   server << "<hr/>";
+>>>>>>> origin/master
 
   ////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////
@@ -346,12 +368,21 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   server << F("<h1>Set functions when GPI pins are triggered:</h1><table border=0 cellspacing=3><tr>");
   for (i = 1; i <= 8; ++i)
   {
+<<<<<<< HEAD
+    server << F("<td><p>GPI ") << i << F(":</p>");
+    server << F("<select name='GPI1AT") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(100+i)==0? F(" selected='selected'") : F("")) << F(">ATEM1ME") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(100+i)==1? F(" selected='selected'") : F("")) << F(">ATEM2ME") << F("</option>");
+=======
     server << "<td><p>GPI " << i << ":</p>";
     server << "<select name='GPI1AT" << i << ":'div style='width:78px;>";
     server << "<option value='0'></option>";
 
     server << F("<option value='") << 0 << "'" << (EEPROM.read(100+i)==0?" selected='selected'":"") << ">ATEM1ME" << "</option>";
     server << F("<option value='") << 1 << "'" << (EEPROM.read(100+i)==1?" selected='selected'":"") << ">ATEM2ME" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -359,6 +390,42 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   for (i = 1; i <= 8; ++i)
   {
+<<<<<<< HEAD
+    server << F("<td></p>");
+    server << F("<select name='GPI1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(200+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+
+    // Preview 1-20
+    for (uint8_t j=1;j<=20;j++)  {
+      server << F("<option value='") << j << F("'") << (EEPROM.read(200+i)==j? F(" selected='selected'") : F("")) << F(">PVW ") << j << F("</option>");
+    }
+    // Program 1-16
+    for (uint8_t j=1;j<=20;j++)  {
+      server << F("<option value='") << j+20 << F("'") << (EEPROM.read(200+i)==j+20? F(" selected='selected'") : F("")) << F(">PGM ") << j << F("</option>");
+    }
+
+    // Other input sources
+    server << F("<option value='") << 41 << F("'") << (EEPROM.read(200+i)==41? F(" selected='selected'") : F("")) << F(">PvwBlack") << F("</option>");
+    server << F("<option value='") << 42 << F("'") << (EEPROM.read(200+i)==42? F(" selected='selected'") : F("")) << F(">PgmBlack") << F("</option>");
+    server << F("<option value='") << 43 << F("'") << (EEPROM.read(200+i)==43? F(" selected='selected'") : F("")) << F(">PvwBars") << F("</option>");
+    server << F("<option value='") << 44 << F("'") << (EEPROM.read(200+i)==44? F(" selected='selected'") : F("")) << F(">PgmBars") << F("</option>");
+    server << F("<option value='") << 45 << F("'") << (EEPROM.read(200+i)==45? F(" selected='selected'") : F("")) << F(">PvwColor1") << F("</option>");
+    server << F("<option value='") << 46 << F("'") << (EEPROM.read(200+i)==46? F(" selected='selected'") : F("")) << F(">PgmColor1") << F("</option>");
+    server << F("<option value='") << 47 << F("'") << (EEPROM.read(200+i)==47? F(" selected='selected'") : F("")) << F(">PvwColor2") << F("</option>");
+    server << F("<option value='") << 48 << F("'") << (EEPROM.read(200+i)==48? F(" selected='selected'") : F("")) << F(">PgmColor2") << F("</option>");
+    server << F("<option value='") << 49 << F("'") << (EEPROM.read(200+i)==49? F(" selected='selected'") : F("")) << F(">PvwMedia1") << F("</option>");
+    server << F("<option value='") << 50 << F("'") << (EEPROM.read(200+i)==50? F(" selected='selected'") : F("")) << F(">PgmMedia1") << F("</option>");
+    server << F("<option value='") << 51 << F("'") << (EEPROM.read(200+i)==51? F(" selected='selected'") : F("")) << F(">PvwMedia2") << F("</option>");
+    server << F("<option value='") << 52 << F("'") << (EEPROM.read(200+i)==52? F(" selected='selected'") : F("")) << F(">PgmMedia2") << F("</option>");
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(200+i)==53? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(200+i)==54? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
+
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(200+i)==53? F(" selected='selected'") : F("")) << F(">Cut") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(200+i)==54? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
+    server << F("<option value='") << 55 << F("'") << (EEPROM.read(200+i)==55? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
+=======
     server << "<td></p>";
     server << "<select name='GPI1" << i << ":'div style='width:78px;>";
     server << "<option value='0'></option>";
@@ -393,6 +460,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 53 << "'" << (EEPROM.read(200+i)==53?" selected='selected'":"") << ">Cut" << "</option>";
     server << F("<option value='") << 54 << "'" << (EEPROM.read(200+i)==54?" selected='selected'":"") << ">Auto" << "</option>";
     server << F("<option value='") << 55 << "'" << (EEPROM.read(200+i)==55?" selected='selected'":"") << ">FTB" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -402,6 +470,47 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   //  server << F("<h1>Set secondary functions when GPI pins are triggered:</h1><table border=0 cellspacing=3><tr>");
   for (i = 1; i <= 8; ++i)
   {
+<<<<<<< HEAD
+    server << F("<td></p>");
+    server << F("<select name='GPI2") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(210+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+
+    // USK 1-4 on/off
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(210+i)==1? F(" selected='selected'") : F("")) << F(">USK1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(210+i)==2? F(" selected='selected'") : F("")) << F(">USK2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(210+i)==3? F(" selected='selected'") : F("")) << F(">USK3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(210+i)==4? F(" selected='selected'") : F("")) << F(">USK4") << F("</option>");
+
+    // USK 1-4 on and off
+
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(210+i)==5? F(" selected='selected'") : F("")) << F(">USK1 on") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(210+i)==6? F(" selected='selected'") : F("")) << F(">USK1 off") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(210+i)==7? F(" selected='selected'") : F("")) << F(">USK2 on") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(210+i)==8? F(" selected='selected'") : F("")) << F(">USK2 off") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(210+i)==9? F(" selected='selected'") : F("")) << F(">USK3 on") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(210+i)==10? F(" selected='selected'") : F("")) << F(">USK3 off") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(210+i)==11? F(" selected='selected'") : F("")) << F(">USK4 on") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(210+i)==12? F(" selected='selected'") : F("")) << F(">USK4 off") << F("</option>");
+
+    // DSK 1-2 on/off
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(210+i)==13? F(" selected='selected'") : F("")) << F(">DSK1") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(210+i)==14? F(" selected='selected'") : F("")) << F(">DSK2") << F("</option>");
+
+
+    // DSK 1-2 on and off
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(210+i)==15? F(" selected='selected'") : F("")) << F(">DSK1 on") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(210+i)==16? F(" selected='selected'") : F("")) << F(">DSK1 off") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(210+i)==17? F(" selected='selected'") : F("")) << F(">DSK2 on") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(210+i)==18? F(" selected='selected'") : F("")) << F(">DSK2 off") << F("</option>");
+
+    // Others
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(210+i)==19? F(" selected='selected'") : F("")) << F(">Cut") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(210+i)==20? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(210+i)==21? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(210+i)==22? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
+=======
     server << "<td></p>";
     server << "<select name='GPI2" << i << ":'div style='width:78px;>";
     server << "<option value='0'></option>";
@@ -441,6 +550,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 20 << "'" << (EEPROM.read(210+i)==20?" selected='selected'":"") << ">Auto" << "</option>";
     server << F("<option value='") << 21 << "'" << (EEPROM.read(210+i)==21?" selected='selected'":"") << ">FTB" << "</option>";
     server << F("<option value='") << 22 << "'" << (EEPROM.read(210+i)==22?" selected='selected'":"") << ">Keys Off" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -450,6 +560,47 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   //  server << F("<h1>Set tertiary functions when GPI pins are triggered:</h1><table border=0 cellspacing=3><tr>");
   for (i = 1; i <= 8; ++i)
   {
+<<<<<<< HEAD
+    server << F("<td></p>");
+    server << F("<select name='GPI3") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(220+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+
+    // USK 1-4 on/off
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(220+i)==1? F(" selected='selected'") : F("")) << F(">USK1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(220+i)==2? F(" selected='selected'") : F("")) << F(">USK2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(220+i)==3? F(" selected='selected'") : F("")) << F(">USK3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(220+i)==4? F(" selected='selected'") : F("")) << F(">USK4") << F("</option>");
+
+    // USK 1-4 on and off
+
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(220+i)==5? F(" selected='selected'") : F("")) << F(">USK1 on") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(220+i)==6? F(" selected='selected'") : F("")) << F(">USK1 off") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(220+i)==7? F(" selected='selected'") : F("")) << F(">USK2 on") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(220+i)==8? F(" selected='selected'") : F("")) << F(">USK2 off") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(220+i)==9? F(" selected='selected'") : F("")) << F(">USK3 on") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(220+i)==10? F(" selected='selected'") : F("")) << F(">USK3 off") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(220+i)==11? F(" selected='selected'") : F("")) << F(">USK4 on") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(220+i)==12? F(" selected='selected'") : F("")) << F(">USK4 off") << F("</option>");
+
+    // DSK 1-2 on/off
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(220+i)==13? F(" selected='selected'") : F("")) << F(">DSK1") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(220+i)==14? F(" selected='selected'") : F("")) << F(">DSK2") << F("</option>");
+
+
+    // DSK 1-2 on and off
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(220+i)==15? F(" selected='selected'") : F("")) << F(">DSK1 on") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(220+i)==16? F(" selected='selected'") : F("")) << F(">DSK1 off") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(220+i)==17? F(" selected='selected'") : F("")) << F(">DSK2 on") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(220+i)==18? F(" selected='selected'") : F("")) << F(">DSK2 off") << F("</option>");
+
+    // Others
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(220+i)==19? F(" selected='selected'") : F("")) << F(">Cut") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(220+i)==20? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(220+i)==21? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(220+i)==22? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
+=======
     server << "<td></p>";
     server << "<select name='GPI3" << i << ":'div style='width:78px;>";
     server << "<option value='0'></option>";
@@ -489,6 +640,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 20 << "'" << (EEPROM.read(220+i)==20?" selected='selected'":"") << ">Auto" << "</option>";
     server << F("<option value='") << 21 << "'" << (EEPROM.read(220+i)==21?" selected='selected'":"") << ">FTB" << "</option>";
     server << F("<option value='") << 22 << "'" << (EEPROM.read(220+i)==22?" selected='selected'":"") << ">Keys Off" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -498,6 +650,49 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   // Aux 1
   server << F("<table border=0 cellspacing=3><tr>");
+<<<<<<< HEAD
+  server << F("<h2>Aux1</h2><p>");
+  for (i = 1; i <= 8; ++i)
+  {
+    server << F("<td>");
+    server << F("<select name='GPIA1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(230+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(230+i)==1? F(" selected='selected'") : F("")) << F(">Camera1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(230+i)==2? F(" selected='selected'") : F("")) << F(">Camera2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(230+i)==3? F(" selected='selected'") : F("")) << F(">Camera3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(230+i)==4? F(" selected='selected'") : F("")) << F(">Camera4") << F("</option>");
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(230+i)==5? F(" selected='selected'") : F("")) << F(">Camera5") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(230+i)==6? F(" selected='selected'") : F("")) << F(">Camera6") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(230+i)==7? F(" selected='selected'") : F("")) << F(">Camera7") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(230+i)==8? F(" selected='selected'") : F("")) << F(">Camera8") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(230+i)==9? F(" selected='selected'") : F("")) << F(">Camera9") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(230+i)==10? F(" selected='selected'") : F("")) << F(">Camera10") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(230+i)==11? F(" selected='selected'") : F("")) << F(">Camera11") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(230+i)==12? F(" selected='selected'") : F("")) << F(">Camera12") << F("</option>");
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(230+i)==13? F(" selected='selected'") : F("")) << F(">Camera13") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(230+i)==14? F(" selected='selected'") : F("")) << F(">Camera14") << F("</option>");
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(230+i)==15? F(" selected='selected'") : F("")) << F(">Camera15") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(230+i)==16? F(" selected='selected'") : F("")) << F(">Camera16") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(230+i)==17? F(" selected='selected'") : F("")) << F(">Camera17") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(230+i)==18? F(" selected='selected'") : F("")) << F(">Camera18") << F("</option>");
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(230+i)==19? F(" selected='selected'") : F("")) << F(">Camera19") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(230+i)==20? F(" selected='selected'") : F("")) << F(">Camera20") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(230+i)==21? F(" selected='selected'") : F("")) << F(">Black") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(230+i)==22? F(" selected='selected'") : F("")) << F(">Bars") << F("</option>");
+    server << F("<option value='") << 23 << F("'") << (EEPROM.read(230+i)==23? F(" selected='selected'") : F("")) << F(">Color1") << F("</option>");
+    server << F("<option value='") << 24 << F("'") << (EEPROM.read(230+i)==24? F(" selected='selected'") : F("")) << F(">Color2") << F("</option>");
+    server << F("<option value='") << 25 << F("'") << (EEPROM.read(230+i)==25? F(" selected='selected'") : F("")) << F(">MPL1") << F("</option>");
+    server << F("<option value='") << 26 << F("'") << (EEPROM.read(230+i)==26? F(" selected='selected'") : F("")) << F(">MPL1-K") << F("</option>");
+    server << F("<option value='") << 27 << F("'") << (EEPROM.read(230+i)==27? F(" selected='selected'") : F("")) << F(">MPL2") << F("</option>");
+    server << F("<option value='") << 28 << F("'") << (EEPROM.read(230+i)==28? F(" selected='selected'") : F("")) << F(">MPL2-K") << F("</option>");
+    server << F("<option value='") << 29 << F("'") << (EEPROM.read(230+i)==29? F(" selected='selected'") : F("")) << F(">CleanFeed1") << F("</option>");
+    server << F("<option value='") << 30 << F("'") << (EEPROM.read(230+i)==30? F(" selected='selected'") : F("")) << F(">CleanFeed2") << F("</option>");
+    server << F("<option value='") << 31 << F("'") << (EEPROM.read(230+i)==31? F(" selected='selected'") : F("")) << F(">SuperSource") << F("</option>");
+    server << F("<option value='") << 32 << F("'") << (EEPROM.read(230+i)==32? F(" selected='selected'") : F("")) << F(">Program") << F("</option>");
+    server << F("<option value='") << 33 << F("'") << (EEPROM.read(230+i)==33? F(" selected='selected'") : F("")) << F(">Preview") << F("</option>");
+=======
   server << "<h2>Aux1</h2><p>";
   for (i = 1; i <= 8; ++i)
   {
@@ -539,6 +734,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 31 << "'" << (EEPROM.read(230+i)==31?" selected='selected'":"") << ">SuperSource" << "</option>";
     server << F("<option value='") << 32 << "'" << (EEPROM.read(230+i)==32?" selected='selected'":"") << ">Program" << "</option>";
     server << F("<option value='") << 33 << "'" << (EEPROM.read(230+i)==33?" selected='selected'":"") << ">Preview" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -546,6 +742,49 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   // Aux 2
   server << F("<table border=0 cellspacing=3><tr>");
+<<<<<<< HEAD
+  server << F("<h2>Aux2</h2><p>");
+  for (i = 1; i <= 8; ++i)
+  {
+    server << F("<td>");
+    server << F("<select name='GPIA2") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(240+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(240+i)==1? F(" selected='selected'") : F("")) << F(">Camera1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(240+i)==2? F(" selected='selected'") : F("")) << F(">Camera2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(240+i)==3? F(" selected='selected'") : F("")) << F(">Camera3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(240+i)==4? F(" selected='selected'") : F("")) << F(">Camera4") << F("</option>");
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(240+i)==5? F(" selected='selected'") : F("")) << F(">Camera5") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(240+i)==6? F(" selected='selected'") : F("")) << F(">Camera6") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(240+i)==7? F(" selected='selected'") : F("")) << F(">Camera7") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(240+i)==8? F(" selected='selected'") : F("")) << F(">Camera8") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(240+i)==9? F(" selected='selected'") : F("")) << F(">Camera9") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(240+i)==10? F(" selected='selected'") : F("")) << F(">Camera10") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(240+i)==11? F(" selected='selected'") : F("")) << F(">Camera11") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(240+i)==12? F(" selected='selected'") : F("")) << F(">Camera12") << F("</option>");
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(240+i)==13? F(" selected='selected'") : F("")) << F(">Camera13") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(240+i)==14? F(" selected='selected'") : F("")) << F(">Camera14") << F("</option>");
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(240+i)==15? F(" selected='selected'") : F("")) << F(">Camera15") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(240+i)==16? F(" selected='selected'") : F("")) << F(">Camera16") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(240+i)==17? F(" selected='selected'") : F("")) << F(">Camera17") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(240+i)==18? F(" selected='selected'") : F("")) << F(">Camera18") << F("</option>");
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(240+i)==19? F(" selected='selected'") : F("")) << F(">Camera19") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(240+i)==20? F(" selected='selected'") : F("")) << F(">Camera20") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(240+i)==21? F(" selected='selected'") : F("")) << F(">Black") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(240+i)==22? F(" selected='selected'") : F("")) << F(">Bars") << F("</option>");
+    server << F("<option value='") << 23 << F("'") << (EEPROM.read(240+i)==23? F(" selected='selected'") : F("")) << F(">Color1") << F("</option>");
+    server << F("<option value='") << 24 << F("'") << (EEPROM.read(240+i)==24? F(" selected='selected'") : F("")) << F(">Color2") << F("</option>");
+    server << F("<option value='") << 25 << F("'") << (EEPROM.read(240+i)==25? F(" selected='selected'") : F("")) << F(">MPL1") << F("</option>");
+    server << F("<option value='") << 26 << F("'") << (EEPROM.read(240+i)==26? F(" selected='selected'") : F("")) << F(">MPL1-K") << F("</option>");
+    server << F("<option value='") << 27 << F("'") << (EEPROM.read(240+i)==27? F(" selected='selected'") : F("")) << F(">MPL2") << F("</option>");
+    server << F("<option value='") << 28 << F("'") << (EEPROM.read(240+i)==28? F(" selected='selected'") : F("")) << F(">MPL2-K") << F("</option>");
+    server << F("<option value='") << 29 << F("'") << (EEPROM.read(240+i)==29? F(" selected='selected'") : F("")) << F(">CleanFeed1") << F("</option>");
+    server << F("<option value='") << 30 << F("'") << (EEPROM.read(240+i)==30? F(" selected='selected'") : F("")) << F(">CleanFeed2") << F("</option>");
+    server << F("<option value='") << 31 << F("'") << (EEPROM.read(240+i)==31? F(" selected='selected'") : F("")) << F(">SuperSource") << F("</option>");
+    server << F("<option value='") << 32 << F("'") << (EEPROM.read(240+i)==32? F(" selected='selected'") : F("")) << F(">Program") << F("</option>");
+    server << F("<option value='") << 33 << F("'") << (EEPROM.read(240+i)==33? F(" selected='selected'") : F("")) << F(">Preview") << F("</option>");
+=======
   server << "<h2>Aux2</h2><p>";
   for (i = 1; i <= 8; ++i)
   {
@@ -587,6 +826,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 31 << "'" << (EEPROM.read(240+i)==31?" selected='selected'":"") << ">SuperSource" << "</option>";
     server << F("<option value='") << 32 << "'" << (EEPROM.read(240+i)==32?" selected='selected'":"") << ">Program" << "</option>";
     server << F("<option value='") << 33 << "'" << (EEPROM.read(240+i)==33?" selected='selected'":"") << ">Preview" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -594,6 +834,49 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   // Aux 3
   server << F("<table border=0 cellspacing=3><tr>");
+<<<<<<< HEAD
+  server << F("<h2>Aux3</h2><p>");
+  for (i = 1; i <= 8; ++i)
+  {
+    server << F("<td>");
+    server << F("<select name='GPIA3") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(250+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(250+i)==1? F(" selected='selected'") : F("")) << F(">Camera1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(250+i)==2? F(" selected='selected'") : F("")) << F(">Camera2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(250+i)==3? F(" selected='selected'") : F("")) << F(">Camera3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(250+i)==4? F(" selected='selected'") : F("")) << F(">Camera4") << F("</option>");
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(250+i)==5? F(" selected='selected'") : F("")) << F(">Camera5") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(250+i)==6? F(" selected='selected'") : F("")) << F(">Camera6") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(250+i)==7? F(" selected='selected'") : F("")) << F(">Camera7") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(250+i)==8? F(" selected='selected'") : F("")) << F(">Camera8") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(250+i)==9? F(" selected='selected'") : F("")) << F(">Camera9") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(250+i)==10? F(" selected='selected'") : F("")) << F(">Camera10") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(250+i)==11? F(" selected='selected'") : F("")) << F(">Camera11") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(250+i)==12? F(" selected='selected'") : F("")) << F(">Camera12") << F("</option>");
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(250+i)==13? F(" selected='selected'") : F("")) << F(">Camera13") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(250+i)==14? F(" selected='selected'") : F("")) << F(">Camera14") << F("</option>");
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(250+i)==15? F(" selected='selected'") : F("")) << F(">Camera15") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(250+i)==16? F(" selected='selected'") : F("")) << F(">Camera16") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(250+i)==17? F(" selected='selected'") : F("")) << F(">Camera17") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(250+i)==18? F(" selected='selected'") : F("")) << F(">Camera18") << F("</option>");
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(250+i)==19? F(" selected='selected'") : F("")) << F(">Camera19") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(250+i)==20? F(" selected='selected'") : F("")) << F(">Camera20") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(250+i)==21? F(" selected='selected'") : F("")) << F(">Black") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(250+i)==22? F(" selected='selected'") : F("")) << F(">Bars") << F("</option>");
+    server << F("<option value='") << 23 << F("'") << (EEPROM.read(250+i)==23? F(" selected='selected'") : F("")) << F(">Color1") << F("</option>");
+    server << F("<option value='") << 24 << F("'") << (EEPROM.read(250+i)==24? F(" selected='selected'") : F("")) << F(">Color2") << F("</option>");
+    server << F("<option value='") << 25 << F("'") << (EEPROM.read(250+i)==25? F(" selected='selected'") : F("")) << F(">MPL1") << F("</option>");
+    server << F("<option value='") << 26 << F("'") << (EEPROM.read(250+i)==26? F(" selected='selected'") : F("")) << F(">MPL1-K") << F("</option>");
+    server << F("<option value='") << 27 << F("'") << (EEPROM.read(250+i)==27? F(" selected='selected'") : F("")) << F(">MPL2") << F("</option>");
+    server << F("<option value='") << 28 << F("'") << (EEPROM.read(250+i)==28? F(" selected='selected'") : F("")) << F(">MPL2-K") << F("</option>");
+    server << F("<option value='") << 29 << F("'") << (EEPROM.read(250+i)==29? F(" selected='selected'") : F("")) << F(">CleanFeed1") << F("</option>");
+    server << F("<option value='") << 30 << F("'") << (EEPROM.read(250+i)==30? F(" selected='selected'") : F("")) << F(">CleanFeed2") << F("</option>");
+    server << F("<option value='") << 31 << F("'") << (EEPROM.read(250+i)==31? F(" selected='selected'") : F("")) << F(">SuperSource") << F("</option>");
+    server << F("<option value='") << 32 << F("'") << (EEPROM.read(250+i)==32? F(" selected='selected'") : F("")) << F(">Program") << F("</option>");
+    server << F("<option value='") << 33 << F("'") << (EEPROM.read(250+i)==33? F(" selected='selected'") : F("")) << F(">Preview") << F("</option>");
+=======
   server << "<h2>Aux3</h2><p>";
   for (i = 1; i <= 8; ++i)
   {
@@ -635,6 +918,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 31 << "'" << (EEPROM.read(250+i)==31?" selected='selected'":"") << ">SuperSource" << "</option>";
     server << F("<option value='") << 32 << "'" << (EEPROM.read(250+i)==32?" selected='selected'":"") << ">Program" << "</option>";
     server << F("<option value='") << 33 << "'" << (EEPROM.read(250+i)==33?" selected='selected'":"") << ">Preview" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -642,6 +926,49 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   // Aux 4
   server << F("<table border=0 cellspacing=3><tr>");
+<<<<<<< HEAD
+  server << F("<h2>Aux4</h2><p>");
+  for (i = 1; i <= 8; ++i)
+  {
+    server << F("<td>");
+    server << F("<select name='GPIA4") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(260+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(260+i)==1? F(" selected='selected'") : F("")) << F(">Camera1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(260+i)==2? F(" selected='selected'") : F("")) << F(">Camera2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(260+i)==3? F(" selected='selected'") : F("")) << F(">Camera3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(260+i)==4? F(" selected='selected'") : F("")) << F(">Camera4") << F("</option>");
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(260+i)==5? F(" selected='selected'") : F("")) << F(">Camera5") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(260+i)==6? F(" selected='selected'") : F("")) << F(">Camera6") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(260+i)==7? F(" selected='selected'") : F("")) << F(">Camera7") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(260+i)==8? F(" selected='selected'") : F("")) << F(">Camera8") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(260+i)==9? F(" selected='selected'") : F("")) << F(">Camera9") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(260+i)==10? F(" selected='selected'") : F("")) << F(">Camera10") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(260+i)==11? F(" selected='selected'") : F("")) << F(">Camera11") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(260+i)==12? F(" selected='selected'") : F("")) << F(">Camera12") << F("</option>");
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(260+i)==13? F(" selected='selected'") : F("")) << F(">Camera13") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(260+i)==14? F(" selected='selected'") : F("")) << F(">Camera14") << F("</option>");
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(260+i)==15? F(" selected='selected'") : F("")) << F(">Camera15") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(260+i)==16? F(" selected='selected'") : F("")) << F(">Camera16") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(260+i)==17? F(" selected='selected'") : F("")) << F(">Camera17") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(260+i)==18? F(" selected='selected'") : F("")) << F(">Camera18") << F("</option>");
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(260+i)==19? F(" selected='selected'") : F("")) << F(">Camera19") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(260+i)==20? F(" selected='selected'") : F("")) << F(">Camera20") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(260+i)==21? F(" selected='selected'") : F("")) << F(">Black") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(260+i)==22? F(" selected='selected'") : F("")) << F(">Bars") << F("</option>");
+    server << F("<option value='") << 23 << F("'") << (EEPROM.read(260+i)==23? F(" selected='selected'") : F("")) << F(">Color1") << F("</option>");
+    server << F("<option value='") << 24 << F("'") << (EEPROM.read(260+i)==24? F(" selected='selected'") : F("")) << F(">Color2") << F("</option>");
+    server << F("<option value='") << 25 << F("'") << (EEPROM.read(260+i)==25? F(" selected='selected'") : F("")) << F(">MPL1") << F("</option>");
+    server << F("<option value='") << 26 << F("'") << (EEPROM.read(260+i)==26? F(" selected='selected'") : F("")) << F(">MPL1-K") << F("</option>");
+    server << F("<option value='") << 27 << F("'") << (EEPROM.read(260+i)==27? F(" selected='selected'") : F("")) << F(">MPL2") << F("</option>");
+    server << F("<option value='") << 28 << F("'") << (EEPROM.read(260+i)==28? F(" selected='selected'") : F("")) << F(">MPL2-K") << F("</option>");
+    server << F("<option value='") << 29 << F("'") << (EEPROM.read(260+i)==29? F(" selected='selected'") : F("")) << F(">CleanFeed1") << F("</option>");
+    server << F("<option value='") << 30 << F("'") << (EEPROM.read(260+i)==30? F(" selected='selected'") : F("")) << F(">CleanFeed2") << F("</option>");
+    server << F("<option value='") << 31 << F("'") << (EEPROM.read(260+i)==31? F(" selected='selected'") : F("")) << F(">SuperSource") << F("</option>");
+    server << F("<option value='") << 32 << F("'") << (EEPROM.read(260+i)==32? F(" selected='selected'") : F("")) << F(">Program") << F("</option>");
+    server << F("<option value='") << 33 << F("'") << (EEPROM.read(260+i)==33? F(" selected='selected'") : F("")) << F(">Preview") << F("</option>");
+=======
   server << "<h2>Aux4</h2><p>";
   for (i = 1; i <= 8; ++i)
   {
@@ -683,6 +1010,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 31 << "'" << (EEPROM.read(260+i)==31?" selected='selected'":"") << ">SuperSource" << "</option>";
     server << F("<option value='") << 32 << "'" << (EEPROM.read(260+i)==32?" selected='selected'":"") << ">Program" << "</option>";
     server << F("<option value='") << 33 << "'" << (EEPROM.read(260+i)==33?" selected='selected'":"") << ">Preview" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -690,6 +1018,49 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   // Aux 5
   server << F("<table border=0 cellspacing=3><tr>");
+<<<<<<< HEAD
+  server << F("<h2>Aux5</h2><p>");
+  for (i = 1; i <= 8; ++i)
+  {
+    server << F("<td>");
+    server << F("<select name='GPIA5") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(270+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(270+i)==1? F(" selected='selected'") : F("")) << F(">Camera1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(270+i)==2? F(" selected='selected'") : F("")) << F(">Camera2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(270+i)==3? F(" selected='selected'") : F("")) << F(">Camera3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(270+i)==4? F(" selected='selected'") : F("")) << F(">Camera4") << F("</option>");
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(270+i)==5? F(" selected='selected'") : F("")) << F(">Camera5") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(270+i)==6? F(" selected='selected'") : F("")) << F(">Camera6") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(270+i)==7? F(" selected='selected'") : F("")) << F(">Camera7") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(270+i)==8? F(" selected='selected'") : F("")) << F(">Camera8") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(270+i)==9? F(" selected='selected'") : F("")) << F(">Camera9") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(270+i)==10? F(" selected='selected'") : F("")) << F(">Camera10") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(270+i)==11? F(" selected='selected'") : F("")) << F(">Camera11") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(270+i)==12? F(" selected='selected'") : F("")) << F(">Camera12") << F("</option>");
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(270+i)==13? F(" selected='selected'") : F("")) << F(">Camera13") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(270+i)==14? F(" selected='selected'") : F("")) << F(">Camera14") << F("</option>");
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(270+i)==15? F(" selected='selected'") : F("")) << F(">Camera15") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(270+i)==16? F(" selected='selected'") : F("")) << F(">Camera16") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(270+i)==17? F(" selected='selected'") : F("")) << F(">Camera17") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(270+i)==18? F(" selected='selected'") : F("")) << F(">Camera18") << F("</option>");
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(270+i)==19? F(" selected='selected'") : F("")) << F(">Camera19") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(270+i)==20? F(" selected='selected'") : F("")) << F(">Camera20") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(270+i)==21? F(" selected='selected'") : F("")) << F(">Black") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(270+i)==22? F(" selected='selected'") : F("")) << F(">Bars") << F("</option>");
+    server << F("<option value='") << 23 << F("'") << (EEPROM.read(270+i)==23? F(" selected='selected'") : F("")) << F(">Color1") << F("</option>");
+    server << F("<option value='") << 24 << F("'") << (EEPROM.read(270+i)==24? F(" selected='selected'") : F("")) << F(">Color2") << F("</option>");
+    server << F("<option value='") << 25 << F("'") << (EEPROM.read(270+i)==25? F(" selected='selected'") : F("")) << F(">MPL1") << F("</option>");
+    server << F("<option value='") << 26 << F("'") << (EEPROM.read(270+i)==26? F(" selected='selected'") : F("")) << F(">MPL1-K") << F("</option>");
+    server << F("<option value='") << 27 << F("'") << (EEPROM.read(270+i)==27? F(" selected='selected'") : F("")) << F(">MPL2") << F("</option>");
+    server << F("<option value='") << 28 << F("'") << (EEPROM.read(270+i)==28? F(" selected='selected'") : F("")) << F(">MPL2-K") << F("</option>");
+    server << F("<option value='") << 29 << F("'") << (EEPROM.read(270+i)==29? F(" selected='selected'") : F("")) << F(">CleanFeed1") << F("</option>");
+    server << F("<option value='") << 30 << F("'") << (EEPROM.read(270+i)==30? F(" selected='selected'") : F("")) << F(">CleanFeed2") << F("</option>");
+    server << F("<option value='") << 31 << F("'") << (EEPROM.read(270+i)==31? F(" selected='selected'") : F("")) << F(">SuperSource") << F("</option>");
+    server << F("<option value='") << 32 << F("'") << (EEPROM.read(270+i)==32? F(" selected='selected'") : F("")) << F(">Program") << F("</option>");
+    server << F("<option value='") << 33 << F("'") << (EEPROM.read(270+i)==33? F(" selected='selected'") : F("")) << F(">Preview") << F("</option>");
+=======
   server << "<h2>Aux5</h2><p>";
   for (i = 1; i <= 8; ++i)
   {
@@ -731,6 +1102,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 31 << "'" << (EEPROM.read(270+i)==31?" selected='selected'":"") << ">SuperSource" << "</option>";
     server << F("<option value='") << 32 << "'" << (EEPROM.read(270+i)==32?" selected='selected'":"") << ">Program" << "</option>";
     server << F("<option value='") << 33 << "'" << (EEPROM.read(270+i)==33?" selected='selected'":"") << ">Preview" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -738,6 +1110,49 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
   // Aux 6
   server << F("<table border=0 cellspacing=3><tr>");
+<<<<<<< HEAD
+  server << F("<h2>Aux6</h2><p>");
+  for (i = 1; i <= 8; ++i)
+  {
+    server << F("<td>");
+    server << F("<select name='GPIA6") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(280+i)==0? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(280+i)==1? F(" selected='selected'") : F("")) << F(">Camera1") << F("</option>");
+    server << F("<option value='") << 2 << F("'") << (EEPROM.read(280+i)==2? F(" selected='selected'") : F("")) << F(">Camera2") << F("</option>");
+    server << F("<option value='") << 3 << F("'") << (EEPROM.read(280+i)==3? F(" selected='selected'") : F("")) << F(">Camera3") << F("</option>");
+    server << F("<option value='") << 4 << F("'") << (EEPROM.read(280+i)==4? F(" selected='selected'") : F("")) << F(">Camera4") << F("</option>");
+    server << F("<option value='") << 5 << F("'") << (EEPROM.read(280+i)==5? F(" selected='selected'") : F("")) << F(">Camera5") << F("</option>");
+    server << F("<option value='") << 6 << F("'") << (EEPROM.read(280+i)==6? F(" selected='selected'") : F("")) << F(">Camera6") << F("</option>");
+    server << F("<option value='") << 7 << F("'") << (EEPROM.read(280+i)==7? F(" selected='selected'") : F("")) << F(">Camera7") << F("</option>");
+    server << F("<option value='") << 8 << F("'") << (EEPROM.read(280+i)==8? F(" selected='selected'") : F("")) << F(">Camera8") << F("</option>");
+    server << F("<option value='") << 9 << F("'") << (EEPROM.read(280+i)==9? F(" selected='selected'") : F("")) << F(">Camera9") << F("</option>");
+    server << F("<option value='") << 10 << F("'") << (EEPROM.read(280+i)==10? F(" selected='selected'") : F("")) << F(">Camera10") << F("</option>");
+    server << F("<option value='") << 11 << F("'") << (EEPROM.read(280+i)==11? F(" selected='selected'") : F("")) << F(">Camera11") << F("</option>");
+    server << F("<option value='") << 12 << F("'") << (EEPROM.read(280+i)==12? F(" selected='selected'") : F("")) << F(">Camera12") << F("</option>");
+    server << F("<option value='") << 13 << F("'") << (EEPROM.read(280+i)==13? F(" selected='selected'") : F("")) << F(">Camera13") << F("</option>");
+    server << F("<option value='") << 14 << F("'") << (EEPROM.read(280+i)==14? F(" selected='selected'") : F("")) << F(">Camera14") << F("</option>");
+    server << F("<option value='") << 15 << F("'") << (EEPROM.read(280+i)==15? F(" selected='selected'") : F("")) << F(">Camera15") << F("</option>");
+    server << F("<option value='") << 16 << F("'") << (EEPROM.read(280+i)==16? F(" selected='selected'") : F("")) << F(">Camera16") << F("</option>");
+    server << F("<option value='") << 17 << F("'") << (EEPROM.read(280+i)==17? F(" selected='selected'") : F("")) << F(">Camera17") << F("</option>");
+    server << F("<option value='") << 18 << F("'") << (EEPROM.read(280+i)==18? F(" selected='selected'") : F("")) << F(">Camera18") << F("</option>");
+    server << F("<option value='") << 19 << F("'") << (EEPROM.read(280+i)==19? F(" selected='selected'") : F("")) << F(">Camera19") << F("</option>");
+    server << F("<option value='") << 20 << F("'") << (EEPROM.read(280+i)==20? F(" selected='selected'") : F("")) << F(">Camera20") << F("</option>");
+    server << F("<option value='") << 21 << F("'") << (EEPROM.read(280+i)==21? F(" selected='selected'") : F("")) << F(">Black") << F("</option>");
+    server << F("<option value='") << 22 << F("'") << (EEPROM.read(280+i)==22? F(" selected='selected'") : F("")) << F(">Bars") << F("</option>");
+    server << F("<option value='") << 23 << F("'") << (EEPROM.read(280+i)==23? F(" selected='selected'") : F("")) << F(">Color1") << F("</option>");
+    server << F("<option value='") << 24 << F("'") << (EEPROM.read(280+i)==24? F(" selected='selected'") : F("")) << F(">Color2") << F("</option>");
+    server << F("<option value='") << 25 << F("'") << (EEPROM.read(280+i)==25? F(" selected='selected'") : F("")) << F(">MPL1") << F("</option>");
+    server << F("<option value='") << 26 << F("'") << (EEPROM.read(280+i)==26? F(" selected='selected'") : F("")) << F(">MPL1-K") << F("</option>");
+    server << F("<option value='") << 27 << F("'") << (EEPROM.read(280+i)==27? F(" selected='selected'") : F("")) << F(">MPL2") << F("</option>");
+    server << F("<option value='") << 28 << F("'") << (EEPROM.read(280+i)==28? F(" selected='selected'") : F("")) << F(">MPL2-K") << F("</option>");
+    server << F("<option value='") << 29 << F("'") << (EEPROM.read(280+i)==29? F(" selected='selected'") : F("")) << F(">CleanFeed1") << F("</option>");
+    server << F("<option value='") << 30 << F("'") << (EEPROM.read(280+i)==30? F(" selected='selected'") : F("")) << F(">CleanFeed2") << F("</option>");
+    server << F("<option value='") << 31 << F("'") << (EEPROM.read(280+i)==31? F(" selected='selected'") : F("")) << F(">SuperSource") << F("</option>");
+    server << F("<option value='") << 32 << F("'") << (EEPROM.read(280+i)==32? F(" selected='selected'") : F("")) << F(">Program") << F("</option>");
+    server << F("<option value='") << 33 << F("'") << (EEPROM.read(280+i)==33? F(" selected='selected'") : F("")) << F(">Preview") << F("</option>");
+=======
   server << "<h2>Aux6</h2><p>";
   for (i = 1; i <= 8; ++i)
   {
@@ -779,6 +1194,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 31 << "'" << (EEPROM.read(280+i)==31?" selected='selected'":"") << ">SuperSource" << "</option>";
     server << F("<option value='") << 32 << "'" << (EEPROM.read(280+i)==32?" selected='selected'":"") << ">Program" << "</option>";
     server << F("<option value='") << 33 << "'" << (EEPROM.read(280+i)==33?" selected='selected'":"") << ">Preview" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }
@@ -791,18 +1207,65 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   server << F("<h1>Set GPO functions:</h1><table border=0 cellspacing=3><tr>");
   for (i = 1; i <= 8; ++i)
   {
+<<<<<<< HEAD
+    server << F("<td><p>GPO ") << i << F(":</p>");
+    server << F("<select name='GPO1AT") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(150+i)==0? F(" selected='selected'") : F("")) << F(">ATEM1ME") << F("</option>");
+    server << F("<option value='") << 1 << F("'") << (EEPROM.read(150+i)==1? F(" selected='selected'") : F("")) << F(">ATEM2ME") << F("</option>");
+=======
     server << "<td><p>GPO " << i << ":</p>";
     server << "<select name='GPO1AT" << i << ":'div style='width:78px;>";
     server << "<option value='0'></option>";
 
     server << F("<option value='") << 0 << "'" << (EEPROM.read(150+i)==0?" selected='selected'":"") << ">ATEM1ME" << "</option>";
     server << F("<option value='") << 1 << "'" << (EEPROM.read(150+i)==1?" selected='selected'":"") << ">ATEM2ME" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }  
   server << F("</tr></n>");
   for (i = 1; i <= 8; ++i)
   {
+<<<<<<< HEAD
+    server << F("<td></p>");
+    server << F("<select name='GPO1") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(300+i)==0? F(" selected='selected'") : F("")) << F(">\t") << F("</option>");
+
+    // Inputs 1-20
+    for (uint8_t j=1;j<=20;j++)  {
+      server << F("<option value='") << j << F("'") << (EEPROM.read(300+i)==j? F(" selected='selected'") : F("")) << F(">PVW ") << j << F("</option>");
+    }
+    for (uint8_t j=1;j<=20;j++)  {
+      server << F("<option value='") << j+20 << F("'") << (EEPROM.read(300+i)==j+20? F(" selected='selected'") : F("")) << F(">PGM ") << j << F("</option>");
+    }
+    // Other inputs
+    server << F("<option value='") << 41 << F("'") << (EEPROM.read(300+i)==41? F(" selected='selected'") : F("")) << F(">PvwBlack") << F("</option>");
+    server << F("<option value='") << 42 << F("'") << (EEPROM.read(300+i)==42? F(" selected='selected'") : F("")) << F(">PgmBlack") << F("</option>");
+    server << F("<option value='") << 43 << F("'") << (EEPROM.read(300+i)==43? F(" selected='selected'") : F("")) << F(">PvwBars") << F("</option>");
+    server << F("<option value='") << 44 << F("'") << (EEPROM.read(300+i)==44? F(" selected='selected'") : F("")) << F(">PgmBars") << F("</option>");
+    server << F("<option value='") << 45 << F("'") << (EEPROM.read(300+i)==45? F(" selected='selected'") : F("")) << F(">PvwColor1") << F("</option>");
+    server << F("<option value='") << 46 << F("'") << (EEPROM.read(300+i)==46? F(" selected='selected'") : F("")) << F(">PgmColor1") << F("</option>");
+    server << F("<option value='") << 47 << F("'") << (EEPROM.read(300+i)==47? F(" selected='selected'") : F("")) << F(">PvwColor2") << F("</option>");
+    server << F("<option value='") << 48 << F("'") << (EEPROM.read(300+i)==48? F(" selected='selected'") : F("")) << F(">PgmColor2") << F("</option>");
+    server << F("<option value='") << 49 << F("'") << (EEPROM.read(300+i)==49? F(" selected='selected'") : F("")) << F(">PvwMedia1") << F("</option>");
+    server << F("<option value='") << 50 << F("'") << (EEPROM.read(300+i)==50? F(" selected='selected'") : F("")) << F(">PgmMedia1") << F("</option>");
+    server << F("<option value='") << 51 << F("'") << (EEPROM.read(300+i)==51? F(" selected='selected'") : F("")) << F(">PvwMedia2") << F("</option>");
+    server << F("<option value='") << 52 << F("'") << (EEPROM.read(300+i)==52? F(" selected='selected'") : F("")) << F(">PgmMedia2") << F("</option>");
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(300+i)==53? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(300+i)==54? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
+
+    // Other sources
+    server << F("<option value='") << 53 << F("'") << (EEPROM.read(300+i)==53? F(" selected='selected'") : F("")) << F(">USK1") << F("</option>");
+    server << F("<option value='") << 54 << F("'") << (EEPROM.read(300+i)==54? F(" selected='selected'") : F("")) << F(">USK2") << F("</option>");
+    server << F("<option value='") << 55 << F("'") << (EEPROM.read(300+i)==55? F(" selected='selected'") : F("")) << F(">USK3") << F("</option>");
+    server << F("<option value='") << 56 << F("'") << (EEPROM.read(300+i)==56? F(" selected='selected'") : F("")) << F(">USK4") << F("</option>");
+    server << F("<option value='") << 57 << F("'") << (EEPROM.read(300+i)==57? F(" selected='selected'") : F("")) << F(">DSK1") << F("</option>");
+    server << F("<option value='") << 58 << F("'") << (EEPROM.read(300+i)==58? F(" selected='selected'") : F("")) << F(">DSK2") << F("</option>");
+=======
     server << "<td></p>";
     server << "<select name='GPO1" << i << ":'div style='width:78px;>";
     server << "<option value='0'></option>";
@@ -839,6 +1302,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 56 << "'" << (EEPROM.read(300+i)==56?" selected='selected'":"") << ">USK4" << "</option>";
     server << F("<option value='") << 57 << "'" << (EEPROM.read(300+i)==57?" selected='selected'":"") << ">DSK1" << "</option>";
     server << F("<option value='") << 58 << "'" << (EEPROM.read(300+i)==58?" selected='selected'":"") << ">DSK2" << "</option>";
+>>>>>>> origin/master
 
     server << F("</select></td>");
   }  
@@ -847,6 +1311,49 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
   //server << F("<h1>Set GPO functions:</h1><table border=0 cellspacing=3><tr>");
   for (i = 1; i <= 8; ++i)
   {
+<<<<<<< HEAD
+    server << F("<td></p>");
+    server << F("<select name='GPO2") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(310+i)==0? F(" selected='selected'") : F("")) << F(">\t") << F("</option>");
+
+    //Aux
+    for (uint8_t j=1;j<=6;j++) {
+      server << F("<option value='") << 1+(j-1)*33 << F("'") << (EEPROM.read(310+i)==1+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam1") << F("</option>");
+      server << F("<option value='") << 2+(j-1)*33 << F("'") << (EEPROM.read(310+i)==2+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam2") << F("</option>");
+      server << F("<option value='") << 3+(j-1)*33 << F("'") << (EEPROM.read(310+i)==3+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam3") << F("</option>");
+      server << F("<option value='") << 4+(j-1)*33 << F("'") << (EEPROM.read(310+i)==4+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam4") << F("</option>");
+      server << F("<option value='") << 5+(j-1)*33 << F("'") << (EEPROM.read(310+i)==5+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam5") << F("</option>");
+      server << F("<option value='") << 6+(j-1)*33 << F("'") << (EEPROM.read(310+i)==6+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam6") << F("</option>");
+      server << F("<option value='") << 7+(j-1)*33 << F("'") << (EEPROM.read(310+i)==7+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam7") << F("</option>");
+      server << F("<option value='") << 8+(j-1)*33 << F("'") << (EEPROM.read(310+i)==8+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam8") << F("</option>");
+      server << F("<option value='") << 9+(j-1)*33 << F("'") << (EEPROM.read(310+i)==9+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam9") << F("</option>");
+      server << F("<option value='") << 10+(j-1)*33 << F("'") << (EEPROM.read(310+i)==10+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam10") << F("</option>");
+      server << F("<option value='") << 11+(j-1)*33 << F("'") << (EEPROM.read(310+i)==11+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam11") << F("</option>");
+      server << F("<option value='") << 12+(j-1)*33 << F("'") << (EEPROM.read(310+i)==12+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam12") << F("</option>");
+      server << F("<option value='") << 13+(j-1)*33 << F("'") << (EEPROM.read(310+i)==13+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam13") << F("</option>");
+      server << F("<option value='") << 14+(j-1)*33 << F("'") << (EEPROM.read(310+i)==14+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam14") << F("</option>");
+      server << F("<option value='") << 15+(j-1)*33 << F("'") << (EEPROM.read(310+i)==15+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam15") << F("</option>");
+      server << F("<option value='") << 16+(j-1)*33 << F("'") << (EEPROM.read(310+i)==16+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam16") << F("</option>");
+      server << F("<option value='") << 17+(j-1)*33 << F("'") << (EEPROM.read(310+i)==17+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam17") << F("</option>");
+      server << F("<option value='") << 18+(j-1)*33 << F("'") << (EEPROM.read(310+i)==18+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam18") << F("</option>");
+      server << F("<option value='") << 19+(j-1)*33 << F("'") << (EEPROM.read(310+i)==19+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam19") << F("</option>");
+      server << F("<option value='") << 20+(j-1)*33 << F("'") << (EEPROM.read(310+i)==20+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Cam20") << F("</option>");
+      server << F("<option value='") << 21+(j-1)*33 << F("'") << (EEPROM.read(310+i)==21+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Black") << F("</option>");
+      server << F("<option value='") << 22+(j-1)*33 << F("'") << (EEPROM.read(310+i)==22+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Bars") << F("</option>");
+      server << F("<option value='") << 23+(j-1)*33 << F("'") << (EEPROM.read(310+i)==23+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Color1") << F("</option>");
+      server << F("<option value='") << 24+(j-1)*33 << F("'") << (EEPROM.read(310+i)==24+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Color2") << F("</option>");
+      server << F("<option value='") << 25+(j-1)*33 << F("'") << (EEPROM.read(310+i)==25+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-MPL1") << F("</option>");
+      server << F("<option value='") << 26+(j-1)*33 << F("'") << (EEPROM.read(310+i)==26+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-MPL1-K") << F("</option>");
+      server << F("<option value='") << 27+(j-1)*33 << F("'") << (EEPROM.read(310+i)==27+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-MPL2") << F("</option>");
+      server << F("<option value='") << 28+(j-1)*33 << F("'") << (EEPROM.read(310+i)==28+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-MPL3-K") << F("</option>");
+      server << F("<option value='") << 29+(j-1)*33 << F("'") << (EEPROM.read(310+i)==29+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-ClFeed1") << F("</option>");
+      server << F("<option value='") << 30+(j-1)*33 << F("'") << (EEPROM.read(310+i)==30+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-ClFeed2") << F("</option>");
+      server << F("<option value='") << 31+(j-1)*33 << F("'") << (EEPROM.read(310+i)==31+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-SSource") << F("</option>");
+      server << F("<option value='") << 32+(j-1)*33 << F("'") << (EEPROM.read(310+i)==32+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Program") << F("</option>");
+      server << F("<option value='") << 33+(j-1)*33 << F("'") << (EEPROM.read(310+i)==33+(j-1)*33? F(" selected='selected'") : F("")) << F(">A") << j << F("-Preview") << F("</option>");
+=======
     server << "<td></p>";
     server << "<select name='GPO2" << i << ":'div style='width:78px;>";
     server << "<option value='0'></option>";
@@ -888,6 +1395,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
       server << F("<option value='") << 31+(j-1)*33 << "'" << (EEPROM.read(310+i)==31+(j-1)*33?" selected='selected'":"") << ">A"<< j << "-SSource" << "</option>";
       server << F("<option value='") << 32+(j-1)*33 << "'" << (EEPROM.read(310+i)==32+(j-1)*33?" selected='selected'":"") << ">A"<< j << "-Program" << "</option>";
       server << F("<option value='") << 33+(j-1)*33 << "'" << (EEPROM.read(310+i)==33+(j-1)*33?" selected='selected'":"") << ">A"<< j << "-Preview" << "</option>";
+>>>>>>> origin/master
     }
     server << F("</select></td>");
   } 
@@ -897,9 +1405,15 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
 
   // End form and page:
+<<<<<<< HEAD
+  server << F("<input type='submit' value='Submit'/></form></div>");
+  server << F("<br><i>(Reset / Pull the power after submitting the form successfully)</i>");
+  server << F("</body></html>");
+=======
   server << "<input type='submit' value='Submit'/></form></div>";
   server << "<br><i>(Reset / Pull the power after submitting the form successfully)</i>";
   server << "</body></html>";
+>>>>>>> origin/master
 }
 
 void formCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, bool tail_complete)

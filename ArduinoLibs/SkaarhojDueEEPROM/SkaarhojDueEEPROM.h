@@ -26,6 +26,11 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #ifndef SkaarhojDueEEPROM_H
 #define SkaarhojDueEEPROM_H
 
+<<<<<<< HEAD
+#include "Arduino.h"
+
+=======
+>>>>>>> origin/master
 #include "Wire.h"
 
 class SkaarhojDueEEPROM
