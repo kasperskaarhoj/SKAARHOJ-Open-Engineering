@@ -1007,6 +1007,15 @@ void deviceSetup() {
         SmartView[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
+        case SK_DEV_BMDCAMCTRL:
+  #if SK_DEVICES_BMDCAMCTRL
+          Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
+          deviceMap[a] = BMDCamCtrl_initIdx++;
+          BMDCamCtrl[deviceMap[a]].begin(deviceIP[a]);	// TODO doesn't make sense
+          BMDCamCtrl[deviceMap[a]].serialOutput(debugMode);
+  #endif
+          break;
+		
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }
@@ -2209,6 +2218,13 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
+                  case SK_DEV_BMDCAMCTRL:
+  #if SK_DEVICES_BMDCAMCTRL
+                    retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                    if (retValue == 0)
+                      retValue = retValueT; // Use first ever return value in case of multiple actions.
+  #endif
+                    break;
                 }
               } else {
                 // Serial << "Device disabled!\n";

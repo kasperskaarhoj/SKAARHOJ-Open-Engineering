@@ -59,6 +59,7 @@
 #define SK_DEV_HYPERDECK 2
 #define SK_DEV_VIDEOHUB 3
 #define SK_DEV_SMARTSCOPE 4
+#define SK_DEV_BMDCAMCTRL 5
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -601,6 +602,12 @@ uint8_t SmartView_initIdx = 0;
 #include "SK_DEV_SMARTSCOPE.h";
 #endif
 
+#if SK_DEVICES_BMDCAMCTRL
+#include "ClientBMDCamCtrl.h";
+ClientBMDCamCtrl BMDCamCtrl[SK_DEVICES_BMDCAMCTRL];
+uint8_t BMDCamCtrl_initIdx = 0;
+#include "SK_DEV_BMDCAMCTRL.h";
+#endif
 
 
 
