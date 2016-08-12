@@ -4,7 +4,7 @@
 // 1,2,3,4 = full (yellow), red, green, yellow
 // Bit 4 (16) = blink flag, filter out for KP01 buttons.
 uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
-/*  uint16_t retVal = 0;
+  uint16_t retVal = 0;
   int tempInt = 0;
   uint8_t tempByte = 0;
 
@@ -14,11 +14,33 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
 
   if (actDown || actUp) {
     if (debugMode)
-      Serial << F("ATEM action ") << globalConfigMem[actionPtr] << F("\n");
+      Serial << F("BMDCAM action ") << globalConfigMem[actionPtr] << F("\n");
   }
 
   switch (globalConfigMem[actionPtr]) {
-  case 0: // Program Source
+    case 31: // Iris
+      cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
+      if (actDown) {
+        if (value != 0x8000) { // Value input
+          BMDCamCtrl[devIndex].setIris(cam, 1.0 - (float) value / 1000.0);
+        } else { // Binary - auto iris
+          Serial << F("Perform Auto Iris... \n");
+          BMDCamCtrl[devIndex].setAutoIris(cam);
+        }
+      }
+      if (pulses & 0xFFFE) {
+        AtemSwitcher[devIndex].setCameraControlIris(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlIris(cam), 0, 2048, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 20, 200));
+      }
+      if (extRetValIsWanted()) {
+        extRetVal(100 - constrain(((long)AtemSwitcher[devIndex].getCameraControlIris(cam) * 100) >> 11, 0, 100), 2, _systemHWcActionFineFlag[HWc]);
+        extRetValScale(1, 0, 100, 0, 100);
+        extRetValShortLabel(PSTR("Iris"));
+        extRetValLongLabel(PSTR("Iris Cam "), cam);
+        extRetValColor(B011011);
+      }
+      break;
+  }
+  /*case 0: // Program Source
     if (actDown) {
       if (globalConfigMem[actionPtr + 3] == 3) {       // Source cycle by button push
         _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used to show button is highlighted here
@@ -1756,7 +1778,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
     break;
   }
-	
+
 	*/
 
   // Default:

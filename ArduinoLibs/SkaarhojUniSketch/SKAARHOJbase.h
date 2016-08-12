@@ -1011,11 +1011,11 @@ void deviceSetup() {
   #if SK_DEVICES_BMDCAMCTRL
           Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
           deviceMap[a] = BMDCamCtrl_initIdx++;
-          BMDCamCtrl[deviceMap[a]].begin(deviceIP[a]);	// TODO doesn't make sense
+          BMDCamCtrl[deviceMap[a]].begin(0x6E);	// TODO doesn't make sense
           BMDCamCtrl[deviceMap[a]].serialOutput(debugMode);
   #endif
           break;
-		
+
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }

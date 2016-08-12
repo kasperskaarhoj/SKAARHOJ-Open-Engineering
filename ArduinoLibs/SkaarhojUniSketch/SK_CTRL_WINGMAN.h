@@ -48,7 +48,11 @@ uint8_t HWsetupL() {
 
     // Set up I2C port for A or B monitor:
     Wire.beginTransmission(0x70);
+<<<<<<< HEAD
     Wire.write(1 << i); // Port 0 or 1
+=======
+    Wire.write(2 << i); // Port 1 or 2
+>>>>>>> origin/master
     Wire.endTransmission();
 
     // Touch
@@ -240,7 +244,11 @@ void HWrunLoop() {
   for (uint8_t i = 0; i < 2; i++) {
     // Set up I2C port for A or B monitor:
     Wire.beginTransmission(0x70);
+<<<<<<< HEAD
     Wire.write(1 << i); // Port 0 or 1
+=======
+    Wire.write(2 << i); // Port 1 or 2
+>>>>>>> origin/master
     Wire.endTransmission();
 
     // Dome buttons, side

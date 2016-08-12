@@ -90,7 +90,7 @@
 #include "utility/w5100.h"
 #include "Streaming.h"
 #ifdef __arm__  /* Arduino DUE */
-#include "SkaarhojDueEEPROM.h"
+//#include "SkaarhojDueEEPROM.h" // FIX THIS
 SkaarhojDueEEPROM EEPROM;
 #else
 #include "EEPROM.h"
@@ -603,6 +603,7 @@ uint8_t SmartView_initIdx = 0;
 #endif
 
 #if SK_DEVICES_BMDCAMCTRL
+#include "BMDSDIControl.h"
 #include "ClientBMDCamCtrl.h";
 ClientBMDCamCtrl BMDCamCtrl[SK_DEVICES_BMDCAMCTRL];
 uint8_t BMDCamCtrl_initIdx = 0;

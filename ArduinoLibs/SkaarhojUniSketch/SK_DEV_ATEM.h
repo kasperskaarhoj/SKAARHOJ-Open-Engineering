@@ -1458,11 +1458,19 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 37: // Gain
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 2]);
     if (actDown) {           // Binary or Value input...
+<<<<<<< HEAD
       int outValue = globalConfigMem[actionPtr]==37?2048:0;      // Binary (reset) value by default
       if (value != 0x8000) { // Value input different from -32768
         switch (globalConfigMem[actionPtr]) {
         case 35: // Lift:
           outValue = constrain(map(value, 0, 1000, -4096/8, 4096/8), -4096, 4096);
+=======
+      int outValue = 0;      // Binary (reset) value by default
+      if (value != 0x8000) { // Value input different from -32768
+        switch (globalConfigMem[actionPtr]) {
+        case 35: // Lift:
+          outValue = constrain(map(value, 0, 1000, -4096, 4096), -4096, 4096);
+>>>>>>> origin/master
           break;
         case 36: // Gamma:
           outValue = constrain(map(value, 0, 1000, -8192, 8192), -8192, 8192);
@@ -1529,6 +1537,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       case 35: // Lift:
         switch (globalConfigMem[actionPtr + 1]) {
         case 0:
+<<<<<<< HEAD
           AtemSwitcher[devIndex].setCameraControlLiftY(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlLiftY(cam), -4096, 4096, false, pulses, 20, 200));
           break;
         case 1:
@@ -1536,6 +1545,15 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           break;
         case 2:
           AtemSwitcher[devIndex].setCameraControlLiftG(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlLiftG(cam), -4096, 4096, false, pulses, 20, 200));
+=======
+          AtemSwitcher[devIndex].setCameraControlLiftY(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlLiftY(cam), -4096, 4096, false, pulses, 200, 2000));
+          break;
+        case 1:
+          AtemSwitcher[devIndex].setCameraControlLiftR(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlLiftR(cam), -4096, 4096, false, pulses, 100, 1000));
+          break;
+        case 2:
+          AtemSwitcher[devIndex].setCameraControlLiftG(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlLiftG(cam), -4096, 4096, false, pulses, 50, 500));
+>>>>>>> origin/master
           break;
         case 3:
           AtemSwitcher[devIndex].setCameraControlLiftB(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlLiftB(cam), -4096, 4096, false, pulses, 20, 200));
