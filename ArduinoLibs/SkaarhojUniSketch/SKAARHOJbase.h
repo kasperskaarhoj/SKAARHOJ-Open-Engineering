@@ -29,7 +29,16 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
  *
  ************************************/
 
+#if defined(__arm__)
+void resetFunc() {
+  const int RSTC_KEY = 0xA5;
+  RSTC->RSTC_CR = RSTC_CR_KEY(RSTC_KEY) | RSTC_CR_PROCRST | RSTC_CR_PERRST;
+  while (true)
+    ;
+}
+#else
 void (*resetFunc)(void) = 0; // declare reset function @ address 0
+#endif
 
 // MAC address and IP address for this *particular* SKAARDUINO
 byte mac[6] = {};                   // Loaded from EEPROM
@@ -388,7 +397,10 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     memset(_strCache, 0, 11);
     switch (_extRetFormat & 0xF) {
     case 1:
+#ifdef __arm__ /* Arduino DUE */
+#else
       dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache); // Need to find alternative for Due Platform.
+#endif
       break;
     default:
       itoa(_extRetValue[a], _strCache, 10);
@@ -513,7 +525,10 @@ void write3x16Display(SkaarhojEADOGMDisplay &disp) {
     memset(_strCache, 0, 11);
     switch (_extRetFormat & 0xF) {
     case 1:
+#ifdef __arm__ /* Arduino DUE */
+#else
       dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache);
+#endif
       break;
     default:
       itoa(_extRetValue[a], _strCache, 10);
@@ -1053,10 +1068,10 @@ uint8_t HWsetup() {
 // ++++++++++++++++++++++
 #if (SK_HWEN_STDOLEDDISPLAY)
   Serial << F("Init Info OLED Display\n");
-#if SK_MODEL == SK_MICROMONITOR
-  infoDisplay.begin(4, 1);
-#else
+#if SK_MODEL == SK_MICROMONITOR || SK_MODEL == SK_RCP
   infoDisplay.begin(0, 1);
+#else
+  infoDisplay.begin(4, 1);
 #endif
 #if SK_MODEL == SK_RCP || SK_MODEL == SK_MICROMONITOR
   infoDisplay.setRotation(2);
@@ -1433,7 +1448,7 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
       prevHash = extRetValHash();
       writeDisplayTile(SSWmenu, 0, 0, 0);
       SSWmenuEnc.runLoop();
-	  SSWmenu.display(B10000);
+      SSWmenu.display(B10000);
       Serial << F("Write SSWmenu gfx!\n");
     }
     if (prevColor != _extRetColor) {

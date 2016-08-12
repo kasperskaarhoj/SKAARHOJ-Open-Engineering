@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_C90SM
+#define SK_MODEL SK_RCP
 
 
 
@@ -89,7 +89,7 @@
 #include "utility/w5100.h"
 #include "Streaming.h"
 #ifdef __arm__  /* Arduino DUE */
-#include "SkaarhojDueEEPROM.h_________"
+#include "SkaarhojDueEEPROM.h"
 SkaarhojDueEEPROM EEPROM;
 #else
 #include "EEPROM.h"
