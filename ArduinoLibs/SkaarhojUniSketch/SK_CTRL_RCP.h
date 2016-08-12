@@ -102,21 +102,13 @@ uint8_t HWsetupL() {
 
   // Encoders
   Serial << F("Init Upper+Left Encoders\n");
-<<<<<<< HEAD
   encoders.begin(2);
-=======
-  encoders.begin(3);
->>>>>>> origin/master
   // encoders.serialOutput(SK_SERIAL_OUTPUT);
   encoders.setStateCheckDelay(250);
   statusLED(QUICKBLANK);
 
   Serial << F("Init Lower+Right Encoders\n");
-<<<<<<< HEAD
   encoders2.begin(3);
-=======
-  encoders2.begin(2);
->>>>>>> origin/master
   // encoders2.serialOutput(SK_SERIAL_OUTPUT);
   encoders2.setStateCheckDelay(250);
   statusLED(QUICKBLANK);
@@ -133,7 +125,6 @@ uint8_t HWsetupL() {
   statusLED(QUICKBLANK);
 
   Serial << F("Init Joystick\n");
-<<<<<<< HEAD
   //  joystick.uniDirectionalSlider_init(10, 35, 35, 0, 1);
   joystick.uniDirectionalSlider_init(15, 80, 80, 0, 2);
   joystick.uniDirectionalSlider_disableUnidirectionality(true);
@@ -144,11 +135,6 @@ uint8_t HWsetupL() {
   joystickbutton.uniDirectionalSlider_init(15, 80, 80, 0, 0);
   joystickbutton.uniDirectionalSlider_disableUnidirectionality(true);
 
-=======
-  joystick.uniDirectionalSlider_init(10, 35, 35, 0, 0);
-  joystick.uniDirectionalSlider_disableUnidirectionality(true);
-
->>>>>>> origin/master
   Serial << F("Init Details Display\n");
   detailsDisplay.begin(4);
   detailsDisplay.clearDisplay(); // clears the screen and buffer
@@ -248,11 +234,7 @@ void HWrunLoop() {
   // Address switch:
   static uint8_t currentAddress = 255;
   bDown = addressSwitch_getAddress();
-<<<<<<< HEAD
   actionDispatch(53, currentAddress != bDown, false, 0, bDown);
-=======
-  actionDispatch(51, currentAddress != bDown, false, 0, bDown);
->>>>>>> origin/master
   currentAddress = bDown;
 
   // BI16 buttons:
@@ -270,11 +252,7 @@ void HWrunLoop() {
   // UHB buttons:
   bUp = buttons2.buttonUpAll();
   bDown = buttons2.buttonDownAll();
-<<<<<<< HEAD
   uint8_t b16Map2[] = {47, 50, 49, 48}; // These numbers refer to the drawing in the web interface
-=======
-  uint8_t b16Map2[] = {45, 48, 47, 46}; // These numbers refer to the drawing in the web interface
->>>>>>> origin/master
   for (uint8_t a = 0; a < 4; a++) {
     extRetValPrefersLabel(b16Map2[a]);
     uint8_t color = actionDispatch(b16Map2[a], bDown & (B1 << a), bUp & (B1 << a));
@@ -289,7 +267,6 @@ void HWrunLoop() {
 
   // Joystick:
   bool hasMoved = joystick.uniDirectionalSlider_hasMoved();
-<<<<<<< HEAD
   //  actionDispatch(41, hasMoved, false, 0, 1000 - joystick.uniDirectionalSlider_position());
   actionDispatch(41, hasMoved, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
 
@@ -302,9 +279,6 @@ void HWrunLoop() {
   static bool lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
   actionDispatch(43, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
   lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
-=======
-  actionDispatch(41, hasMoved, false, 0, 1000 - joystick.uniDirectionalSlider_position());
->>>>>>> origin/master
 
   // Encoders
   uint8_t encMap[] = {30, 31, 32, 33, 39}; // These numbers refer to the drawing in the web interface
@@ -369,11 +343,7 @@ void HWrunLoop() {
 #if (SK_HWEN_STDOLEDDISPLAY)
   static uint16_t infoDisplay_prevHash[3];
   static bool infoDisplay_written;
-<<<<<<< HEAD
   HWrunLoop_128x32OLED(infoDisplay, 44, infoDisplay_prevHash, infoDisplay_written);
-=======
-  HWrunLoop_128x32OLED(infoDisplay, 42, infoDisplay_prevHash, infoDisplay_written);
->>>>>>> origin/master
 #endif
 
   // ID Display:
@@ -410,19 +380,11 @@ void HWrunLoop() {
       bUp = 1;
     }
   }
-<<<<<<< HEAD
   actionDispatch(52, bDown, bUp);
 
   // GPO:
   static bool gpoCache = false;
   uint8_t state = actionDispatch(51) & 0xF;
-=======
-  actionDispatch(50, bDown, bUp);
-
-  // GPO:
-  static bool gpoCache = false;
-  uint8_t state = actionDispatch(49) & 0xF;
->>>>>>> origin/master
   if (state != 5 && state != 0) {
     if (!gpoCache) {
       gpoCache = true;
