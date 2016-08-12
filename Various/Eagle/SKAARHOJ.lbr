@@ -6,7 +6,11 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
+<<<<<<< HEAD
 <grid distance="0.8" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+=======
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+>>>>>>> origin/master
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -6874,6 +6878,7 @@ GGU (S-PBGA-N144) Source: tms320vc5402.pdf</description>
 <text x="-5.715" y="6.35" size="1.27" layer="25">&gt;NAME</text>
 <text x="-5.715" y="-7.62" size="1.27" layer="27">&gt;VALUE</text>
 </package>
+<<<<<<< HEAD
 <package name="LQFP144-0.5-20X20M">
 <description>&lt;b&gt;QFP144&lt;/b&gt;&lt;p&gt;
 shrink quad flat pack, square (smd-ipc)</description>
@@ -7789,6 +7794,8 @@ Source: 6120s.pdf</description>
 <vertex x="-4.35" y="4.375"/>
 </polygon>
 </package>
+=======
+>>>>>>> origin/master
 </packages>
 <symbols>
 <symbol name="LP11ESWITCH">
@@ -11079,6 +11086,7 @@ Rev2 only</description>
 <pin name="13" x="10.16" y="12.7" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 <pin name="14" x="10.16" y="15.24" visible="pad" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 </symbol>
+<<<<<<< HEAD
 <symbol name="SMARTPRJ_ATSAM3X4/8E">
 <wire x1="-54.61" y1="64.77" x2="54.61" y2="64.77" width="0.254" layer="94"/>
 <wire x1="54.61" y1="64.77" x2="54.61" y2="-64.77" width="0.254" layer="94"/>
@@ -11341,6 +11349,8 @@ Rev2 only</description>
 <text x="47.625" y="-62.23" size="1.27" layer="94" ratio="10">Erase</text>
 <pin name="GND5" x="59.69" y="49.53" length="middle" direction="pwr" rot="R180"/>
 </symbol>
+=======
+>>>>>>> origin/master
 </symbols>
 <devicesets>
 <deviceset name="LP11-B" prefix="B">
@@ -11990,6 +12000,7 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <connect gate="G$1" pin="5" pad="5"/>
 <connect gate="G$1" pin="6" pad="6"/>
 <connect gate="G$1" pin="7" pad="7"/>
+<<<<<<< HEAD
 <connect gate="G$1" pin="8" pad="8"/>
 </connects>
 <technologies>
@@ -13044,6 +13055,9 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="8_TMDS0GND" pad="C8"/>
 <connect gate="G$1" pin="9_TMDS0-" pad="C9"/>
 <connect gate="G$1" pin="SHLD" pad="GND"/>
+=======
+<connect gate="G$1" pin="8" pad="8"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13051,6 +13065,1062 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
+=======
+<deviceset name="NAV-SWITCH-5WAY">
+<description>For use with a push-button switch made by CnK components. The Part # is</description>
+<gates>
+<gate name="G$1" symbol="NAV-SWITCH-5WAY" x="0" y="0"/>
+</gates>
+<devices>
+<device name="CNK_LOCK" package="NAV-SWITCH-5WAY">
+<connects>
+<connect gate="G$1" pin="COMMON" pad="PIN4"/>
+<connect gate="G$1" pin="DWN" pad="PIN3"/>
+<connect gate="G$1" pin="LEFT" pad="PIN2"/>
+<connect gate="G$1" pin="PUSH" pad="PIN6"/>
+<connect gate="G$1" pin="RIGHT" pad="PIN5"/>
+<connect gate="G$1" pin="UP" pad="PIN1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="LEDBICOLOR-AKA">
+<gates>
+<gate name="G$1" symbol="LEDBICOLOR-AKA" x="-20.32" y="10.16"/>
+</gates>
+<devices>
+<device name="" package="LED5MM-BICOLOR">
+<connects>
+<connect gate="G$1" pin="P$1" pad="K1"/>
+<connect gate="G$1" pin="P$2" pad="A2"/>
+<connect gate="G$1" pin="P$3" pad="A3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ARDUINO-MEGA-EXT-BREAKOUT" prefix="U">
+<description>Arduino Mega footprint connections</description>
+<gates>
+<gate name="G$1" symbol="ARDUINO-MEGA-EXT-BREAKOUT" x="0" y="0"/>
+</gates>
+<devices>
+<device name="FULL" package="ARDUINO_MEGA_EXT_BREAKOUT">
+<connects>
+<connect gate="G$1" pin="14(TX3)" pad="14"/>
+<connect gate="G$1" pin="15(RX3)" pad="15"/>
+<connect gate="G$1" pin="16(TX2)" pad="16"/>
+<connect gate="G$1" pin="17(RX2)" pad="17"/>
+<connect gate="G$1" pin="18(TX1)" pad="18"/>
+<connect gate="G$1" pin="19(RX1)" pad="19"/>
+<connect gate="G$1" pin="20(SDA)" pad="20"/>
+<connect gate="G$1" pin="21(SCL)" pad="21"/>
+<connect gate="G$1" pin="22" pad="22"/>
+<connect gate="G$1" pin="23" pad="23"/>
+<connect gate="G$1" pin="24" pad="24"/>
+<connect gate="G$1" pin="25" pad="25"/>
+<connect gate="G$1" pin="26" pad="26"/>
+<connect gate="G$1" pin="27" pad="27"/>
+<connect gate="G$1" pin="28" pad="28"/>
+<connect gate="G$1" pin="29" pad="29"/>
+<connect gate="G$1" pin="30" pad="30"/>
+<connect gate="G$1" pin="31" pad="31"/>
+<connect gate="G$1" pin="32" pad="32"/>
+<connect gate="G$1" pin="33" pad="33"/>
+<connect gate="G$1" pin="34" pad="34"/>
+<connect gate="G$1" pin="35" pad="35"/>
+<connect gate="G$1" pin="36" pad="36"/>
+<connect gate="G$1" pin="37" pad="37"/>
+<connect gate="G$1" pin="38" pad="38"/>
+<connect gate="G$1" pin="39" pad="39"/>
+<connect gate="G$1" pin="40" pad="40"/>
+<connect gate="G$1" pin="41" pad="41"/>
+<connect gate="G$1" pin="42" pad="42"/>
+<connect gate="G$1" pin="43" pad="43"/>
+<connect gate="G$1" pin="44" pad="44"/>
+<connect gate="G$1" pin="45" pad="45"/>
+<connect gate="G$1" pin="46" pad="46"/>
+<connect gate="G$1" pin="47" pad="47"/>
+<connect gate="G$1" pin="48" pad="48"/>
+<connect gate="G$1" pin="49" pad="49"/>
+<connect gate="G$1" pin="50" pad="50"/>
+<connect gate="G$1" pin="51" pad="51"/>
+<connect gate="G$1" pin="52" pad="52"/>
+<connect gate="G$1" pin="53" pad="53"/>
+<connect gate="G$1" pin="5V@1" pad="5V@1"/>
+<connect gate="G$1" pin="5V@2" pad="5V@2"/>
+<connect gate="G$1" pin="A10" pad="A10"/>
+<connect gate="G$1" pin="A11" pad="A11"/>
+<connect gate="G$1" pin="A12" pad="A12"/>
+<connect gate="G$1" pin="A13" pad="A13"/>
+<connect gate="G$1" pin="A14" pad="A14"/>
+<connect gate="G$1" pin="A15" pad="A15"/>
+<connect gate="G$1" pin="A6" pad="A6"/>
+<connect gate="G$1" pin="A7" pad="A7"/>
+<connect gate="G$1" pin="A8" pad="A8"/>
+<connect gate="G$1" pin="A9" pad="A9"/>
+<connect gate="G$1" pin="GND@2" pad="GND@2"/>
+<connect gate="G$1" pin="GND@3" pad="GND@3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="CFPB">
+<gates>
+<gate name="G$1" symbol="CFPB" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="CFPB-6/9MM">
+<connects>
+<connect gate="G$1" pin="A" pad="P$3"/>
+<connect gate="G$1" pin="K" pad="P$4"/>
+<connect gate="G$1" pin="SW1" pad="P$1"/>
+<connect gate="G$1" pin="SW2" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="LEDBICOLOR-SMD">
+<gates>
+<gate name="G$1" symbol="LEDBICOLOR-SMD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="LEDBICOLOR-SMD">
+<connects>
+<connect gate="G$1" pin="A" pad="P$1"/>
+<connect gate="G$1" pin="A1" pad="P$3"/>
+<connect gate="G$1" pin="C" pad="P$2"/>
+<connect gate="G$1" pin="C1" pad="P$4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ARDUINO-MEGA" prefix="U">
+<description>Arduino Mega footprint connections</description>
+<gates>
+<gate name="G$1" symbol="ARDUINO-MEGA" x="0" y="0"/>
+</gates>
+<devices>
+<device name="FULL" package="ARDUINO_MEGA">
+<connects>
+<connect gate="G$1" pin="0(RX0)" pad="0"/>
+<connect gate="G$1" pin="1(TX0)" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14(TX3)" pad="14"/>
+<connect gate="G$1" pin="15(RX3)" pad="15"/>
+<connect gate="G$1" pin="16(TX2)" pad="16"/>
+<connect gate="G$1" pin="17(RX2)" pad="17"/>
+<connect gate="G$1" pin="18(TX1)" pad="18"/>
+<connect gate="G$1" pin="19(RX1)" pad="19"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="20(SDA)" pad="20"/>
+<connect gate="G$1" pin="21(SCL)" pad="21"/>
+<connect gate="G$1" pin="22" pad="22"/>
+<connect gate="G$1" pin="23" pad="23"/>
+<connect gate="G$1" pin="24" pad="24"/>
+<connect gate="G$1" pin="25" pad="25"/>
+<connect gate="G$1" pin="26" pad="26"/>
+<connect gate="G$1" pin="27" pad="27"/>
+<connect gate="G$1" pin="28" pad="28"/>
+<connect gate="G$1" pin="29" pad="29"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="3.3V" pad="3.3V"/>
+<connect gate="G$1" pin="30" pad="30"/>
+<connect gate="G$1" pin="31" pad="31"/>
+<connect gate="G$1" pin="32" pad="32"/>
+<connect gate="G$1" pin="33" pad="33"/>
+<connect gate="G$1" pin="34" pad="34"/>
+<connect gate="G$1" pin="35" pad="35"/>
+<connect gate="G$1" pin="36" pad="36"/>
+<connect gate="G$1" pin="37" pad="37"/>
+<connect gate="G$1" pin="38" pad="38"/>
+<connect gate="G$1" pin="39" pad="39"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="40" pad="40"/>
+<connect gate="G$1" pin="41" pad="41"/>
+<connect gate="G$1" pin="42" pad="42"/>
+<connect gate="G$1" pin="43" pad="43"/>
+<connect gate="G$1" pin="44" pad="44"/>
+<connect gate="G$1" pin="45" pad="45"/>
+<connect gate="G$1" pin="46" pad="46"/>
+<connect gate="G$1" pin="47" pad="47"/>
+<connect gate="G$1" pin="48" pad="48"/>
+<connect gate="G$1" pin="49" pad="49"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="50" pad="50"/>
+<connect gate="G$1" pin="51" pad="51"/>
+<connect gate="G$1" pin="52" pad="52"/>
+<connect gate="G$1" pin="53" pad="53"/>
+<connect gate="G$1" pin="5V@0" pad="5V@0"/>
+<connect gate="G$1" pin="5V@1" pad="5V@1"/>
+<connect gate="G$1" pin="5V@2" pad="5V@2"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+<connect gate="G$1" pin="A0(RX0)" pad="A0"/>
+<connect gate="G$1" pin="A1(TX0)" pad="A1"/>
+<connect gate="G$1" pin="A10" pad="A10"/>
+<connect gate="G$1" pin="A11" pad="A11"/>
+<connect gate="G$1" pin="A12" pad="A12"/>
+<connect gate="G$1" pin="A13" pad="A13"/>
+<connect gate="G$1" pin="A14" pad="A14"/>
+<connect gate="G$1" pin="A15" pad="A15"/>
+<connect gate="G$1" pin="A2" pad="A2"/>
+<connect gate="G$1" pin="A3" pad="A3"/>
+<connect gate="G$1" pin="A4" pad="A4"/>
+<connect gate="G$1" pin="A5" pad="A5"/>
+<connect gate="G$1" pin="A6" pad="A6"/>
+<connect gate="G$1" pin="A7" pad="A7"/>
+<connect gate="G$1" pin="A8" pad="A8"/>
+<connect gate="G$1" pin="A9" pad="A9"/>
+<connect gate="G$1" pin="AREF" pad="AREF"/>
+<connect gate="G$1" pin="GND@0" pad="GND@0"/>
+<connect gate="G$1" pin="GND@1" pad="GND@1"/>
+<connect gate="G$1" pin="GND@2" pad="GND@2"/>
+<connect gate="G$1" pin="GND@3" pad="GND@3"/>
+<connect gate="G$1" pin="GND@4" pad="GND@4"/>
+<connect gate="G$1" pin="RESET" pad="RESET"/>
+<connect gate="G$1" pin="VIN" pad="VIN"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="M02X2">
+<gates>
+<gate name="G$1" symbol="M02X2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="2X2">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="NC7">
+<gates>
+<gate name="G$1" symbol="NC7" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="NC7-MD-L1">
+<connects>
+<connect gate="G$1" pin="1" pad="PIN1"/>
+<connect gate="G$1" pin="2" pad="PIN2"/>
+<connect gate="G$1" pin="3" pad="PIN3"/>
+<connect gate="G$1" pin="4" pad="PIN4"/>
+<connect gate="G$1" pin="5" pad="PIN5"/>
+<connect gate="G$1" pin="6" pad="PIN6"/>
+<connect gate="G$1" pin="7" pad="PIN7"/>
+<connect gate="G$1" pin="G" pad="G"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="5PINDIN">
+<gates>
+<gate name="G$1" symbol="5PIN" x="-2.54" y="5.08"/>
+</gates>
+<devices>
+<device name="" package="5PINDIN">
+<connects>
+<connect gate="G$1" pin="1" pad="PIN1"/>
+<connect gate="G$1" pin="2" pad="PIN2"/>
+<connect gate="G$1" pin="3" pad="PIN3"/>
+<connect gate="G$1" pin="4" pad="PIN4"/>
+<connect gate="G$1" pin="5" pad="PIN5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="3BITADDR">
+<gates>
+<gate name="G$1" symbol="3BITADDR" x="-5.08" y="0"/>
+</gates>
+<devices>
+<device name="" package="3BITADDR">
+<connects>
+<connect gate="G$1" pin="A0" pad="A0"/>
+<connect gate="G$1" pin="A1" pad="A1"/>
+<connect gate="G$1" pin="A2" pad="A2"/>
+<connect gate="G$1" pin="GND" pad="L1 L2 L3"/>
+<connect gate="G$1" pin="VCC" pad="H1 H2 H3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMALL" package="3BITADDR_SMALL">
+<connects>
+<connect gate="G$1" pin="A0" pad="A0 AS0"/>
+<connect gate="G$1" pin="A1" pad="A1 AS1"/>
+<connect gate="G$1" pin="A2" pad="A2 AS2"/>
+<connect gate="G$1" pin="GND" pad="L0 L1 L2"/>
+<connect gate="G$1" pin="VCC" pad="H0 H1 H2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="GNDPAD" prefix="P">
+<gates>
+<gate name="G$1" symbol="SINGLEPAD" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="3.2MMPAD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="6MM" package="3.2MMPAD6MM">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="4.5MM" package="4.5MMPAD6MM">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="NJ3">
+<gates>
+<gate name="G$1" symbol="NC3" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="NJ3FP6C">
+<connects>
+<connect gate="G$1" pin="1" pad="TIP"/>
+<connect gate="G$1" pin="2" pad="RING"/>
+<connect gate="G$1" pin="G" pad="G"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="RN08" prefix="RN" uservalue="yes">
+<description>&lt;b&gt;RESISTOR NETWORK&lt;/b&gt;</description>
+<gates>
+<gate name="1" symbol="RN08" x="5.08" y="0"/>
+</gates>
+<devices>
+<device name="" package="RN-9">
+<connects>
+<connect gate="1" pin="1" pad="1"/>
+<connect gate="1" pin="2" pad="2"/>
+<connect gate="1" pin="3" pad="3"/>
+<connect gate="1" pin="4" pad="4"/>
+<connect gate="1" pin="5" pad="5"/>
+<connect gate="1" pin="6" pad="6"/>
+<connect gate="1" pin="7" pad="7"/>
+<connect gate="1" pin="8" pad="8"/>
+<connect gate="1" pin="9" pad="9"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="" constant="no"/>
+<attribute name="OC_FARNELL" value="unknown" constant="no"/>
+<attribute name="OC_NEWARK" value="unknown" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MSTBV2" prefix="X">
+<description>&lt;b&gt;PHOENIX&lt;/b&gt;</description>
+<gates>
+<gate name="-1" symbol="SK" x="0" y="5.08" addlevel="always"/>
+<gate name="-2" symbol="SKV" x="0" y="0" addlevel="always"/>
+</gates>
+<devices>
+<device name="" package="MSTBV2">
+<connects>
+<connect gate="-1" pin="1" pad="1"/>
+<connect gate="-2" pin="1" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="MSTBV 2,5/2-GF-5.08" constant="no"/>
+<attribute name="OC_FARNELL" value="1792792" constant="no"/>
+<attribute name="OC_NEWARK" value="69R9845" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="3.5MM" package="MSTBV2-3.5">
+<connects>
+<connect gate="-1" pin="1" pad="1"/>
+<connect gate="-2" pin="1" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MSTBV3" prefix="X">
+<description>&lt;b&gt;PHOENIX&lt;/b&gt;</description>
+<gates>
+<gate name="-1" symbol="SK" x="0" y="7.62" addlevel="always"/>
+<gate name="-2" symbol="SK" x="0" y="2.54" addlevel="always"/>
+<gate name="-3" symbol="SKV" x="0" y="-2.54" addlevel="always"/>
+</gates>
+<devices>
+<device name="" package="MSTBV3">
+<connects>
+<connect gate="-1" pin="1" pad="1"/>
+<connect gate="-2" pin="1" pad="2"/>
+<connect gate="-3" pin="1" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="MSTBV 2,5/3-GF-5.08" constant="no"/>
+<attribute name="OC_FARNELL" value="1792793" constant="no"/>
+<attribute name="OC_NEWARK" value="69R9846" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="3.5MM" package="MSTBV3-3.5">
+<connects>
+<connect gate="-1" pin="1" pad="1"/>
+<connect gate="-2" pin="1" pad="2"/>
+<connect gate="-3" pin="1" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="NKK-NP01-SINGLECOLOR">
+<gates>
+<gate name="G$1" symbol="NKK-NP01" x="0" y="2.54"/>
+</gates>
+<devices>
+<device name="" package="NKK-NP01">
+<connects>
+<connect gate="G$1" pin="L1" pad="L1"/>
+<connect gate="G$1" pin="L2" pad="L2"/>
+<connect gate="G$1" pin="L3" pad="L3"/>
+<connect gate="G$1" pin="L4" pad="L4"/>
+<connect gate="G$1" pin="LC1" pad="LC1"/>
+<connect gate="G$1" pin="LC2" pad="LC2"/>
+<connect gate="G$1" pin="SW1" pad="1"/>
+<connect gate="G$1" pin="SW2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LESSHOLES" package="NKK-NP01_LESSHOLES">
+<connects>
+<connect gate="G$1" pin="L1" pad="L1"/>
+<connect gate="G$1" pin="L2" pad="L2"/>
+<connect gate="G$1" pin="L3" pad="L3"/>
+<connect gate="G$1" pin="L4" pad="L4"/>
+<connect gate="G$1" pin="LC1" pad="LC1"/>
+<connect gate="G$1" pin="LC2" pad="LC2"/>
+<connect gate="G$1" pin="SW1" pad="1"/>
+<connect gate="G$1" pin="SW2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="2BITADDR">
+<gates>
+<gate name="G$1" symbol="2BITADDR" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="2BITADDR">
+<connects>
+<connect gate="G$1" pin="A1" pad="A1"/>
+<connect gate="G$1" pin="A2" pad="A2"/>
+<connect gate="G$1" pin="GND" pad="L2 L3"/>
+<connect gate="G$1" pin="VCC" pad="H2 H3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMALL" package="2BITADDR_SMALL">
+<connects>
+<connect gate="G$1" pin="A1" pad="A0 AS0"/>
+<connect gate="G$1" pin="A2" pad="A1 AS1"/>
+<connect gate="G$1" pin="GND" pad="L0 L1"/>
+<connect gate="G$1" pin="VCC" pad="H0 H1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MSTBV5" prefix="X">
+<description>&lt;b&gt;PHOENIX&lt;/b&gt;</description>
+<gates>
+<gate name="-1" symbol="SK" x="0" y="20.32" addlevel="always"/>
+<gate name="-2" symbol="SK" x="0" y="15.24" addlevel="always"/>
+<gate name="-3" symbol="SK" x="0" y="10.16" addlevel="always"/>
+<gate name="-4" symbol="SK" x="0" y="5.08" addlevel="always"/>
+<gate name="-5" symbol="SKV" x="0" y="0" addlevel="always"/>
+</gates>
+<devices>
+<device name="" package="MSTBV5">
+<connects>
+<connect gate="-1" pin="1" pad="1"/>
+<connect gate="-2" pin="1" pad="2"/>
+<connect gate="-3" pin="1" pad="3"/>
+<connect gate="-4" pin="1" pad="4"/>
+<connect gate="-5" pin="1" pad="5"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="" constant="no"/>
+<attribute name="MPN" value="MSTBV 2,5/5-GF-5.08" constant="no"/>
+<attribute name="OC_FARNELL" value="1792795" constant="no"/>
+<attribute name="OC_NEWARK" value="69R9848" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="3.5MM" package="MSTBV5-3.5">
+<connects>
+<connect gate="-1" pin="1" pad="1"/>
+<connect gate="-2" pin="1" pad="2"/>
+<connect gate="-3" pin="1" pad="3"/>
+<connect gate="-4" pin="1" pad="4"/>
+<connect gate="-5" pin="1" pad="5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BUZZER" prefix="SG">
+<description>&lt;b&gt;Buzzer 12mm&lt;/b&gt;
+Spark Fun Electronics SKU : Comp-Buzzer</description>
+<gates>
+<gate name="G$1" symbol="BUZZER" x="0" y="0"/>
+</gates>
+<devices>
+<device name="PTH" package="BUZZER-12MM">
+<connects>
+<connect gate="G$1" pin="1" pad="+"/>
+<connect gate="G$1" pin="2" pad="-"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PCA9671">
+<gates>
+<gate name="G$1" symbol="PCA9671" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TSSOP24">
+<connects>
+<connect gate="G$1" pin="AD0" pad="21"/>
+<connect gate="G$1" pin="AD1" pad="2"/>
+<connect gate="G$1" pin="AD2" pad="3"/>
+<connect gate="G$1" pin="GND" pad="12"/>
+<connect gate="G$1" pin="P00" pad="4"/>
+<connect gate="G$1" pin="P01" pad="5"/>
+<connect gate="G$1" pin="P02" pad="6"/>
+<connect gate="G$1" pin="P03" pad="7"/>
+<connect gate="G$1" pin="P04" pad="8"/>
+<connect gate="G$1" pin="P05" pad="9"/>
+<connect gate="G$1" pin="P06" pad="10"/>
+<connect gate="G$1" pin="P07" pad="11"/>
+<connect gate="G$1" pin="P10" pad="13"/>
+<connect gate="G$1" pin="P11" pad="14"/>
+<connect gate="G$1" pin="P12" pad="15"/>
+<connect gate="G$1" pin="P13" pad="16"/>
+<connect gate="G$1" pin="P14" pad="17"/>
+<connect gate="G$1" pin="P15" pad="18"/>
+<connect gate="G$1" pin="P16" pad="19"/>
+<connect gate="G$1" pin="P17" pad="20"/>
+<connect gate="G$1" pin="RESET" pad="1"/>
+<connect gate="G$1" pin="SCL" pad="22"/>
+<connect gate="G$1" pin="SDA" pad="23"/>
+<connect gate="G$1" pin="VDD" pad="24"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ER_OLED032-1" prefix="U" uservalue="yes">
+<description>&lt;b&gt;128x128 1.5" RGB OLED&lt;/b&gt; - UG-2828GDEDF11
+&lt;p&gt;30-Pin 0.5mm Pitch FPC Cable (Top+Bottom Contacts) - OMRON XF2M-3015-1A (Digikey: OR723TR-ND)&lt;/p&gt;
+&lt;p&gt;This FPC connector has contacts on the top and bottom, but the appropriate pin needs to be selected depending on whether the OLED will be inserted right-side up (use the TOP pinout) or upside-down (use the BOTTOM pinout).&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="ER-OLED032-1" x="0" y="0"/>
+</gates>
+<devices>
+<device name="TOP" package="FPC_XF2M-3015-1A">
+<connects>
+<connect gate="G$1" pin="BS0" pad="P$15"/>
+<connect gate="G$1" pin="BS1" pad="P$14"/>
+<connect gate="G$1" pin="CS#" pad="P$12"/>
+<connect gate="G$1" pin="D0" pad="P$18"/>
+<connect gate="G$1" pin="D1" pad="P$19"/>
+<connect gate="G$1" pin="D2" pad="P$20"/>
+<connect gate="G$1" pin="D3" pad="P$21"/>
+<connect gate="G$1" pin="D4" pad="P$22"/>
+<connect gate="G$1" pin="D5" pad="P$23"/>
+<connect gate="G$1" pin="D6" pad="P$24"/>
+<connect gate="G$1" pin="D7" pad="P$25"/>
+<connect gate="G$1" pin="DC#" pad="P$13"/>
+<connect gate="G$1" pin="E/RD#" pad="P$17"/>
+<connect gate="G$1" pin="FR" pad="P$10"/>
+<connect gate="G$1" pin="IREF" pad="P$9"/>
+<connect gate="G$1" pin="NC" pad="P$8"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="P$30"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="P$1"/>
+<connect gate="G$1" pin="R/W#" pad="P$16"/>
+<connect gate="G$1" pin="RES#" pad="P$11"/>
+<connect gate="G$1" pin="VCC" pad="P$28"/>
+<connect gate="G$1" pin="VCC@2" pad="P$2"/>
+<connect gate="G$1" pin="VCI" pad="P$5"/>
+<connect gate="G$1" pin="VCOMH" pad="P$27"/>
+<connect gate="G$1" pin="VDD" pad="P$6"/>
+<connect gate="G$1" pin="VDDIO" pad="P$7"/>
+<connect gate="G$1" pin="VLSS" pad="P$26"/>
+<connect gate="G$1" pin="VLSS@2" pad="P$3"/>
+<connect gate="G$1" pin="VSL" pad="P$4"/>
+<connect gate="G$1" pin="VSS" pad="P$29"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="BOTTOM" package="FPC_XF2M-3015-1A">
+<connects>
+<connect gate="G$1" pin="BS0" pad="P$16"/>
+<connect gate="G$1" pin="BS1" pad="P$17"/>
+<connect gate="G$1" pin="CS#" pad="P$19"/>
+<connect gate="G$1" pin="D0" pad="P$13"/>
+<connect gate="G$1" pin="D1" pad="P$12"/>
+<connect gate="G$1" pin="D2" pad="P$11"/>
+<connect gate="G$1" pin="D3" pad="P$10"/>
+<connect gate="G$1" pin="D4" pad="P$9"/>
+<connect gate="G$1" pin="D5" pad="P$8"/>
+<connect gate="G$1" pin="D6" pad="P$7"/>
+<connect gate="G$1" pin="D7" pad="P$6"/>
+<connect gate="G$1" pin="DC#" pad="P$18"/>
+<connect gate="G$1" pin="E/RD#" pad="P$14"/>
+<connect gate="G$1" pin="FR" pad="P$21"/>
+<connect gate="G$1" pin="IREF" pad="P$22"/>
+<connect gate="G$1" pin="NC" pad="P$23"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="P$1"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="P$30"/>
+<connect gate="G$1" pin="R/W#" pad="P$15"/>
+<connect gate="G$1" pin="RES#" pad="P$20"/>
+<connect gate="G$1" pin="VCC" pad="P$3"/>
+<connect gate="G$1" pin="VCC@2" pad="P$29"/>
+<connect gate="G$1" pin="VCI" pad="P$26"/>
+<connect gate="G$1" pin="VCOMH" pad="P$4"/>
+<connect gate="G$1" pin="VDD" pad="P$25"/>
+<connect gate="G$1" pin="VDDIO" pad="P$24"/>
+<connect gate="G$1" pin="VLSS" pad="P$5"/>
+<connect gate="G$1" pin="VLSS@2" pad="P$28"/>
+<connect gate="G$1" pin="VSL" pad="P$27"/>
+<connect gate="G$1" pin="VSS" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ER-OLED011-1" prefix="U" uservalue="yes">
+<description>UG-2864HSWEG01 OLED display
+&lt;p&gt;Both 1.3" and 0.96" models share the same FPC tab footprint, only the screen dimensions vary.&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="ER-OLED011-1" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ER-OLED011-1_WRAPAROUND">
+<connects>
+<connect gate="G$1" pin="BS1" pad="6"/>
+<connect gate="G$1" pin="BS2" pad="7"/>
+<connect gate="G$1" pin="CS#" pad="8"/>
+<connect gate="G$1" pin="D/C#" pad="10"/>
+<connect gate="G$1" pin="D0/SPI_SCLK" pad="13"/>
+<connect gate="G$1" pin="D1/SPI_SDIN" pad="14"/>
+<connect gate="G$1" pin="D2" pad="15"/>
+<connect gate="G$1" pin="D3" pad="16"/>
+<connect gate="G$1" pin="D4" pad="17"/>
+<connect gate="G$1" pin="D5" pad="18"/>
+<connect gate="G$1" pin="D6" pad="19"/>
+<connect gate="G$1" pin="D7" pad="20"/>
+<connect gate="G$1" pin="E/RD#" pad="12"/>
+<connect gate="G$1" pin="IREF" pad="21"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="1"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="25"/>
+<connect gate="G$1" pin="R/W#" pad="11"/>
+<connect gate="G$1" pin="RES#" pad="9"/>
+<connect gate="G$1" pin="VCC" pad="2"/>
+<connect gate="G$1" pin="VCC@2" pad="23"/>
+<connect gate="G$1" pin="VCOMH" pad="22"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VDDIO" pad="5"/>
+<connect gate="G$1" pin="VLSS" pad="24"/>
+<connect gate="G$1" pin="VSS" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="TOP" package="ER-OLED011-1">
+<connects>
+<connect gate="G$1" pin="BS1" pad="6"/>
+<connect gate="G$1" pin="BS2" pad="7"/>
+<connect gate="G$1" pin="CS#" pad="8"/>
+<connect gate="G$1" pin="D/C#" pad="10"/>
+<connect gate="G$1" pin="D0/SPI_SCLK" pad="13"/>
+<connect gate="G$1" pin="D1/SPI_SDIN" pad="14"/>
+<connect gate="G$1" pin="D2" pad="15"/>
+<connect gate="G$1" pin="D3" pad="16"/>
+<connect gate="G$1" pin="D4" pad="17"/>
+<connect gate="G$1" pin="D5" pad="18"/>
+<connect gate="G$1" pin="D6" pad="19"/>
+<connect gate="G$1" pin="D7" pad="20"/>
+<connect gate="G$1" pin="E/RD#" pad="12"/>
+<connect gate="G$1" pin="IREF" pad="21"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="1"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="25"/>
+<connect gate="G$1" pin="R/W#" pad="11"/>
+<connect gate="G$1" pin="RES#" pad="9"/>
+<connect gate="G$1" pin="VCC" pad="2"/>
+<connect gate="G$1" pin="VCC@2" pad="23"/>
+<connect gate="G$1" pin="VCOMH" pad="22"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VDDIO" pad="5"/>
+<connect gate="G$1" pin="VLSS" pad="24"/>
+<connect gate="G$1" pin="VSS" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ER-OLED0.91-2" prefix="U" uservalue="yes">
+<description>UG-2864HSWEG01 OLED display
+&lt;p&gt;Both 1.3" and 0.96" models share the same FPC tab footprint, only the screen dimensions vary.&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="ER-OLED0.91-2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ER-OLED0.91-2_WRAPAROUND">
+<connects>
+<connect gate="G$1" pin="BS1" pad="6"/>
+<connect gate="G$1" pin="BS2" pad="7"/>
+<connect gate="G$1" pin="CS#" pad="8"/>
+<connect gate="G$1" pin="D/C#" pad="10"/>
+<connect gate="G$1" pin="D0/SPI_SCLK" pad="13"/>
+<connect gate="G$1" pin="D1/SPI_SDIN" pad="14"/>
+<connect gate="G$1" pin="D2" pad="15"/>
+<connect gate="G$1" pin="D3" pad="16"/>
+<connect gate="G$1" pin="D4" pad="17"/>
+<connect gate="G$1" pin="D5" pad="18"/>
+<connect gate="G$1" pin="D6" pad="19"/>
+<connect gate="G$1" pin="D7" pad="20"/>
+<connect gate="G$1" pin="E/RD#" pad="12"/>
+<connect gate="G$1" pin="IREF" pad="21"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="1"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="25"/>
+<connect gate="G$1" pin="R/W#" pad="11"/>
+<connect gate="G$1" pin="RES#" pad="9"/>
+<connect gate="G$1" pin="VCC" pad="2"/>
+<connect gate="G$1" pin="VCC@2" pad="23"/>
+<connect gate="G$1" pin="VCOMH" pad="22"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VDDIO" pad="5"/>
+<connect gate="G$1" pin="VLSS" pad="24"/>
+<connect gate="G$1" pin="VSS" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="TOP" package="ER_OLED0.91-2">
+<connects>
+<connect gate="G$1" pin="BS1" pad="6"/>
+<connect gate="G$1" pin="BS2" pad="7"/>
+<connect gate="G$1" pin="CS#" pad="8"/>
+<connect gate="G$1" pin="D/C#" pad="10"/>
+<connect gate="G$1" pin="D0/SPI_SCLK" pad="13"/>
+<connect gate="G$1" pin="D1/SPI_SDIN" pad="14"/>
+<connect gate="G$1" pin="D2" pad="15"/>
+<connect gate="G$1" pin="D3" pad="16"/>
+<connect gate="G$1" pin="D4" pad="17"/>
+<connect gate="G$1" pin="D5" pad="18"/>
+<connect gate="G$1" pin="D6" pad="19"/>
+<connect gate="G$1" pin="D7" pad="20"/>
+<connect gate="G$1" pin="E/RD#" pad="12"/>
+<connect gate="G$1" pin="IREF" pad="21"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="1"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="25"/>
+<connect gate="G$1" pin="R/W#" pad="11"/>
+<connect gate="G$1" pin="RES#" pad="9"/>
+<connect gate="G$1" pin="VCC" pad="2"/>
+<connect gate="G$1" pin="VCC@2" pad="23"/>
+<connect gate="G$1" pin="VCOMH" pad="22"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VDDIO" pad="5"/>
+<connect gate="G$1" pin="VLSS" pad="24"/>
+<connect gate="G$1" pin="VSS" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PI-REV2-" prefix="B">
+<description>Raspberry Pi Rev2</description>
+<gates>
+<gate name="GPIO" symbol="GPIO" x="0" y="15.24"/>
+<gate name="AUX" symbol="GPIO_AUX" x="0" y="-17.78" addlevel="always"/>
+<gate name="RST" symbol="RESET" x="50.8" y="-5.08" addlevel="always"/>
+</gates>
+<devices>
+<device name="BOARD" package="RASPBERRY-PI-REV2">
+<connects>
+<connect gate="AUX" pin="+3V3@2" pad="P5-2"/>
+<connect gate="AUX" pin="+5V0@1" pad="P5-1"/>
+<connect gate="AUX" pin="GEN_GPIO10" pad="P5-5"/>
+<connect gate="AUX" pin="GEN_GPIO11" pad="P5-6"/>
+<connect gate="AUX" pin="GEN_GPIO8" pad="P5-3"/>
+<connect gate="AUX" pin="GEN_GPIO9" pad="P5-4"/>
+<connect gate="AUX" pin="GND@7" pad="P5-7"/>
+<connect gate="AUX" pin="GND@8" pad="P5-8"/>
+<connect gate="GPIO" pin="!SPI_CE0" pad="P1-24"/>
+<connect gate="GPIO" pin="!SPI_CE1" pad="P1-26"/>
+<connect gate="GPIO" pin="+3V3@1" pad="P1-1"/>
+<connect gate="GPIO" pin="+3V3@17" pad="P1-17"/>
+<connect gate="GPIO" pin="+5V0@2" pad="P1-2"/>
+<connect gate="GPIO" pin="+5V0@4" pad="P1-4"/>
+<connect gate="GPIO" pin="GND@14" pad="P1-14"/>
+<connect gate="GPIO" pin="GND@20" pad="P1-20"/>
+<connect gate="GPIO" pin="GND@25" pad="P1-25"/>
+<connect gate="GPIO" pin="GND@6" pad="P1-6"/>
+<connect gate="GPIO" pin="GND@9" pad="P1-9"/>
+<connect gate="GPIO" pin="GPIO_GCLK" pad="P1-7"/>
+<connect gate="GPIO" pin="GPIO_GEN0" pad="P1-11"/>
+<connect gate="GPIO" pin="GPIO_GEN1" pad="P1-12"/>
+<connect gate="GPIO" pin="GPIO_GEN2" pad="P1-13"/>
+<connect gate="GPIO" pin="GPIO_GEN3" pad="P1-15"/>
+<connect gate="GPIO" pin="GPIO_GEN4" pad="P1-16"/>
+<connect gate="GPIO" pin="GPIO_GEN5" pad="P1-18"/>
+<connect gate="GPIO" pin="GPIO_GEN6" pad="P1-22"/>
+<connect gate="GPIO" pin="RXD0" pad="P1-10"/>
+<connect gate="GPIO" pin="SCL0" pad="P1-5"/>
+<connect gate="GPIO" pin="SDA0" pad="P1-3"/>
+<connect gate="GPIO" pin="SPI_MISO" pad="P1-21"/>
+<connect gate="GPIO" pin="SPI_MOSI" pad="P1-19"/>
+<connect gate="GPIO" pin="SPI_SCLK" pad="P1-23"/>
+<connect gate="GPIO" pin="TXD0" pad="P1-8"/>
+<connect gate="RST" pin="GND" pad="P6-1"/>
+<connect gate="RST" pin="RST" pad="P6-2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="SD">
+<description>&lt;b&gt;SD MMC Card holder&lt;/b&gt;
+&lt;p&gt;
+4UCON part #06132 - easy to solder</description>
+<gates>
+<gate name="G$1" symbol="SD_FEMALE" x="-2.54" y="0"/>
+</gates>
+<devices>
+<device name="18650" package="SD_MICRO">
+<connects>
+<connect gate="G$1" pin="CARD_DETECT" pad="CD"/>
+<connect gate="G$1" pin="CS" pad="2"/>
+<connect gate="G$1" pin="DAT1" pad="8"/>
+<connect gate="G$1" pin="DAT2" pad="1"/>
+<connect gate="G$1" pin="DATA_IN" pad="3"/>
+<connect gate="G$1" pin="DATA_OUT" pad="7"/>
+<connect gate="G$1" pin="GND" pad="COM MT1 MT2 MT3"/>
+<connect gate="G$1" pin="SCLK" pad="5"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VSS1" pad="6"/>
+<connect gate="G$1" pin="WRITE_PROTECT" pad="WP"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="06132" package="SD_LARGE">
+<connects>
+<connect gate="G$1" pin="CARD_DETECT" pad="CD"/>
+<connect gate="G$1" pin="COMMON_SW" pad="GP3"/>
+<connect gate="G$1" pin="CS" pad="1"/>
+<connect gate="G$1" pin="DAT1" pad="8"/>
+<connect gate="G$1" pin="DAT2" pad="9"/>
+<connect gate="G$1" pin="DATA_IN" pad="2"/>
+<connect gate="G$1" pin="DATA_OUT" pad="7"/>
+<connect gate="G$1" pin="GND" pad="GP"/>
+<connect gate="G$1" pin="SCLK" pad="5"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VSS1" pad="3"/>
+<connect gate="G$1" pin="VSS2" pad="6"/>
+<connect gate="G$1" pin="WRITE_PROTECT" pad="WP"/>
+<connect gate="G$1" pin="WRITE_PROTECT1" pad="WP1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="SDMALEPCB">
+<gates>
+<gate name="G$1" symbol="SD_MALE" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SD_MALEPCB">
+<connects>
+<connect gate="G$1" pin="CS" pad="1"/>
+<connect gate="G$1" pin="DAT1" pad="8"/>
+<connect gate="G$1" pin="DAT2" pad="9"/>
+<connect gate="G$1" pin="DATA_IN" pad="2"/>
+<connect gate="G$1" pin="DATA_OUT" pad="7"/>
+<connect gate="G$1" pin="SCLK" pad="5"/>
+<connect gate="G$1" pin="VDD" pad="4"/>
+<connect gate="G$1" pin="VSS1" pad="3"/>
+<connect gate="G$1" pin="VSS2" pad="6"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="HDMI">
+<gates>
+<gate name="G$1" symbol="HDMI" x="-15.24" y="0"/>
+</gates>
+<devices>
+<device name="" package="HDMI">
+<connects>
+<connect gate="G$1" pin="10_TMDS_CLK+" pad="C10"/>
+<connect gate="G$1" pin="11_TMDS_CLKGND" pad="C11"/>
+<connect gate="G$1" pin="12_TMDS_CLK-" pad="C12"/>
+<connect gate="G$1" pin="13_CEC" pad="C13"/>
+<connect gate="G$1" pin="14_NC" pad="C14"/>
+<connect gate="G$1" pin="15_DDC" pad="C15"/>
+<connect gate="G$1" pin="16_DDC" pad="C16"/>
+<connect gate="G$1" pin="17_DDC/CEC_GND" pad="C17"/>
+<connect gate="G$1" pin="18_5V" pad="C18"/>
+<connect gate="G$1" pin="19_HOTPLUG_DETECT" pad="C19"/>
+<connect gate="G$1" pin="1_TMDS2+" pad="C1"/>
+<connect gate="G$1" pin="2_TMDS2GND" pad="C2"/>
+<connect gate="G$1" pin="3_TMDS2-" pad="C3"/>
+<connect gate="G$1" pin="4_TMDS1+" pad="C4"/>
+<connect gate="G$1" pin="5_TMDS1GND" pad="C5"/>
+<connect gate="G$1" pin="6_TMDS1-" pad="C6"/>
+<connect gate="G$1" pin="7_TMDS0+" pad="C7"/>
+<connect gate="G$1" pin="8_TMDS0GND" pad="C8"/>
+<connect gate="G$1" pin="9_TMDS0-" pad="C9"/>
+<connect gate="G$1" pin="SHLD" pad="GND2 GND3 P$2 P$3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="PCBMALECON" package="HDMI_MALEINTERCON">
+<connects>
+<connect gate="G$1" pin="10_TMDS_CLK+" pad="C10"/>
+<connect gate="G$1" pin="11_TMDS_CLKGND" pad="C11"/>
+<connect gate="G$1" pin="12_TMDS_CLK-" pad="C12"/>
+<connect gate="G$1" pin="13_CEC" pad="C13"/>
+<connect gate="G$1" pin="14_NC" pad="C14"/>
+<connect gate="G$1" pin="15_DDC" pad="C15"/>
+<connect gate="G$1" pin="16_DDC" pad="C16"/>
+<connect gate="G$1" pin="17_DDC/CEC_GND" pad="C17"/>
+<connect gate="G$1" pin="18_5V" pad="C18"/>
+<connect gate="G$1" pin="19_HOTPLUG_DETECT" pad="C19"/>
+<connect gate="G$1" pin="1_TMDS2+" pad="C1"/>
+<connect gate="G$1" pin="2_TMDS2GND" pad="C2"/>
+<connect gate="G$1" pin="3_TMDS2-" pad="C3"/>
+<connect gate="G$1" pin="4_TMDS1+" pad="C4"/>
+<connect gate="G$1" pin="5_TMDS1GND" pad="C5"/>
+<connect gate="G$1" pin="6_TMDS1-" pad="C6"/>
+<connect gate="G$1" pin="7_TMDS0+" pad="C7"/>
+<connect gate="G$1" pin="8_TMDS0GND" pad="C8"/>
+<connect gate="G$1" pin="9_TMDS0-" pad="C9"/>
+<connect gate="G$1" pin="SHLD" pad="GND"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+>>>>>>> origin/master
 <deviceset name="74HC4050D" prefix="U" uservalue="yes">
 <description>&lt;p&gt;6-channel level shifter
 &lt;p&gt;74HC4050D - 2V-6V Supply&lt;/p&gt;
@@ -13113,6 +14183,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </gates>
 <devices>
 <device name="" package="DIL16">
+<<<<<<< HEAD
 <connects>
 <connect gate="G$1" pin="/CS" pad="10"/>
 <connect gate="G$1" pin="AGND" pad="14"/>
@@ -13136,6 +14207,8 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </technologies>
 </device>
 <device name="SOIC" package="SOIC16">
+=======
+>>>>>>> origin/master
 <connects>
 <connect gate="G$1" pin="/CS" pad="10"/>
 <connect gate="G$1" pin="AGND" pad="14"/>
@@ -13158,6 +14231,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <technology name=""/>
 </technologies>
 </device>
+<<<<<<< HEAD
 </devices>
 </deviceset>
 <deviceset name="M24C64">
@@ -13175,6 +14249,26 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="VCC" pad="8"/>
 <connect gate="G$1" pin="VSS" pad="4"/>
 <connect gate="G$1" pin="_WC" pad="7"/>
+=======
+<device name="SOIC" package="SOIC16">
+<connects>
+<connect gate="G$1" pin="/CS" pad="10"/>
+<connect gate="G$1" pin="AGND" pad="14"/>
+<connect gate="G$1" pin="CH0" pad="1"/>
+<connect gate="G$1" pin="CH1" pad="2"/>
+<connect gate="G$1" pin="CH2" pad="3"/>
+<connect gate="G$1" pin="CH3" pad="4"/>
+<connect gate="G$1" pin="CH4" pad="5"/>
+<connect gate="G$1" pin="CH5" pad="6"/>
+<connect gate="G$1" pin="CH6" pad="7"/>
+<connect gate="G$1" pin="CH7" pad="8"/>
+<connect gate="G$1" pin="CLK" pad="13"/>
+<connect gate="G$1" pin="DIN" pad="11"/>
+<connect gate="G$1" pin="DOUT" pad="12"/>
+<connect gate="G$1" pin="GND" pad="9"/>
+<connect gate="G$1" pin="VDD" pad="16"/>
+<connect gate="G$1" pin="VREF" pad="15"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13182,6 +14276,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="NKK-OLED-ROCKER">
 <gates>
 <gate name="G$1" symbol="NKK_OLEDROCKER" x="0" y="0"/>
@@ -13225,11 +14320,29 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="VOUT_D" pad="5"/>
 <connect gate="G$1" pin="V_A" pad="1"/>
 <connect gate="G$1" pin="V_REFIN" pad="7"/>
+=======
+<deviceset name="M24C64">
+<gates>
+<gate name="G$1" symbol="ATMEL_M24C64" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TSSOP8">
+<connects>
+<connect gate="G$1" pin="E0" pad="1"/>
+<connect gate="G$1" pin="E1" pad="2"/>
+<connect gate="G$1" pin="E2" pad="3"/>
+<connect gate="G$1" pin="SCL" pad="6"/>
+<connect gate="G$1" pin="SDA" pad="5"/>
+<connect gate="G$1" pin="VCC" pad="8"/>
+<connect gate="G$1" pin="VSS" pad="4"/>
+<connect gate="G$1" pin="_WC" pad="7"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+<<<<<<< HEAD
 <device name="TEST" package="_TEST">
 <connects>
 <connect gate="G$1" pin="D_IN" pad="8"/>
@@ -13242,6 +14355,29 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="VOUT_D" pad="5"/>
 <connect gate="G$1" pin="V_A" pad="1"/>
 <connect gate="G$1" pin="V_REFIN" pad="7"/>
+=======
+</devices>
+</deviceset>
+<deviceset name="NKK-OLED-ROCKER">
+<gates>
+<gate name="G$1" symbol="NKK_OLEDROCKER" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="JST_BM12B-SURS">
+<connects>
+<connect gate="G$1" pin="A0" pad="P$4"/>
+<connect gate="G$1" pin="SCL_(SCLK)" pad="P$5"/>
+<connect gate="G$1" pin="SI_(MOSI)" pad="P$6"/>
+<connect gate="G$1" pin="SW1" pad="P$9"/>
+<connect gate="G$1" pin="SW2" pad="P$10"/>
+<connect gate="G$1" pin="SW3" pad="P$11"/>
+<connect gate="G$1" pin="SW_COM" pad="P$12"/>
+<connect gate="G$1" pin="VAH" pad="P$8"/>
+<connect gate="G$1" pin="VDDA" pad="P$1"/>
+<connect gate="G$1" pin="VSS_(GND)" pad="P$7 SUPPORT1 SUPPORT2"/>
+<connect gate="G$1" pin="XCS#" pad="P$3"/>
+<connect gate="G$1" pin="XRES#" pad="P$2"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13249,6 +14385,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="RCD-48">
 <gates>
 <gate name="G$1" symbol="RCD-48" x="0" y="-5.08"/>
@@ -13263,11 +14400,31 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="VOUT+" pad="P$7"/>
 <connect gate="G$1" pin="VOUT-" pad="P$6"/>
 <connect gate="G$1" pin="V_REF" pad="P$3"/>
+=======
+<deviceset name="DAC124S085">
+<gates>
+<gate name="G$1" symbol="DAC124S085" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="MSOP10">
+<connects>
+<connect gate="G$1" pin="D_IN" pad="8"/>
+<connect gate="G$1" pin="GND" pad="6"/>
+<connect gate="G$1" pin="SCLK" pad="10"/>
+<connect gate="G$1" pin="SYNC#" pad="9"/>
+<connect gate="G$1" pin="VOUT_A" pad="2"/>
+<connect gate="G$1" pin="VOUT_B" pad="3"/>
+<connect gate="G$1" pin="VOUT_C" pad="4"/>
+<connect gate="G$1" pin="VOUT_D" pad="5"/>
+<connect gate="G$1" pin="V_A" pad="1"/>
+<connect gate="G$1" pin="V_REFIN" pad="7"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+<<<<<<< HEAD
 </devices>
 </deviceset>
 <deviceset name="UB2-DPSINGLE">
@@ -13285,6 +14442,20 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="NC2" pad="P$6"/>
 <connect gate="G$1" pin="NO1" pad="P$2"/>
 <connect gate="G$1" pin="NO2" pad="P$5"/>
+=======
+<device name="TEST" package="_TEST">
+<connects>
+<connect gate="G$1" pin="D_IN" pad="8"/>
+<connect gate="G$1" pin="GND" pad="6"/>
+<connect gate="G$1" pin="SCLK" pad="10"/>
+<connect gate="G$1" pin="SYNC#" pad="9"/>
+<connect gate="G$1" pin="VOUT_A" pad="2"/>
+<connect gate="G$1" pin="VOUT_B" pad="3"/>
+<connect gate="G$1" pin="VOUT_C" pad="4"/>
+<connect gate="G$1" pin="VOUT_D" pad="5"/>
+<connect gate="G$1" pin="V_A" pad="1"/>
+<connect gate="G$1" pin="V_REFIN" pad="7"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13292,6 +14463,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="UB2-DPBICOLOR">
 <gates>
 <gate name="G$1" symbol="UB2-DPBICOLOR" x="0" y="-2.54"/>
@@ -13308,6 +14480,22 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="NC2" pad="P$6"/>
 <connect gate="G$1" pin="NO1" pad="P$2"/>
 <connect gate="G$1" pin="NO2" pad="P$5"/>
+=======
+<deviceset name="RCD-48">
+<gates>
+<gate name="G$1" symbol="RCD-48" x="0" y="-5.08"/>
+</gates>
+<devices>
+<device name="" package="RCD-48">
+<connects>
+<connect gate="G$1" pin="ANALOGUE" pad="P$5"/>
+<connect gate="G$1" pin="GND" pad="P$2"/>
+<connect gate="G$1" pin="PWM" pad="P$4"/>
+<connect gate="G$1" pin="VIN+" pad="P$1"/>
+<connect gate="G$1" pin="VOUT+" pad="P$7"/>
+<connect gate="G$1" pin="VOUT-" pad="P$6"/>
+<connect gate="G$1" pin="V_REF" pad="P$3"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13315,6 +14503,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="UB2-SPBICOLOR">
 <gates>
 <gate name="G$1" symbol="UB2-SPBICOLOR" x="0" y="0"/>
@@ -13328,6 +14517,23 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="LC" pad="LED-A"/>
 <connect gate="G$1" pin="NC1" pad="P$3"/>
 <connect gate="G$1" pin="NO1" pad="P$2"/>
+=======
+<deviceset name="UB2-DPSINGLE">
+<gates>
+<gate name="G$1" symbol="UB2-DPSINGLE" x="0" y="-5.08"/>
+</gates>
+<devices>
+<device name="" package="UB2-DPSINGLE">
+<connects>
+<connect gate="G$1" pin="COM1" pad="P$1"/>
+<connect gate="G$1" pin="COM2" pad="P$4"/>
+<connect gate="G$1" pin="L1" pad="LED-K"/>
+<connect gate="G$1" pin="LC" pad="LED-A"/>
+<connect gate="G$1" pin="NC1" pad="P$3"/>
+<connect gate="G$1" pin="NC2" pad="P$6"/>
+<connect gate="G$1" pin="NO1" pad="P$2"/>
+<connect gate="G$1" pin="NO2" pad="P$5"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13335,6 +14541,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="UB2-SPSINGLE">
 <gates>
 <gate name="G$1" symbol="UB2-SPSINGLE" x="0" y="-5.08"/>
@@ -13421,6 +14628,24 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="VSS" pad="6"/>
 <connect gate="G$1" pin="V_B" pad="4"/>
 <connect gate="G$1" pin="W_I" pad="3"/>
+=======
+<deviceset name="UB2-DPBICOLOR">
+<gates>
+<gate name="G$1" symbol="UB2-DPBICOLOR" x="0" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="UB2-DPBICOLOR">
+<connects>
+<connect gate="G$1" pin="COM1" pad="P$1"/>
+<connect gate="G$1" pin="COM2" pad="P$4"/>
+<connect gate="G$1" pin="L1" pad="LED-K1"/>
+<connect gate="G$1" pin="L2" pad="LED-K2"/>
+<connect gate="G$1" pin="LC" pad="LED-A"/>
+<connect gate="G$1" pin="NC1" pad="P$3"/>
+<connect gate="G$1" pin="NC2" pad="P$6"/>
+<connect gate="G$1" pin="NO1" pad="P$2"/>
+<connect gate="G$1" pin="NO2" pad="P$5"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13428,6 +14653,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="DOGM_DISPLAY">
 <gates>
 <gate name="G$1" symbol="DOGM_DISPLAY" x="0" y="10.16"/>
@@ -13459,6 +14685,21 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="VIN" pad="25"/>
 <connect gate="G$1" pin="VOUT" pad="24"/>
 <connect gate="G$1" pin="VSS" pad="27"/>
+=======
+<deviceset name="UB2-SPBICOLOR">
+<gates>
+<gate name="G$1" symbol="UB2-SPBICOLOR" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="UB2-SPBICOLOR">
+<connects>
+<connect gate="G$1" pin="COM1" pad="P$1"/>
+<connect gate="G$1" pin="L1" pad="LED-K1"/>
+<connect gate="G$1" pin="L2" pad="LED-K2"/>
+<connect gate="G$1" pin="LC" pad="LED-A"/>
+<connect gate="G$1" pin="NC1" pad="P$3"/>
+<connect gate="G$1" pin="NO1" pad="P$2"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13466,6 +14707,7 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="STEREOJACK" prefix="X">
 <description>&lt;b&gt;MIC/HEADPHONE JACK&lt;/b&gt;&lt;p&gt;
 Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544</description>
@@ -13478,6 +14720,20 @@ Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544<
 <connect gate="1" pin="GND" pad="GND"/>
 <connect gate="1" pin="RING" pad="RING"/>
 <connect gate="1" pin="TIP" pad="TIP"/>
+=======
+<deviceset name="UB2-SPSINGLE">
+<gates>
+<gate name="G$1" symbol="UB2-SPSINGLE" x="0" y="-5.08"/>
+</gates>
+<devices>
+<device name="" package="UB2-SPSINGLE">
+<connects>
+<connect gate="G$1" pin="COM1" pad="P$1"/>
+<connect gate="G$1" pin="L1" pad="LED-K"/>
+<connect gate="G$1" pin="LC" pad="LED-A"/>
+<connect gate="G$1" pin="NC1" pad="P$3"/>
+<connect gate="G$1" pin="NO1" pad="P$2"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13485,6 +14741,7 @@ Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544<
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="JOYSTICK_3WAYS">
 <gates>
 <gate name="G$1" symbol="POT" x="-45.72" y="30.48"/>
@@ -13503,6 +14760,41 @@ Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544<
 <connect gate="G$3" pin="A" pad="ROT_COM"/>
 <connect gate="G$3" pin="E" pad="ROT_V"/>
 <connect gate="G$3" pin="S" pad="ROT_C"/>
+=======
+<deviceset name="ARDUINO_MINI">
+<gates>
+<gate name="G$1" symbol="ARDUINO_MINI" x="0" y="2.54"/>
+</gates>
+<devices>
+<device name="" package="ARDUINO_MINI">
+<connects>
+<connect gate="G$1" pin="5V" pad="5V_1 5V_2 5V_3"/>
+<connect gate="G$1" pin="9V" pad="9V"/>
+<connect gate="G$1" pin="A0" pad="AD0"/>
+<connect gate="G$1" pin="A1" pad="AD1"/>
+<connect gate="G$1" pin="A2" pad="AD2"/>
+<connect gate="G$1" pin="A3" pad="AD3"/>
+<connect gate="G$1" pin="A4" pad="AD4"/>
+<connect gate="G$1" pin="A5" pad="AD5"/>
+<connect gate="G$1" pin="A6" pad="AD6"/>
+<connect gate="G$1" pin="A7" pad="AD7"/>
+<connect gate="G$1" pin="D10" pad="D10"/>
+<connect gate="G$1" pin="D11" pad="D11"/>
+<connect gate="G$1" pin="D12" pad="D12"/>
+<connect gate="G$1" pin="D13" pad="D13"/>
+<connect gate="G$1" pin="D2" pad="D2"/>
+<connect gate="G$1" pin="D3" pad="D3"/>
+<connect gate="G$1" pin="D4" pad="D4"/>
+<connect gate="G$1" pin="D5" pad="D5"/>
+<connect gate="G$1" pin="D6" pad="D6"/>
+<connect gate="G$1" pin="D7" pad="D7"/>
+<connect gate="G$1" pin="D8" pad="D8"/>
+<connect gate="G$1" pin="D9" pad="D9"/>
+<connect gate="G$1" pin="GND" pad="GND1 GND2 GND3 GND4"/>
+<connect gate="G$1" pin="RESET" pad="RES1 RES2"/>
+<connect gate="G$1" pin="RX" pad="RX1 RX2"/>
+<connect gate="G$1" pin="TX" pad="TX1 TX2"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13510,6 +14802,7 @@ Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544<
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="SMART_DISPLAY">
 <gates>
 <gate name="G$1" symbol="SMART_DISPLAY" x="0" y="0"/>
@@ -13523,6 +14816,35 @@ Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544<
 <connect gate="G$1" pin="SDO" pad="5-SDO"/>
 <connect gate="G$1" pin="SS" pad="8-SS"/>
 <connect gate="G$1" pin="VDD" pad="4-VDD"/>
+=======
+<deviceset name="AS5132">
+<gates>
+<gate name="G$1" symbol="AS5132" x="-2.54" y="-7.62"/>
+</gates>
+<devices>
+<device name="" package="SSOP20_AS5132">
+<connects>
+<connect gate="G$1" pin="CLK" pad="17"/>
+<connect gate="G$1" pin="COM/NC" pad="9"/>
+<connect gate="G$1" pin="CSN" pad="16"/>
+<connect gate="G$1" pin="DIAG" pad="19"/>
+<connect gate="G$1" pin="DIO" pad="15"/>
+<connect gate="G$1" pin="DIR" pad="18"/>
+<connect gate="G$1" pin="PROG" pad="5"/>
+<connect gate="G$1" pin="PWM" pad="20"/>
+<connect gate="G$1" pin="S" pad="2"/>
+<connect gate="G$1" pin="TC" pad="10"/>
+<connect gate="G$1" pin="TEST0" pad="11"/>
+<connect gate="G$1" pin="TEST1" pad="12"/>
+<connect gate="G$1" pin="TEST2" pad="13"/>
+<connect gate="G$1" pin="TEST3" pad="14"/>
+<connect gate="G$1" pin="U_A" pad="7"/>
+<connect gate="G$1" pin="VDD" pad="8"/>
+<connect gate="G$1" pin="VDDP" pad="1"/>
+<connect gate="G$1" pin="VSS" pad="6"/>
+<connect gate="G$1" pin="V_B" pad="4"/>
+<connect gate="G$1" pin="W_I" pad="3"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13530,6 +14852,7 @@ Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544<
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="BU-SMA-G" prefix="X">
 <description>FEMALE &lt;b&gt;SMA CONNECTOR&lt;/b&gt;&lt;p&gt;
 Radiall&lt;p&gt;
@@ -13542,6 +14865,39 @@ distributor RS 193-9117</description>
 <connects>
 <connect gate="G1" pin="1" pad="CONTACT"/>
 <connect gate="G1" pin="2" pad="GND"/>
+=======
+<deviceset name="DOGM_DISPLAY">
+<gates>
+<gate name="G$1" symbol="DOGM_DISPLAY" x="0" y="10.16"/>
+</gates>
+<devices>
+<device name="" package="DOGM">
+<connects>
+<connect gate="G$1" pin="A1/A" pad="1"/>
+<connect gate="G$1" pin="A2/B" pad="20"/>
+<connect gate="G$1" pin="C1/R" pad="2"/>
+<connect gate="G$1" pin="C2/G" pad="19"/>
+<connect gate="G$1" pin="CAP1N" pad="21"/>
+<connect gate="G$1" pin="CAP1P" pad="22"/>
+<connect gate="G$1" pin="CSB_" pad="38"/>
+<connect gate="G$1" pin="D0" pad="35"/>
+<connect gate="G$1" pin="D1" pad="34"/>
+<connect gate="G$1" pin="D2" pad="33"/>
+<connect gate="G$1" pin="D3" pad="32"/>
+<connect gate="G$1" pin="D4" pad="31"/>
+<connect gate="G$1" pin="D5" pad="30"/>
+<connect gate="G$1" pin="D6" pad="29"/>
+<connect gate="G$1" pin="D7" pad="28"/>
+<connect gate="G$1" pin="E" pad="36"/>
+<connect gate="G$1" pin="PSB" pad="23"/>
+<connect gate="G$1" pin="R/W_" pad="37"/>
+<connect gate="G$1" pin="RESET_" pad="40"/>
+<connect gate="G$1" pin="RS" pad="39"/>
+<connect gate="G$1" pin="VDD" pad="26"/>
+<connect gate="G$1" pin="VIN" pad="25"/>
+<connect gate="G$1" pin="VOUT" pad="24"/>
+<connect gate="G$1" pin="VSS" pad="27"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name="">
@@ -13554,6 +14910,7 @@ distributor RS 193-9117</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="LMH1981">
 <gates>
 <gate name="G$1" symbol="LMH1981" x="0" y="0"/>
@@ -13575,6 +14932,20 @@ distributor RS 193-9117</description>
 <connect gate="G$1" pin="VFOUT" pad="9"/>
 <connect gate="G$1" pin="VIDEO_IN" pad="4"/>
 <connect gate="G$1" pin="VSOUT" pad="8"/>
+=======
+<deviceset name="STEREOJACK" prefix="X">
+<description>&lt;b&gt;MIC/HEADPHONE JACK&lt;/b&gt;&lt;p&gt;
+Stereo jack with two switches. Kycon STX3100, CUI SJ1-3555NG and/or 4UCon 05544</description>
+<gates>
+<gate name="1" symbol="KS-S" x="5.08" y="2.54"/>
+</gates>
+<devices>
+<device name="" package="STX3100">
+<connects>
+<connect gate="1" pin="GND" pad="GND"/>
+<connect gate="1" pin="RING" pad="RING"/>
+<connect gate="1" pin="TIP" pad="TIP"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13582,6 +14953,7 @@ distributor RS 193-9117</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="AS5311">
 <gates>
 <gate name="G$1" symbol="AS5311" x="2.54" y="0"/>
@@ -13609,6 +14981,26 @@ distributor RS 193-9117</description>
 <connect gate="G$1" pin="PWM" pad="15"/>
 <connect gate="G$1" pin="VDD3V3" pad="18"/>
 <connect gate="G$1" pin="VDD5V" pad="19"/>
+=======
+<deviceset name="JOYSTICK_3WAYS">
+<gates>
+<gate name="G$1" symbol="POT" x="-45.72" y="30.48"/>
+<gate name="G$2" symbol="POT" x="-45.72" y="0"/>
+<gate name="G$3" symbol="POT" x="-45.72" y="-27.94"/>
+</gates>
+<devices>
+<device name="" package="JOYSTICK">
+<connects>
+<connect gate="G$1" pin="A" pad="LR_COM"/>
+<connect gate="G$1" pin="E" pad="LR_V"/>
+<connect gate="G$1" pin="S" pad="LR_C"/>
+<connect gate="G$2" pin="A" pad="UD_COM"/>
+<connect gate="G$2" pin="E" pad="UD_V"/>
+<connect gate="G$2" pin="S" pad="UD_C"/>
+<connect gate="G$3" pin="A" pad="ROT_COM"/>
+<connect gate="G$3" pin="E" pad="ROT_V"/>
+<connect gate="G$3" pin="S" pad="ROT_C"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13616,6 +15008,7 @@ distributor RS 193-9117</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="AS5306">
 <gates>
 <gate name="G$1" symbol="AS5306" x="0" y="0"/>
@@ -13643,6 +15036,21 @@ distributor RS 193-9117</description>
 <connect gate="G$1" pin="VDDA" pad="16"/>
 <connect gate="G$1" pin="VDDP" pad="3"/>
 <connect gate="G$1" pin="ZPZ" pad="20"/>
+=======
+<deviceset name="SMART_DISPLAY">
+<gates>
+<gate name="G$1" symbol="SMART_DISPLAY" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SMART_DISPLAY">
+<connects>
+<connect gate="G$1" pin="GND" pad="3-GND P$1 P$2 P$3 P$4"/>
+<connect gate="G$1" pin="SCK" pad="7-SCK"/>
+<connect gate="G$1" pin="SDI" pad="6-SDI"/>
+<connect gate="G$1" pin="SDO" pad="5-SDO"/>
+<connect gate="G$1" pin="SS" pad="8-SS"/>
+<connect gate="G$1" pin="VDD" pad="4-VDD"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13650,6 +15058,7 @@ distributor RS 193-9117</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="NC4">
 <gates>
 <gate name="G$1" symbol="NC4" x="0" y="2.54"/>
@@ -13662,6 +15071,20 @@ distributor RS 193-9117</description>
 <connect gate="G$1" pin="3" pad="PIN3"/>
 <connect gate="G$1" pin="4" pad="PIN4"/>
 <connect gate="G$1" pin="G" pad="G"/>
+=======
+<deviceset name="BU-SMA-G" prefix="X">
+<description>FEMALE &lt;b&gt;SMA CONNECTOR&lt;/b&gt;&lt;p&gt;
+Radiall&lt;p&gt;
+distributor RS 193-9117</description>
+<gates>
+<gate name="G1" symbol="BNC-FGND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BU-SMA-G">
+<connects>
+<connect gate="G1" pin="1" pad="CONTACT"/>
+<connect gate="G1" pin="2" pad="GND"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13669,6 +15092,7 @@ distributor RS 193-9117</description>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="IRLZ24N" prefix="Q">
 <description>&lt;b&gt;N-Channel HEXFET® Power MOSFET&lt;/b&gt; Logic Level&lt;p&gt;
  AUTOMOTIVE MOSFET&lt;br&gt;
@@ -13682,6 +15106,29 @@ Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</descript
 <connect gate="G$1" pin="D" pad="D"/>
 <connect gate="G$1" pin="G" pad="G"/>
 <connect gate="G$1" pin="S" pad="S"/>
+=======
+<deviceset name="LMH1981">
+<gates>
+<gate name="G$1" symbol="LMH1981" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TSSOP14">
+<connects>
+<connect gate="G$1" pin="BPOUT" pad="13"/>
+<connect gate="G$1" pin="CSOUT" pad="12"/>
+<connect gate="G$1" pin="GND1" pad="2"/>
+<connect gate="G$1" pin="GND2" pad="5"/>
+<connect gate="G$1" pin="GND3" pad="10"/>
+<connect gate="G$1" pin="HSOUT" pad="7"/>
+<connect gate="G$1" pin="OEOUT" pad="14"/>
+<connect gate="G$1" pin="R_EXT" pad="1"/>
+<connect gate="G$1" pin="VDD1" pad="3"/>
+<connect gate="G$1" pin="VDD2" pad="6"/>
+<connect gate="G$1" pin="VDD3" pad="11"/>
+<connect gate="G$1" pin="VFOUT" pad="9"/>
+<connect gate="G$1" pin="VIDEO_IN" pad="4"/>
+<connect gate="G$1" pin="VSOUT" pad="8"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13689,6 +15136,7 @@ Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</descript
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="UC3707">
 <gates>
 <gate name="G$1" symbol="UC3707" x="-7.62" y="0"/>
@@ -13717,6 +15165,221 @@ Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</descript
 <technology name=""/>
 </technologies>
 </device>
+<device name="SOIC16-WIDE" package="SO-16W">
+<connects>
+<connect gate="G$1" pin="ANALOG_STOP_INV" pad="9"/>
+<connect gate="G$1" pin="ANALOG_STOP_NI" pad="10"/>
+<connect gate="G$1" pin="GND" pad="12"/>
+<connect gate="G$1" pin="GND1" pad="13"/>
+<connect gate="G$1" pin="GND2" pad="5"/>
+<connect gate="G$1" pin="GND3" pad="4"/>
+<connect gate="G$1" pin="INPUT_A_INV" pad="16"/>
+<connect gate="G$1" pin="INPUT_A_NI" pad="15"/>
+<connect gate="G$1" pin="INPUT_B_INV" pad="1"/>
+<connect gate="G$1" pin="INPUT_B_NI" pad="2"/>
+<connect gate="G$1" pin="LATCH_DISABLE" pad="3"/>
+<connect gate="G$1" pin="OUTPUT_A" pad="6"/>
+<connect gate="G$1" pin="OUTPUT_B" pad="11"/>
+<connect gate="G$1" pin="SHUTDOWN" pad="7"/>
+<connect gate="G$1" pin="V_C" pad="8"/>
+<connect gate="G$1" pin="V_IN" pad="14"/>
+=======
+<deviceset name="AS5311">
+<gates>
+<gate name="G$1" symbol="AS5311" x="2.54" y="0"/>
+</gates>
+<devices>
+<device name="" package="TSSOP20_AMS">
+<connects>
+<connect gate="G$1" pin="A" pad="4"/>
+<connect gate="G$1" pin="B" pad="5"/>
+<connect gate="G$1" pin="CLK" pad="13"/>
+<connect gate="G$1" pin="CSN#" pad="14"/>
+<connect gate="G$1" pin="DO" pad="12"/>
+<connect gate="G$1" pin="GND" pad="8"/>
+<connect gate="G$1" pin="INDEX" pad="7"/>
+<connect gate="G$1" pin="MAGDECN" pad="3"/>
+<connect gate="G$1" pin="MAGINCN" pad="2"/>
+<connect gate="G$1" pin="NC" pad="1"/>
+<connect gate="G$1" pin="NC1" pad="6"/>
+<connect gate="G$1" pin="NC2" pad="10"/>
+<connect gate="G$1" pin="NC3" pad="11"/>
+<connect gate="G$1" pin="NC4" pad="16"/>
+<connect gate="G$1" pin="NC5" pad="17"/>
+<connect gate="G$1" pin="NC6" pad="20"/>
+<connect gate="G$1" pin="PROG" pad="9"/>
+<connect gate="G$1" pin="PWM" pad="15"/>
+<connect gate="G$1" pin="VDD3V3" pad="18"/>
+<connect gate="G$1" pin="VDD5V" pad="19"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="POWERINDUCTOR">
+<gates>
+<gate name="G$1" symbol="INDUCTOR" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="3015">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+=======
+<deviceset name="AS5306">
+<gates>
+<gate name="G$1" symbol="AS5306" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TSSOP20_AS5304">
+<connects>
+<connect gate="G$1" pin="A" pad="2"/>
+<connect gate="G$1" pin="A0" pad="6"/>
+<connect gate="G$1" pin="B" pad="4"/>
+<connect gate="G$1" pin="GND/VSS" pad="1"/>
+<connect gate="G$1" pin="INDEX" pad="8"/>
+<connect gate="G$1" pin="NC" pad="9"/>
+<connect gate="G$1" pin="NC1" pad="10"/>
+<connect gate="G$1" pin="NC2" pad="11"/>
+<connect gate="G$1" pin="TEST" pad="5"/>
+<connect gate="G$1" pin="TEST1" pad="12"/>
+<connect gate="G$1" pin="TEST2" pad="13"/>
+<connect gate="G$1" pin="TEST3" pad="14"/>
+<connect gate="G$1" pin="TEST4" pad="17"/>
+<connect gate="G$1" pin="TEST5" pad="18"/>
+<connect gate="G$1" pin="TEST6" pad="19"/>
+<connect gate="G$1" pin="TEST_GND" pad="15"/>
+<connect gate="G$1" pin="VDD(5V)" pad="7"/>
+<connect gate="G$1" pin="VDDA" pad="16"/>
+<connect gate="G$1" pin="VDDP" pad="3"/>
+<connect gate="G$1" pin="ZPZ" pad="20"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="TVS_DIODE_ARRAY4">
+<gates>
+<gate name="G$1" symbol="TVS-4PACK" x="0" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="SOT23-6L">
+<connects>
+<connect gate="G$1" pin="A" pad="1"/>
+<connect gate="G$1" pin="B" pad="3"/>
+<connect gate="G$1" pin="C" pad="4"/>
+<connect gate="G$1" pin="D" pad="6"/>
+<connect gate="G$1" pin="GND" pad="2 5"/>
+=======
+<deviceset name="NC4">
+<gates>
+<gate name="G$1" symbol="NC4" x="0" y="2.54"/>
+</gates>
+<devices>
+<device name="" package="NC4-MD-L1">
+<connects>
+<connect gate="G$1" pin="1" pad="PIN1"/>
+<connect gate="G$1" pin="2" pad="PIN2"/>
+<connect gate="G$1" pin="3" pad="PIN3"/>
+<connect gate="G$1" pin="4" pad="PIN4"/>
+<connect gate="G$1" pin="G" pad="G"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="BINARY_DIP">
+<gates>
+<gate name="G$1" symbol="BINARY_DIP" x="0" y="2.54"/>
+</gates>
+<devices>
+<device name="" package="P65SMT">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="4"/>
+<connect gate="G$1" pin="4" pad="3"/>
+<connect gate="G$1" pin="8" pad="6"/>
+<connect gate="G$1" pin="GND" pad="2 5"/>
+=======
+<deviceset name="IRLZ24N" prefix="Q">
+<description>&lt;b&gt;N-Channel HEXFET® Power MOSFET&lt;/b&gt; Logic Level&lt;p&gt;
+ AUTOMOTIVE MOSFET&lt;br&gt;
+Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</description>
+<gates>
+<gate name="G$1" symbol="MFNS" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TO220BH">
+<connects>
+<connect gate="G$1" pin="D" pad="D"/>
+<connect gate="G$1" pin="G" pad="G"/>
+<connect gate="G$1" pin="S" pad="S"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<<<<<<< HEAD
+<device name="UPRIGHT" package="P65SMT_UPRIGHT_TH">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$4"/>
+<connect gate="G$1" pin="4" pad="P$3"/>
+<connect gate="G$1" pin="8" pad="P$6"/>
+<connect gate="G$1" pin="GND" pad="P$2 P$5"/>
+=======
+</devices>
+</deviceset>
+<deviceset name="UC3707">
+<gates>
+<gate name="G$1" symbol="UC3707" x="-7.62" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOIC16">
+<connects>
+<connect gate="G$1" pin="ANALOG_STOP_INV" pad="9"/>
+<connect gate="G$1" pin="ANALOG_STOP_NI" pad="10"/>
+<connect gate="G$1" pin="GND" pad="12"/>
+<connect gate="G$1" pin="GND1" pad="13"/>
+<connect gate="G$1" pin="GND2" pad="5"/>
+<connect gate="G$1" pin="GND3" pad="4"/>
+<connect gate="G$1" pin="INPUT_A_INV" pad="16"/>
+<connect gate="G$1" pin="INPUT_A_NI" pad="15"/>
+<connect gate="G$1" pin="INPUT_B_INV" pad="1"/>
+<connect gate="G$1" pin="INPUT_B_NI" pad="2"/>
+<connect gate="G$1" pin="LATCH_DISABLE" pad="3"/>
+<connect gate="G$1" pin="OUTPUT_A" pad="6"/>
+<connect gate="G$1" pin="OUTPUT_B" pad="11"/>
+<connect gate="G$1" pin="SHUTDOWN" pad="7"/>
+<connect gate="G$1" pin="V_C" pad="8"/>
+<connect gate="G$1" pin="V_IN" pad="14"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<<<<<<< HEAD
+<device name="TH" package="P65TH">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="4"/>
+<connect gate="G$1" pin="4" pad="3"/>
+<connect gate="G$1" pin="8" pad="6"/>
+=======
 <device name="SOIC16-WIDE" package="SO-16W">
 <connects>
 <connect gate="G$1" pin="ANALOG_STOP_INV" pad="9"/>
@@ -13769,6 +15432,7 @@ Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</descript
 <connect gate="G$1" pin="B" pad="3"/>
 <connect gate="G$1" pin="C" pad="4"/>
 <connect gate="G$1" pin="D" pad="6"/>
+>>>>>>> origin/master
 <connect gate="G$1" pin="GND" pad="2 5"/>
 </connects>
 <technologies>
@@ -13777,6 +15441,30 @@ Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</descript
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
+<deviceset name="CREE-XLAMP-XM-L" prefix="LED">
+<description>&lt;b&gt;Cree® XLamp® XM-L LEDs&lt;/b&gt;&lt;p&gt;
+Source: http://www.cree.com</description>
+<gates>
+<gate name="WHITE" symbol="LED-1" x="-12.7" y="2.54"/>
+<gate name="RED" symbol="LED-1" x="-2.54" y="2.54"/>
+<gate name="GREEN" symbol="LED-1" x="7.62" y="2.54"/>
+<gate name="BLUE" symbol="LED-1" x="17.78" y="2.54"/>
+<gate name="G$1" symbol="GNDPIN" x="30.48" y="2.54"/>
+</gates>
+<devices>
+<device name="" package="CREE-XLAMP-XM-L">
+<connects>
+<connect gate="BLUE" pin="A" pad="P3"/>
+<connect gate="BLUE" pin="C" pad="P6"/>
+<connect gate="G$1" pin="P$1" pad="EXP"/>
+<connect gate="GREEN" pin="A" pad="P2"/>
+<connect gate="GREEN" pin="C" pad="P7"/>
+<connect gate="RED" pin="A" pad="P1"/>
+<connect gate="RED" pin="C" pad="P8"/>
+<connect gate="WHITE" pin="A" pad="P4"/>
+<connect gate="WHITE" pin="C" pad="P5"/>
+=======
 <deviceset name="BINARY_DIP">
 <gates>
 <gate name="G$1" symbol="BINARY_DIP" x="0" y="2.54"/>
@@ -13813,6 +15501,7 @@ Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</descript
 <connect gate="G$1" pin="4" pad="3"/>
 <connect gate="G$1" pin="8" pad="6"/>
 <connect gate="G$1" pin="GND" pad="2 5"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13820,6 +15509,23 @@ Source: http://www.irf.com/product-info/datasheets/data/irlz44zpbf.pdf</descript
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
+<deviceset name="SY100ELT23">
+<gates>
+<gate name="G$1" symbol="SY10ELT23" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SO08">
+<connects>
+<connect gate="G$1" pin="D0" pad="1"/>
+<connect gate="G$1" pin="D1" pad="4"/>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="Q0" pad="7"/>
+<connect gate="G$1" pin="Q1" pad="6"/>
+<connect gate="G$1" pin="VCC" pad="8"/>
+<connect gate="G$1" pin="_D0" pad="2"/>
+<connect gate="G$1" pin="_D1" pad="3"/>
+=======
 <deviceset name="CREE-XLAMP-XM-L" prefix="LED">
 <description>&lt;b&gt;Cree® XLamp® XM-L LEDs&lt;/b&gt;&lt;p&gt;
 Source: http://www.cree.com</description>
@@ -13842,6 +15548,7 @@ Source: http://www.cree.com</description>
 <connect gate="RED" pin="C" pad="P8"/>
 <connect gate="WHITE" pin="A" pad="P4"/>
 <connect gate="WHITE" pin="C" pad="P5"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13849,28 +15556,7 @@ Source: http://www.cree.com</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="SY100ELT23">
-<gates>
-<gate name="G$1" symbol="SY10ELT23" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SO08">
-<connects>
-<connect gate="G$1" pin="D0" pad="1"/>
-<connect gate="G$1" pin="D1" pad="4"/>
-<connect gate="G$1" pin="GND" pad="5"/>
-<connect gate="G$1" pin="Q0" pad="7"/>
-<connect gate="G$1" pin="Q1" pad="6"/>
-<connect gate="G$1" pin="VCC" pad="8"/>
-<connect gate="G$1" pin="_D0" pad="2"/>
-<connect gate="G$1" pin="_D1" pad="3"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
+<<<<<<< HEAD
 <deviceset name="SY55857">
 <gates>
 <gate name="G$1" symbol="SY55857" x="0" y="0"/>
@@ -13960,6 +15646,23 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
+=======
+<deviceset name="SY100ELT23">
+<gates>
+<gate name="G$1" symbol="SY10ELT23" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SO08">
+<connects>
+<connect gate="G$1" pin="D0" pad="1"/>
+<connect gate="G$1" pin="D1" pad="4"/>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="Q0" pad="7"/>
+<connect gate="G$1" pin="Q1" pad="6"/>
+<connect gate="G$1" pin="VCC" pad="8"/>
+<connect gate="G$1" pin="_D0" pad="2"/>
+<connect gate="G$1" pin="_D1" pad="3"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -13967,6 +15670,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="MAX3093_3094">
 <gates>
 <gate name="G$1" symbol="MAX3093_3094" x="2.54" y="-2.54"/>
@@ -13990,11 +15694,257 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="YB" pad="13"/>
 <connect gate="G$1" pin="YC" pad="5"/>
 <connect gate="G$1" pin="YD" pad="11"/>
+=======
+<deviceset name="SY55857">
+<gates>
+<gate name="G$1" symbol="SY55857" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="MSOP10">
+<connects>
+<connect gate="G$1" pin="D0" pad="1"/>
+<connect gate="G$1" pin="D1" pad="3"/>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="Q0" pad="9"/>
+<connect gate="G$1" pin="Q1" pad="7"/>
+<connect gate="G$1" pin="VCC" pad="10"/>
+<connect gate="G$1" pin="_D0" pad="2"/>
+<connect gate="G$1" pin="_D1" pad="4"/>
+<connect gate="G$1" pin="_Q0" pad="8"/>
+<connect gate="G$1" pin="_Q1" pad="6"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="MAX3032_3033">
+<gates>
+<gate name="G$1" symbol="MAX3032_3033" x="-2.54" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOIC16">
+<connects>
+<connect gate="G$1" pin="DI1" pad="1"/>
+<connect gate="G$1" pin="DI2" pad="7"/>
+<connect gate="G$1" pin="DI3" pad="9"/>
+<connect gate="G$1" pin="DI4" pad="15"/>
+<connect gate="G$1" pin="DO1+" pad="2"/>
+<connect gate="G$1" pin="DO1-" pad="3"/>
+<connect gate="G$1" pin="DO2+" pad="6"/>
+<connect gate="G$1" pin="DO2-" pad="5"/>
+<connect gate="G$1" pin="DO3+" pad="10"/>
+<connect gate="G$1" pin="DO3-" pad="11"/>
+<connect gate="G$1" pin="DO4+" pad="14"/>
+<connect gate="G$1" pin="DO4-" pad="13"/>
+<connect gate="G$1" pin="EN12" pad="4"/>
+<connect gate="G$1" pin="EN34" pad="12"/>
+<connect gate="G$1" pin="GND" pad="8"/>
+<connect gate="G$1" pin="VCC" pad="16"/>
+=======
+<deviceset name="HIROSE_12PIN_FEMALE">
+<gates>
+<gate name="G$1" symbol="HIROSE_12PIN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="HIROSE_12PIN_RECEP">
+<connects>
+<connect gate="G$1" pin="1" pad="PIN1"/>
+<connect gate="G$1" pin="10" pad="PIN10"/>
+<connect gate="G$1" pin="11" pad="PIN11"/>
+<connect gate="G$1" pin="12" pad="PIN12"/>
+<connect gate="G$1" pin="2" pad="PIN2"/>
+<connect gate="G$1" pin="3" pad="PIN3"/>
+<connect gate="G$1" pin="4" pad="PIN4"/>
+<connect gate="G$1" pin="5" pad="PIN5"/>
+<connect gate="G$1" pin="6" pad="PIN6"/>
+<connect gate="G$1" pin="7" pad="PIN7"/>
+<connect gate="G$1" pin="8" pad="PIN8"/>
+<connect gate="G$1" pin="9" pad="PIN9"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="AD5683R">
+<gates>
+<gate name="G$1" symbol="AD5683R" x="7.62" y="-7.62"/>
+</gates>
+<devices>
+<device name="" package="MSOP10">
+<connects>
+<connect gate="G$1" pin="GND" pad="5"/>
+<connect gate="G$1" pin="LDAC#" pad="4"/>
+<connect gate="G$1" pin="RESET#" pad="3"/>
+<connect gate="G$1" pin="SCLK" pad="6"/>
+<connect gate="G$1" pin="SDI" pad="8"/>
+<connect gate="G$1" pin="SYNC#" pad="7"/>
+<connect gate="G$1" pin="VDD" pad="1"/>
+<connect gate="G$1" pin="VLOGIC" pad="2"/>
+<connect gate="G$1" pin="VOUT" pad="10"/>
+<connect gate="G$1" pin="VREF" pad="9"/>
+=======
+<deviceset name="HIROSE_6PIN_FEMALE">
+<gates>
+<gate name="G$1" symbol="HIROSE_6PIN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="HIROSE_6PIN_RECEP">
+<connects>
+<connect gate="G$1" pin="1" pad="PIN1"/>
+<connect gate="G$1" pin="2" pad="PIN2"/>
+<connect gate="G$1" pin="3" pad="PIN3"/>
+<connect gate="G$1" pin="4" pad="PIN4"/>
+<connect gate="G$1" pin="5" pad="PIN5"/>
+<connect gate="G$1" pin="6" pad="PIN6"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="M1X1">
+<gates>
+<gate name="G$1" symbol="M1X1" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="2MMPIN">
+<connects>
+<connect gate="G$1" pin="5" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="TEST" package="M1X1">
+<connects>
+<connect gate="G$1" pin="5" pad="1"/>
+=======
+<deviceset name="M05X2" prefix="JP">
+<description>&lt;b&gt;Header 5x2&lt;/b&gt;
+Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark Fun Electronics SKU: PRT-00778</description>
+<gates>
+<gate name="G$1" symbol="M05X2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="PTH" package="AVR_ICSP">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="M04X2">
+<gates>
+<gate name="G$1" symbol="M04X2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="M2X4SMALL">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+=======
+<deviceset name="MAX3093_3094">
+<gates>
+<gate name="G$1" symbol="MAX3093_3094" x="2.54" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="SOIC16">
+<connects>
+<connect gate="G$1" pin="A+" pad="2"/>
+<connect gate="G$1" pin="A-" pad="1"/>
+<connect gate="G$1" pin="B+" pad="14"/>
+<connect gate="G$1" pin="B-" pad="15"/>
+<connect gate="G$1" pin="C+" pad="6"/>
+<connect gate="G$1" pin="C-" pad="7"/>
+<connect gate="G$1" pin="D+" pad="10"/>
+<connect gate="G$1" pin="D-" pad="9"/>
+<connect gate="G$1" pin="ENAC" pad="4"/>
+<connect gate="G$1" pin="ENBD" pad="12"/>
+<connect gate="G$1" pin="GND" pad="8"/>
+<connect gate="G$1" pin="VCC" pad="16"/>
+<connect gate="G$1" pin="YA" pad="3"/>
+<connect gate="G$1" pin="YB" pad="13"/>
+<connect gate="G$1" pin="YC" pad="5"/>
+<connect gate="G$1" pin="YD" pad="11"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<<<<<<< HEAD
+<device name="2MM" package="M2X4_2MM">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="M2X4SMALLER" package="M2X4SMALLER">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="ZIF-0.5" package="ZIP-8-0.5">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
+=======
 </devices>
 </deviceset>
 <deviceset name="MAX3032_3033">
@@ -14020,6 +15970,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="EN34" pad="12"/>
 <connect gate="G$1" pin="GND" pad="8"/>
 <connect gate="G$1" pin="VCC" pad="16"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -14027,6 +15978,21 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
+<deviceset name="M03X2">
+<gates>
+<gate name="G$1" symbol="M03X2" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="M2X3_2MM">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+=======
 <deviceset name="AD5683R">
 <gates>
 <gate name="G$1" symbol="AD5683R" x="7.62" y="-7.62"/>
@@ -14044,6 +16010,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="VLOGIC" pad="2"/>
 <connect gate="G$1" pin="VOUT" pad="10"/>
 <connect gate="G$1" pin="VREF" pad="9"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -14051,6 +16018,36 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
+<deviceset name="SMD-HEADER-16P-2.54" prefix="J" uservalue="yes">
+<description>320020023</description>
+<gates>
+<gate name="G$1" symbol="HEADER-8P" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="H16-SMD-2.54">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14" pad="14"/>
+<connect gate="G$1" pin="15" pad="15"/>
+<connect gate="G$1" pin="16" pad="16"/>
+<connect gate="G$1" pin="17" pad="17"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+</connects>
+<technologies>
+<technology name=""/>
+=======
 <deviceset name="M1X1">
 <gates>
 <gate name="G$1" symbol="M1X1" x="0" y="0"/>
@@ -14137,28 +16134,50 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </connects>
 <technologies>
 <technology name=""/>
+>>>>>>> origin/master
 </technologies>
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
+<deviceset name="NC3">
+<gates>
+<gate name="G$1" symbol="NC3+GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="NC3FAH2">
+=======
 <deviceset name="M03X2">
 <gates>
 <gate name="G$1" symbol="M03X2" x="0" y="0"/>
 </gates>
 <devices>
 <device name="" package="M2X3_2MM">
+>>>>>>> origin/master
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
 <connect gate="G$1" pin="3" pad="3"/>
+<<<<<<< HEAD
+<connect gate="G$1" pin="G" pad="G"/>
+=======
 <connect gate="G$1" pin="4" pad="4"/>
 <connect gate="G$1" pin="5" pad="5"/>
 <connect gate="G$1" pin="6" pad="6"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+<<<<<<< HEAD
+<device name="MAH" package="NC3MAH">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="G" pad="G"/>
+=======
 </devices>
 </deviceset>
 <deviceset name="SMD-HEADER-16P-2.54" prefix="J" uservalue="yes">
@@ -14186,6 +16205,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -14193,35 +16213,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 </devices>
 </deviceset>
-<deviceset name="NC3">
-<gates>
-<gate name="G$1" symbol="NC3+GND" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="NC3FAH2">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-<connect gate="G$1" pin="3" pad="3"/>
-<connect gate="G$1" pin="G" pad="G"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="MAH" package="NC3MAH">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-<connect gate="G$1" pin="3" pad="3"/>
-<connect gate="G$1" pin="G" pad="G"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
+<<<<<<< HEAD
 <deviceset name="CS8427_HWMODE">
 <gates>
 <gate name="G$1" symbol="CS8427_HWMODE" x="0" y="-7.62"/>
@@ -14257,6 +16249,30 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="VA+" pad="6"/>
 <connect gate="G$1" pin="VL+" pad="23"/>
 <connect gate="G$1" pin="VL2+" pad="27"/>
+=======
+<deviceset name="NC3">
+<gates>
+<gate name="G$1" symbol="NC3+GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="NC3FAH2">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="G" pad="G"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="MAH" package="NC3MAH">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="G" pad="G"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -14264,6 +16280,106 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
+<deviceset name="CS8427_SWMODE">
+<gates>
+<gate name="G$1" symbol="CS8427_SWMODE" x="0" y="0"/>
+=======
+<deviceset name="CS8427_HWMODE">
+<gates>
+<gate name="G$1" symbol="CS8427_HWMODE" x="0" y="-7.62"/>
+>>>>>>> origin/master
+</gates>
+<devices>
+<device name="" package="SO28W">
+<connects>
+<<<<<<< HEAD
+<connect gate="G$1" pin="AD0/CS#" pad="2"/>
+<connect gate="G$1" pin="AD1/CDIN" pad="28"/>
+<connect gate="G$1" pin="AGND" pad="7"/>
+<connect gate="G$1" pin="DGND" pad="22"/>
+<connect gate="G$1" pin="EMPH#" pad="3"/>
+<connect gate="G$1" pin="FILT" pad="8"/>
+<connect gate="G$1" pin="H/S#" pad="24"/>
+<connect gate="G$1" pin="ILRCK" pad="12"/>
+<connect gate="G$1" pin="INT" pad="19"/>
+<connect gate="G$1" pin="ISCLK" pad="13"/>
+<connect gate="G$1" pin="OLRCK" pad="17"/>
+<connect gate="G$1" pin="OMCK" pad="21"/>
+<connect gate="G$1" pin="OSCLK" pad="16"/>
+=======
+<connect gate="G$1" pin="AGND" pad="7"/>
+<connect gate="G$1" pin="APMS" pad="21"/>
+<connect gate="G$1" pin="AUDIO#/V" pad="19"/>
+<connect gate="G$1" pin="COPY" pad="1"/>
+<connect gate="G$1" pin="DGND" pad="22"/>
+<connect gate="G$1" pin="DGND2" pad="2"/>
+<connect gate="G$1" pin="EMPH#/U" pad="3"/>
+<connect gate="G$1" pin="FILT" pad="8"/>
+<connect gate="G$1" pin="H/S#" pad="24"/>
+<connect gate="G$1" pin="ILRCK" pad="12"/>
+<connect gate="G$1" pin="ISCLK" pad="13"/>
+<connect gate="G$1" pin="OLRCK" pad="17"/>
+<connect gate="G$1" pin="ORIG" pad="28"/>
+<connect gate="G$1" pin="OSCLK" pad="16"/>
+<connect gate="G$1" pin="PRO/C" pad="20"/>
+>>>>>>> origin/master
+<connect gate="G$1" pin="RERR" pad="11"/>
+<connect gate="G$1" pin="RMCK" pad="10"/>
+<connect gate="G$1" pin="RST#" pad="9"/>
+<connect gate="G$1" pin="RXN" pad="5"/>
+<connect gate="G$1" pin="RXP" pad="4"/>
+<<<<<<< HEAD
+<connect gate="G$1" pin="SCL/CCLK" pad="27"/>
+<connect gate="G$1" pin="SDA/CDOUT" pad="1"/>
+=======
+>>>>>>> origin/master
+<connect gate="G$1" pin="SDIN" pad="14"/>
+<connect gate="G$1" pin="SDOUT" pad="18"/>
+<connect gate="G$1" pin="TCBL" pad="15"/>
+<connect gate="G$1" pin="TXN" pad="25"/>
+<connect gate="G$1" pin="TXP" pad="26"/>
+<<<<<<< HEAD
+<connect gate="G$1" pin="U" pad="20"/>
+<connect gate="G$1" pin="VA+" pad="6"/>
+<connect gate="G$1" pin="VL+" pad="23"/>
+=======
+<connect gate="G$1" pin="VA+" pad="6"/>
+<connect gate="G$1" pin="VL+" pad="23"/>
+<connect gate="G$1" pin="VL2+" pad="27"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="AS5145">
+<gates>
+<gate name="G$1" symbol="AS5145" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SSOP16">
+<connects>
+<connect gate="G$1" pin="CLK" pad="10"/>
+<connect gate="G$1" pin="CSN#" pad="11"/>
+<connect gate="G$1" pin="DO" pad="9"/>
+<connect gate="G$1" pin="DTEST1_A" pad="3"/>
+<connect gate="G$1" pin="DTEST1_B" pad="4"/>
+<connect gate="G$1" pin="GND" pad="7"/>
+<connect gate="G$1" pin="MAGDECN" pad="2"/>
+<connect gate="G$1" pin="MAGINCN" pad="1"/>
+<connect gate="G$1" pin="MODE_INDEX" pad="6"/>
+<connect gate="G$1" pin="NC1" pad="5"/>
+<connect gate="G$1" pin="NC4" pad="13"/>
+<connect gate="G$1" pin="NC5" pad="14"/>
+<connect gate="G$1" pin="PDIO" pad="8"/>
+<connect gate="G$1" pin="PWM" pad="12"/>
+<connect gate="G$1" pin="VDD3V3" pad="15"/>
+<connect gate="G$1" pin="VDD5V" pad="16"/>
+=======
 <deviceset name="CS8427_SWMODE">
 <gates>
 <gate name="G$1" symbol="CS8427_SWMODE" x="0" y="0"/>
@@ -14299,6 +16415,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="U" pad="20"/>
 <connect gate="G$1" pin="VA+" pad="6"/>
 <connect gate="G$1" pin="VL+" pad="23"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -14306,36 +16423,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 </devices>
 </deviceset>
-<deviceset name="AS5145">
-<gates>
-<gate name="G$1" symbol="AS5145" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SSOP16">
-<connects>
-<connect gate="G$1" pin="CLK" pad="10"/>
-<connect gate="G$1" pin="CSN#" pad="11"/>
-<connect gate="G$1" pin="DO" pad="9"/>
-<connect gate="G$1" pin="DTEST1_A" pad="3"/>
-<connect gate="G$1" pin="DTEST1_B" pad="4"/>
-<connect gate="G$1" pin="GND" pad="7"/>
-<connect gate="G$1" pin="MAGDECN" pad="2"/>
-<connect gate="G$1" pin="MAGINCN" pad="1"/>
-<connect gate="G$1" pin="MODE_INDEX" pad="6"/>
-<connect gate="G$1" pin="NC1" pad="5"/>
-<connect gate="G$1" pin="NC4" pad="13"/>
-<connect gate="G$1" pin="NC5" pad="14"/>
-<connect gate="G$1" pin="PDIO" pad="8"/>
-<connect gate="G$1" pin="PWM" pad="12"/>
-<connect gate="G$1" pin="VDD3V3" pad="15"/>
-<connect gate="G$1" pin="VDD5V" pad="16"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
+<<<<<<< HEAD
 <deviceset name="AG9800">
 <gates>
 <gate name="G$1" symbol="AG9800" x="0" y="0"/>
@@ -14366,6 +16454,31 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="VIN+2" pad="P6"/>
 <connect gate="G$1" pin="VIN-1" pad="P7"/>
 <connect gate="G$1" pin="VIN-2" pad="P8"/>
+=======
+<deviceset name="AS5145">
+<gates>
+<gate name="G$1" symbol="AS5145" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SSOP16">
+<connects>
+<connect gate="G$1" pin="CLK" pad="10"/>
+<connect gate="G$1" pin="CSN#" pad="11"/>
+<connect gate="G$1" pin="DO" pad="9"/>
+<connect gate="G$1" pin="DTEST1_A" pad="3"/>
+<connect gate="G$1" pin="DTEST1_B" pad="4"/>
+<connect gate="G$1" pin="GND" pad="7"/>
+<connect gate="G$1" pin="MAGDECN" pad="2"/>
+<connect gate="G$1" pin="MAGINCN" pad="1"/>
+<connect gate="G$1" pin="MODE_INDEX" pad="6"/>
+<connect gate="G$1" pin="NC1" pad="5"/>
+<connect gate="G$1" pin="NC4" pad="13"/>
+<connect gate="G$1" pin="NC5" pad="14"/>
+<connect gate="G$1" pin="PDIO" pad="8"/>
+<connect gate="G$1" pin="PWM" pad="12"/>
+<connect gate="G$1" pin="VDD3V3" pad="15"/>
+<connect gate="G$1" pin="VDD5V" pad="16"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -14373,6 +16486,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="AG9800SLIM">
 <gates>
 <gate name="G$1" symbol="AG9800SLIM" x="0" y="0"/>
@@ -14384,11 +16498,131 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="-VDC" pad="P3"/>
 <connect gate="G$1" pin="VIN+2" pad="P6"/>
 <connect gate="G$1" pin="VIN-1" pad="P7"/>
+=======
+<deviceset name="AG9800">
+<gates>
+<gate name="G$1" symbol="AG9800" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="AG9800">
+<connects>
+<connect gate="G$1" pin="+VDC1" pad="P1"/>
+<connect gate="G$1" pin="+VDC2" pad="P2"/>
+<connect gate="G$1" pin="-VDC" pad="P3"/>
+<connect gate="G$1" pin="ADJ" pad="P4"/>
+<connect gate="G$1" pin="VIN+1" pad="P5"/>
+<connect gate="G$1" pin="VIN+2" pad="P6"/>
+<connect gate="G$1" pin="VIN-1" pad="P7"/>
+<connect gate="G$1" pin="VIN-2" pad="P8"/>
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+<device name="PTH" package="AG9800PTH">
+<connects>
+<connect gate="G$1" pin="+VDC1" pad="P1"/>
+<connect gate="G$1" pin="+VDC2" pad="P2"/>
+<connect gate="G$1" pin="-VDC" pad="P3"/>
+<connect gate="G$1" pin="ADJ" pad="P4"/>
+<connect gate="G$1" pin="VIN+1" pad="P5"/>
+<connect gate="G$1" pin="VIN+2" pad="P6"/>
+<connect gate="G$1" pin="VIN-1" pad="P7"/>
+<connect gate="G$1" pin="VIN-2" pad="P8"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<<<<<<< HEAD
+<deviceset name="SKAARDUINO_HEADER">
+<gates>
+<gate name="G$1" symbol="SKAARDUINO_HEADER" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SKAARDUINO_PTH_HEADER">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14" pad="14"/>
+<connect gate="G$1" pin="15" pad="15"/>
+<connect gate="G$1" pin="16" pad="16"/>
+<connect gate="G$1" pin="17" pad="17"/>
+<connect gate="G$1" pin="18" pad="18"/>
+<connect gate="G$1" pin="19" pad="19"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="20" pad="20"/>
+<connect gate="G$1" pin="21" pad="21"/>
+<connect gate="G$1" pin="22" pad="22"/>
+<connect gate="G$1" pin="23" pad="23"/>
+<connect gate="G$1" pin="24" pad="24"/>
+<connect gate="G$1" pin="25" pad="25"/>
+<connect gate="G$1" pin="26" pad="GND_E"/>
+<connect gate="G$1" pin="27" pad="POE1"/>
+<connect gate="G$1" pin="28" pad="POE3"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+=======
+<deviceset name="AG9800SLIM">
+<gates>
+<gate name="G$1" symbol="AG9800SLIM" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="AG9800SLIM">
+<connects>
+<connect gate="G$1" pin="+VDC1" pad="P1"/>
+<connect gate="G$1" pin="-VDC" pad="P3"/>
+<connect gate="G$1" pin="VIN+2" pad="P6"/>
+<connect gate="G$1" pin="VIN-1" pad="P7"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<<<<<<< HEAD
+<device name="SMD" package="SKAARDUINO_SMD_HEADER">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="10" pad="P$10"/>
+<connect gate="G$1" pin="11" pad="P$11"/>
+<connect gate="G$1" pin="12" pad="P$12"/>
+<connect gate="G$1" pin="13" pad="P$13"/>
+<connect gate="G$1" pin="14" pad="P$14"/>
+<connect gate="G$1" pin="15" pad="P$15"/>
+<connect gate="G$1" pin="16" pad="P$16"/>
+<connect gate="G$1" pin="17" pad="P$17"/>
+<connect gate="G$1" pin="18" pad="P$18"/>
+<connect gate="G$1" pin="19" pad="P$19"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="20" pad="P$20"/>
+<connect gate="G$1" pin="21" pad="P$21"/>
+<connect gate="G$1" pin="22" pad="P$22"/>
+<connect gate="G$1" pin="23" pad="P$23"/>
+<connect gate="G$1" pin="24" pad="P$24"/>
+<connect gate="G$1" pin="25" pad="P$25"/>
+<connect gate="G$1" pin="26" pad="GND_E2"/>
+<connect gate="G$1" pin="27" pad="POE1_S"/>
+<connect gate="G$1" pin="28" pad="POE3_S"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
+<connect gate="G$1" pin="9" pad="P$9"/>
+=======
 </devices>
 </deviceset>
 <deviceset name="SKAARDUINO_HEADER">
@@ -14426,11 +16660,16 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+<<<<<<< HEAD
+<device name="PTH+SMD" package="SKAARDUINO_PTH_SMD_HEADER">
+<connects>
+=======
 <device name="SMD" package="SKAARDUINO_SMD_HEADER">
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
@@ -14468,6 +16707,7 @@ Standard 10-pin dual row 0.1" header. Commonly used with AVR-ISP. Use with Spark
 </device>
 <device name="PTH+SMD" package="SKAARDUINO_PTH_SMD_HEADER">
 <connects>
+>>>>>>> origin/master
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="10" pad="10"/>
 <connect gate="G$1" pin="11" pad="11"/>
@@ -14635,6 +16875,8 @@ Proven layout and schematic for triple color LED in SMD package - common anode. 
 <connect gate="G$1" pin="BLU" pad="P$3"/>
 <connect gate="G$1" pin="GRN" pad="P$4"/>
 <connect gate="G$1" pin="RED" pad="P$2"/>
+<<<<<<< HEAD
+=======
 </connects>
 <technologies>
 <technology name=""/>
@@ -14646,6 +16888,40 @@ Proven layout and schematic for triple color LED in SMD package - common anode. 
 <connect gate="G$1" pin="BLU" pad="P$3"/>
 <connect gate="G$1" pin="GRN" pad="P$1"/>
 <connect gate="G$1" pin="RED" pad="P$2"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<<<<<<< HEAD
+<device name="LTBR" package="LED-TRICOLOR-SMD-LTBR">
+<connects>
+<connect gate="G$1" pin="A" pad="P$4 P$5 P$6"/>
+<connect gate="G$1" pin="BLU" pad="P$3"/>
+<connect gate="G$1" pin="GRN" pad="P$1"/>
+<connect gate="G$1" pin="RED" pad="P$2"/>
+=======
+</devices>
+</deviceset>
+<deviceset name="M10_1.27">
+<gates>
+<gate name="G$1" symbol="M10" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="M10X1">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
@@ -14653,6 +16929,7 @@ Proven layout and schematic for triple color LED in SMD package - common anode. 
 </device>
 </devices>
 </deviceset>
+<<<<<<< HEAD
 <deviceset name="M10_1.27">
 <gates>
 <gate name="G$1" symbol="M10" x="0" y="0"/>
@@ -14682,6 +16959,13 @@ Proven layout and schematic for triple color LED in SMD package - common anode. 
 <gate name="G$1" symbol="MAX3107" x="0" y="0"/>
 </gates>
 <devices>
+=======
+<deviceset name="MAX3107">
+<gates>
+<gate name="G$1" symbol="MAX3107" x="0" y="0"/>
+</gates>
+<devices>
+>>>>>>> origin/master
 <device name="" package="SSOP24">
 <connects>
 <connect gate="G$1" pin="AGND" pad="2"/>
@@ -15212,6 +17496,7 @@ Standard 14-pin 0.1" header. Use with straight break away headers (SKU : PRT-001
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
+<<<<<<< HEAD
 </connects>
 <technologies>
 <technology name=""/>
@@ -15275,11 +17560,14 @@ Standard 14-pin 0.1" header. Use with straight break away headers (SKU : PRT-001
 <connect gate="G$1" pin="7" pad="7"/>
 <connect gate="G$1" pin="8" pad="8"/>
 <connect gate="G$1" pin="9" pad="9"/>
+=======
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+<<<<<<< HEAD
 </devices>
 </deviceset>
 <deviceset name="MCU-ATSAM3X8EA-AU-ND(LQFP144)" prefix="U" uservalue="yes">
@@ -15555,11 +17843,51 @@ Standard 14-pin 0.1" header. Use with straight break away headers (SKU : PRT-001
 <connect gate="G$1" pin="XIN32" pad="36"/>
 <connect gate="G$1" pin="XOUT" pad="24"/>
 <connect gate="G$1" pin="XOUT32" pad="37"/>
+=======
+<device name="LOCK" package="1X14_LOCK">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14" pad="14"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
 </connects>
 <technologies>
 <technology name=""/>
 </technologies>
 </device>
+<device name="LOCK_LONGPADS" package="1X14_LOCK_LONGPADS">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14" pad="14"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+>>>>>>> origin/master
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<<<<<<< HEAD
 <device name="TFBGA100" package="TFBGA100">
 <connects>
 <connect gate="G$1" pin="ADVREF" pad="K9"/>
@@ -15662,6 +17990,24 @@ Standard 14-pin 0.1" header. Use with straight break away headers (SKU : PRT-001
 <connect gate="G$1" pin="XIN32" pad="J5"/>
 <connect gate="G$1" pin="XOUT" pad="G1"/>
 <connect gate="G$1" pin="XOUT32" pad="K5"/>
+=======
+<device name="LONGPADS" package="1X14-LONGPADS">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="10" pad="10"/>
+<connect gate="G$1" pin="11" pad="11"/>
+<connect gate="G$1" pin="12" pad="12"/>
+<connect gate="G$1" pin="13" pad="13"/>
+<connect gate="G$1" pin="14" pad="14"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+<connect gate="G$1" pin="6" pad="6"/>
+<connect gate="G$1" pin="7" pad="7"/>
+<connect gate="G$1" pin="8" pad="8"/>
+<connect gate="G$1" pin="9" pad="9"/>
+>>>>>>> origin/master
 </connects>
 <technologies>
 <technology name=""/>

@@ -6,7 +6,11 @@
 */
 
 // Define model (according to list further down):
+<<<<<<< HEAD
 #define SK_MODEL SK_RCP
+=======
+#define SK_MODEL SK_C90SM
+>>>>>>> origin/master
 
 
 
@@ -59,7 +63,10 @@
 #define SK_DEV_HYPERDECK 2
 #define SK_DEV_VIDEOHUB 3
 #define SK_DEV_SMARTSCOPE 4
+<<<<<<< HEAD
 #define SK_DEV_BMDCAMCTRL 5
+=======
+>>>>>>> origin/master
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -445,6 +452,7 @@ void extRetValShortLabel(const char *shortLabel, const int number = 0) {
 }
 
 /**
+<<<<<<< HEAD
     Alternative Prefix labels for values in case of 64 pixels wide displays
 */
 void extRetValTxtShort(const char *txt)  {
@@ -452,6 +460,8 @@ void extRetValTxtShort(const char *txt)  {
 }
 
 /**
+=======
+>>>>>>> origin/master
     Prefix labels for values
 */
 void extRetValTxt(const char *txt, uint8_t i)  {
@@ -462,8 +472,13 @@ void extRetValTxt(const char *txt, uint8_t i)  {
 /**
     Alternative Prefix labels for values in case of 64 pixels wide displays
 */
+<<<<<<< HEAD
 void extRetValTxtShort_P(const char *txt)  {
   strncpy_P(_extRetTxtShort, txt, 5);
+=======
+void extRetValTxtShort(const char *txt)  {
+  strncpy(_extRetTxtShort, txt, 5);
+>>>>>>> origin/master
 }
 
 /**
@@ -474,6 +489,16 @@ void extRetValTxt_P(const char *txt, uint8_t i)  {
   extRetValTxtShort_P(txt);
 }
 
+<<<<<<< HEAD
+=======
+/**
+    Alternative Prefix labels for values in case of 64 pixels wide displays
+*/
+void extRetValTxtShort_P(const char *txt)  {
+  strncpy_P(_extRetTxtShort, txt, 5);
+}
+
+>>>>>>> origin/master
 
 /**
     Button color (if RGB SmartSwitch)
@@ -602,12 +627,15 @@ uint8_t SmartView_initIdx = 0;
 #include "SK_DEV_SMARTSCOPE.h";
 #endif
 
+<<<<<<< HEAD
 #if SK_DEVICES_BMDCAMCTRL
 #include "ClientBMDCamCtrl.h";
 ClientBMDCamCtrl BMDCamCtrl[SK_DEVICES_BMDCAMCTRL];
 uint8_t BMDCamCtrl_initIdx = 0;
 #include "SK_DEV_BMDCAMCTRL.h";
 #endif
+=======
+>>>>>>> origin/master
 
 
 

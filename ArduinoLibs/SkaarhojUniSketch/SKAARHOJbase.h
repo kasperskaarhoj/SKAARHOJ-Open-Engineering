@@ -29,6 +29,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
  *
  ************************************/
 
+<<<<<<< HEAD
 #if defined(__arm__)
 void resetFunc() {
   const int RSTC_KEY = 0xA5;
@@ -39,6 +40,9 @@ void resetFunc() {
 #else
 void (*resetFunc)(void) = 0; // declare reset function @ address 0
 #endif
+=======
+void (*resetFunc)(void) = 0; // declare reset function @ address 0
+>>>>>>> origin/master
 
 // MAC address and IP address for this *particular* SKAARDUINO
 byte mac[6] = {};                   // Loaded from EEPROM
@@ -397,10 +401,14 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     memset(_strCache, 0, 11);
     switch (_extRetFormat & 0xF) {
     case 1:
+<<<<<<< HEAD
 #ifdef __arm__ /* Arduino DUE */
 #else
       dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache); // Need to find alternative for Due Platform.
 #endif
+=======
+      dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache); // Need to find alternative for Due Platform.
+>>>>>>> origin/master
       break;
     default:
       itoa(_extRetValue[a], _strCache, 10);
@@ -525,10 +533,14 @@ void write3x16Display(SkaarhojEADOGMDisplay &disp) {
     memset(_strCache, 0, 11);
     switch (_extRetFormat & 0xF) {
     case 1:
+<<<<<<< HEAD
 #ifdef __arm__ /* Arduino DUE */
 #else
       dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache);
 #endif
+=======
+      dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache);
+>>>>>>> origin/master
       break;
     default:
       itoa(_extRetValue[a], _strCache, 10);
@@ -1007,6 +1019,7 @@ void deviceSetup() {
         SmartView[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
+<<<<<<< HEAD
         case SK_DEV_BMDCAMCTRL:
   #if SK_DEVICES_BMDCAMCTRL
           Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
@@ -1016,6 +1029,8 @@ void deviceSetup() {
   #endif
           break;
 		
+=======
+>>>>>>> origin/master
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }
@@ -1077,10 +1092,17 @@ uint8_t HWsetup() {
 // ++++++++++++++++++++++
 #if (SK_HWEN_STDOLEDDISPLAY)
   Serial << F("Init Info OLED Display\n");
+<<<<<<< HEAD
 #if SK_MODEL == SK_MICROMONITOR || SK_MODEL == SK_RCP
   infoDisplay.begin(0, 1);
 #else
   infoDisplay.begin(4, 1);
+=======
+#if SK_MODEL == SK_MICROMONITOR
+  infoDisplay.begin(4, 1);
+#else
+  infoDisplay.begin(0, 1);
+>>>>>>> origin/master
 #endif
 #if SK_MODEL == SK_RCP || SK_MODEL == SK_MICROMONITOR
   infoDisplay.setRotation(2);
@@ -1425,6 +1447,10 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
     if (SSWmenu.buttonDown(5)) {
       SSWMenuItemPtr = (SSWMenuItemPtr + 1) % getNumOfActions(HWc);
     }
+<<<<<<< HEAD
+=======
+    SSWmenuEnc.runLoop();
+>>>>>>> origin/master
 
     static bool voidVar = SSWmenuEnc.reset(0);
 
@@ -1455,14 +1481,21 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
     static uint8_t prevColor = 0;
     if (prevHash != extRetValHash()) {
       prevHash = extRetValHash();
+<<<<<<< HEAD
       writeDisplayTile(SSWmenu, 0, 0, 0);
       SSWmenuEnc.runLoop();
       SSWmenu.display(B10000);
+=======
+      writeDisplayTile(SSWmenu, 0, 0, B10000);
+>>>>>>> origin/master
       Serial << F("Write SSWmenu gfx!\n");
     }
     if (prevColor != _extRetColor) {
       prevColor = _extRetColor;
+<<<<<<< HEAD
       SSWmenuEnc.runLoop();
+=======
+>>>>>>> origin/master
       SSWmenu.setButtonColor((_extRetColor >> 4) & 3, (_extRetColor >> 2) & 3, _extRetColor & 3, B10000);
       if (debugMode)
         Serial << F("Write SSWmenu color\n");
@@ -2218,6 +2251,7 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
+<<<<<<< HEAD
                   case SK_DEV_BMDCAMCTRL:
   #if SK_DEVICES_BMDCAMCTRL
                     retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
@@ -2225,6 +2259,8 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
                       retValue = retValueT; // Use first ever return value in case of multiple actions.
   #endif
                     break;
+=======
+>>>>>>> origin/master
                 }
               } else {
                 // Serial << "Device disabled!\n";
