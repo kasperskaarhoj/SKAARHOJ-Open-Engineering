@@ -1007,15 +1007,14 @@ void deviceSetup() {
         SmartView[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
-        case SK_DEV_BMDCAMCTRL:
-  #if SK_DEVICES_BMDCAMCTRL
-          Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
-          deviceMap[a] = BMDCamCtrl_initIdx++;
-          BMDCamCtrl[deviceMap[a]].begin(0x6E);	// TODO doesn't make sense
-          BMDCamCtrl[deviceMap[a]].serialOutput(debugMode);
-  #endif
-          break;
-
+      case SK_DEV_BMDCAMCTRL:
+#if SK_DEVICES_BMDCAMCTRL
+        Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
+        deviceMap[a] = BMDCamCtrl_initIdx++;
+        BMDCamCtrl[deviceMap[a]].begin(0x6E); // TODO doesn't make sense
+        BMDCamCtrl[deviceMap[a]].serialOutput(debugMode);
+#endif
+        break;
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }
@@ -1054,6 +1053,10 @@ void deviceRunLoop() {
         deviceReady[a] = SmartView[deviceMap[a]].hasInitialized();
 #endif
         break;
+      case SK_DEV_BMDCAMCTRL:
+#if SK_DEVICES_BMDCAMCTRL
+        deviceReady[a] = BMDCamCtrl[deviceMap[a]].hasInitialized();
+#endif
       }
     }
   }
@@ -1135,7 +1138,7 @@ uint8_t HWsetup() {
   SSWmenu.begin(2);
   SSWmenuEnc.begin(2);
   SSWmenuChip.begin(2);
-#elif(SK_MODEL == SK_E201M16)
+#elif (SK_MODEL == SK_E201M16)
   SSWmenu.begin(6);
   SSWmenuEnc.begin(6);
   SSWmenuChip.begin(6);
@@ -1195,7 +1198,7 @@ uint8_t HWsetup() {
   Serial << F("Init Audio Master Control\n");
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
-#elif(SK_MODEL == SK_MICROLEVELS)
+#elif (SK_MODEL == SK_MICROLEVELS)
 //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
@@ -2218,13 +2221,13 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
-                  case SK_DEV_BMDCAMCTRL:
-  #if SK_DEVICES_BMDCAMCTRL
-                    retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                    if (retValue == 0)
-                      retValue = retValueT; // Use first ever return value in case of multiple actions.
-  #endif
-                    break;
+                case SK_DEV_BMDCAMCTRL:
+#if SK_DEVICES_BMDCAMCTRL
+                  retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
                 }
               } else {
                 // Serial << "Device disabled!\n";

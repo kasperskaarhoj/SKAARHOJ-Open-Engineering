@@ -1,6 +1,8 @@
 #ifndef ClientBMDCamCtrl_h
 #define ClientBMDCamCtrl_h
 
+#define ClientBMDCamCtrl_Cams 10
+
 #include "BMDSDIControl.h"
 #include <Arduino.h>
 
@@ -9,6 +11,9 @@ class ClientBMDCamCtrl
 private:
 	BMD_SDICameraControl_I2C _cameraControl;
 	BMD_SDITallyControl_I2C _tallyControl;
+	bool _hasInitialized;
+
+	float cameraIrisValue[ClientBMDCamCtrl_Cams];
 
 	byte _cameraOutput[255];
 	int _cameraOutPos;
@@ -17,10 +22,11 @@ private:
 	int pos;
 
 public:
-	//ClientBMDCamCtrl(uint8_t address);
+	ClientBMDCamCtrl();
 	uint8_t _serialOutput;
 
 	void serialOutput(uint8_t level);
+	bool hasInitialized();
 
 	void begin(uint8_t address);
 
@@ -35,6 +41,7 @@ public:
 	void setAutoFocus(uint8_t camera);
 	void setIrisf(uint8_t camera, float iris, bool offset = false); // Range: -1.0 - 16.0
 	void setIris(uint8_t camera, float iris, bool offset = false); // Range: 0.0- 1.0
+	float getIris(uint8_t camera);
 	void setAutoIris(uint8_t camera);
 	void setOIS(uint8_t camera, bool state, bool offset = false);
 	void setZoom(uint8_t camera, uint16_t zoom, bool offset = false);

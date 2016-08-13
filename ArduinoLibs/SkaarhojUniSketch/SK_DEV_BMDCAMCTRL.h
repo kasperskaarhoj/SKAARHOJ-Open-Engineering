@@ -1,3 +1,15 @@
+/**
+ * Index to camera source (aligned with selector box in web interface)
+ */
+uint16_t BMDCAMCTRL_idxToCamera(uint8_t idx) {
+  if (idx < 10) {
+    return idx + 1;
+  } else if (idx >= 10 && idx <= 13) {
+    return _systemMem[idx - 10];
+  } else
+    return 0;
+}
+
 // Button return colors:
 // 0 = off
 // 5 = dimmed
@@ -18,27 +30,30 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   }
 
   switch (globalConfigMem[actionPtr]) {
-    case 31: // Iris
-      cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
-      if (actDown) {
-        if (value != 0x8000) { // Value input
-          BMDCamCtrl[devIndex].setIris(cam, 1.0 - (float) value / 1000.0);
-        } else { // Binary - auto iris
-          Serial << F("Perform Auto Iris... \n");
-          BMDCamCtrl[devIndex].setAutoIris(cam);
-        }
+  case 1: // Iris
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
+    if (actDown) {
+      if (value != 0x8000) { // Value input
+        BMDCamCtrl[devIndex].setIris(cam, 1.0 - (float)value / 1000.0);
+      } else { // Binary - auto iris
+        Serial << F("Perform Auto Iris... \n");
+        BMDCamCtrl[devIndex].setAutoIris(cam);
       }
-      if (pulses & 0xFFFE) {
-        AtemSwitcher[devIndex].setCameraControlIris(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlIris(cam), 0, 2048, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 20, 200));
-      }
-      if (extRetValIsWanted()) {
-        extRetVal(100 - constrain(((long)AtemSwitcher[devIndex].getCameraControlIris(cam) * 100) >> 11, 0, 100), 2, _systemHWcActionFineFlag[HWc]);
-        extRetValScale(1, 0, 100, 0, 100);
-        extRetValShortLabel(PSTR("Iris"));
-        extRetValLongLabel(PSTR("Iris Cam "), cam);
-        extRetValColor(B011011);
-      }
-      break;
+    }
+    if (pulses & 0xFFFE) {
+      AtemSwitcher[devIndex].setCameraControlIris(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlIris(cam), 0, 2048, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 20, 200));
+    }
+    if (extRetValIsWanted()) {
+      int lal = (int)BMDCamCtrl[devIndex].getIris(cam) * 100;
+      Serial.print("Iris: ");
+      Serial.println((int)(BMDCamCtrl[devIndex].getIris(cam) * 100.0));
+      extRetVal((int)(BMDCamCtrl[devIndex].getIris(cam) * 100.0), 2, _systemHWcActionFineFlag[HWc]);
+      extRetValScale(1, 0, 100, 0, 100);
+      extRetValShortLabel(PSTR("Iris"));
+      extRetValLongLabel(PSTR("Iris Cam "), cam);
+      extRetValColor(B011011);
+    }
+    break;
   }
   /*case 0: // Program Source
     if (actDown) {
@@ -1779,7 +1794,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     break;
   }
 
-	*/
+        */
 
   // Default:
   if (actDown) {

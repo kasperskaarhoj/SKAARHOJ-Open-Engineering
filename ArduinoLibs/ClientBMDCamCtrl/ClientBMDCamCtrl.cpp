@@ -1,10 +1,21 @@
 #include "ClientBMDCamCtrl.h"
 
+ClientBMDCamCtrl::ClientBMDCamCtrl() {
+  _hasInitialized = false;
+}
+
 void ClientBMDCamCtrl::begin(uint8_t address) {
+
+  for(int i=0; i < ClientBMDCamCtrl_Cams; i++) {
+      cameraIrisValue[i] = 0.00;
+  }
+
   _cameraControl.begin(address);
   _tallyControl.begin(address);
 
   _cameraControl.setOverride(true);
+
+  _hasInitialized = true;
 }
 
 // void ClientBMDCamCtrl::begin(BMD_SDICameraControl_I2C *cameraControl, BMD_SDITallyControl_I2C *tallyControl) {
@@ -20,6 +31,10 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
 
 void ClientBMDCamCtrl::serialOutput(uint8_t level) {
 	_serialOutput = level;
+}
+
+bool ClientBMDCamCtrl::hasInitialized() {
+  return _hasInitialized;
 }
 
 void ClientBMDCamCtrl::runLoop() {
@@ -120,8 +135,14 @@ void ClientBMDCamCtrl::setIrisf(uint8_t camera, float iris, bool offset) { // Ra
 }
 void ClientBMDCamCtrl::setIris(uint8_t camera, float iris, bool offset) { // Range: 0.0- 1.0
   clampValue(&iris, 0.0f, 1.0f);
+  cameraIrisValue[camera-1] = iris;
   _cameraControl.writeCommandFixed16(camera, 0, 3, (offset?1:0), iris);
 }
+
+float ClientBMDCamCtrl::getIris(uint8_t camera) {
+  return cameraIrisValue[camera-1];
+}
+
 void ClientBMDCamCtrl::setAutoIris(uint8_t camera) {
   _cameraControl.writeCommandVoid(camera, 0, 5);
 }
