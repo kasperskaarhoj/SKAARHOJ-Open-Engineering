@@ -21,6 +21,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   uint8_t tempByte = 0;
 
   uint8_t cam = 0;
+  uint8_t option = 0;
   uint16_t aSrc = 0;
   char yrgbLabels[5] = "YRGB";
 
@@ -41,19 +42,73 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       }
     }
     if (pulses & 0xFFFE) {
-      AtemSwitcher[devIndex].setCameraControlIris(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlIris(cam), 0, 2048, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 20, 200));
+      BMDCamCtrl[devIndex].setIris(cam, pulsesHelper(BMDCamCtrl[devIndex].getIris(cam) * 100.0, 0, 100, false, pulses, 1, 10) / 100.0);
     }
     if (extRetValIsWanted()) {
-      int lal = (int)BMDCamCtrl[devIndex].getIris(cam) * 100;
-      Serial.print("Iris: ");
-      Serial.println((int)(BMDCamCtrl[devIndex].getIris(cam) * 100.0));
-      extRetVal((int)(BMDCamCtrl[devIndex].getIris(cam) * 100.0), 2, _systemHWcActionFineFlag[HWc]);
+      extRetVal((int)(100.0 - BMDCamCtrl[devIndex].getIris(cam) * 100.0), 2, _systemHWcActionFineFlag[HWc]);
       extRetValScale(1, 0, 100, 0, 100);
       extRetValShortLabel(PSTR("Iris"));
       extRetValLongLabel(PSTR("Iris Cam "), cam);
       extRetValColor(B011011);
     }
     break;
+
+  case 5: { // Lift
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 2]);
+    option = globalConfigMem[actionPtr + 1];
+    float(&val)[4] = BMDCamCtrl[devIndex].getCameraLift(cam);
+    if (actDown) {
+      if (value != 0x8000) {
+        val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / 250.0;
+      } else {
+        val[(option + 3) % 4] = 0.0;
+      }
+      BMDCamCtrl[devIndex].setCameraLift(cam, val);
+    }
+
+    if (pulses & 0xFFFE) {
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100), -200, 200, false, pulses, 1, 10)) / 100.0;
+      BMDCamCtrl[devIndex].setCameraLift(cam, val);
+    }
+
+    if (extRetValIsWanted()) {
+      extRetVal(val[(option + 3) % 4] * 1e3, 1, _systemHWcActionFineFlag[HWc]);
+      extRetValShortLabel(PSTR("Lift-"));
+      extRetValLongLabel(PSTR("Lift-"));
+      _extRetShort[5] = yrgbLabels[option];
+      _extRetLong[5] = yrgbLabels[option];
+      extRetValColor(B011011);
+    }
+    break;
+  }
+  case 7: { // Gain
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 2]);
+    option = globalConfigMem[actionPtr + 1];
+    float(&val)[4] = BMDCamCtrl[devIndex].getCameraGain(cam);
+    if (actDown) {
+      if (value != 0x8000) {
+        val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / 250.0;
+      } else {
+        val[(option + 3) % 4] = 1.0;
+      }
+      BMDCamCtrl[devIndex].setCameraGain(cam, val);
+    }
+
+    if (pulses & 0xFFFE) {
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100), 0, 1600, false, pulses, 10, 50)) / 100.0;
+      BMDCamCtrl[devIndex].setCameraGain(cam, val);
+    }
+
+    if (extRetValIsWanted()) {
+      extRetVal(val[(option + 3) % 4] * 1e3, 1, _systemHWcActionFineFlag[HWc]);
+      extRetValShortLabel(PSTR("Gain-"));
+      extRetValLongLabel(PSTR("Gain-"));
+      _extRetShort[5] = yrgbLabels[option];
+      _extRetLong[5] = yrgbLabels[option];
+      extRetValColor(B011011);
+    }
+    break;
+  }
   }
   /*case 0: // Program Source
     if (actDown) {
