@@ -395,6 +395,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
+#if SK_MODEL != SK_RCP
   case 4: // USK settings
     if (globalConfigMem[actionPtr + 3] != 4) {
       if (actDown) {
@@ -1068,13 +1069,13 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
       switch (globalConfigMem[actionPtr + 1]) {
       case 25:
-        AtemSwitcher[devIndex].setAudioMixerMasterVolume(AtemSwitcher[devIndex].audioDb2Word(outValue/10));
+        AtemSwitcher[devIndex].setAudioMixerMasterVolume(AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
         break;
       case 26:
-        AtemSwitcher[devIndex].setAudioMixerMonitorVolume(AtemSwitcher[devIndex].audioDb2Word(outValue/10));
+        AtemSwitcher[devIndex].setAudioMixerMonitorVolume(AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
         break;
       default:
-        AtemSwitcher[devIndex].setAudioMixerInputVolume(aSrc, AtemSwitcher[devIndex].audioDb2Word(outValue/10));
+        AtemSwitcher[devIndex].setAudioMixerInputVolume(aSrc, AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
         break;
       }
     }
@@ -1321,6 +1322,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 29: // Downstream Keyer Parameters
     break;
+#endif
+#if SK_MODEL == SK_RCP
   case 30: // Focus
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
@@ -1457,12 +1460,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 36: // Gamma
   case 37: // Gain
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 2]);
-    if (actDown) {           // Binary or Value input...
-      int outValue = globalConfigMem[actionPtr]==37?2048:0;      // Binary (reset) value by default
-      if (value != 0x8000) { // Value input different from -32768
+    if (actDown) {                                                // Binary or Value input...
+      int outValue = globalConfigMem[actionPtr] == 37 ? 2048 : 0; // Binary (reset) value by default
+      if (value != 0x8000) {                                      // Value input different from -32768
         switch (globalConfigMem[actionPtr]) {
         case 35: // Lift:
-          outValue = constrain(map(value, 0, 1000, -4096/8, 4096/8), -4096, 4096);
+          outValue = constrain(map(value, 0, 1000, -4096 / 8, 4096 / 8), -4096, 4096);
           break;
         case 36: // Gamma:
           outValue = constrain(map(value, 0, 1000, -8192, 8192), -8192, 8192);
@@ -1822,6 +1825,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 45: // CCU Settings
     break;
+#endif
+#if SK_MODEL != SK_RCP
   case 46: // PIP
     break;
   case 47: // DVE
@@ -1930,6 +1935,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       extRetValColor(B011010);
     }
     break;
+#endif
   }
 
   // Default:

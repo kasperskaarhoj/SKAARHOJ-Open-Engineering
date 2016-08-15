@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_E21TVS
 
 
 
@@ -604,7 +604,7 @@ uint8_t SmartView_initIdx = 0;
 
 #if SK_DEVICES_BMDCAMCTRL
 #include "BMDSDIControl.h"
-#include "ClientBMDCamCtrl.h";
+#include "ClientBMDCamCtrl.h"
 ClientBMDCamCtrl BMDCamCtrl[SK_DEVICES_BMDCAMCTRL];
 uint8_t BMDCamCtrl_initIdx = 0;
 #include "SK_DEV_BMDCAMCTRL.h";
