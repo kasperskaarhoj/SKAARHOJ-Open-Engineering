@@ -1,19 +1,16 @@
 #ifndef SK_CUSTOM
-		
-	// Define number of each supported device we want to talk to:
-#define SK_DEVICES_ATEM 1
+
+// Define number of each supported device we want to talk to:
+//#define SK_DEVICES_ATEM 1
 #define SK_DEVICES_BMDCAMCTRL 1
 #define SK_DEVICES_SMARTSCOPE 1
 #define SK_DEVICES_VIDEOHUB 1
 
 #define SK_DEVICES 4		
-		
 
-#define SK_HWCCOUNT 53	
-			
+#define SK_HWCCOUNT 53
 
-#define SK_MAXACTIONS 13	
-			
+#define SK_MAXACTIONS 13
 
 	// Define the relation between a device index in the configuration and which device type it is.
 	// There must be an exact match between the listed devices here and the defined number of devices just above
@@ -21,7 +18,7 @@
 	// This is how the arduino code will know, what a given device index means
 static const uint8_t deviceArray[] PROGMEM = {0,SK_DEV_ATEM,SK_DEV_BMDCAMCTRL,SK_DEV_SMARTSCOPE,SK_DEV_VIDEOHUB};
 
-		// SVG drawing of the unit
+// SVG drawing of the unit
 static const unsigned char htmlSVG[] PROGMEM = "<svg viewBox=\"0 0 1320 3550\" width=\"33%\" id=\"ctrlimg\"><defs><linearGradient id=\"grad1\" x1=\"0%\" y1=\"0%\" x2=\"0%\" y2=\"100%\"><stop offset=\"0%\" style=\"stop-color:rgb(0,0,208);stop-opacity:1\" /><stop offset=\"40%\" style=\"stop-color:rgb(0,0,150);stop-opacity:1\" /><stop offset=\"100%\" style=\"stop-color:rgb(0,0,190);stop-opacity:1\" /></linearGradient></defs><rect width=\"1020\" height=\"3550\" x=0 y=0 style=\"fill:url(#grad1);\"/><circle cx=510 cy=114 r=25 style=\"fill:white;\"/><circle cx=510 cy=3436 r=25 style=\"fill:white;\"/><text x=\"335\" y=\"311\" style=\"text-anchor:middle;fill:white;font-family:Verdana;font-weight:bold;font-size:50;transform:scale(1.5,1);letter-spacing:-5px;\">SKAARHOJ</text></svg>";
 
 	// JavaScript generic code (script.min.js) + configuration data for controller / devices. GZIP'ed
@@ -669,10 +666,9 @@ static const uint8_t defaultControllerConfig[] PROGMEM = {
 
 #endif
 
-
 #define SK_HWEN_STDOLEDDISPLAY 1
 SkaarhojBI16 buttons;
-SkaarhojUHB buttons2;
+SkaarhojBI8 buttons2;
 SkaarhojEADOGMDisplay idDisplay;
 SkaarhojEncoders encoders;
 SkaarhojEncoders encoders2;

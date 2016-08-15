@@ -80,12 +80,12 @@ uint8_t HWsetupL() {
   };
 
   // UHB buttons
-  Serial << F("Init UHB board\n");
+  Serial << F("Init BI8 board\n");
   buttons2.begin(1);
   buttons2.setDefaultColor(0); // Off by default
   buttons2.setButtonColorsToDefault();
   if (getConfigMode()) {
-    Serial << F("Test: UHB board color sequence\n");
+    Serial << F("Test: BI8 board color sequence\n");
     buttons2.testSequence();
   }
   statusLED(QUICKBLANK);
@@ -259,11 +259,7 @@ void HWrunLoop() {
   for (uint8_t a = 0; a < 4; a++) {
     extRetValPrefersLabel(b16Map2[a]);
     uint8_t color = actionDispatch(b16Map2[a], bDown & (B1 << a), bUp & (B1 << a));
-    if (a == 0) {
-      buttons2.setButtonColor(a + 1, (color & 15) > 0 ? ((!(color & 16) || (millis() & 512) > 0) && ((color & 15) != 5) ? 1 : 3) : 0); // This implements the mono color blink bit
-    } else {
-      buttons2.setButtonColor(a + 1, color & 0xF);
-    }
+    buttons2.setButtonColor(a + 1, color & 0xF);
   }
   encoders.runLoop();
   encoders2.runLoop();
@@ -283,7 +279,6 @@ void HWrunLoop() {
   static bool lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
   actionDispatch(43, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
   lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
-
 
   // Encoders
   uint8_t encMap[] = {30, 31, 32, 33, 39}; // These numbers refer to the drawing in the web interface
