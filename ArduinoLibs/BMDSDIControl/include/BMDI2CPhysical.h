@@ -27,161 +27,138 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <Arduino.h>
 #include <Wire.h>
+#include <stdint.h>
 
-namespace BMD
-{
-	template <typename T>
-	class I2CPhysical : public T
-	{
-	public:
-		// Inherits from T
-		virtual void		begin(int wireAddress);
-		virtual uint32_t	regRead32(uint16_t address) const;
-		virtual void		regWrite32(uint16_t address, uint32_t value) const;
-		virtual uint16_t	regRead16(uint16_t address) const;
-		virtual void		regWrite16(uint16_t address, uint16_t value) const;
-		virtual uint8_t		regRead8(uint16_t address) const;
-		virtual void		regWrite8(uint16_t address, uint8_t value) const;
-		virtual void		regRead(uint16_t address, uint8_t values[], int length) const;
-		virtual void		regWrite(uint16_t address, const uint8_t values[], int length) const;
+namespace BMD {
+template <typename T> class I2CPhysical : public T {
+public:
+  // Inherits from T
+  virtual void begin(int wireAddress);
+  virtual uint32_t regRead32(uint16_t address) const;
+  virtual void regWrite32(uint16_t address, uint32_t value) const;
+  virtual uint16_t regRead16(uint16_t address) const;
+  virtual void regWrite16(uint16_t address, uint16_t value) const;
+  virtual uint8_t regRead8(uint16_t address) const;
+  virtual void regWrite8(uint16_t address, uint8_t value) const;
+  virtual void regRead(uint16_t address, uint8_t values[], int length) const;
+  virtual void regWrite(uint16_t address, const uint8_t values[], int length) const;
 
-	private:
-		int	m_wireAddress;
-	};
+private:
+  int m_wireAddress;
+};
 
-	template <typename T>
-	void I2CPhysical<T>::begin(int wireAddress)
-	{
-		m_wireAddress = wireAddress;
-		Wire.begin();
-		T::begin();
-	}
+template <typename T> void I2CPhysical<T>::begin(int wireAddress) {
+  m_wireAddress = wireAddress;
+  // Wire.begin();
+  T::begin();
+}
 
-	template <typename T>
-	uint32_t I2CPhysical<T>::regRead32(uint16_t address) const
-	{
-		uint8_t regBytes[4];
+template <typename T> uint32_t I2CPhysical<T>::regRead32(uint16_t address) const {
+  uint8_t regBytes[4];
 
-		Wire.beginTransmission(m_wireAddress);
-		Wire.write((uint8_t)(address & 0xFF));
-		Wire.write((uint8_t)(address >> 8));
-		Wire.endTransmission();
+  Wire.beginTransmission(m_wireAddress);
+  Wire.write((uint8_t)(address & 0xFF));
+  Wire.write((uint8_t)(address >> 8));
+  Wire.endTransmission();
 
-		Wire.requestFrom(m_wireAddress, 4);
-		regBytes[0] = Wire.read();
-		regBytes[1] = Wire.read();
-		regBytes[2] = Wire.read();
-		regBytes[3] = Wire.read();
+  Wire.requestFrom(m_wireAddress, 4);
+  regBytes[0] = Wire.read();
+  regBytes[1] = Wire.read();
+  regBytes[2] = Wire.read();
+  regBytes[3] = Wire.read();
 
-		return ((uint32_t)regBytes[3] << 24) | ((uint32_t)regBytes[2] << 16) | ((uint32_t)regBytes[1] << 8) | regBytes[0];
-	}
+  return ((uint32_t)regBytes[3] << 24) | ((uint32_t)regBytes[2] << 16) | ((uint32_t)regBytes[1] << 8) | regBytes[0];
+}
 
-	template <typename T>
-	void I2CPhysical<T>::regWrite32(uint16_t address, uint32_t value) const
-	{
-		Wire.beginTransmission(m_wireAddress);
-		Wire.write((uint8_t)(address & 0xFF));
-		Wire.write((uint8_t)(address >> 8));
-		Wire.write((uint8_t)(value & 0xFF));
-		Wire.write((uint8_t)(value >> 8));
-		Wire.write((uint8_t)(value >> 16));
-		Wire.write((uint8_t)(value >> 24));
-		Wire.endTransmission();
-	}
+template <typename T> void I2CPhysical<T>::regWrite32(uint16_t address, uint32_t value) const {
+  Wire.beginTransmission(m_wireAddress);
+  Wire.write((uint8_t)(address & 0xFF));
+  Wire.write((uint8_t)(address >> 8));
+  Wire.write((uint8_t)(value & 0xFF));
+  Wire.write((uint8_t)(value >> 8));
+  Wire.write((uint8_t)(value >> 16));
+  Wire.write((uint8_t)(value >> 24));
+  Wire.endTransmission();
+}
 
-	template <typename T>
-	uint16_t I2CPhysical<T>::regRead16(uint16_t address) const
-	{
-		uint8_t regBytes[2];
+template <typename T> uint16_t I2CPhysical<T>::regRead16(uint16_t address) const {
+  uint8_t regBytes[2];
 
-		Wire.beginTransmission(m_wireAddress);
-		Wire.write((uint8_t)(address & 0xFF));
-		Wire.write((uint8_t)(address >> 8));
-		Wire.endTransmission();
+  Wire.beginTransmission(m_wireAddress);
+  Wire.write((uint8_t)(address & 0xFF));
+  Wire.write((uint8_t)(address >> 8));
+  Wire.endTransmission();
 
-		Wire.requestFrom(m_wireAddress, 2);
-		regBytes[0] = Wire.read();
-		regBytes[1] = Wire.read();
+  Wire.requestFrom(m_wireAddress, 2);
+  regBytes[0] = Wire.read();
+  regBytes[1] = Wire.read();
 
-		return ((uint16_t)regBytes[1] << 8) | regBytes[0];
-	}
+  return ((uint16_t)regBytes[1] << 8) | regBytes[0];
+}
 
-	template <typename T>
-	void I2CPhysical<T>::regWrite16(uint16_t address, uint16_t value) const
-	{
-		Wire.beginTransmission(m_wireAddress);
-		Wire.write((uint8_t)(address & 0xFF));
-		Wire.write((uint8_t)(address >> 8));
-		Wire.write((uint8_t)(value & 0xFF));
-		Wire.write((uint8_t)(value >> 8));
-		Wire.endTransmission();
-	}
+template <typename T> void I2CPhysical<T>::regWrite16(uint16_t address, uint16_t value) const {
+  Wire.beginTransmission(m_wireAddress);
+  Wire.write((uint8_t)(address & 0xFF));
+  Wire.write((uint8_t)(address >> 8));
+  Wire.write((uint8_t)(value & 0xFF));
+  Wire.write((uint8_t)(value >> 8));
+  Wire.endTransmission();
+}
 
-	template <typename T>
-	uint8_t	I2CPhysical<T>::regRead8(uint16_t address) const
-	{
-		Wire.beginTransmission(m_wireAddress);
-		Wire.write((uint8_t)(address & 0xFF));
-		Wire.write((uint8_t)(address >> 8));
-		Wire.endTransmission();
+template <typename T> uint8_t I2CPhysical<T>::regRead8(uint16_t address) const {
+  Wire.beginTransmission(m_wireAddress);
+  Wire.write((uint8_t)(address & 0xFF));
+  Wire.write((uint8_t)(address >> 8));
+  Wire.endTransmission();
 
-		Wire.requestFrom(m_wireAddress, 1);
-		return Wire.read();
-	}
+  Wire.requestFrom(m_wireAddress, 1);
+  return Wire.read();
+}
 
-	template <typename T>
-	void I2CPhysical<T>::regWrite8(uint16_t address, uint8_t value) const
-	{
-		Wire.beginTransmission(m_wireAddress);
-		Wire.write((uint8_t)(address & 0xFF));
-		Wire.write((uint8_t)(address >> 8));
-		Wire.write(value);
-		Wire.endTransmission();
-	}
+template <typename T> void I2CPhysical<T>::regWrite8(uint16_t address, uint8_t value) const {
+  Wire.beginTransmission(m_wireAddress);
+  Wire.write((uint8_t)(address & 0xFF));
+  Wire.write((uint8_t)(address >> 8));
+  Wire.write(value);
+  Wire.endTransmission();
+}
 
-	template <typename T>
-	void I2CPhysical<T>::regRead(uint16_t address, uint8_t values[], int length) const
-	{
-		// The Wire library only supports receiving small chunks of data at a time
-		for (int position = 0; position < length; position += 16)
-		{
-			int readLength = min(length - position, 16);
+template <typename T> void I2CPhysical<T>::regRead(uint16_t address, uint8_t values[], int length) const {
+  // The Wire library only supports receiving small chunks of data at a time
+  for (int position = 0; position < length; position += 16) {
+    int readLength = min(length - position, 16);
 
-			Wire.beginTransmission(m_wireAddress);
-			Wire.write((uint8_t)(address & 0xFF));
-			Wire.write((uint8_t)(address >> 8));
-			Wire.endTransmission();
+    Wire.beginTransmission(m_wireAddress);
+    Wire.write((uint8_t)(address & 0xFF));
+    Wire.write((uint8_t)(address >> 8));
+    Wire.endTransmission();
 
-			Wire.requestFrom(m_wireAddress, readLength);
-			for (int offset = 0; offset < readLength; offset++)
-				values[position + offset] = Wire.read();
-			Wire.endTransmission();
+    Wire.requestFrom(m_wireAddress, readLength);
+    for (int offset = 0; offset < readLength; offset++)
+      values[position + offset] = Wire.read();
+    Wire.endTransmission();
 
-			address += readLength;
-		}
-	}
+    address += readLength;
+  }
+}
 
-	template <typename T>
-	void I2CPhysical<T>::regWrite(uint16_t address, const uint8_t values[], int length) const
-	{
-		// The Wire library only supports sending small chunks of data at a time
-		for (int position = 0; position < length; position += 16)
-		{
-			int writeLength = min(length - position, 16);
+template <typename T> void I2CPhysical<T>::regWrite(uint16_t address, const uint8_t values[], int length) const {
+  // The Wire library only supports sending small chunks of data at a time
+  for (int position = 0; position < length; position += 16) {
+    int writeLength = min(length - position, 16);
 
-			Wire.beginTransmission(m_wireAddress);
-			Wire.write((uint8_t)(address & 0xFF));
-			Wire.write((uint8_t)(address >> 8));
+    Wire.beginTransmission(m_wireAddress);
+    Wire.write((uint8_t)(address & 0xFF));
+    Wire.write((uint8_t)(address >> 8));
 
-			for (int offset = 0; offset < writeLength; offset++)
-				Wire.write(values[position + offset]);
+    for (int offset = 0; offset < writeLength; offset++)
+      Wire.write(values[position + offset]);
 
-			Wire.endTransmission();
+    Wire.endTransmission();
 
-			address += writeLength;
-		}
-	}
+    address += writeLength;
+  }
+}
 }

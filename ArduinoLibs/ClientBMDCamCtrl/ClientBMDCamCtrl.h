@@ -1,7 +1,7 @@
 #ifndef ClientBMDCamCtrl_h
 #define ClientBMDCamCtrl_h
 
-#define ClientBMDCamCtrl_Cams 10
+#define ClientBMDCamCtrl_Cams 1
 
 #include "BMDSDIControl.h"
 #include <Arduino.h>
@@ -76,6 +76,7 @@ public:
 
   // Lens commands
   void setFocus(uint8_t camera, float focus, bool offset = false); // Range: 0.0 - 1.0
+  float getFocus(uint8_t camera);
   void setAutoFocus(uint8_t camera);
   void setIrisf(uint8_t camera, float iris, bool offset = false); // Range: -1.0 - 16.0
   void setIris(uint8_t camera, float iris, bool offset = false);  // Range: 0.0- 1.0
