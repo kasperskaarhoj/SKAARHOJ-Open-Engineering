@@ -31,6 +31,30 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   }
 
   switch (globalConfigMem[actionPtr]) {
+  case 0: // Focus
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
+    if (actDown) {
+      if (value != 0x8000) {
+        BMDCamCtrl[devIndex].setFocus(cam, (float)value / 1000.0);
+      } else {
+        Serial << F("Performing auto focus...");
+        BMDCamCtrl[devIndex].setAutoFocus(cam);
+      }
+    }
+
+    if (pulses & 0xFFFE) {
+      BMDCamCtrl[devIndex].setFocus(cam, pulsesHelper(BMDCamCtrl[devIndex].getFocus(cam) * 100.0, 0, 100, false, pulses, 1, 10) / 100.0);
+    }
+
+    if (extRetValIsWanted()) {
+      extRetVal((int)(BMDCamCtrl[devIndex].getFocus(cam) * 1000.0), 1, _systemHWcActionFineFlag[HWc]);
+      extRetValShortLabel(PSTR("Focus"));
+      extRetValLongLabel(PSTR("Focus Cam "), cam);
+      extRetValColor(B011011);
+    }
+
+    break;
+
   case 1: // Iris
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
@@ -53,6 +77,18 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
     break;
 
+  case 2: // Sensor gain
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
+    option = globalConfigMem[actionPtr + 2];
+    int8_t currentValue = BMDCamCtrl[devIndex].getSensorGain(cam);
+
+    uint8_t c = 0;
+    for (int i = 0; (currentValue >> i) ^ 1; i++;) {
+    }
+    if (actDown && value == 0x8000) {
+      BMDCamCtrl[devIndex].setSensorGain(cam, )
+    }
+    break;
   case 5: { // Lift
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 2]);
     option = globalConfigMem[actionPtr + 1];
@@ -95,7 +131,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100), 0, 1600, false, pulses, 10, 50)) / 100.0;
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100), 0, 1600, false, pulses, 1, 10)) / 100.0;
       BMDCamCtrl[devIndex].setCameraGain(cam, val);
     }
 
@@ -109,6 +145,35 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
     break;
   }
+
+  case 9: // Contrast
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
+    float newValue[2] = {0.50, NAN};
+    float(&oldValue)[2] = BMDCamCtrl[devIndex].getCameraContrast(cam);
+
+    if (actDown) {
+      if (value != 0x8000) {
+        newValue[1] = (float)value / 500.0;
+        BMDCamCtrl[devIndex].setCameraContrast(cam, newValue);
+      } else {
+        newValue[1] = 1.00;
+        BMDCamCtrl[devIndex].setCameraContrast(cam, newValue);
+      }
+    }
+
+    if (pulses & 0xFFFE) {
+      newValue[1] = (float)pulsesHelper(oldValue[1] * 100, 0, 200, false, pulses, 1, 10) / 100.0;
+      BMDCamCtrl[devIndex].setCameraContrast(cam, newValue);
+    }
+
+    if (extRetValIsWanted()) {
+      extRetVal(oldValue[1] * 50, 2, _systemHWcActionFineFlag[HWc]);
+      extRetValScale(1, 0, 100, 0, 100);
+      extRetValShortLabel(PSTR("Contrast"));
+      extRetValLongLabel(PSTR("Contrast"));
+      extRetValColor(B011011);
+    }
+    break;
   }
   /*case 0: // Program Source
     if (actDown) {

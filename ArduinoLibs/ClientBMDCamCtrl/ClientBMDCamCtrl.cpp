@@ -6,6 +6,8 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
 
   for (int i = 0; i < ClientBMDCamCtrl_Cams; i++) {
     cameraIrisValue[i] = 0.00;
+    cameraContrastValue[i][0] = 0.5;
+    cameraContrastValue[i][1] = 1.0;
 
     for (int j = 0; j < 4; j++) {
       cameraGainValue[i][j] = 1.00;
@@ -35,58 +37,58 @@ void ClientBMDCamCtrl::serialOutput(uint8_t level) { _serialOutput = level; }
 
 bool ClientBMDCamCtrl::hasInitialized() { return _hasInitialized; }
 
-// void ClientBMDCamCtrl::runLoop() {
-//   unsigned long startTime = millis();
-//   if (_cameraControl.available()) {
-//     int availableLength = _cameraControl.read(a + pos, 519 - pos) + pos;
-//
-//     if (availableLength > pos) {
-//       int i = 0;
-//
-//       while (1) {
-//         int len = 0;
-//
-//         if (i + 1 <= availableLength) {
-//           len = a[i + 1];
-//         }
-//
-//         int totalPacket = (4 + len + 3) & ~0x03;
-//
-//         if (totalPacket + i >= availableLength) {
-//           memmove(a, a + i, availableLength - i);
-//           pos = availableLength - i + 1;
-//           break;
-//         } else {
-//           printPacket(a + i, 4 + len);
-//           // if(*(a+i) == 0x01 && *(a+i+4) == 0x08 && *(a+i+5) == 0x04) {
-//           //   appendCameraPacket(a+i, 4+len);
-//           //   uint16_t c = *(a+i+11) << 8 | *(a+i+10);
-//           //   float contrast = _cameraControl.fromFixed16(c);
-//           //   Serial.print("Contrast is set to: ");
-//           //   Serial.println(contrast);
-//           // }
-//           i += totalPacket;
-//         }
-//       }
-//     } else if (availableLength == -1) {
-//       Serial.println("FATAL ERROR: Received package did not fit into buffer! Deadlock.");
-//       while (1)
-//         ;
-//     }
-//     if (_cameraOutPos > 0) {
-//       /*Serial.print("Writing ");
-//       Serial.print(_cameraOutPos);
-//       Serial.println(" bytes to output.");
-//
-//       Serial.print("Parsing: ");
-//       Serial.println(millis() - startTime);*/
-//       sendCameraPacket(_cameraOutput, _cameraOutPos);
-//       _cameraOutPos = 0;
-//       // Serial.print(" Parsing and sending: ");
-//       // Serial.println(millis() - startTime);
-//     }
-//   }
-// }
+void ClientBMDCamCtrl::runLoop() {
+  unsigned long startTime = millis();
+  if (_cameraControl.available()) {
+    int availableLength = _cameraControl.read(a + pos, 519 - pos) + pos;
+
+    if (availableLength > pos) {
+      int i = 0;
+
+      while (1) {
+        int len = 0;
+
+        if (i + 1 <= availableLength) {
+          len = a[i + 1];
+        }
+
+        int totalPacket = (4 + len + 3) & ~0x03;
+
+        if (totalPacket + i >= availableLength) {
+          memmove(a, a + i, availableLength - i);
+          pos = availableLength - i + 1;
+          break;
+        } else {
+          printPacket(a + i, 4 + len);
+          // if(*(a+i) == 0x01 && *(a+i+4) == 0x08 && *(a+i+5) == 0x04) {
+          //   appendCameraPacket(a+i, 4+len);
+          //   uint16_t c = *(a+i+11) << 8 | *(a+i+10);
+          //   float contrast = _cameraControl.fromFixed16(c);
+          //   Serial.print("Contrast is set to: ");
+          //   Serial.println(contrast);
+          // }
+          i += totalPacket;
+        }
+      }
+    } else if (availableLength == -1) {
+      Serial.println("FATAL ERROR: Received package did not fit into buffer! Deadlock.");
+      while (1)
+        ;
+    }
+    if (_cameraOutPos > 0) {
+      /*Serial.print("Writing ");
+      Serial.print(_cameraOutPos);
+      Serial.println(" bytes to output.");
+
+      Serial.print("Parsing: ");
+      Serial.println(millis() - startTime);*/
+      sendCameraPacket(_cameraOutput, _cameraOutPos);
+      _cameraOutPos = 0;
+      // Serial.print(" Parsing and sending: ");
+      // Serial.println(millis() - startTime);
+    }
+  }
+}
 
 void ClientBMDCamCtrl::sendCameraPacket(byte *data, int len) {
   _cameraControl.write(data, len);
@@ -382,7 +384,7 @@ void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) { _cameraControl
 // Lens commands
 
 float ClientBMDCamCtrl::getIris(uint8_t camera) { return cameraIrisValue[camera - 1]; }
-
+float ClientBMDCamCtrl::getFocus(uint8_t camera) { return cameraFocusValue[camera - 1]; }
 float ClientBMDCamCtrl::getNormZoom(uint8_t camera) { return cameraZoomValue[camera - 1]; }
 
 // Video controls
