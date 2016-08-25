@@ -60,6 +60,7 @@
 #define SK_DEV_VIDEOHUB 3
 #define SK_DEV_SMARTSCOPE 4
 #define SK_DEV_BMDCAMCTRL 5
+#define SK_DEV_SONYRCP 6
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -608,6 +609,13 @@ uint8_t SmartView_initIdx = 0;
 ClientBMDCamCtrl BMDCamCtrl[SK_DEVICES_BMDCAMCTRL];
 uint8_t BMDCamCtrl_initIdx = 0;
 #include "SK_DEV_BMDCAMCTRL.h";
+#endif
+
+#if SK_DEV_SONYRCP
+#include "ClientSonyRCP.h"
+ClientSonyRCP SonyRCP[SK_DEVICES_SONYRCP];
+uint8_t SonyRCP_initIdx = 0;
+#include "SK_DEV_SONYRCP.h";
 #endif
 
 

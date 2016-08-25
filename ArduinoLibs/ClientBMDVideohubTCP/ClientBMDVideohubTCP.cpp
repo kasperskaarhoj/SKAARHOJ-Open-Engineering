@@ -256,7 +256,7 @@ void ClientBMDVideohubTCP::_sendPing() {
   _sendBuffer();
 }
 
-void ClientBMDVideohubTCP::routeInputToOutput(uint8_t input, uint8_t output) {
+void ClientBMDVideohubTCP::routeInputToOutput(uint8_t input, uint8_t output, bool waitForConfirmedChange) {
   _resetBuffer();
   _addToBuffer_P(PSTR("VIDEO OUTPUT ROUTING:\n"));
   _addToBuffer(String(output - 1));
@@ -264,6 +264,13 @@ void ClientBMDVideohubTCP::routeInputToOutput(uint8_t input, uint8_t output) {
   _addToBuffer(String(input - 1));
   _addToBuffer_P(PSTR("\n\n"));
   _sendBuffer();
+  
+  if (waitForConfirmedChange)	{
+	  unsigned long timer = millis();
+	  while(_outputRouting[output - 1] != input-1 && millis()-500 < timer)	{	// 500 ms timeout if route is not set...
+		  runLoop();
+	  }
+  }
 }
 void ClientBMDVideohubTCP::setLock(uint8_t output, char newState) {
   _resetBuffer();

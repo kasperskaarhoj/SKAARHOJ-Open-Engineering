@@ -1,199 +1,30 @@
-uint16_t AtemSwitcher_vSrcMap[] = {1000, 2001, 2002, 3010, 3020, 6000, 7001, 7002, 10010, 10011, 10020, 10021};
-uint16_t AtemSwitcher_aSrcMap[] = {1001, 1101, 1201, 2001, 2002};
-#define ATEM_HOLDGROUPSIZE 5
-uint16_t AtemSwitcher_holdGroup[2][ATEM_HOLDGROUPSIZE];
-uint8_t AtemSwitcher_holdGroupHWc[2][ATEM_HOLDGROUPSIZE];
-uint8_t AtemSwitcher_holdGroupPtr[2] = {0, 0};
-
-/**
- * Index to ATEM video source (aligned with selector box in web interface)
- */
-uint16_t ATEM_idxToVideoSrc(uint8_t devIndex, uint8_t idx) {
-  if (idx <= 20) {
-    return idx;
-  } else if (idx >= 21 && idx <= 28) {
-    return AtemSwitcher_vSrcMap[idx - 21];
-  } else if (idx >= 29 && idx <= 34) { // AUX's
-    return AtemSwitcher[devIndex].getAuxSourceInput(idx - 29);
-  } else if (idx >= 35 && idx <= 38) {
-    return AtemSwitcher_vSrcMap[idx - 27];
-  } else if (idx >= 39 && idx <= 46) { // MV1
-    return AtemSwitcher[devIndex].getMultiViewerInputVideoSource(0, idx - 39 + 2);
-  } else if (idx >= 47 && idx <= 54) { // MV2
-    return AtemSwitcher[devIndex].getMultiViewerInputVideoSource(1, idx - 47 + 2);
-  } else if (idx >= 55 && idx <= 58) { // MEM A-D
-    if (_systemMem[idx - 55] < 55)
-      return ATEM_idxToVideoSrc(devIndex, _systemMem[idx - 55]); // Recursive call, but making sure we are not asking for another memory value which would make the loop infinite
-  }
-  return -1;
-}
-
-/**
- * Index to ATEM audio source (aligned with selector box in web interface)
- */
-uint16_t ATEM_idxToAudioSrc(uint8_t devIndex, uint8_t idx) {
-  if (idx < 20) {
-    return idx + 1;
-  } else if (idx >= 20 && idx <= 25) {
-    return AtemSwitcher_aSrcMap[idx - 20];
-  } else if (idx >= 28 && idx <= 31) {
-    if (_systemMem[idx - 28] < 28)
-      return ATEM_idxToAudioSrc(devIndex, _systemMem[idx - 28]); // Recursive call, but making sure we are not asking for another memory value which would make the loop infinite
-  }
-  return 0;
-}
-
-/**
- * Index to camera source (aligned with selector box in web interface)
- */
-uint16_t ATEM_idxToCamera(uint8_t idx) {
-  if (idx < 10) {
-    return idx + 1;
-  } else if (idx >= 10 && idx <= 13) {
-    return _systemMem[idx - 10];
-  } else
-    return 0;
-}
-
-/**
- * Pushes source to hold group
- */
-bool ATEM_pushToHoldGroup(uint8_t hgIdx, uint16_t src, uint8_t HWc) {
-  if (AtemSwitcher_holdGroupPtr[hgIdx] < ATEM_HOLDGROUPSIZE) {
-    AtemSwitcher_holdGroup[hgIdx][AtemSwitcher_holdGroupPtr[hgIdx]] = src;
-    AtemSwitcher_holdGroupHWc[hgIdx][AtemSwitcher_holdGroupPtr[hgIdx]] = HWc;
-    // Serial << "Pushed " << AtemSwitcher_holdGroup[hgIdx][AtemSwitcher_holdGroupPtr[hgIdx]] << " for " << HWc << "\n";
-    AtemSwitcher_holdGroupPtr[hgIdx]++;
-    /*
-for (uint8_t a = 0; a < AtemSwitcher_holdGroupPtr[hgIdx]; a++) {
-  Serial << "Stack " << a << ": Src " << AtemSwitcher_holdGroup[hgIdx][a] << " for HWc " << AtemSwitcher_holdGroupHWc[hgIdx][a] << "\n";
-}*/
-    return true;
-  } else
-    return false;
-}
-
-/**
- * Pulls source from hold group
- */
-uint16_t ATEM_pullFromHoldGroup(uint8_t hgIdx, uint8_t HWc) {
-  uint8_t ai = 0;
-  uint8_t origPtr = AtemSwitcher_holdGroupPtr[hgIdx] < ATEM_HOLDGROUPSIZE ? AtemSwitcher_holdGroupPtr[hgIdx] : ATEM_HOLDGROUPSIZE;
-  uint16_t retVal = 0x8000;
-  for (uint8_t a = 0; a < origPtr; a++) {
-    if (AtemSwitcher_holdGroupHWc[hgIdx][a] != HWc) {
-      AtemSwitcher_holdGroupHWc[hgIdx][ai] = AtemSwitcher_holdGroupHWc[hgIdx][a];
-      AtemSwitcher_holdGroup[hgIdx][ai] = AtemSwitcher_holdGroup[hgIdx][a];
-      ai++;
-      retVal = 0x8000;
-    } else {
-      if (a + 1 < origPtr) {
-        AtemSwitcher_holdGroup[hgIdx][a + 1] = AtemSwitcher_holdGroup[hgIdx][a];
-        //        Serial << "Forward...\n";
-      }
-      AtemSwitcher_holdGroupPtr[hgIdx]--;
-      retVal = AtemSwitcher_holdGroup[hgIdx][a];
-    }
-  }
-  /*
-  for (uint8_t a = 0; a < AtemSwitcher_holdGroupPtr[hgIdx]; a++) {
-    Serial << "Stack " << a << ": Src " << AtemSwitcher_holdGroup[hgIdx][a] << " for HWc " << AtemSwitcher_holdGroupHWc[hgIdx][a] << "\n";
-  }
-  Serial << "Returns " << retVal << " for " << HWc << "\n";
-  */
-  return retVal;
-}
-
-/**
- * Searches for the video sources up/down in list
- */
-uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int pulseCount, uint8_t filter, uint8_t filterME, uint8_t limit) {
-
-  uint8_t srcI = AtemSwitcher[devIndex].getVideoSrcIndex(src);
-  uint8_t c = 0;
-  for (uint8_t a = 0; a < abs(pulseCount); a++) {
-    // Serial << "test 1\n";
-    do {
-      c++;
-      srcI = (srcI + AtemSwitcher[devIndex].maxAtemSeriesVideoInputs() + (pulseCount > 0 ? 1 : -1)) % AtemSwitcher[devIndex].maxAtemSeriesVideoInputs();
-      if (limit != 0) {
-        if (pulseCount > 0 && srcI > limit)
-          srcI = 1;
-        if (pulseCount < 0 && srcI > limit)
-          srcI = limit;
-      }
-      // Serial << srcI << "\n";
-    } while (!((AtemSwitcher[devIndex].getInputAvailability(AtemSwitcher[devIndex].getVideoIndexSrc(srcI)) & filter) == filter && (AtemSwitcher[devIndex].getInputMEAvailability(AtemSwitcher[devIndex].getVideoIndexSrc(srcI)) & filterME) == filterME) && c < AtemSwitcher[devIndex].maxAtemSeriesVideoInputs());
-  }
-  //	Serial << "Out: " << srcI << "," << AtemSwitcher[devIndex].getVideoIndexSrc(srcI)<<"\n";
-  return AtemSwitcher[devIndex].getVideoIndexSrc(srcI);
-}
-
-/**
- * Searches for the media still up/down in list
- */
-uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int pulseCount, uint8_t limit) {
-
-  uint8_t c = 0;
-  for (uint8_t a = 0; a < abs(pulseCount); a++) {
-    do {
-      c++;
-      srcI = (srcI + 32 + (pulseCount > 0 ? 1 : -1)) % 32;
-      if (limit != 0) {
-        if (pulseCount > 0 && srcI > limit)
-          srcI = 0;
-        if (pulseCount < 0 && srcI > limit)
-          srcI = limit;
-      }
-    } while (!AtemSwitcher[devIndex].getMediaPlayerStillFilesIsUsed(srcI) && c < 32);
-  }
-
-  return srcI;
-}
-
-/**
- * Searches for macro up/down in list
- */
-uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int pulseCount, uint8_t limit) {
-
-  uint8_t c = 0;
-  for (uint8_t a = 0; a < abs(pulseCount); a++) {
-    do {
-      c++;
-      macroIdx = (macroIdx + 10 + (pulseCount > 0 ? 1 : -1)) % 10;
-      if (limit != 0) {
-        if (pulseCount > 0 && macroIdx > limit)
-          macroIdx = 0;
-        if (pulseCount < 0 && macroIdx > limit)
-          macroIdx = limit;
-      }
-    } while (false);
-  }
-  Serial << macroIdx << "\n";
-  return macroIdx;
-}
 
 // Button return colors:
 // 0 = off
 // 5 = dimmed
 // 1,2,3,4 = full (yellow), red, green, yellow
 // Bit 4 (16) = blink flag, filter out for KP01 buttons.
-uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
+uint16_t evaluateAction_SONYRCP(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
   uint16_t retVal = 0;
   int tempInt = 0;
   uint8_t tempByte = 0;
 
   uint8_t cam = 0;
+  uint8_t option = 0;
   uint16_t aSrc = 0;
   char yrgbLabels[5] = "YRGB";
 
   if (actDown || actUp) {
     if (debugMode)
-      Serial << F("ATEM action ") << globalConfigMem[actionPtr] << F("\n");
+      Serial << F("SonyRCP action ") << globalConfigMem[actionPtr] << F("\n");
   }
 
   switch (globalConfigMem[actionPtr]) {
-  case 0: // Program Source
+  case 0:
+
+    break;
+  }
+  /*case 0: // Program Source
     if (actDown) {
       if (globalConfigMem[actionPtr + 3] == 3) {       // Source cycle by button push
         _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used to show button is highlighted here
@@ -395,7 +226,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-#if SK_MODEL != SK_RCP
   case 4: // USK settings
     if (globalConfigMem[actionPtr + 3] != 4) {
       if (actDown) {
@@ -1069,13 +899,13 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
       switch (globalConfigMem[actionPtr + 1]) {
       case 25:
-        AtemSwitcher[devIndex].setAudioMixerMasterVolume(AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
+        AtemSwitcher[devIndex].setAudioMixerMasterVolume(AtemSwitcher[devIndex].audioDb2Word(outValue/10));
         break;
       case 26:
-        AtemSwitcher[devIndex].setAudioMixerMonitorVolume(AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
+        AtemSwitcher[devIndex].setAudioMixerMonitorVolume(AtemSwitcher[devIndex].audioDb2Word(outValue/10));
         break;
       default:
-        AtemSwitcher[devIndex].setAudioMixerInputVolume(aSrc, AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
+        AtemSwitcher[devIndex].setAudioMixerInputVolume(aSrc, AtemSwitcher[devIndex].audioDb2Word(outValue/10));
         break;
       }
     }
@@ -1223,10 +1053,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     case 5:
       retVal = AtemSwitcher[devIndex].getFadeToBlackRate(globalConfigMem[actionPtr + 1]);
       break;
-    case 6: // DSK 1 - TODO
-      break;
-    case 7: // DSK 2 - TODO
-      break;
     }
     tempInt = 0;
     if (actDown || (pulses & 0xFFFE)) {
@@ -1326,14 +1152,11 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 29: // Downstream Keyer Parameters
     break;
-#endif
-#if SK_MODEL == SK_RCP
   case 30: // Focus
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
       if (value == 0x8000) { // Binary input
-        Serial << F("Perform Auto Focus...\n");
-        AtemSwitcher[devIndex].setCameraControlAutoFocus(cam, 0);
+        Serial << F("Perform Auto Focus... TODO\n");
       }
     }
     if (pulses & 0xFFFE) {
@@ -1354,8 +1177,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         int outValue = constrain(map(value, 1000, 0, 0, 2048), 0, 2048);
         AtemSwitcher[devIndex].setCameraControlIris(cam, outValue);
       } else { // Binary - auto iris
-        Serial << F("Perform Auto Iris...\n");
-        AtemSwitcher[devIndex].setCameraControlAutoIris(cam, 0);
+        Serial << F("Perform Auto Iris... TODO\n");
       }
     }
     if (pulses & 0xFFFE) {
@@ -1466,12 +1288,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 36: // Gamma
   case 37: // Gain
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 2]);
-    if (actDown) {                                                // Binary or Value input...
-      int outValue = globalConfigMem[actionPtr] == 37 ? 2048 : 0; // Binary (reset) value by default
-      if (value != 0x8000) {                                      // Value input different from -32768
+    if (actDown) {           // Binary or Value input...
+      int outValue = globalConfigMem[actionPtr]==37?2048:0;      // Binary (reset) value by default
+      if (value != 0x8000) { // Value input different from -32768
         switch (globalConfigMem[actionPtr]) {
         case 35: // Lift:
-          outValue = constrain(map(value, 0, 1000, -4096 / 8, 4096 / 8), -4096, 4096);
+          outValue = constrain(map(value, 0, 1000, -4096/8, 4096/8), -4096, 4096);
           break;
         case 36: // Gamma:
           outValue = constrain(map(value, 0, 1000, -8192, 8192), -8192, 8192);
@@ -1733,13 +1555,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 41: // Bars
     break;
-  case 42: // Detail
-    break;
-  case 43: // CCU Settings
-    break;
-  case 44: // Reset
-    break;
-  case 45: // Video Tally
+  case 42: // Video Tally
     retVal = 5;
     switch (globalConfigMem[actionPtr + 2]) {
     case 1:
@@ -1784,7 +1600,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-  case 46: // Audio Tally
+  case 43: // Audio Tally
     aSrc = ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
     retVal = AtemSwitcher[devIndex].getAudioTallyFlags(ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1])) ? (4 | 0x20) : 5;
 
@@ -1833,13 +1649,13 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     return retVal;
     break;
-#endif
-#if SK_MODEL != SK_RCP
-  case 47: // Chroma Settings
+  case 44: // Chroma Settings
     break;
-  case 48: // PIP
+  case 45: // CCU Settings
     break;
-  case 49: // DVE
+  case 46: // PIP
+    break;
+  case 47: // DVE
            // This makes pushes to the encoder change which parameter to adjust:
     if ((pulses & B1) != _systemHWcActionCacheFlag[HWc][actIdx]) {
       _systemHWcActionCacheFlag[HWc][actIdx] = pulses & B1;
@@ -1945,8 +1761,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       extRetValColor(B011010);
     }
     break;
-#endif
   }
+
+        */
 
   // Default:
   if (actDown) {
