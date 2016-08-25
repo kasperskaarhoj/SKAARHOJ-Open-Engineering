@@ -1328,7 +1328,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
       if (value == 0x8000) { // Binary input
-        Serial << F("Perform Auto Focus... TODO\n");
+        Serial << F("Perform Auto Focus...\n");
+        AtemSwitcher[devIndex].setCameraControlAutoFocus(cam, 0);
       }
     }
     if (pulses & 0xFFFE) {
@@ -1349,7 +1350,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         int outValue = constrain(map(value, 1000, 0, 0, 2048), 0, 2048);
         AtemSwitcher[devIndex].setCameraControlIris(cam, outValue);
       } else { // Binary - auto iris
-        Serial << F("Perform Auto Iris... TODO\n");
+        Serial << F("Perform Auto Iris...\n");
+        AtemSwitcher[devIndex].setCameraControlAutoIris(cam, 0);
       }
     }
     if (pulses & 0xFFFE) {

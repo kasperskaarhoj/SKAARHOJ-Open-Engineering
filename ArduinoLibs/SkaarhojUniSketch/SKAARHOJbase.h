@@ -1748,7 +1748,6 @@ void initActionCache() {
 
 long pulsesHelper(long inValue, const long lower, const long higher, const bool cycle, const int pulses, const int scaleFine, const int scaleNormal) {
   int scale = pulses & B1 ? scaleFine : scaleNormal;
-
   inValue += (pulses >> 1) * scale;
   if (cycle) {
     if (inValue < lower) {
