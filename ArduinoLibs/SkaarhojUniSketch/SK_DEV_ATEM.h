@@ -1223,6 +1223,10 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     case 5:
       retVal = AtemSwitcher[devIndex].getFadeToBlackRate(globalConfigMem[actionPtr + 1]);
       break;
+    case 6: // DSK 1 - TODO
+      break;
+    case 7: // DSK 2 - TODO
+      break;
     }
     tempInt = 0;
     if (actDown || (pulses & 0xFFFE)) {
@@ -1727,7 +1731,13 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 41: // Bars
     break;
-  case 42: // Video Tally
+  case 42: // Detail
+    break;
+  case 43: // CCU Settings
+    break;
+  case 44: // Reset
+    break;
+  case 45: // Video Tally
     retVal = 5;
     switch (globalConfigMem[actionPtr + 2]) {
     case 1:
@@ -1772,7 +1782,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-  case 43: // Audio Tally
+  case 46: // Audio Tally
     aSrc = ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
     retVal = AtemSwitcher[devIndex].getAudioTallyFlags(ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1])) ? (4 | 0x20) : 5;
 
@@ -1821,15 +1831,13 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     return retVal;
     break;
-  case 44: // Chroma Settings
-    break;
-  case 45: // CCU Settings
-    break;
 #endif
 #if SK_MODEL != SK_RCP
-  case 46: // PIP
+  case 47: // Chroma Settings
     break;
-  case 47: // DVE
+  case 48: // PIP
+    break;
+  case 49: // DVE
            // This makes pushes to the encoder change which parameter to adjust:
     if ((pulses & B1) != _systemHWcActionCacheFlag[HWc][actIdx]) {
       _systemHWcActionCacheFlag[HWc][actIdx] = pulses & B1;
