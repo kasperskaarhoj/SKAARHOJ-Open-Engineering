@@ -30,5 +30,5 @@ void HWrunLoop() {
 #endif
 
   static bool gpioStates2[] = {false, false, false, false, false, false, false, false};
-  HWrunLoop_GPIO(GPIOboard, 17, gpioStates2);
+  HWrunLoop_GPIO(GPIOboard2, 17, gpioStates2);
 }

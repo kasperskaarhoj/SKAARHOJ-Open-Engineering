@@ -38,8 +38,8 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include <Ethernet.h>
 #include "SkaarhojPgmspace.h" - 23 / 2 2014
 
-#define ClientBMDVideohubTCP_NUMINPUTS 72
-#define ClientBMDVideohubTCP_NUMOUTPUTS 72
+#define ClientBMDVideohubTCP_NUMINPUTS 16
+#define ClientBMDVideohubTCP_NUMOUTPUTS 16
 #define ClientBMDVideohubTCP_LABELLEN 10
 
 class ClientBMDVideohubTCP : public SkaarhojTCPClient {
@@ -70,7 +70,7 @@ private: // Overloading:
 public:
   // "input" and "output" are the "natural" numbers starting with "1" (same as label on BNC plugs)
   // Internally - also in the protocol - these "natural numbers" actually start at 0. So on a 16 input router (1-16), internally the inputs are referred to with 0-15.
-  void routeInputToOutput(uint8_t input, uint8_t output);
+  void routeInputToOutput(uint8_t input, uint8_t output, bool waitForConfirmedChange = false);
   void setLock(uint8_t output, char newState);
   uint8_t getRoute(uint8_t output);
   char getLock(uint8_t output);

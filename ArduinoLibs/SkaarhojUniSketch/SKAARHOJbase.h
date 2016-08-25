@@ -288,7 +288,7 @@ void lDelay(uint16_t delayVal) {
  */
 bool isConfigButtonPushed() {
 #if SK_ETHMEGA
-  return (analogRead(A1) > 500) || (EEPROM.read(0) != 0);
+  return (analogRead(A1) < 500) || (EEPROM.read(0) != 0);
 #else
   return (!digitalRead(18)) || (EEPROM.read(0) != 0);
 #endif
@@ -1057,6 +1057,7 @@ void deviceRunLoop() {
 #if SK_DEVICES_BMDCAMCTRL
         deviceReady[a] = BMDCamCtrl[deviceMap[a]].hasInitialized();
 #endif
+		break;
       }
     }
   }
@@ -2077,7 +2078,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
     break;
   case 8: // Wait
     if (actDown || (pulses & 0xFFFE))
-      lDelay(sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, 20) * 100);
+      lDelay(sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, 250) * 100);
     break;
   case 9: // Custom function
     return customActionHandler(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
