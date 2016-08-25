@@ -6,8 +6,8 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21TVS
-
+#define SK_MODEL SK_E21GPIO
+#define SK_ETHMEGA 1
 
 
 
