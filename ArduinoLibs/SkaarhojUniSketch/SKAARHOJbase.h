@@ -1015,6 +1015,14 @@ void deviceSetup() {
         BMDCamCtrl[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
+      case SK_DEV_SONYRCP:
+#if SK_DEVICES_SONYRCP
+        Serial << F(": SONYRCP") << SonyRCP_initIdx;
+        deviceMap[a] = SonyRCP_initIdx++;
+//  SonyRCP[deviceMap[a]].begin();
+//  SonyRCP[deviceMap[a]].serialOutput(debugMode);
+#endif
+        break;
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }
@@ -1057,7 +1065,12 @@ void deviceRunLoop() {
 #if SK_DEVICES_BMDCAMCTRL
         deviceReady[a] = BMDCamCtrl[deviceMap[a]].hasInitialized();
 #endif
-		break;
+        break;
+      case SK_DEV_SONYRCP:
+#if SK_DEVICES_SONYRCP
+//   deviceReady[a] = SonyRCP[deviceMap[a]].hasInitialized();
+#endif
+        break;
       }
     }
   }
@@ -1139,7 +1152,7 @@ uint8_t HWsetup() {
   SSWmenu.begin(2);
   SSWmenuEnc.begin(2);
   SSWmenuChip.begin(2);
-#elif (SK_MODEL == SK_E201M16)
+#elif(SK_MODEL == SK_E201M16)
   SSWmenu.begin(6);
   SSWmenuEnc.begin(6);
   SSWmenuChip.begin(6);
@@ -1199,7 +1212,7 @@ uint8_t HWsetup() {
   Serial << F("Init Audio Master Control\n");
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
-#elif (SK_MODEL == SK_MICROLEVELS)
+#elif(SK_MODEL == SK_MICROLEVELS)
 //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
@@ -2225,6 +2238,13 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
                 case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
                   retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_SONYRCP:
+#if SK_DEVICES_SONYRCP
+                  retValueT = evaluateAction_SONYRCP(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (retValue == 0)
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
