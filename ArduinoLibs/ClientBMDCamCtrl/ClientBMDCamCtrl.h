@@ -1,7 +1,7 @@
 #ifndef ClientBMDCamCtrl_h
 #define ClientBMDCamCtrl_h
 
-#define ClientBMDCamCtrl_Cams 1
+#define ClientBMDCamCtrl_Cams 8
 
 #include "BMDSDIControl.h"
 #include <Arduino.h>

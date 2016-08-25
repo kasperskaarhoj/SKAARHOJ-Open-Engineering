@@ -51,7 +51,7 @@ private:
 
 template <typename T> void I2CPhysical<T>::begin(int wireAddress) {
   m_wireAddress = wireAddress;
-  // Wire.begin();
+  Wire.begin();
   T::begin();
 }
 

@@ -42,6 +42,10 @@ class ATEMmin : public ATEMbase
 	  
 
 
+
+
+
+
 // *********************************
 // **
 // ** Implementations in ATEMmin.h:
@@ -50,7 +54,7 @@ class ATEMmin : public ATEMbase
 
 private:
 	void _parseGetCommands(const char *cmdStr);
-	
+
 			// Private Variables in ATEM.h:
 	
 			uint16_t atemProgramInputVideoSource[2];
@@ -69,7 +73,7 @@ private:
 			uint16_t atemAuxSourceInput[6];
 			uint16_t atemTallyByIndexSources;
 			uint8_t atemTallyByIndexTallyFlags[21];
-	
+
 public:
 			// Public Methods in ATEM.h:
 	
@@ -98,7 +102,6 @@ public:
 			void setAuxSourceInput(uint8_t aUXChannel, uint16_t input);
 			uint16_t getTallyByIndexSources();
 			uint8_t getTallyByIndexTallyFlags(uint16_t sources);
-	  
 };
 
 #endif

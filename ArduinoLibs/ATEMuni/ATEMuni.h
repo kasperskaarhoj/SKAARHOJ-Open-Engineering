@@ -44,6 +44,15 @@ class ATEMuni : public ATEMbase
 	uint8_t getTallyFlags(uint16_t videoSource);
 	uint8_t getAudioTallyFlags(uint16_t audioSource);
 
+	void setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t resolution, uint8_t interlaced);
+	void setCameraControlLift(uint8_t input, int liftR, int liftG, int liftB, int liftY);
+	void setCameraControlGamma(uint8_t input, int gammaR, int gammaG, int gammaB, int gammaY);
+	void setCameraControlGain(uint8_t input, int gainR, int gainG, int gainB, int gainY);
+
+
+
+
+
 
 // *********************************
 // **
@@ -53,7 +62,7 @@ class ATEMuni : public ATEMbase
 
 private:
 	void _parseGetCommands(const char *cmdStr);
-	
+
 			// Private Variables in ATEM.h:
 	
 			char atemInputLongName[47][21];
@@ -145,7 +154,9 @@ private:
 			int atemCameraControlFocus[9];
 			int atemCameraControlGain[9];
 			int atemCameraControlWhiteBalance[9];
+			int atemCameraControlSharpeningLevel[9];
 			int atemCameraControlZoomSpeed[9];
+			int atemCameraControlColorbars[9];
 			int atemCameraControlLiftR[9];
 			int atemCameraControlGammaR[9];
 			int atemCameraControlGainR[9];
@@ -183,7 +194,7 @@ private:
 			bool atemAudioMixerMonitorSolo;
 			uint16_t atemAudioMixerMonitorSoloInput;
 			bool atemAudioMixerMonitorDim;
-			
+
 				uint8_t atemAudioMixerLevelsSources;
 				uint16_t atemAudioMixerLevelsMasterLeft;
 				uint16_t atemAudioMixerLevelsMasterRight;
@@ -202,7 +213,7 @@ private:
 			uint16_t atemTallyBySourceSources;
 			uint16_t atemTallyBySourceVideoSource[42];
 			uint8_t atemTallyBySourceTallyFlags[42];
-	
+
 public:
 			// Public Methods in ATEM.h:
 	
@@ -362,7 +373,9 @@ public:
 			int getCameraControlFocus(uint8_t input);
 			int getCameraControlGain(uint8_t input);
 			int getCameraControlWhiteBalance(uint8_t input);
+			int getCameraControlSharpeningLevel(uint8_t input);
 			int getCameraControlZoomSpeed(uint8_t input);
+			int getCameraControlColorbars(uint8_t input);
 			int getCameraControlLiftR(uint8_t input);
 			int getCameraControlGammaR(uint8_t input);
 			int getCameraControlGainR(uint8_t input);
@@ -382,14 +395,19 @@ public:
 			int getCameraControlGainY(uint8_t input);
 			void setCameraControlIris(uint8_t input, int iris);
 			void setCameraControlFocus(uint8_t input, int focus);
+			void setCameraControlAutoFocus(uint8_t input, int autoFocus);
+			void setCameraControlAutoIris(uint8_t input, int autoIris);
 			void setCameraControlGain(uint8_t input, int gain);
 			void setCameraControlWhiteBalance(uint8_t input, int whiteBalance);
+			void setCameraControlSharpeningLevel(uint8_t input, int sharpeningLevel);
 			void setCameraControlZoomSpeed(uint8_t input, int zoomSpeed);
+			void setCameraControlColorbars(uint8_t input, int colorbars);
 			void setCameraControlLiftR(uint8_t input, int liftR);
 			void setCameraControlGammaR(uint8_t input, int gammaR);
 			void setCameraControlGainR(uint8_t input, int gainR);
 			void setCameraControlLumMix(uint8_t input, int lumMix);
 			void setCameraControlHue(uint8_t input, int hue);
+			void setCameraControlResetAll(uint8_t input, int resetAll);
 			void setCameraControlShutter(uint8_t input, int shutter);
 			void setCameraControlLiftG(uint8_t input, int liftG);
 			void setCameraControlGammaG(uint8_t input, int gammaG);
@@ -455,7 +473,6 @@ public:
 			uint16_t getTallyBySourceSources();
 			uint16_t getTallyBySourceVideoSource(uint16_t sources);
 			uint8_t getTallyBySourceTallyFlags(uint16_t sources);
-	  
 };
 
 #endif

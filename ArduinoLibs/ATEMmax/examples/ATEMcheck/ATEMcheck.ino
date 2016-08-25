@@ -5465,7 +5465,7 @@ void loop() {
     AtemSwitcher.setMultiViewerPropertiesLayout(multiViewer, origValue);
     AtemSwitcher.runLoop(delayBetweenCmds);	// Delay before next command
 
-    for (uint8_t windowIndex = 0; windowIndex <= 9; windowIndex++)	{
+    for (uint8_t windowIndex = 2; windowIndex <= 9; windowIndex++)	{
 
       // Multi Viewer Input - Video Source
       Serial << F("\nMulti Viewer Input - Video Source:\n");

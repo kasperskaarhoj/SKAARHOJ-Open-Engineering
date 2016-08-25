@@ -267,11 +267,12 @@ void HWrunLoop() {
   // Joystick:
   bool hasMoved = joystick.uniDirectionalSlider_hasMoved();
 
-  //  actionDispatch(41, hasMoved, false, 0, 1000 - joystick.uniDirectionalSlider_position());
+  // actionDispatch(41, hasMoved, false, 0, 1000 - joystick.uniDirectionalSlider_position());
   actionDispatch(41, hasMoved, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
 
   // Wheel
-  actionDispatch(42, wheel.uniDirectionalSlider_hasMoved(), false, 0, wheel.uniDirectionalSlider_position());
+  hasMoved = wheel.uniDirectionalSlider_hasMoved();
+  actionDispatch(42, hasMoved, false, 0, wheel.uniDirectionalSlider_position());
 
   // Button
   //  Serial << (joystickbutton.uniDirectionalSlider_position() < 500) << "\n";

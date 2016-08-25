@@ -8,10 +8,16 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
     cameraIrisValue[i] = 0.00;
     cameraContrastValue[i][0] = 0.5;
     cameraContrastValue[i][1] = 1.0;
+    cameraWBValue[i] = 3200;
+    cameraExposureValue[i] = 10000;
+    cameraSensorGainValue[i] = 2; // Apparently this is the lowest value
 
     for (int j = 0; j < 4; j++) {
       cameraGainValue[i][j] = 1.00;
     }
+
+    cameraColourAdjustValue[i][0] = 0.0;
+    cameraColourAdjustValue[i][1] = 1.0;
   }
 
   _cameraControl.begin(address);
@@ -21,17 +27,6 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
 
   _hasInitialized = true;
 }
-
-// void ClientBMDCamCtrl::begin(BMD_SDICameraControl_I2C *cameraControl, BMD_SDITallyControl_I2C *tallyControl) {
-//   _cameraControl = cameraControl;
-//   _tallyControl = tallyControl;
-//
-//   _cameraControl.begin();
-//   _tallyControl->begin();
-//
-//   _serialOutput = 0;
-//   _cameraOutPos = 0;
-// }
 
 void ClientBMDCamCtrl::serialOutput(uint8_t level) { _serialOutput = level; }
 
