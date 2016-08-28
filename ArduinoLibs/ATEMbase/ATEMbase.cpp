@@ -39,14 +39,13 @@ ATEMbase::ATEMbase(){}
  * Setting up IP address for the switcher (and local port to send packets from)
  * Using local port here is deprecated. Rather let the library pick a random one
  */
-void ATEMbase::begin(const IPAddress ip){
-	begin(ip, random(50100,65300));
+void ATEMbase::begin(const IPAddress ip, const ATEMEthernetUDP udp){
+	begin(ip, random(50100,65300), udp);
 }
-void ATEMbase::begin(const IPAddress ip, const uint16_t localPort){
+void ATEMbase::begin(const IPAddress ip, const uint16_t localPort, const ATEMEthernetUDP udp){
 
 		// Set up Udp communication object:
-	EthernetUDP Udp;
-	_Udp = Udp;
+	_Udp = udp;
 	
 	_switcherIP = ip;			// Set switcher IP address
 	_localPort = localPort;		// Set default local port

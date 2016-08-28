@@ -45,10 +45,21 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #define ATEM_debug 0				// If "1" (true), more debugging information may hit the serial monitor, in particular when _serialDebug = 0x80. Setting this to "0" is recommended for production environments since it saves on flash memory.
 
+class ATEMEthernetUDP {
+public:
+    virtual void begin(uint16_t) {};
+    virtual int beginPacket(IPAddress ip, uint16_t port) {};
+    virtual int endPacket() {};
+    virtual size_t write(const uint8_t *buffer, size_t size) {};
+    virtual int parsePacket() {};
+    virtual int available() {};
+    virtual int read(unsigned char* buffer, size_t len) {};
+};
+
 class ATEMbase
 {
   protected:
-	EthernetUDP _Udp;					// UDP object for communication, see constructor.
+	ATEMEthernetUDP _Udp;					// UDP object for communication, see constructor.
 	uint16_t _localPort; 				// Default local port to send from. Preferably it's chosen randomly inside the class.
 	IPAddress _switcherIP;				// IP address of the switcher
 	uint8_t _serialOutput;				// If set, the library will print status/debug information to the Serial object
@@ -78,8 +89,8 @@ class ATEMbase
 	
   public:
     ATEMbase();
-	void begin(const IPAddress ip);
-	void begin(const IPAddress ip, const uint16_t localPort);
+	void begin(const IPAddress ip, const ATEMEthernetUDP udp);
+	void begin(const IPAddress ip, const uint16_t localPort, const ATEMEthernetUDP udp);
     void connect();
     void connect(const boolean useFixedPortNumber);
     void runLoop();
