@@ -1152,7 +1152,7 @@ uint8_t HWsetup() {
   SSWmenu.begin(2);
   SSWmenuEnc.begin(2);
   SSWmenuChip.begin(2);
-#elif(SK_MODEL == SK_E201M16)
+#elif (SK_MODEL == SK_E201M16)
   SSWmenu.begin(6);
   SSWmenuEnc.begin(6);
   SSWmenuChip.begin(6);
@@ -1212,7 +1212,7 @@ uint8_t HWsetup() {
   Serial << F("Init Audio Master Control\n");
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
-#elif(SK_MODEL == SK_MICROLEVELS)
+#elif (SK_MODEL == SK_MICROLEVELS)
 //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
@@ -2399,14 +2399,22 @@ void initController() {
     Serial << ip[i] << (i != 3 ? F(".") : F("\n"));
   }
 
+  IPAddress configSubnet(255, 255, 255, 0);
   // Setting Subnet
   if (configMode != 2) {
-    subnet[0] = globalConfigMem[getConfigMemIPIndex() + 4];
-    subnet[1] = globalConfigMem[getConfigMemIPIndex() + 5];
-    subnet[2] = globalConfigMem[getConfigMemIPIndex() + 6];
-    subnet[3] = globalConfigMem[getConfigMemIPIndex() + 7];
+    configSubnet[0] = globalConfigMem[getConfigMemIPIndex() + 4];
+    configSubnet[1] = globalConfigMem[getConfigMemIPIndex() + 5];
+    configSubnet[2] = globalConfigMem[getConfigMemIPIndex() + 6];
+    configSubnet[3] = globalConfigMem[getConfigMemIPIndex() + 7];
   }
-  Serial << F("Subnet mask: ");
+
+  if ((uint32_t)configSubnet != 0) {
+    subnet = configSubnet;
+    Serial << F("Subnet mask: ");
+  } else {
+    Serial << F("Using default subnet: ");
+  }
+
   for (uint8_t i = 0; i < 4; i++) {
     Serial << subnet[i] << (i != 3 ? F(".") : F("\n"));
   }

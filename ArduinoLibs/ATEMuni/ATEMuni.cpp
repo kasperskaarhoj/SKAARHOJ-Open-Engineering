@@ -66,8 +66,6 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 		_packetBuffer[12+_cBBO+4+4+7] = 0x05; // 5 Byte array
 
-		//_packetBuffer[12+_cBBO+4+4+9] = 0x05; // 5 byte array
-
 		_packetBuffer[12+_cBBO+4+4+16] = fps;
 		_packetBuffer[12+_cBBO+4+4+17] = 0x00; // Regular M-rate
 		_packetBuffer[12+_cBBO+4+4+18] = resolution;
@@ -150,6 +148,12 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 		_finishCommandPacket();
 	}
+
+
+
+
+
+
 
 
 
@@ -1139,6 +1143,133 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					if ((_serialOutput==0x80 && atemDownstreamKeyerKeySource[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerKeySource[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
 						Serial.println(atemDownstreamKeyerKeySource[keyer]);
+					}
+					#endif
+					
+				}
+			} else 
+			if(!strcmp_P(cmdStr, PSTR("DskP"))) {
+				
+				keyer = _packetBuffer[0];
+				if (keyer<=1) {
+					#if ATEM_debug
+					temp = atemDownstreamKeyerTie[keyer];
+					#endif
+					atemDownstreamKeyerTie[keyer] = _packetBuffer[1];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerTie[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerTie[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerTie[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerRate[keyer];
+					#endif
+					atemDownstreamKeyerRate[keyer] = _packetBuffer[2];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerRate[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerRate[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerRate[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerPreMultiplied[keyer];
+					#endif
+					atemDownstreamKeyerPreMultiplied[keyer] = _packetBuffer[3];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerPreMultiplied[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerPreMultiplied[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerPreMultiplied[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerClip[keyer];
+					#endif
+					atemDownstreamKeyerClip[keyer] = word(_packetBuffer[4], _packetBuffer[5]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerClip[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerClip[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerClip[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerGain[keyer];
+					#endif
+					atemDownstreamKeyerGain[keyer] = word(_packetBuffer[6], _packetBuffer[7]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerGain[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerGain[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerGain[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerInvertKey[keyer];
+					#endif
+					atemDownstreamKeyerInvertKey[keyer] = _packetBuffer[8];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerInvertKey[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerInvertKey[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerInvertKey[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerMasked[keyer];
+					#endif
+					atemDownstreamKeyerMasked[keyer] = _packetBuffer[9];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerMasked[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerMasked[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerMasked[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerTop[keyer];
+					#endif
+					atemDownstreamKeyerTop[keyer] = (int16_t) word(_packetBuffer[10], _packetBuffer[11]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerTop[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerTop[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerTop[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerBottom[keyer];
+					#endif
+					atemDownstreamKeyerBottom[keyer] = (int16_t) word(_packetBuffer[12], _packetBuffer[13]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerBottom[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerBottom[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerBottom[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerLeft[keyer];
+					#endif
+					atemDownstreamKeyerLeft[keyer] = (int16_t) word(_packetBuffer[14], _packetBuffer[15]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerLeft[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerLeft[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerLeft[keyer]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemDownstreamKeyerRight[keyer];
+					#endif
+					atemDownstreamKeyerRight[keyer] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemDownstreamKeyerRight[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemDownstreamKeyerRight[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
+						Serial.println(atemDownstreamKeyerRight[keyer]);
 					}
 					#endif
 					
@@ -4021,6 +4152,94 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			}
 			
 			/**
+			 * Get Downstream Keyer; Tie
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			bool ATEMuni::getDownstreamKeyerTie(uint8_t keyer) {
+				return atemDownstreamKeyerTie[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Rate
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			uint8_t ATEMuni::getDownstreamKeyerRate(uint8_t keyer) {
+				return atemDownstreamKeyerRate[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Pre Multiplied
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			bool ATEMuni::getDownstreamKeyerPreMultiplied(uint8_t keyer) {
+				return atemDownstreamKeyerPreMultiplied[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Clip
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			uint16_t ATEMuni::getDownstreamKeyerClip(uint8_t keyer) {
+				return atemDownstreamKeyerClip[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Gain
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			uint16_t ATEMuni::getDownstreamKeyerGain(uint8_t keyer) {
+				return atemDownstreamKeyerGain[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Invert Key
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			bool ATEMuni::getDownstreamKeyerInvertKey(uint8_t keyer) {
+				return atemDownstreamKeyerInvertKey[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Masked
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			bool ATEMuni::getDownstreamKeyerMasked(uint8_t keyer) {
+				return atemDownstreamKeyerMasked[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Top
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			int ATEMuni::getDownstreamKeyerTop(uint8_t keyer) {
+				return atemDownstreamKeyerTop[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Bottom
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			int ATEMuni::getDownstreamKeyerBottom(uint8_t keyer) {
+				return atemDownstreamKeyerBottom[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Left
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			int ATEMuni::getDownstreamKeyerLeft(uint8_t keyer) {
+				return atemDownstreamKeyerLeft[keyer];
+			}
+			
+			/**
+			 * Get Downstream Keyer; Right
+			 * keyer 	0: DSK1, 1: DSK2
+			 */
+			int ATEMuni::getDownstreamKeyerRight(uint8_t keyer) {
+				return atemDownstreamKeyerRight[keyer];
+			}
+			
+			/**
 			 * Set Downstream Keyer Auto; Keyer
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
@@ -4392,6 +4611,28 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					_finishCommandPacket();
 			}
 
+
+			/**
+				* Set Camera Control; Detail level
+				* 0: Off, 1: Low, 2: Medium, 3: High
+				*/
+
+			void ATEMuni::setCameraControlSharpeningLevel(uint8_t input, int detail) {
+					_prepareCommandPacket(PSTR("CCmd"), 20);
+
+					_packetBuffer[12+_cBBO+4+4+0] = input;
+
+					_packetBuffer[12+_cBBO+4+4+1] = 1;
+					_packetBuffer[12+_cBBO+4+4+2] = 8;
+
+					_packetBuffer[12+_cBBO+4+4+4] = 0x01; // Data type: int8
+					_packetBuffer[12+_cBBO+4+4+7] = 0x01;
+
+					_packetBuffer[12+_cBBO+4+4+16] = detail & 0xFF;
+
+					_finishCommandPacket();
+			}
+
 			/**
 				* Set Camera Control; Auto focus
 				* Command takes no input
@@ -4426,6 +4667,26 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					_packetBuffer[12+_cBBO+4+4+4] = 0x00; // Data type: void
 
 					_finishCommandPacket();
+
+					// Update local state variables to reflect reset values
+					atemCameraControlGammaY[input] = 0;
+					atemCameraControlGammaR[input] = 0;
+					atemCameraControlGammaG[input] = 0;
+					atemCameraControlGammaB[input] = 0;
+
+					atemCameraControlLiftY[input] = 0;
+					atemCameraControlLiftR[input] = 0;
+					atemCameraControlLiftG[input] = 0;
+					atemCameraControlLiftB[input] = 0;
+
+					atemCameraControlGainY[input] = 2048;
+					atemCameraControlGainR[input] = 2048;
+					atemCameraControlGainG[input] = 2048;
+					atemCameraControlGainB[input] = 2048;
+
+					atemCameraControlContrast[input] = 2048;
+					atemCameraControlHue[input] = 0;
+					atemCameraControlSaturation[input] = 2048;
 			}
 
 			/**
@@ -4459,7 +4720,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 */
 			void ATEMuni::setCameraControlColorbars(uint8_t input, int colorbars) {
 
-		  		_prepareCommandPacket(PSTR("CCmd"),16);
+		  		_prepareCommandPacket(PSTR("CCmd"), 20);
 
 				_packetBuffer[12+_cBBO+4+4+0] = input;
 
@@ -5677,4 +5938,3 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 
 	
-		
