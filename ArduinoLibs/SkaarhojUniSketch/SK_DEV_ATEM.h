@@ -1289,6 +1289,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       case 5:
         AtemSwitcher[devIndex].setFadeToBlackRate(globalConfigMem[actionPtr + 1], tempInt);
         break;
+      case 6:
+        AtemSwitcher[devIndex].setDownstreamKeyerRate(0, tempInt);
+        break;
+      case 7:
+        AtemSwitcher[devIndex].setDownstreamKeyerRate(1, tempInt);
+        break;
       }
       Serial << "Set trans frame rate";
     }
@@ -1331,6 +1337,14 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       case 5:
         extRetValShortLabel(PSTR(" FTB"));
         extRetValLongLabel(PSTR(" FTB Rate"));
+        break;
+      case 6:
+        extRetValShortLabel(PSTR(" DSK1"));
+        extRetValLongLabel(PSTR(" DSK1 Rate"));
+        break;
+      case 7:
+        extRetValShortLabel(PSTR(" DSK2"));
+        extRetValLongLabel(PSTR(" DSK2 Rate"));
         break;
       }
     }

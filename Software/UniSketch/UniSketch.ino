@@ -308,6 +308,10 @@ uint8_t HWsetupL();
 void HWtestL();
 void HWcfgDisplay();
 
+// Pre-declaring functions defined in the individual hardware files
+uint8_t HWnumOfAnalogComponents();
+int16_t HWAnalogComponentValue(uint8_t num);
+
 
 
 
@@ -754,8 +758,7 @@ void setup() {
 void loop() {
   checkIncomingSerial();
   statusSerial();
-  //  if (_calibrateMode)   HWcalibrate();
-
+  
   if (getConfigMode())  {
     statusLED(defaultStatusColor(), 1);
     HWtest();
