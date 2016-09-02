@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_MICROSMARTV
 
 
 
@@ -611,7 +611,7 @@ uint8_t BMDCamCtrl_initIdx = 0;
 #include "SK_DEV_BMDCAMCTRL.h";
 #endif
 
-#if SK_DEV_SONYRCP
+#if SK_DEVICES_SONYRCP
 #include "ClientSonyRCP.h"
 ClientSonyRCP SonyRCP[SK_DEVICES_SONYRCP];
 uint8_t SonyRCP_initIdx = 0;
