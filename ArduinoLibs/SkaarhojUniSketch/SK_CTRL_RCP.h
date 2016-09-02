@@ -1,6 +1,7 @@
 /**
  * Specific
  */
+
 uint8_t pca9672OutputByte = B11111111; // Bits: 7-0: GPO, GPI, PRV Tally, PGM Tally, Addr4, Addr3, Addr2, Addr1;
 int IOchipAddress = B100000;
 
@@ -131,11 +132,13 @@ uint8_t HWsetupL() {
 
   Serial << F("Init Joystick\n");
 
+  uint16_t(&cal1)[3] = getAnalogComponentCalibration(1);
   //  joystick.uniDirectionalSlider_init(10, 35, 35, 0, 1);
-  joystick.uniDirectionalSlider_init(15, 80, 80, 0, 2);
+  joystick.uniDirectionalSlider_init(cal1[2], cal1[0], cal1[1], 0, 2);
   joystick.uniDirectionalSlider_disableUnidirectionality(true);
 
-  wheel.uniDirectionalSlider_init(15, 0, 0, 0, 3);
+  uint16_t(&cal2)[3] = getAnalogComponentCalibration(2);
+  wheel.uniDirectionalSlider_init(cal2[2], cal1[0], cal2[1], 0, 3);
   wheel.uniDirectionalSlider_disableUnidirectionality(true);
 
   joystickbutton.uniDirectionalSlider_init(15, 80, 80, 0, 0);
@@ -402,5 +405,18 @@ void HWrunLoop() {
       gpoCache = false;
       addressSwitch_setGPO(false);
     }
+  }
+}
+
+uint8_t HWnumOfAnalogComponents() { return 2; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  switch (num) {
+  case 1:
+    return joystick.uniDirectionalSlider_rawValue();
+    break;
+  case 2:
+    return wheel.uniDirectionalSlider_rawValue();
+    break;
   }
 }

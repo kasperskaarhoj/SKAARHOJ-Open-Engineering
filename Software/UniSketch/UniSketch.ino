@@ -303,9 +303,14 @@ long pulsesHelper(long inValue, const long lower, const long higher, const bool 
 uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const uint16_t value = 0);
 uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const bool actUp = false, const int pulses = 0, const int value = 0x8000, const uint8_t specificAction = 0);
 uint16_t getNumOfActions(const uint8_t HWcNum);
+void lDelay(uint16_t delayVal);
 uint8_t HWsetupL();
 void HWtestL();
 void HWcfgDisplay();
+
+// Pre-declaring functions defined in the individual hardware files
+uint8_t HWnumOfAnalogComponents();
+int16_t HWAnalogComponentValue(uint8_t num);
 
 
 
@@ -753,8 +758,7 @@ void setup() {
 void loop() {
   checkIncomingSerial();
   statusSerial();
-  //  if (_calibrateMode)   HWcalibrate();
-
+  
   if (getConfigMode())  {
     statusLED(defaultStatusColor(), 1);
     HWtest();

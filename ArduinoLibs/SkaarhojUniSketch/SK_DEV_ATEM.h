@@ -395,7 +395,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-#if SK_MODEL != SK_RCP
+  //#if SK_MODEL != SK_RCP
   case 4: // USK settings
     if (globalConfigMem[actionPtr + 3] != 4) {
       if (actDown) {
@@ -415,7 +415,20 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
       }
     } else {
-      // TODO: perform auto on USK
+      if (actDown && !AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1])) {
+        unsigned long startTime = millis();
+        uint8_t transitionStyle = AtemSwitcher[devIndex].getTransitionNextTransition(globalConfigMem[actionPtr + 1]);
+        AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 1] + 1));
+        AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
+
+        // Wait for the transition to actually begin
+        while (!AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1]) || sTools.hasTimedOut(startTime, 200)) {
+          lDelay(2);
+        }
+
+        // Set the transition mask back to the initial value
+        AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], transitionStyle);
+      }
     }
     if (pulses & 0xFFFE) {
       AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], !AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]));
@@ -457,6 +470,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
+#if SK_MODEL != SK_RCP
   case 5: // Upstream Keyer Fill
     if (actDown) {
       AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
@@ -1223,9 +1237,11 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     case 5:
       retVal = AtemSwitcher[devIndex].getFadeToBlackRate(globalConfigMem[actionPtr + 1]);
       break;
-    case 6: // DSK 1 - TODO
+    case 6: // DSK 1
+      retVal = AtemSwitcher[devIndex].getDownstreamKeyerRate(0);
       break;
-    case 7: // DSK 2 - TODO
+    case 7: // DSK 2
+      retVal = AtemSwitcher[devIndex].getDownstreamKeyerRate(1);
       break;
     }
     tempInt = 0;
@@ -1273,6 +1289,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       case 5:
         AtemSwitcher[devIndex].setFadeToBlackRate(globalConfigMem[actionPtr + 1], tempInt);
         break;
+      case 6:
+        AtemSwitcher[devIndex].setDownstreamKeyerRate(0, tempInt);
+        break;
+      case 7:
+        AtemSwitcher[devIndex].setDownstreamKeyerRate(1, tempInt);
+        break;
       }
       Serial << "Set trans frame rate";
     }
@@ -1315,6 +1337,14 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       case 5:
         extRetValShortLabel(PSTR(" FTB"));
         extRetValLongLabel(PSTR(" FTB Rate"));
+        break;
+      case 6:
+        extRetValShortLabel(PSTR(" DSK1"));
+        extRetValLongLabel(PSTR(" DSK1 Rate"));
+        break;
+      case 7:
+        extRetValShortLabel(PSTR(" DSK2"));
+        extRetValLongLabel(PSTR(" DSK2 Rate"));
         break;
       }
     }
@@ -1731,13 +1761,98 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       extRetValColor(B100111);
     }
     break;
-  case 41: // Bars
+  case 41: { // Bars
+    cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
+    uint8_t duration = globalConfigMem[actionPtr + 3];
+    if (actDown && value == 0x8000) {
+      switch (globalConfigMem[actionPtr + 2]) {
+      case 0: // Toggle
+        if (AtemSwitcher[devIndex].getCameraControlColorbars(cam) == 0) {
+          AtemSwitcher[devIndex].setCameraControlColorbars(cam, duration);
+        } else {
+          AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
+        }
+        break;
+      case 1: // On
+        AtemSwitcher[devIndex].setCameraControlColorbars(cam, duration);
+        break;
+      case 2: // Off
+        AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
+        break;
+      case 3: // Hold down
+        AtemSwitcher[devIndex].setCameraControlColorbars(cam, 30);
+        break;
+      }
+    }
+
+    if (actUp && globalConfigMem[actionPtr + 2] == 3) { // Hold down activated
+      AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
+    }
+
     break;
+  }
   case 42: // Detail
+    cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
+    if (actDown && value == 0x8000) { // Button push
+      AtemSwitcher[devIndex].setCameraControlSharpeningLevel(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+    }
+
+    if (pulses & 0xFFFE) {
+      AtemSwitcher[devIndex].setCameraControlSharpeningLevel(globalConfigMem[actionPtr + 1], pulsesHelper(AtemSwitcher[devIndex].getCameraControlSharpeningLevel(globalConfigMem[actionPtr + 1]) >> 8, 0, 3, false, pulses, 1, 1));
+    }
+
+    if (extRetValIsWanted()) {
+      extRetVal(0, 7);
+      extRetValShortLabel(PSTR("Detail"));
+      extRetValLongLabel(PSTR("Detail cam "), (globalConfigMem[actionPtr + 1]) + 1);
+
+      if (_systemHWcActionPrefersLabel[HWc] && globalConfigMem[actionPtr + 2] != 0) {
+        extRetValColor(retVal & 0x20 ? B011111 : B101010);
+        extRetValSetLabel(true);
+      } else {
+        extRetValColor(B011111);
+      }
+
+      switch (AtemSwitcher[devIndex].getCameraControlSharpeningLevel(globalConfigMem[actionPtr + 1]) >> 8) {
+      case 0:
+        extRetValTxt_P(PSTR("Off"), 0);
+        break;
+      case 1:
+        extRetValTxt_P(PSTR("Low"), 0);
+        break;
+      case 2:
+        extRetValTxt_P(PSTR("Med"), 0);
+        break;
+      case 3:
+        extRetValTxt_P(PSTR("High"), 0);
+        break;
+      }
+    }
+
     break;
   case 43: // CCU Settings
     break;
   case 44: // Reset
+    cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
+    if (actDown && value == 0x8000) {
+      switch (globalConfigMem[actionPtr + 2]) {
+      case 0:
+        Serial << F("Resetting Lift...\n");
+        AtemSwitcher[devIndex].setCameraControlLift(cam, 0, 0, 0, 0);
+        break;
+      case 1:
+        Serial << F("Resetting Gamma...\n");
+        AtemSwitcher[devIndex].setCameraControlGamma(cam, 0, 0, 0, 0);
+        break;
+      case 2:
+        Serial << F("Resetting Gain...\n");
+        AtemSwitcher[devIndex].setCameraControlGain(cam, 2048, 2048, 2048, 2048);
+        break;
+      case 3:
+        Serial << F("Resetting colour settings...\n");
+        AtemSwitcher[devIndex].setCameraControlResetAll(cam, 0);
+      }
+    }
     break;
   case 45: // Video Tally
     retVal = 5;

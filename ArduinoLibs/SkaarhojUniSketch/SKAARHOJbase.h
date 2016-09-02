@@ -70,9 +70,11 @@ bool loadSerialCommandToCRNL() {    // Call in loop() to check for commands
 
   while (Serial.available()) {
     char c = Serial.read();
-    if (c == 10 || c == 13) {
-      serialBufferPointer = 0; // so, we can start over again filling the buffer
-      return true;
+    if ((c == 10 || c == 13)) {
+      if (serialBufferPointer > 0) { // Ignore consecutive newline/carriage returns
+        serialBufferPointer = 0;     // so, we can start over again filling the buffer
+        return true;
+      }
     } else {
       if (serialBufferPointer < SER_BUFFER_SIZE - 1) { // one byte for null termination reserved
         serialBuffer[serialBufferPointer] = c;
@@ -85,6 +87,206 @@ bool loadSerialCommandToCRNL() {    // Call in loop() to check for commands
   }
 
   return false;
+}
+
+void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, uint8_t hysteresis) {
+  num -= 1;
+  if (num > 9)
+    return;
+
+  Serial << F("Saving calibration for analog component #") << num + 1 << "\n";
+  EEPROM.write(20 + num * 4 + 1, start >> 1 & 0xFF);
+  EEPROM.write(20 + num * 4 + 2, end >> 1 & 0xFF);
+  EEPROM.write(20 + num * 4 + 3, hysteresis & 0x3F | (start & 1) << 7 | (end & 1) << 6);
+  EEPROM.write(20 + num * 4 + 4, 193 ^ EEPROM.read(20 + num * 4 + 1) ^ EEPROM.read(20 + num * 4 + 2) ^ EEPROM.read(20 + num * 4 + 3));
+}
+
+uint16_t (&getAnalogComponentCalibration(uint8_t num))[3] {
+  uint16_t calibration[3] = {0, 0, 0};
+
+  num -= 1;
+  if (num > 9)
+    return calibration;
+
+  uint8_t c1, c2, c3, c4;
+  c1 = EEPROM.read(20 + num * 4 + 1);
+  c2 = EEPROM.read(20 + num * 4 + 2);
+  c3 = EEPROM.read(20 + num * 4 + 3);
+  c4 = EEPROM.read(20 + num * 4 + 4);
+
+  if ((193 ^ c1 ^ c2 ^ c3) != c4) {
+    Serial << F("Initialized calibration for analog component ") << num + 1 << "\n";
+    setAnalogComponentCalibration(num, 30, 30, 15);
+  }
+
+  calibration[0] = EEPROM.read(20 + num * 4 + 1) << 1 | EEPROM.read(20 + num * 4 + 3) >> 7;     // Start
+  calibration[1] = EEPROM.read(20 + num * 4 + 2) << 1 | EEPROM.read(20 + num * 4 + 3) >> 6 & 1; // End
+  calibration[2] = EEPROM.read(20 + num * 4 + 3) & 0x3F;                                        // Hysteresis
+
+  Serial << "Calibration for analog component #" << num + 1 << ": Start: " << calibration[0] << ", End: " << calibration[1] << ", Hysteresis: " << calibration[2] << "\n";
+  return calibration;
+}
+
+uint8_t currentAnalogComponent = 0;
+unsigned long lastAnalogPrint = 0;
+uint16_t average = 0xFFFF;
+uint8_t currentIndex = 0;
+uint8_t hysteresis = 0;
+void listAnalogHWComponent(uint8_t num = 0) {
+  if (num > 0) {
+    currentAnalogComponent = num;
+    average = 0xFFFF;
+    uint16_t(&calibration)[3] = getAnalogComponentCalibration(num);
+    hysteresis = calibration[2];
+  }
+
+  if (average == 0xFFFF) {
+    average = 0;
+    for (uint8_t i = 0; i < 10; i++) {
+      average += HWAnalogComponentValue(currentAnalogComponent);
+    }
+    average = average / 10;
+    Serial << average - 40 << F("                                     ") << average << F("                                     ") << average + 40 << "\n";
+  }
+
+  if (sTools.hasTimedOut(lastAnalogPrint, 200)) {
+    int startPos = HWAnalogComponentValue(currentAnalogComponent) - average;
+
+    if (startPos < -40) {
+      startPos = -40;
+    }
+    if (startPos > 40) {
+      startPos = 40;
+    }
+    for (int i = -40; i <= 40; i++) {
+      if (i == 0 || abs(i) == hysteresis) {
+        Serial << "|";
+      } else if ((i < 0 && startPos < 0 && startPos < i) || (i > 0 && startPos > 0 && startPos > i)) {
+        Serial << "-";
+      } else {
+        Serial << " ";
+      }
+    }
+
+    Serial << "\n";
+  }
+}
+
+void hideAnalogHWComponent() {
+  currentAnalogComponent = 0;
+  average = 0xFFFF;
+}
+
+uint8_t calibrationState = 0;
+
+bool sampleComponent(uint8_t num, uint16_t *average, uint16_t *maxDeviation) {
+  static uint8_t avgCounter = 0;
+  static uint8_t sampleCounter = 0;
+
+  if (avgCounter++ < 10) {
+    *average += HWAnalogComponentValue(currentAnalogComponent);
+  } else {
+    if (sampleCounter++ == 0) {
+      *average = *average / 10;
+    } else if (sampleCounter < 50) {
+      int16_t deviation = HWAnalogComponentValue(currentAnalogComponent) - *average;
+
+      if (abs(deviation) > *maxDeviation) {
+        *maxDeviation = abs(deviation);
+      }
+    } else {
+      Serial << F("Results are average = ") << average[0] << " and max deviation = " << maxDeviation[0] << "\n";
+      calibrationState++;
+      avgCounter = 0;
+      sampleCounter = 0;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+uint8_t serialState = 0; // 1: show analog, 2: calibrate
+
+void calibrateAnalogHWComponent(uint8_t num = 0) {
+  static uint16_t average[5];
+  static uint16_t maxDeviation[5];
+  static uint16_t start, end, hysteresis;
+
+  if (num > 0) {
+    currentAnalogComponent = num;
+    calibrationState = 1;
+  }
+
+  switch (calibrationState) {
+  case 1: // Start calibration
+    memset(average, 0x00, sizeof(average));
+    memset(maxDeviation, 0x00, sizeof(maxDeviation));
+
+    calibrationState = 2;
+    Serial << F("Calibrating analog component #") << currentAnalogComponent << ". Please move the control to the first endpoint, and send 'ok'\n";
+    break;
+  case 3: // First endpoint 1 sampling
+    if (sampleComponent(currentAnalogComponent, average, maxDeviation)) {
+      Serial << F("Please move the control to other endpoint, and send 'ok'\n");
+    }
+    break;
+  case 5: // First endpoint 2 sampling
+    if (sampleComponent(currentAnalogComponent, average + 1, maxDeviation + 1)) {
+      Serial << F("Please move the control to the first endpoint, and send 'ok'\n");
+    }
+    break;
+  case 7: // Second endpoint 1 sampling
+    if (sampleComponent(currentAnalogComponent, average + 2, maxDeviation + 2)) {
+      Serial << F("Please move the control to the other, and send 'ok'\n");
+    }
+    break;
+  case 9: // Second endpoint 2 sampling
+    if (sampleComponent(currentAnalogComponent, average + 3, maxDeviation + 3)) {
+      Serial << F("Please move the control to a roughly central position, and send 'ok'\n");
+    }
+    break;
+  case 11: // Central position sampling
+    if (sampleComponent(currentAnalogComponent, average + 4, maxDeviation + 4)) {
+      Serial << F("Please move the control to a roughly central position, and send 'ok'\n");
+    }
+    break;
+  case 12:
+    int a, b;
+    a = (average[0] + average[2]) / 2;
+    b = (average[1] + average[3]) / 2;
+
+    if (a > b) {
+      start = b;
+      end = 1023 - a;
+    } else {
+      start = a;
+      end = 1023 - b;
+    }
+
+    hysteresis = 0;
+    for (uint8_t i = 0; i < 5; i++) {
+      if (maxDeviation[i] > hysteresis) {
+        hysteresis = maxDeviation[i];
+      }
+    }
+
+    hysteresis = hysteresis * 5;
+
+    Serial << F("Calibration results:\n");
+    Serial << F("Start offset: ") << start << "\n";
+    Serial << F("End offset: ") << end << "\n";
+    Serial << F("Hysteresis: ") << hysteresis << " (Safety factor = 5)\n";
+
+    Serial << F("\n Send 'ok' to save this calibration.");
+    calibrationState++;
+    break;
+  case 14:
+    Serial << F("Calibration saved!\n");
+    setAnalogComponentCalibration(currentAnalogComponent, start, end, hysteresis);
+    serialState = 0;
+    break;
+  }
 }
 
 /**
@@ -129,16 +331,48 @@ bool checkIncomingSerial() {
       Serial << F("Presets clear\n");
       delay(1000);
       resetFunc();
-    } else if (!strncmp(serialBuffer, "calibrate", 9)) {
-      Serial << F("Start calibration\n");
-      _calibrateMode = true;
     } else if (!strncmp(serialBuffer, "reset", 5)) {
       Serial << F("Resetting...\n");
       delay(1000);
       resetFunc();
+    } else if (!strncmp(serialBuffer, "list analog", 11)) {
+      Serial << F("Number of analog components: ") << HWnumOfAnalogComponents() << "\n";
+    } else if (!strncmp(serialBuffer, "show analog ", 12)) {
+      uint8_t num = serialBuffer[12] - '0';
+      if (num == 0) {
+        Serial << F("Invalid analog component number\n");
+      } else {
+        Serial << F("Analog component chosen: ") << num << "\n";
+        listAnalogHWComponent(num);
+        serialState = 1;
+      }
+    } else if (!strncmp(serialBuffer, "hide analog", 11)) {
+      hideAnalogHWComponent();
+      serialState = 0;
+    } else if (!strncmp(serialBuffer, "calibrate analog ", 17)) {
+      uint8_t num = serialBuffer[17] - '0';
+      if (num == 0) {
+        Serial << F("Invalid analog component number\n");
+      } else {
+        calibrateAnalogHWComponent(num);
+        serialState = 2;
+      }
+    } else if (!strncmp(serialBuffer, "ok", 2)) {
+      if (serialState == 2) { // Calibration in progress
+        calibrationState++;
+      }
     } else {
       Serial << F("NAK\n");
     }
+  }
+
+  switch (serialState) {
+  case 1: // List values
+    listAnalogHWComponent();
+    break;
+  case 2: // Calibrate component
+    calibrateAnalogHWComponent();
+    break;
   }
 
   return false;
@@ -1152,7 +1386,7 @@ uint8_t HWsetup() {
   SSWmenu.begin(2);
   SSWmenuEnc.begin(2);
   SSWmenuChip.begin(2);
-#elif(SK_MODEL == SK_E201M16)
+#elif (SK_MODEL == SK_E201M16)
   SSWmenu.begin(6);
   SSWmenuEnc.begin(6);
   SSWmenuChip.begin(6);
@@ -1212,7 +1446,7 @@ uint8_t HWsetup() {
   Serial << F("Init Audio Master Control\n");
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
-#elif(SK_MODEL == SK_MICROLEVELS)
+#elif (SK_MODEL == SK_MICROLEVELS)
 //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
@@ -2399,14 +2633,22 @@ void initController() {
     Serial << ip[i] << (i != 3 ? F(".") : F("\n"));
   }
 
+  IPAddress configSubnet(255, 255, 255, 0);
   // Setting Subnet
   if (configMode != 2) {
-    subnet[0] = globalConfigMem[getConfigMemIPIndex() + 4];
-    subnet[1] = globalConfigMem[getConfigMemIPIndex() + 5];
-    subnet[2] = globalConfigMem[getConfigMemIPIndex() + 6];
-    subnet[3] = globalConfigMem[getConfigMemIPIndex() + 7];
+    configSubnet[0] = globalConfigMem[getConfigMemIPIndex() + 4];
+    configSubnet[1] = globalConfigMem[getConfigMemIPIndex() + 5];
+    configSubnet[2] = globalConfigMem[getConfigMemIPIndex() + 6];
+    configSubnet[3] = globalConfigMem[getConfigMemIPIndex() + 7];
   }
-  Serial << F("Subnet mask: ");
+
+  if ((uint32_t)configSubnet != 0) {
+    subnet = configSubnet;
+    Serial << F("Subnet mask: ");
+  } else {
+    Serial << F("Using default subnet: ");
+  }
+
   for (uint8_t i = 0; i < 4; i++) {
     Serial << subnet[i] << (i != 3 ? F(".") : F("\n"));
   }

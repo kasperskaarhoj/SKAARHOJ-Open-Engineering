@@ -1,5 +1,5 @@
 /*  SkaarhojAnalog Arduino library with various utilities for products from SKAARHOJ.com
-    Copyright (C) 2012 Kasper Skårhøj    <kasperskaarhoj@gmail.com> 
+    Copyright (C) 2012 Kasper Skårhøj    <kasperskaarhoj@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 #ifndef SkaarhojAnalog_H
 #define SkaarhojAnalog_H
 
-
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -29,53 +28,52 @@
 
 /**
   Version 1.1.0
-	(Semantic Versioning)
+        (Semantic Versioning)
 **/
 
-class SkaarhojAnalog
-{
-  private:
-  	ADS7828 _analogConv;
+class SkaarhojAnalog {
+private:
+  ADS7828 _analogConv;
 
-	bool _debugMode;
-	
-	uint8_t _joystick_index;
-	int _joystick_tolerance;
-	int _joystick_previousPosition[3];
-	int _joystick_previousValue[3];
-	int _joystick_centerValue[3];
-	bool _joystick_buttonStatus;
-	bool _joystick_buttonStatusLastUp;
-	bool _joystick_buttonStatusLastDown;
-	
-	uint8_t _uniDirectionalSlider_pinIndex;
-	int _uniDirectionalSlider_sliderTolerance;
-    int _uniDirectionalSlider_sliderLowEndOffset;
-    int _uniDirectionalSlider_sliderHighEndOffset;
-	int _uniDirectionalSlider_previousSliderValue;
-	int _uniDirectionalSlider_previousTransitionPosition;
-	bool _uniDirectionalSlider_sliderDirectionUp;
-	bool _uniDirectionalSlider_disableUnidirectionality;
-	
-  public:
-	SkaarhojAnalog();
-	void debugMode();
+  bool _debugMode;
 
-		// Joystick functions:
-	void joystick_init(int tolerance, uint8_t i2cAddress, uint8_t index=0);
-	bool joystick_hasMoved(uint8_t index);
-	int joystick_position(uint8_t index);
-	bool joystick_buttonUp();
-	bool joystick_buttonDown();
-	bool joystick_buttonIsPressed();	
-	int joystick_AnalogRead(uint8_t index);
-	
-	
-		// Slider functions:
-	void uniDirectionalSlider_init(int sliderTolerance, int sliderLowEndOffset, int sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex);
-	void uniDirectionalSlider_disableUnidirectionality(bool disable);
-	bool uniDirectionalSlider_hasMoved();
-	int uniDirectionalSlider_position();
-	bool uniDirectionalSlider_isAtEnd();	
+  uint8_t _joystick_index;
+  int _joystick_tolerance;
+  int _joystick_previousPosition[3];
+  int _joystick_previousValue[3];
+  int _joystick_centerValue[3];
+  bool _joystick_buttonStatus;
+  bool _joystick_buttonStatusLastUp;
+  bool _joystick_buttonStatusLastDown;
+
+  uint8_t _uniDirectionalSlider_pinIndex;
+  int _uniDirectionalSlider_sliderTolerance;
+  int _uniDirectionalSlider_sliderLowEndOffset;
+  int _uniDirectionalSlider_sliderHighEndOffset;
+  int _uniDirectionalSlider_previousSliderValue;
+  int _uniDirectionalSlider_previousTransitionPosition;
+  bool _uniDirectionalSlider_sliderDirectionUp;
+  bool _uniDirectionalSlider_disableUnidirectionality;
+
+public:
+  SkaarhojAnalog();
+  void debugMode();
+
+  // Joystick functions:
+  void joystick_init(int tolerance, uint8_t i2cAddress, uint8_t index = 0);
+  bool joystick_hasMoved(uint8_t index);
+  int joystick_position(uint8_t index);
+  bool joystick_buttonUp();
+  bool joystick_buttonDown();
+  bool joystick_buttonIsPressed();
+  int joystick_AnalogRead(uint8_t index);
+
+  // Slider functions:
+  void uniDirectionalSlider_init(int sliderTolerance, int sliderLowEndOffset, int sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex);
+  void uniDirectionalSlider_disableUnidirectionality(bool disable);
+  bool uniDirectionalSlider_hasMoved();
+  int uniDirectionalSlider_position();
+  int16_t uniDirectionalSlider_rawValue();
+  bool uniDirectionalSlider_isAtEnd();
 };
-#endif 
+#endif

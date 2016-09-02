@@ -54,6 +54,10 @@ class ATEMuni : public ATEMbase
 
 
 
+
+
+
+
 // *********************************
 // **
 // ** Implementations in ATEMuni.h:
@@ -141,6 +145,17 @@ private:
 			uint8_t atemKeyDVERate[2][4];
 			uint16_t atemDownstreamKeyerFillSource[2];
 			uint16_t atemDownstreamKeyerKeySource[2];
+			bool atemDownstreamKeyerTie[2];
+			uint8_t atemDownstreamKeyerRate[2];
+			bool atemDownstreamKeyerPreMultiplied[2];
+			uint16_t atemDownstreamKeyerClip[2];
+			uint16_t atemDownstreamKeyerGain[2];
+			bool atemDownstreamKeyerInvertKey[2];
+			bool atemDownstreamKeyerMasked[2];
+			int atemDownstreamKeyerTop[2];
+			int atemDownstreamKeyerBottom[2];
+			int atemDownstreamKeyerLeft[2];
+			int atemDownstreamKeyerRight[2];
 			bool atemDownstreamKeyerOnAir[2];
 			bool atemDownstreamKeyerInTransition[2];
 			bool atemDownstreamKeyerIsAutoTransitioning[2];
@@ -355,6 +370,17 @@ public:
 			uint16_t getDownstreamKeyerKeySource(uint8_t keyer);
 			void setDownstreamKeyerFillSource(uint8_t keyer, uint16_t fillSource);
 			void setDownstreamKeyerKeySource(uint8_t keyer, uint16_t keySource);
+			bool getDownstreamKeyerTie(uint8_t keyer);
+			uint8_t getDownstreamKeyerRate(uint8_t keyer);
+			bool getDownstreamKeyerPreMultiplied(uint8_t keyer);
+			uint16_t getDownstreamKeyerClip(uint8_t keyer);
+			uint16_t getDownstreamKeyerGain(uint8_t keyer);
+			bool getDownstreamKeyerInvertKey(uint8_t keyer);
+			bool getDownstreamKeyerMasked(uint8_t keyer);
+			int getDownstreamKeyerTop(uint8_t keyer);
+			int getDownstreamKeyerBottom(uint8_t keyer);
+			int getDownstreamKeyerLeft(uint8_t keyer);
+			int getDownstreamKeyerRight(uint8_t keyer);
 			void performDownstreamKeyerAutoKeyer(uint8_t keyer);
 			bool getDownstreamKeyerOnAir(uint8_t keyer);
 			bool getDownstreamKeyerInTransition(uint8_t keyer);

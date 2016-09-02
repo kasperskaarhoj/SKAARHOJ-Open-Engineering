@@ -153,6 +153,8 @@ void SkaarhojAnalog::uniDirectionalSlider_disableUnidirectionality(bool disable)
   _uniDirectionalSlider_sliderDirectionUp = false;
 }
 
+int16_t SkaarhojAnalog::uniDirectionalSlider_rawValue() { return _analogConv.analogRead(_uniDirectionalSlider_pinIndex) >> 2; }
+
 bool SkaarhojAnalog::uniDirectionalSlider_hasMoved() {
   int sliderValue = _analogConv.analogRead(_uniDirectionalSlider_pinIndex) >> 2;
 

@@ -161,6 +161,8 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
+
+
 		// *********************************
 		// **
 		// ** Implementations in ATEMmax.c:
@@ -8188,6 +8190,28 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					_finishCommandPacket();
 			}
 
+
+			/**
+				* Set Camera Control; Detail level
+				* 0: Off, 1: Low, 2: Medium, 3: High
+				*/
+
+			void ATEMmax::setCameraControlSharpeningLevel(uint8_t input, int detail) {
+					_prepareCommandPacket(PSTR("CCmd"), 20);
+
+					_packetBuffer[12+_cBBO+4+4+0] = input;
+
+					_packetBuffer[12+_cBBO+4+4+1] = 1;
+					_packetBuffer[12+_cBBO+4+4+2] = 8;
+
+					_packetBuffer[12+_cBBO+4+4+4] = 0x01; // Data type: int8
+					_packetBuffer[12+_cBBO+4+4+7] = 0x01;
+
+					_packetBuffer[12+_cBBO+4+4+16] = detail & 0xFF;
+
+					_finishCommandPacket();
+			}
+
 			/**
 				* Set Camera Control; Auto focus
 				* Command takes no input
@@ -8222,6 +8246,26 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					_packetBuffer[12+_cBBO+4+4+4] = 0x00; // Data type: void
 
 					_finishCommandPacket();
+
+					// Update local state variables to reflect reset values
+					atemCameraControlGammaY[input] = 0;
+					atemCameraControlGammaR[input] = 0;
+					atemCameraControlGammaG[input] = 0;
+					atemCameraControlGammaB[input] = 0;
+
+					atemCameraControlLiftY[input] = 0;
+					atemCameraControlLiftR[input] = 0;
+					atemCameraControlLiftG[input] = 0;
+					atemCameraControlLiftB[input] = 0;
+
+					atemCameraControlGainY[input] = 2048;
+					atemCameraControlGainR[input] = 2048;
+					atemCameraControlGainG[input] = 2048;
+					atemCameraControlGainB[input] = 2048;
+
+					atemCameraControlContrast[input] = 2048;
+					atemCameraControlHue[input] = 0;
+					atemCameraControlSaturation[input] = 2048;
 			}
 
 			/**
@@ -8255,7 +8299,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 */
 			void ATEMmax::setCameraControlColorbars(uint8_t input, int colorbars) {
 
-		  		_prepareCommandPacket(PSTR("CCmd"),16);
+		  		_prepareCommandPacket(PSTR("CCmd"), 20);
 
 				_packetBuffer[12+_cBBO+4+4+0] = input;
 
@@ -10575,5 +10619,6 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			uint8_t ATEMmax::getLastStateChangeTimeCodeFrame() {
 				return atemLastStateChangeTimeCodeFrame;
 			}
+			
 
 	
