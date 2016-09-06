@@ -35,7 +35,8 @@ uint8_t HWsetupL() {
     if (getNumberOfPresets() > 1) {
       uint8_t presetNum = EEPROM.read(EEPROM_PRESET_START + 1);
       while (!sTools.hasTimedOut(timer, 2000) || buttons.buttonIsPressedAll() > 0) {
-        uint8_t b16Map[] = {1, 3, 5, 7, 2, 4, 6, 8}; // These numbers refer to the drawing in the web interface
+        //uint8_t b16Map[] = {1, 3, 5, 7, 2, 4, 6, 8}; // These numbers refer to the drawing in the web interface
+		uint8_t b16Map[] = {8, 6, 4, 2, 7, 5, 3, 1}; // These numbers refer to the drawing in the web interface
         for (uint8_t a = 0; a < 8; a++) {
           uint8_t color = b16Map[a] <= getNumberOfPresets() ? (b16Map[a] == presetNum ? 4 : 5) : 0;
           buttons.setButtonColor(a + 1, color);
@@ -62,6 +63,7 @@ void HWtestL() { buttons.testProgramme(0xFF); }
  * Hardware runloop
  */
 void HWrunLoop() {
-  uint8_t b16Map[] = {1, 3, 5, 7, 2, 4, 6, 8}; // These numbers refer to the drawing in the web interface
+//    uint8_t b16Map[] = {1, 3, 5, 7, 2, 4, 6, 8}; // These numbers refer to the drawing in the web interface
+    uint8_t b16Map[] = {8, 6, 4, 2, 7, 5, 3, 1}; // These numbers refer to the drawing in the web interface
   HWrunLoop_BI8(buttons, b16Map, sizeof(b16Map));
 }

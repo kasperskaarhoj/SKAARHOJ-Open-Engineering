@@ -26,6 +26,11 @@ void addressSwitch_setGPO(bool mode) { // 0=relay off, 1=relay on
   Wire.endTransmission();
 }
 
+
+
+
+
+
 /**
  * Hardware setup, config mode and preset settings
  */
