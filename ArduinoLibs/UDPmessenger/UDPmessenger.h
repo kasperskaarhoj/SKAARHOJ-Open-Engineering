@@ -28,7 +28,11 @@ with the UDPmessenger library. If not, see http://www.gnu.org/licenses/.
 #define UDPmessenger_h
 
 #include "Arduino.h"
+#ifdef ESP8266
+#include <WifiUDP.h>
+#else
 #include <EthernetUdp.h>
+#endif
 #include <SkaarhojPgmspace.h>
 #include <Streaming.h>
 
@@ -40,7 +44,11 @@ with the UDPmessenger library. If not, see http://www.gnu.org/licenses/.
 class UDPmessenger
 {
   private:
-	EthernetUDP _Udp;			// Udp Object for communication, see constructor.
+  	#ifdef ESP8266
+	WiFiUDP _Udp;			// Udp Object for communication, see constructor.
+	#else
+	EthernetUDP _Udp;
+	#endif
 	uint16_t _localPort; 		// local port to send/receive from
 	IPAddress _localIP;		// IP address of the local arduino
 	boolean _serialOutput;		// If set, the library will print status/debug information to the Serial object

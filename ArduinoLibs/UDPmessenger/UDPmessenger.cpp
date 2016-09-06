@@ -33,7 +33,12 @@ UDPmessenger::UDPmessenger(){}
 void UDPmessenger::begin(const IPAddress ip, const uint16_t localPort){
 
 		// Set up Udp communication object:
+	#ifdef ESP8266
+	WiFiUDP Udp;
+	#else
 	EthernetUDP Udp;
+	#endif
+	
 	_Udp = Udp;
 	
 	_localIP = ip;		// This IP

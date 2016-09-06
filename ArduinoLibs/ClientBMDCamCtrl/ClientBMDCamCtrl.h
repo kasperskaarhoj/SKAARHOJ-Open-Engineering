@@ -63,6 +63,9 @@ public:
   ClientBMDCamCtrl();
   uint8_t _serialOutput;
 
+  char* getOutputBuffer();
+  uint8_t getOutputLength();
+
   void serialOutput(uint8_t level);
   bool hasInitialized();
 

@@ -30,6 +30,8 @@
 #include <Arduino.h>
 #include <stdint.h>
 
+#define min(a,b) ((a)<(b)?(a):(b))
+
 namespace BMD
 {
 	struct Version
@@ -42,6 +44,8 @@ namespace BMD
 	{
 	public:
 		virtual void		begin() const;
+
+		mutable bool shieldInitialized;
 
 		/** Version information */
 		Version				getLibraryVersion() const;

@@ -190,7 +190,7 @@ void SharedVariables::shareLocalVariable(uint8_t idx, const int * variableRef, u
 	if (idx < _numberOfVars)	{
 		shareLocalVariable(idx, (void *)variableRef, name, descr);
 		_varType[idx] = 10 | (rw << 6);
-		#ifdef __arm__	/* Arduino DUE */
+		#if  defined(__arm__) || defined(ESP8266)	/* Arduino DUE */
 			_varSize[idx] = theSize/4;	// two bytes per integer	TODO: On Arduino DUE (ARM), the int is 4 bytes, so we shall divide by 4 instead! There are other places to do this for integers on Arduino DUE!!!
 		#else
 			_varSize[idx] = theSize/2;	// two bytes per integer
@@ -901,7 +901,7 @@ void SharedVariables::sendBinaryReadResponse(UDPmessenger &UDPmessengerObj, cons
 				}
 			
 				for(uint8_t i=0; i<dLen; i++)	{
-					#ifdef __arm__	/* Arduino DUE */
+					#if defined(__arm__) || defined(ESP8266)	/* Arduino DUE */
 						/*if ((_varType[idx] & 0xF) == 12)	{	 	// integer array, is 32 bit on Due, LSB first, 4 bytes
 							UDPmessengerObj.addValueToDataBuffer(((uint8_t *)_varReferences[idx])[i+4*(i>>2)], i);
 						} else*/
@@ -982,7 +982,7 @@ void SharedVariables::storeBinaryValue(UDPmessenger &UDPmessengerObj, const uint
 			}
 			if ((dLen > 0 && dLen==dataLength) || varLen)	{
 				for(uint8_t i=0; i<dLen; i++)	{
-					#ifdef __arm__	/* Arduino DUE */
+					#if defined(__arm__) || defined(ESP8266)	/* 32 bit microcontroller */
 					/*	if ((_varType[idx] & 0xF) == 12)	{	 	// integer array, is 32 bit on Due, LSB first, 4 bytes
 							((uint8_t *)_varReferences[idx])[i+4*(i>>2)] = dataArray[i];
 							((uint8_t *)_varReferences[idx])[i+4+4*(i>>2)] = dataArray[4*(i>>2)+3] & 0x80 ? 0xFF : 0x00;

@@ -77,6 +77,9 @@ namespace BMD
 		/** Format conversion */
 		int16_t		toFixed16(float value) const;
 		float		fromFixed16(int16_t value) const;
+
+		mutable char outputBuffer[63];
+		mutable uint8_t outputLength;
 	};
 
 

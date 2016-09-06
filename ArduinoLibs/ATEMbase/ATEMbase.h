@@ -31,7 +31,13 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #define ATEMbase_h
 
 #include "Arduino.h"
-#include "EthernetUdp.h"
+
+#ifdef ESP8266
+#include <WifiUDP.h>
+#else
+#include <EthernetUdp.h>
+#endif
+
 #include <SkaarhojPgmspace.h>
 
 #define ATEM_headerCmd_AckRequest 0x1	// Please acknowledge reception of this package...
@@ -48,7 +54,11 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 class ATEMbase
 {
   protected:
+  	#ifdef ESP8266
+  	WiFiUDP _Udp;
+  	#else
 	EthernetUDP _Udp;					// UDP object for communication, see constructor.
+	#endif
 	uint16_t _localPort; 				// Default local port to send from. Preferably it's chosen randomly inside the class.
 	IPAddress _switcherIP;				// IP address of the switcher
 	uint8_t _serialOutput;				// If set, the library will print status/debug information to the Serial object

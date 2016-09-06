@@ -28,6 +28,14 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
   _hasInitialized = true;
 }
 
+char* ClientBMDCamCtrl::getOutputBuffer() {
+  return _cameraControl.outputBuffer;
+}
+
+uint8_t ClientBMDCamCtrl::getOutputLength() {
+  return _cameraControl.outputLength;
+}
+
 void ClientBMDCamCtrl::serialOutput(uint8_t level) { _serialOutput = level; }
 
 bool ClientBMDCamCtrl::hasInitialized() { return _hasInitialized; }
@@ -158,7 +166,7 @@ void ClientBMDCamCtrl::setSensorGain(uint8_t camera, int8_t gain, bool offset) {
   _cameraControl.writeCommandInt8(camera, 1, 1, (offset ? 1 : 0), gain);
 }
 void ClientBMDCamCtrl::setWhiteBalance(uint8_t camera, int16_t wb, bool offset) { // 3200 - 7500
-  clampValue(&wb, 3200, 7500);
+  clampValue(&wb, (int16_t)3200, (int16_t)7500);
   cameraWBValue[camera - 1] = wb;
   _cameraControl.writeCommandInt16(camera, 1, 2, (offset ? 1 : 0), wb);
 }

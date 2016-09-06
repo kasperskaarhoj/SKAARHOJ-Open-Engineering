@@ -35,10 +35,19 @@ namespace BMD
 
 	void SDIControlShield::begin() const
 	{
+		shieldInitialized = false;
+		unsigned long startTime = millis();
+
 		const uint32_t expectedIdentifier = ((uint32_t)'S' << 0 | (uint32_t)'D' << 8 | (uint32_t)'I' << 16 | (uint32_t)'C' << 24);
 		while (regRead32(kRegIDENTIFIER) != expectedIdentifier)
 		{
+			if(millis() - startTime > 2000) {
+				Serial.println("Timeout connecting to BMD SDI Shield");
+				return;
+			}
 			// Wait for shield to become ready, the FPGA takes time to boot up
+
+			shieldInitialized = true;
 		}
 	}
 

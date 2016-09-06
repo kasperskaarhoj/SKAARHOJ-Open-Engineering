@@ -271,12 +271,12 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
       }
     }
 
-    hysteresis = hysteresis * 5;
+    hysteresis = hysteresis * 2;
 
     Serial << F("Calibration results:\n");
     Serial << F("Start offset: ") << start << "\n";
     Serial << F("End offset: ") << end << "\n";
-    Serial << F("Hysteresis: ") << hysteresis << " (Safety factor = 5)\n";
+    Serial << F("Hysteresis: ") << hysteresis << " (Safety factor = 2)\n";
 
     Serial << F("\n Send 'ok' to save this calibration.");
     calibrationState++;

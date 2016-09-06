@@ -30,128 +30,134 @@
 #include <string.h>
 
 namespace BMD {
-void SDICameraControl::setOverride(bool enabled) const {
-  byte regValue = regRead8(kRegCONTROL);
-  if (enabled)
-    regValue |= kRegCONTROL_COVERIDE_Mask;
-  else
-    regValue &= ~kRegCONTROL_COVERIDE_Mask;
+  void SDICameraControl::setOverride(bool enabled) const {
+    byte regValue = regRead8(kRegCONTROL);
+    if (enabled)
+      regValue |= kRegCONTROL_COVERIDE_Mask;
+    else
+      regValue &= ~kRegCONTROL_COVERIDE_Mask;
 
-  regWrite8(kRegCONTROL, regValue);
-}
-
-bool SDICameraControl::available() const { return (regRead8(kRegICARM) & kRegOCARM_ARM_Mask) == 0; }
-
-int SDICameraControl::read(byte data[], int dataLength) const {
-  if (!available())
-    return 0;
-
-  // Read control data incoming length and data
-  int availableLength = regRead16(kRegICLENGTH);
-
-  if (availableLength > dataLength)
-    return -1;
-
-  regRead(kRegICDATA, data, availableLength);
-
-  // Arm the control data incoming bank
-  regWrite8(kRegICARM, kRegICARM_ARM_Mask);
-
-  return availableLength;
-}
-
-void SDICameraControl::flushRead() const { regWrite8(kRegOCARM, kRegOCARM_ARM_Mask); }
-
-bool SDICameraControl::availableForWrite() const { return (regRead8(kRegOCARM) & kRegOCARM_ARM_Mask) == 0; }
-
-void SDICameraControl::write(const byte data[], int dataLength) const {
-  // Ensure any pending writes are complete before writing new data
-  flushWrite();
-
-  // Set up control override length and data
-  regWrite8(kRegOCLENGTH, dataLength);
-  regWrite(kRegOCDATA, data, dataLength);
-
-  // Arm the control override bank
-  regWrite8(kRegOCARM, kRegOCARM_ARM_Mask);
-}
-
-void SDICameraControl::flushWrite() const {
-  while (!availableForWrite()) {
-    // Wait for control override bank to become ready for new data
+    regWrite8(kRegCONTROL, regValue);
   }
-}
 
-void SDICameraControl::writeCommandVoid(byte camera, byte category, byte parameter) const {
-  const uint8_t kHeaderLength = 4;
-  const uint8_t kParamLength = 1;
-  const uint8_t kPayloadLength = 4 + (kParamLength * 1);
-  const uint8_t kPaddingLength = (kPayloadLength % 4) ? (4 - (kPayloadLength % 4)) : 0;
+  bool SDICameraControl::available() const { return (regRead8(kRegICARM) & kRegOCARM_ARM_Mask) == 0; }
 
-  byte payload[kHeaderLength + kPayloadLength + kPaddingLength] = {                    /* Header */
-                                                                   camera,             // Destination
-                                                                   kPayloadLength - 1, // Payload Length
-                                                                   0,                  // Command
-                                                                   0,                  // Source
+  int SDICameraControl::read(byte data[], int dataLength) const {
+    if (!available())
+      return 0;
 
-                                                                   /* Payload */
-                                                                   category,  // Category
-                                                                   parameter, // Parameter
-                                                                   0,         // Data Type
-                                                                   0,         // Operation
+    // Read control data incoming length and data
+    int availableLength = regRead16(kRegICLENGTH);
 
-                                                                   1, 0, 0, 0};
+    if (availableLength > dataLength)
+      return -1;
 
-  write(payload);
-}
+    regRead(kRegICDATA, data, availableLength);
 
-void SDICameraControl::writeCommandBool(byte camera, byte category, byte parameter, byte operation, bool value) const {
-  const uint8_t kHeaderLength = 4;
-  const uint8_t kParamLength = 1;
-  const uint8_t kPayloadLength = 4 + (kParamLength * 1);
-  const uint8_t kPaddingLength = (kPayloadLength % 4) ? (4 - (kPayloadLength % 4)) : 0;
+    // Arm the control data incoming bank
+    regWrite8(kRegICARM, kRegICARM_ARM_Mask);
 
-  byte payload[kHeaderLength + kPayloadLength + kPaddingLength] = {                /* Header */
-                                                                   camera,         // Destination
-                                                                   kPayloadLength, // Payload Length
-                                                                   0,              // Command
-                                                                   0,              // Source
+    return availableLength;
+  }
 
-                                                                   /* Payload */
-                                                                   category,  // Category
-                                                                   parameter, // Parameter
-                                                                   0,         // Data Type
-                                                                   operation, // Operation
+  void SDICameraControl::flushRead() const { regWrite8(kRegOCARM, kRegOCARM_ARM_Mask); }
 
-                                                                   value, 0, 0, 0};
+  bool SDICameraControl::availableForWrite() const { return (regRead8(kRegOCARM) & kRegOCARM_ARM_Mask) == 0; }
 
-  write(payload);
-}
+  void SDICameraControl::write(const byte data[], int dataLength) const {
 
-void SDICameraControl::writeCommandUTF8(byte camera, byte category, byte parameter, byte operation, const char *string) const {
-  const uint8_t kMaxStringLength = 64;
+    if(shieldInitialized) {
+      // Ensure any pending writes are complete before writing new data
+      flushWrite();
 
-  const uint8_t kHeaderLength = 4;
-  const uint8_t kParamLength = min(strlen(string), kMaxStringLength);
-  const uint8_t kPayloadLength = 4 + (kParamLength * 1);
-  const uint8_t kPaddingLength = (kPayloadLength % 4) ? (4 - (kPayloadLength % 4)) : 0;
+      // Set up control override length and data
+      regWrite8(kRegOCLENGTH, dataLength);
+      regWrite(kRegOCDATA, data, dataLength);
 
-  byte payload[kHeaderLength + (4 + kMaxStringLength) + 4] = {
-      /* Header */
-      camera,         // Destination
-      kPayloadLength, // Payload Length
-      0,              // Command
-      0,              // Source
+      // Arm the control override bank
+      regWrite8(kRegOCARM, kRegOCARM_ARM_Mask);
+    } else {
+      memcpy(outputBuffer, data, dataLength);
+      outputLength = dataLength;
+    }
+  }
 
-      /* Payload */
-      category,  // Category
-      parameter, // Parameter
-      5,         // Data Type
-      operation, // Operation
-  };
+  void SDICameraControl::flushWrite() const {
+    while (!availableForWrite()) {
+      // Wait for control override bank to become ready for new data
+    }
+  }
 
-  strncpy((char *)&payload[kHeaderLength + 4], string, kParamLength);
+  void SDICameraControl::writeCommandVoid(byte camera, byte category, byte parameter) const {
+    const uint8_t kHeaderLength = 4;
+    const uint8_t kParamLength = 1;
+    const uint8_t kPayloadLength = 4 + (kParamLength * 1);
+    const uint8_t kPaddingLength = (kPayloadLength % 4) ? (4 - (kPayloadLength % 4)) : 0;
 
-  write(payload, kHeaderLength + kPayloadLength + kPaddingLength);
-}
+    byte payload[kHeaderLength + kPayloadLength + kPaddingLength] = {                    /* Header */
+                                                                     camera,             // Destination
+                                                                     kPayloadLength - 1, // Payload Length
+                                                                     0,                  // Command
+                                                                     0,                  // Source
+
+                                                                     /* Payload */
+                                                                     category,  // Category
+                                                                     parameter, // Parameter
+                                                                     0,         // Data Type
+                                                                     0,         // Operation
+
+                                                                     1, 0, 0, 0};
+
+    write(payload);
+  }
+
+  void SDICameraControl::writeCommandBool(byte camera, byte category, byte parameter, byte operation, bool value) const {
+    const uint8_t kHeaderLength = 4;
+    const uint8_t kParamLength = 1;
+    const uint8_t kPayloadLength = 4 + (kParamLength * 1);
+    const uint8_t kPaddingLength = (kPayloadLength % 4) ? (4 - (kPayloadLength % 4)) : 0;
+
+    byte payload[kHeaderLength + kPayloadLength + kPaddingLength] = {                /* Header */
+                                                                     camera,         // Destination
+                                                                     kPayloadLength, // Payload Length
+                                                                     0,              // Command
+                                                                     0,              // Source
+
+                                                                     /* Payload */
+                                                                     category,  // Category
+                                                                     parameter, // Parameter
+                                                                     0,         // Data Type
+                                                                     operation, // Operation
+
+                                                                     value, 0, 0, 0};
+
+    write(payload);
+  }
+
+  void SDICameraControl::writeCommandUTF8(byte camera, byte category, byte parameter, byte operation, const char *string) const {
+    const uint8_t kMaxStringLength = 64;
+
+    const uint8_t kHeaderLength = 4;
+    const uint8_t kParamLength = min(strlen(string), kMaxStringLength);
+    const uint8_t kPayloadLength = 4 + (kParamLength * 1);
+    const uint8_t kPaddingLength = (kPayloadLength % 4) ? (4 - (kPayloadLength % 4)) : 0;
+
+    byte payload[kHeaderLength + (4 + kMaxStringLength) + 4] = {
+        /* Header */
+        camera,         // Destination
+        kPayloadLength, // Payload Length
+        0,              // Command
+        0,              // Source
+
+        /* Payload */
+        category,  // Category
+        parameter, // Parameter
+        5,         // Data Type
+        operation, // Operation
+    };
+
+    strncpy((char *)&payload[kHeaderLength + 4], string, kParamLength);
+
+    write(payload, kHeaderLength + kPayloadLength + kPaddingLength);
+  }
 }
