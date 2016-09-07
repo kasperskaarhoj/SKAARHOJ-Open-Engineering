@@ -28,7 +28,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #include "Arduino.h"
 
-#if defined(ARDUINO_SKAARDUINO_V1)  
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)  
 	#include <SPI.h>
 #endif
 

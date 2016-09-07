@@ -113,7 +113,7 @@ void SkaarhojSerialClient::runLoop(uint16_t delayTime) {
 				connect();
 			}
 		} else {
-			if (_ackMsgInterval>0 && hasTimedOut(_lastIncomingMsg,_ackMsgInterval+1000))	{
+			if (_ackMsgInterval>0 && hasTimedOut(_lastIncomingMsg,_ackMsgInterval+2000))	{
 				if (_serialOutput)	Serial.println(F("Disconnected."));
 				_isConnected = false;
 			}

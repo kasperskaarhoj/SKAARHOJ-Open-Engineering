@@ -11,7 +11,13 @@
 #include <Wire.h>
 #include <Ethernet.h>
 #include <Streaming.h>
-#include <EEPROM.h>
+#ifdef __arm__  /* Arduino DUE */
+#include "SkaarhojDueEEPROM.h"
+SkaarhojDueEEPROM EEPROM;
+#else
+#include "EEPROM.h"
+#endif
+
 #include <SkaarhojTools.h>
 SkaarhojTools sTools(0);
 

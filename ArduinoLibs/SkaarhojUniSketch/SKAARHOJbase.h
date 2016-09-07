@@ -56,6 +56,16 @@ IPAddress subnet(255, 255, 255, 0); // This is the default subnet address
 #define QUICKBLANK 254
 #define DONTCHANGE 255
 
+#if defined(ARDUINO_SKAARDUINO_DUE)
+static const uint8_t PIN_RED=2;
+static const uint8_t PIN_GREEN=22;
+static const uint8_t PIN_BLUE=13;
+#else
+static const uint8_t PIN_RED=13;
+static const uint8_t PIN_GREEN=15;
+static const uint8_t PIN_BLUE=14;
+#endif
+
 /**
  * Reading serial buffer for commands
  */
@@ -387,8 +397,8 @@ void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
   static uint8_t color = 0;
   static uint8_t blnk = 0;
 
-  static uint8_t grn = variantLED() ? 14 : 15;
-  static uint8_t blu = variantLED() ? 15 : 14;
+  static uint8_t grn = variantLED() ? PIN_BLUE : PIN_GREEN;
+  static uint8_t blu = variantLED() ? PIN_GREEN : PIN_BLUE;
 
   if (incolor < 254) {
     color = incolor;
@@ -426,42 +436,42 @@ void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
 #else
       switch (color) {
       case 1:                 //  red
-        digitalWrite(13, 0);  // Red
+        digitalWrite(PIN_RED, 0);  // Red
         digitalWrite(grn, 1); // Green
         digitalWrite(blu, 1); // Blue
         break;
       case 2:                 //  green
-        digitalWrite(13, 1);  // Red
+        digitalWrite(PIN_RED, 1);  // Red
         digitalWrite(grn, 0); // Green
         digitalWrite(blu, 1); // Blue
         break;
       case 3:                 //  blue
-        digitalWrite(13, 1);  // Red
+        digitalWrite(PIN_RED, 1);  // Red
         digitalWrite(grn, 1); // Green
         digitalWrite(blu, 0); // Blue
         break;
       case 4:                 //  white
-        digitalWrite(13, 0);  // Red
+        digitalWrite(PIN_RED, 0);  // Red
         digitalWrite(grn, 0); // Green
         digitalWrite(blu, 0); // Blue
         break;
       case 5:                 //  yellow
-        digitalWrite(13, 0);  // Red
+        digitalWrite(PIN_RED, 0);  // Red
         digitalWrite(grn, 0); // Green
         digitalWrite(blu, 1); // Blue
         break;
       case 6:                 //  cyan
-        digitalWrite(13, 1);  // Red
+        digitalWrite(PIN_RED, 1);  // Red
         digitalWrite(grn, 0); // Green
         digitalWrite(blu, 0); // Blue
         break;
       case 7:                 //  purple
-        digitalWrite(13, 0);  // Red
+        digitalWrite(PIN_RED, 0);  // Red
         digitalWrite(grn, 1); // Green
         digitalWrite(blu, 0); // Blue
         break;
       default:                //  off
-        digitalWrite(13, 1);  // Red
+        digitalWrite(PIN_RED, 1);  // Red
         digitalWrite(grn, 1); // Green
         digitalWrite(blu, 1); // Blue
         break;
@@ -472,7 +482,7 @@ void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
       digitalWrite(3, !1); // Red
       digitalWrite(2, !1); // Green
 #else
-      digitalWrite(13, 1);  // Red
+      digitalWrite(PIN_RED, 1);  // Red
       digitalWrite(grn, 1); // Green
       digitalWrite(blu, 1); // Blue
 #endif
@@ -523,7 +533,9 @@ void lDelay(uint16_t delayVal) {
 bool isConfigButtonPushed() {
 #if SK_ETHMEGA
   return (analogRead(A1) < 500) || (EEPROM.read(0) != 0);
-#else
+#elif defined(ARDUINO_SKAARDUINO_DUE)
+  return (!digitalRead(23)) || (EEPROM.read(0) != 0);
+#else 
   return (!digitalRead(18)) || (EEPROM.read(0) != 0);
 #endif
 }
@@ -2563,6 +2575,8 @@ void initController() {
 // Setup Config:
 #if SK_ETHMEGA
   pinMode(A1, INPUT_PULLUP); // CFG input on ethermega MMBOS
+#elif defined(ARDUINO_SKAARDUINO_DUE)
+  pinMode(23, INPUT);  // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
 #else
   pinMode(18, INPUT);  // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
 #endif
