@@ -66,7 +66,7 @@ SkaarhojOLED64x256::SkaarhojOLED64x256() : Adafruit_GFX(SKAARHOJOLED64x256_LCDWI
 void SkaarhojOLED64x256::begin(uint8_t address, uint8_t cs) {
 // NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
 
-#if defined(ARDUINO_SKAARDUINO_V1)
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPI.begin();
 #endif
   _zoom2Xenabled = false;
@@ -79,7 +79,7 @@ void SkaarhojOLED64x256::begin(uint8_t address, uint8_t cs) {
   pinMode(_clockPin, OUTPUT);
   pinMode(_dataPin, OUTPUT);
 
-#if !defined(ARDUINO_SKAARDUINO_V1)
+#if !defined(ARDUINO_SKAARDUINO_V1) && !defined(ARDUINO_SKAARDUINO_DUE)
   clkport = portOutputRegister(digitalPinToPort(_clockPin));
   clkpinmask = digitalPinToBitMask(_clockPin);
   mosiport = portOutputRegister(digitalPinToPort(_dataPin));
@@ -251,7 +251,7 @@ void SkaarhojOLED64x256::display(uint8_t cs) {
 
 inline void SkaarhojOLED64x256::fastSPIwrite(uint8_t d) {
 
-#if defined(ARDUINO_SKAARDUINO_V1)
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPISettings settingsA(10000000, MSBFIRST, SPI_MODE0);
   SPI.beginTransaction(settingsA);
   SPI.transfer(d);

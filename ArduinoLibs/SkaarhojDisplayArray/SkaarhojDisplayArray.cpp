@@ -59,7 +59,7 @@ void SkaarhojDisplayArray::begin(uint8_t address, uint8_t boardType, uint8_t cs,
 
   _boardAddress = 88 | (address & B111); // 0-7
   _boardType = boardType;                // 1=Array A (vertical), 2=Array B (Large horizontal), 3=Array C (Small horizontal)
-#if defined(ARDUINO_SKAARDUINO_V1)
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPI.begin();
 #endif
 
@@ -70,7 +70,7 @@ void SkaarhojDisplayArray::begin(uint8_t address, uint8_t boardType, uint8_t cs,
   pinMode(_clockPin, OUTPUT);
   pinMode(_dataPin, OUTPUT);
 
-#if !defined(ARDUINO_SKAARDUINO_V1)
+#if !defined(ARDUINO_SKAARDUINO_V1) && !defined(ARDUINO_SKAARDUINO_DUE)
   clkport = portOutputRegister(digitalPinToPort(_clockPin));
   clkpinmask = digitalPinToBitMask(_clockPin);
   mosiport = portOutputRegister(digitalPinToPort(_dataPin));
@@ -305,7 +305,7 @@ void SkaarhojDisplayArray::display(uint8_t cs) {
 }
 
 inline void SkaarhojDisplayArray::fastSPIwrite(uint8_t d) {
-#if defined(ARDUINO_SKAARDUINO_V1)
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPISettings settingsA(10000000, MSBFIRST, SPI_MODE0);
   SPI.beginTransaction(settingsA);
   SPI.transfer(d);

@@ -94,7 +94,7 @@ void SkaarhojSmartSwitch2::begin(uint8_t address) {
   // NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
   _boardAddress = (address & B111); // 0-3
 
-#if defined(ARDUINO_SKAARDUINO_V1)
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPI.begin();
 #endif
 
@@ -248,7 +248,7 @@ bool SkaarhojSmartSwitch2::isButtonIn(uint8_t buttonNumber, uint8_t allButtonsSt
 void SkaarhojSmartSwitch2::clearDisplay(void) { memset(bufferSSW, 0, (SKAARHOJSMARTSWITCH_LCDWIDTH * SKAARHOJSMARTSWITCH_LCDHEIGHT / 8)); }
 void SkaarhojSmartSwitch2::display(uint8_t cs) {
 
-#if defined(ARDUINO_SKAARDUINO_V1)
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE1));
   _chipSelect(cs);
   SPI.transfer(0x55);
@@ -292,7 +292,7 @@ bool SkaarhojSmartSwitch2::_validButtonNumber(uint8_t buttonNumber) { // Checks 
  */
 int SkaarhojSmartSwitch2::_writeCommand(int address, int value, uint8_t cs) {
 
-#if defined(ARDUINO_SKAARDUINO_V1)
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE1));
   _chipSelect(cs);
 

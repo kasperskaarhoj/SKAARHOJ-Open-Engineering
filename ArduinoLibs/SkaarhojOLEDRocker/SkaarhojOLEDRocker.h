@@ -15,7 +15,7 @@ open-source hardware by purchasing products from Adafruit as well!
 #include <Wire.h>
 
 
-#if defined(ARDUINO_SKAARDUINO_V1)  
+#if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)  
 	#include <SPI.h>
 #endif
 

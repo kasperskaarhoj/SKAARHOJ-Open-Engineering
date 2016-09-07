@@ -91,7 +91,7 @@
 #include "utility/w5100.h"
 #include "Streaming.h"
 #ifdef __arm__  /* Arduino DUE */
-//#include "SkaarhojDueEEPROM.h" // FIX THIS
+#include "SkaarhojDueEEPROM.h"
 SkaarhojDueEEPROM EEPROM;
 #else
 #include "EEPROM.h"
