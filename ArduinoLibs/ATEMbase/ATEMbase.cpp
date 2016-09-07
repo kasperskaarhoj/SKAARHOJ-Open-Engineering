@@ -557,10 +557,17 @@ uint8_t ATEMbase::getATEMmodel()	{
 float ATEMbase::audioWord2Db(uint16_t input)  {  // -48 to +6 output
   // Formular: log10(input/128)*20-48;
   if (input<=32)  return -60;
-  return (log10(input)-2.1072099696)*20-48;
+  //return (log10(input)-2.1072099696)*20-48;
+  // Better way?
+  //return log10(input >> 5) * 20.0 - 60.0;
+
+  return log10((float)input/(1<<11) / 16.0) * 20.0;
 }
 uint16_t ATEMbase::audioDb2Word(float input)  {  // -48 to +6 input
-  return (float)pow(10,(input+48)/20)*128;
+  //return (float)pow(10,(input+48)/20)*128;
+	//return (uint16_t)pow(10, (input + 60.0) / 20.0) << 5;
+
+	return pow(10, input/20.0) * 16.0 * (1<<11);
 }
 
 

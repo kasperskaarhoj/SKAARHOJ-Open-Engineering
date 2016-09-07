@@ -99,12 +99,12 @@ void SkaarhojEncoders::runLoop() {
                                                                                }
                                                                                _interruptStateTime[b] = millis();
                                                                      }*/
-        if (!((capture >> 8) & (B10 << (b << 1)))) { // Check pin A polarity and pin B direction
-          if (((capture >> 8) & (B1 << (b << 1)))) {
-            _interruptStateNum[b]++;
-            directionUp = true;
-          } else {
+        if (((capture >> 8) & (B1 << (b << 1)))) { // Check pin A polarity and pin B direction
+          if (((capture >> 8) & (B10 << (b << 1)))) {
             _interruptStateNum[b]--;
+            directionUp = false;
+          } else {
+            _interruptStateNum[b]++;
             directionUp = true;
           }
           if (_serialOutput) {

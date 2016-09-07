@@ -1698,8 +1698,9 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
       break;
     }
     extRetValIsWanted(true);
-    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], 0x8000, SSWMenuItemPtr + 1);
 
+    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], 0x8000, SSWMenuItemPtr + 1);
+    
     SSWmenuEnc.runLoop();
 
     static uint16_t prevHash = 0;

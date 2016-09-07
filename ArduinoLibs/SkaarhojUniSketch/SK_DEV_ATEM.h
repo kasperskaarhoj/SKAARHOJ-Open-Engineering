@@ -118,7 +118,7 @@ uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int pulseCount, uin
       srcI = (srcI + AtemSwitcher[devIndex].maxAtemSeriesVideoInputs() + (pulseCount > 0 ? 1 : -1)) % AtemSwitcher[devIndex].maxAtemSeriesVideoInputs();
       if (limit != 0) {
         if (pulseCount > 0 && srcI > limit)
-          srcI = 1;
+          srcI = 0;
         if (pulseCount < 0 && srcI > limit)
           srcI = limit;
       }
@@ -395,7 +395,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-  //#if SK_MODEL != SK_RCP
+  #if SK_MODEL != SK_RCP
   case 4: // USK settings
     if (globalConfigMem[actionPtr + 3] != 4) {
       if (actDown) {
@@ -470,7 +470,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-#if SK_MODEL != SK_RCP
   case 5: // Upstream Keyer Fill
     if (actDown) {
       AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
@@ -1075,21 +1074,22 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         if (value != 0x8000) { // Value input
           outValue = constrain(map(value, 0, 1000, -600, 60), -600, 60);
         } else { // Binary - reset / toggle
-          outValue = (int)AtemSwitcher[devIndex].audioWord2Db(audioVol) != 0 ? 0 : -600;
+          outValue = (uint16_t)AtemSwitcher[devIndex].audioWord2Db(audioVol) != 0 ? 0 : -600;
         }
       }
       if (pulses & 0xFFFE) {
-        outValue = pulsesHelper(AtemSwitcher[devIndex].audioWord2Db(audioVol), -600, 60, false, pulses, 2, 10);
+        outValue = pulsesHelper(round((AtemSwitcher[devIndex].audioWord2Db(audioVol)*10.0)), -600, 60, false, pulses, 2, 10);
       }
+
       switch (globalConfigMem[actionPtr + 1]) {
       case 25:
-        AtemSwitcher[devIndex].setAudioMixerMasterVolume(AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
+        AtemSwitcher[devIndex].setAudioMixerMasterVolume(AtemSwitcher[devIndex].audioDb2Word((float)outValue / 10.0));
         break;
       case 26:
-        AtemSwitcher[devIndex].setAudioMixerMonitorVolume(AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
+        AtemSwitcher[devIndex].setAudioMixerMonitorVolume(AtemSwitcher[devIndex].audioDb2Word((float)outValue / 10.0));
         break;
       default:
-        AtemSwitcher[devIndex].setAudioMixerInputVolume(aSrc, AtemSwitcher[devIndex].audioDb2Word(outValue / 10));
+        AtemSwitcher[devIndex].setAudioMixerInputVolume(aSrc, AtemSwitcher[devIndex].audioDb2Word((float)outValue / 10.0));
         break;
       }
     }
@@ -1097,7 +1097,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     retVal = (int)AtemSwitcher[devIndex].audioWord2Db(audioVol) == 0 ? (4 | 0x20) : 5;
 
     if (extRetValIsWanted()) {
-      extRetVal(AtemSwitcher[devIndex].audioWord2Db(audioVol), 3, _systemHWcActionFineFlag[HWc]);
+      extRetVal(round(AtemSwitcher[devIndex].audioWord2Db(audioVol)), 3, _systemHWcActionFineFlag[HWc]);
       extRetValColor((int)AtemSwitcher[devIndex].audioWord2Db(audioVol) == 0 ? B111110 : ((int)AtemSwitcher[devIndex].audioWord2Db(audioVol) > 0 ? B111010 : (audioVol > AtemSwitcher[devIndex].audioDb2Word(-48) ? B101110 : B010101)));
       extRetValScale(1, -48, 6, -60, 0);
       extRetValShortLabel(PSTR("Vol. "));

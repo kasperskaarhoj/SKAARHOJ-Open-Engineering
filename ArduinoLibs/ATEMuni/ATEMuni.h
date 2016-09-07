@@ -58,6 +58,10 @@ class ATEMuni : public ATEMbase
 
 
 
+
+
+
+
 // *********************************
 // **
 // ** Implementations in ATEMuni.h:
@@ -381,6 +385,7 @@ public:
 			int getDownstreamKeyerBottom(uint8_t keyer);
 			int getDownstreamKeyerLeft(uint8_t keyer);
 			int getDownstreamKeyerRight(uint8_t keyer);
+			void setDownstreamKeyerRate(uint8_t keyer, uint8_t rate);
 			void performDownstreamKeyerAutoKeyer(uint8_t keyer);
 			bool getDownstreamKeyerOnAir(uint8_t keyer);
 			bool getDownstreamKeyerInTransition(uint8_t keyer);

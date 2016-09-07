@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_MICROSMARTV
+#define SK_MODEL SK_E21SSW
 
 
 

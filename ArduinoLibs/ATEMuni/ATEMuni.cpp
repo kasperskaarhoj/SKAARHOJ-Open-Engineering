@@ -159,6 +159,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
+
+
 		// *********************************
 		// **
 		// ** Implementations in ATEMuni.c:
@@ -4237,6 +4239,23 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 */
 			int ATEMuni::getDownstreamKeyerRight(uint8_t keyer) {
 				return atemDownstreamKeyerRight[keyer];
+			}
+			
+			/**
+			 * Set Downstream Keyer; Rate
+			 * keyer 	0: DSK1, 1: DSK2
+			 * rate 	1-250: Frames
+			 */
+			void ATEMuni::setDownstreamKeyerRate(uint8_t keyer, uint8_t rate) {
+			
+	  	  		_prepareCommandPacket(PSTR("CDsR"),4,(_packetBuffer[12+_cBBO+4+4+0]==keyer));
+		
+				_packetBuffer[12+_cBBO+4+4+0] = keyer;
+				
+				_packetBuffer[12+_cBBO+4+4+1] = rate;
+				
+	 	   		_finishCommandPacket();
+		
 			}
 			
 			/**
