@@ -71,7 +71,7 @@ SharedVariables::SharedVariables(uint8_t numberOfVariables, uint8_t numberOfWidg
  * Associate a variable for sharing, integers
  * NOTE: Names for sharing variables is the string by which the variable is referenced via the buffer interface - make sure not to name two variables the same or substrings of each other, for instance dont use names like "My Var" and "My Var2" because "My Var" is a substring of "My Var2". This may lead to unexpected behaviours
  */
-void SharedVariables::shareLocalVariable(uint8_t idx, int &variableRef, uint8_t rw, const char *name, const char *descr, int min, int max) {
+void SharedVariables::shareLocalVariable(uint8_t idx, int16_t &variableRef, uint8_t rw, const char *name, const char *descr, int16_t min, int16_t max) {
 	if (idx < _numberOfVars)	{
 //		Serial.println((int)variableRef);	// Value
 //		Serial.println((int)&variableRef);	// Memory Address
@@ -124,7 +124,7 @@ void SharedVariables::shareLocalVariable(uint8_t idx, uint16_t &variableRef, uin
 /**
  * Associate a variable for sharing, long
  */
-void SharedVariables::shareLocalVariable(uint8_t idx, long &variableRef, uint8_t rw, const char *name, const char *descr) {
+void SharedVariables::shareLocalVariable(uint8_t idx, int32_t &variableRef, uint8_t rw, const char *name, const char *descr) {
 	if (idx < _numberOfVars)	{
 		shareLocalVariable(idx, (void *)&variableRef, name, descr);
 		_varType[idx] = 4 | (rw << 6);
@@ -134,7 +134,7 @@ void SharedVariables::shareLocalVariable(uint8_t idx, long &variableRef, uint8_t
 /**
  * Associate a variable for sharing, unsigned long
  */
-void SharedVariables::shareLocalVariable(uint8_t idx, unsigned long &variableRef, uint8_t rw, const char *name, const char *descr) {
+void SharedVariables::shareLocalVariable(uint8_t idx, uint32_t &variableRef, uint8_t rw, const char *name, const char *descr) {
 	if (idx < _numberOfVars)	{
 		shareLocalVariable(idx, (void *)&variableRef, name, descr);
 		_varType[idx] = 5 | (rw << 6);
@@ -186,15 +186,11 @@ void SharedVariables::shareLocalVariable(uint8_t idx, const uint8_t * variableRe
 /**
  * Associate a variable for sharing, arrays of integers
  */
-void SharedVariables::shareLocalVariable(uint8_t idx, const int * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr) {
+void SharedVariables::shareLocalVariable(uint8_t idx, const int16_t * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr) {
 	if (idx < _numberOfVars)	{
 		shareLocalVariable(idx, (void *)variableRef, name, descr);
 		_varType[idx] = 10 | (rw << 6);
-		#if  defined(__arm__) || defined(ESP8266)	/* Arduino DUE */
-			_varSize[idx] = theSize/4;	// two bytes per integer	TODO: On Arduino DUE (ARM), the int is 4 bytes, so we shall divide by 4 instead! There are other places to do this for integers on Arduino DUE!!!
-		#else
-			_varSize[idx] = theSize/2;	// two bytes per integer
-		#endif
+		_varSize[idx] = theSize/2;	// two bytes per integer
 	}
 }
 
@@ -212,7 +208,7 @@ void SharedVariables::shareLocalVariable(uint8_t idx, const uint16_t * variableR
 /**
  * Associate a variable for sharing, arrays of longs
  */
-void SharedVariables::shareLocalVariable(uint8_t idx, const long * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr) {
+void SharedVariables::shareLocalVariable(uint8_t idx, const int32_t * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr) {
 	if (idx < _numberOfVars)	{
 		shareLocalVariable(idx, (void *)variableRef, name, descr);
 		_varType[idx] = 12 | (rw << 6);
@@ -865,10 +861,10 @@ void SharedVariables::sendBinaryReadResponse(UDPmessenger &UDPmessengerObj, cons
 				case 3: 	// uint16_t
 					dLen = 2;
 					break;
-				case 4: 	// long
+				case 4: 	// int16_t
 					dLen = 4;
 					break;
-				case 5: 	// unsigned long
+				case 5: 	//  uint32_t
 					dLen = 4;
 					break;
 				case 6: 	// float
@@ -883,13 +879,13 @@ void SharedVariables::sendBinaryReadResponse(UDPmessenger &UDPmessengerObj, cons
 				case 9: 	// uint8_t array
 					dLen = _varSize[idx];
 					break;
-				case 10: 	// int array
+				case 10: 	// int16_t array
 					dLen = _varSize[idx]*2;
 					break;
 				case 11: 	// uint16_t array
 					dLen = _varSize[idx]*2;
 					break;
-				case 12: 	// long array
+				case 12: 	// int32_t array
 					dLen = _varSize[idx]*4;
 					break;
 				default:
@@ -932,7 +928,7 @@ void SharedVariables::storeBinaryValue(UDPmessenger &UDPmessengerObj, const uint
 		
 		if (writeEnabled(idx))	{		
 			switch(_varType[idx] & 0xF)	{
-				case 0: 	// int
+				case 0: 	// int16_t
 					dLen = 2;
 					break;
 				case 1: 	// bool
@@ -944,10 +940,10 @@ void SharedVariables::storeBinaryValue(UDPmessenger &UDPmessengerObj, const uint
 				case 3: 	// uint16_t
 					dLen = 2;
 					break;
-				case 4: 	// long
+				case 4: 	// int32_t
 					dLen = 4;
 					break;
-				case 5: 	// unsigned long
+				case 5: 	// uint32_t
 					dLen = 4;
 					break;
 				case 6: 	// float
@@ -966,13 +962,13 @@ void SharedVariables::storeBinaryValue(UDPmessenger &UDPmessengerObj, const uint
 					dLen = dataLength < dLen ? dataLength : dLen;
 					varLen = true;
 					break;
-				case 10: 	// int array
+				case 10: 	// int16_t array
 				case 11: 	// uint16_t array
 					dLen = _varSize[idx]*2;
 					dLen = dataLength < dLen ? dataLength : dLen;
 					varLen = true;
 					break;
-				case 12: 	// long array
+				case 12: 	// int32_T array
 					dLen = _varSize[idx]*4;
 					dLen = dataLength < dLen ? dataLength : dLen;
 					varLen = true;

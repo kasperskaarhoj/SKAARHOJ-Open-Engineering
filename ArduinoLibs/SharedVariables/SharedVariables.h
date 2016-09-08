@@ -112,19 +112,19 @@ class SharedVariables
 	
   public:
 	  SharedVariables(uint8_t numberOfVariables, uint8_t numberOfWidgets=0);
-	  void shareLocalVariable(uint8_t idx, int &variableRef, uint8_t rw, const char *name, const char *descr, int min=0, int max=0);
+	  void shareLocalVariable(uint8_t idx, int16_t &variableRef, uint8_t rw, const char *name, const char *descr, int16_t min=0, int16_t max=0);
 	  void shareLocalVariable(uint8_t idx, bool &variableRef, uint8_t rw, const char *name, const char *descr);
 	  void shareLocalVariable(uint8_t idx, uint8_t &variableRef, uint8_t rw, const char *name, const char *descr, uint8_t min=0, uint8_t max=0);
 	  void shareLocalVariable(uint8_t idx, uint16_t &variableRef, uint8_t rw, const char *name, const char *descr, uint16_t min=0, uint16_t max=0);
-	  void shareLocalVariable(uint8_t idx, long &variableRef, uint8_t rw, const char *name, const char *descr);
-	  void shareLocalVariable(uint8_t idx, unsigned long &variableRef, uint8_t rw, const char *name, const char *descr);
+	  void shareLocalVariable(uint8_t idx, int32_t &variableRef, uint8_t rw, const char *name, const char *descr);
+	  void shareLocalVariable(uint8_t idx, uint32_t &variableRef, uint8_t rw, const char *name, const char *descr);
 	  void shareLocalVariable(uint8_t idx, float &variableRef, uint8_t rw, const char *name, const char *descr, int min=0, int max=0);
 	  void shareLocalVariable(uint8_t idx, char &variableRef, uint8_t rw, const char *name, const char *descr);
 	  void shareLocalVariable(uint8_t idx, const char * variableRef, uint8_t theSize, uint8_t rw, const char *name, const char *descr);
 	  void shareLocalVariable(uint8_t idx, const uint8_t * variableRef, uint8_t theSize, uint8_t rw, const char *name, const char *descr);
-	  void shareLocalVariable(uint8_t idx, const int * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
+	  void shareLocalVariable(uint8_t idx, const int16_t * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
 	  void shareLocalVariable(uint8_t idx, const uint16_t * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
-	  void shareLocalVariable(uint8_t idx, const long * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
+	  void shareLocalVariable(uint8_t idx, const int32_t * variableRef, uint16_t theSize, uint8_t rw, const char *name, const char *descr);
 	  
 	  void addWidget(uint8_t idx, const char *label, const char *category, uint8_t sortOrder, uint8_t widgetType, uint8_t flags, const char *parameters, int pinCode=0, uint8_t cmdVariable=255);
 				
