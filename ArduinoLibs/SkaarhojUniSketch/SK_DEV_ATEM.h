@@ -1079,6 +1079,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
       if (pulses & 0xFFFE) {
         outValue = pulsesHelper(round((AtemSwitcher[devIndex].audioWord2Db(audioVol)*10.0)), -600, 60, false, pulses, 2, 10);
+        Serial << "Audio source options: " << AtemSwitcher[devIndex].getAudioMixerInputMixOption(aSrc) << "\n";
       }
 
       switch (globalConfigMem[actionPtr + 1]) {
@@ -1985,8 +1986,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if (pulses & 0xFFFE) {
       uint16_t DVEsizeX = AtemSwitcher[devIndex].getKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
       uint16_t DVEsizeY = AtemSwitcher[devIndex].getKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
-      int DVEposX = AtemSwitcher[devIndex].getKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10;
-      int DVEposY = AtemSwitcher[devIndex].getKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10;
+      int DVEposX = round(AtemSwitcher[devIndex].getKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10.0);
+      int DVEposY = round(AtemSwitcher[devIndex].getKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10.0);
       int DVEposXlim = globalConfigMem[actionPtr + 4] == 1 ? abs((long)(DVEsizeX - 1000) * 16 / 10) : 6400;
       int DVEposYlim = globalConfigMem[actionPtr + 4] == 1 ? abs((long)(DVEsizeY - 1000) * 9 / 10) : 3600;
 
