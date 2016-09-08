@@ -41,6 +41,7 @@ SkaarhojEncoders::SkaarhojEncoders() {
     _interruptStateTime[i] = 0;
   }
   _stateCheckDelay = 100;
+  _isReverseMode = false;
 
   _serialOutput = 0;
 }
@@ -60,6 +61,7 @@ void SkaarhojEncoders::begin(uint8_t address) {
 
   _GPIOchip.setGPInterruptTriggerType(0);                       // (INTCON) Trigger interrupts on change from previous on all.
   _GPIOchip.setGPInterruptEnable((B01010101 << 8) | B00111111); // Set up which pins triggers interrupt (GPINTEN) [GPA7-GPA0,GPB7-GPB0]
+
 }
 
 /**
@@ -99,8 +101,18 @@ void SkaarhojEncoders::runLoop() {
                                                                                }
                                                                                _interruptStateTime[b] = millis();
                                                                      }*/
-        if (((capture >> 8) & (B1 << (b << 1)))) { // Check pin A polarity and pin B direction
-          if (((capture >> 8) & (B10 << (b << 1)))) {
+        
+        bool polarity, direction;
+        if(_isReverseMode) {
+          polarity = ((capture >> 8) & (B1 << (b << 1)));
+          direction = ((capture >> 8) & (B10 << (b << 1)));
+        } else {
+          polarity = !((capture >> 8) & (B10 << (b << 1)));
+          direction = !((capture >> 8) & (B1 << (b << 1)));
+        }
+
+        if (polarity) { // Check pin A polarity and pin B direction
+          if (_isReverseMode?direction:!direction) {
             _interruptStateNum[b]--;
             directionUp = false;
           } else {
@@ -170,6 +182,10 @@ void SkaarhojEncoders::runLoop() {
     }
   }
 }
+
+void SkaarhojEncoders::setReverseMode(bool mode) {
+  _isReverseMode = mode;
+} 
 
 bool SkaarhojEncoders::reset(uint8_t encNum) {
   _interruptStateTime[encNum] = 0;
