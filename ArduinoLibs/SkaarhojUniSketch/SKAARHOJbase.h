@@ -1409,6 +1409,7 @@ uint8_t HWsetup() {
 #endif
   // SSWmenuEnc.serialOutput(SK_SERIAL_OUTPUT);
   SSWmenuEnc.setStateCheckDelay(250);
+  SSWmenuEnc.setReverseMode(true);
 
   SSWmenuChip.inputOutputMask((B11111111 << 8) | B11101111);      // Set up input and output pins [GPA7-GPA0,GPB7-GPB0]
   SSWmenuChip.inputPolarityMask((B00010000 << 8) | B00000000);    // Reverse polarity for inputs.
@@ -1683,18 +1684,20 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
   uint16_t bDown;
   if (getNumOfActions(HWc) > 0) {
     static uint8_t SSWMenuItemPtr = 0;
-
     SSWmenuEnc.runLoop();
     if (SSWmenu.buttonDown(5)) {
       SSWMenuItemPtr = (SSWMenuItemPtr + 1) % getNumOfActions(HWc);
     }
 
+    if(SSWMenuItemPtr+1 > getNumOfActions(HWc)) {
+      SSWMenuItemPtr = 0;
+    }
+    
     static bool voidVar = SSWmenuEnc.reset(0);
 
     int clicks = 0;
     bool actDown = false;
     bDown = SSWmenuEnc.state(0, 1000);
-
     switch (bDown) {
     case 1:
     case -1:
@@ -1710,11 +1713,9 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
       break;
     }
     extRetValIsWanted(true);
-
-    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], 0x8000, SSWMenuItemPtr + 1);
     
+    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], 0x8000, SSWMenuItemPtr + 1);
     SSWmenuEnc.runLoop();
-
     static uint16_t prevHash = 0;
     static uint8_t prevColor = 0;
     if (prevHash != extRetValHash()) {
@@ -2406,7 +2407,6 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
 uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, int value, const uint8_t specificAction) {
   uint8_t actionMirrorC = 0;
   actionMirror = 0;
-
   _inactivePanel_actDown = actDown;
   if (_inactivePanel) {
     actDown = false;
@@ -2415,8 +2415,12 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
     value = 0x8000;
   }
 
-  do {
+  if(specificAction > getNumOfActions(HWcNum)) {
+    Serial << "Unreachable specificAction=" << specificAction << " from HWc " << HWcNum << ". Breaking...\n";
+    return 0;
+  }
 
+  do {
     if (HWcNum > SK_HWCCOUNT || HWcNum == 0)
       return 0; // Invalid values check - would leak memory if not checked. HWcNum is passed on minus 1 (incoming range is 1-x, outgoing range is 0-(x-1))
 
@@ -2426,7 +2430,6 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
         Serial << F(" Pulses: ") << (pulses >> 1);
       Serial << F("\n");
     }
-
     uint16_t stateBehaviourPtr = getConfigMemIndex(HWcNum - 1, _systemState); // Fetching pointer to state behaviour
     uint16_t retValue = 0;                                                    // Returns zero by default (inactive element)
     uint16_t retValueT = 0;                                                   // Preliminary return value
@@ -2434,21 +2437,20 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
       uint8_t stateLen = globalConfigMem[stateBehaviourPtr - 1];
       bool shiftLevelMatch = false;
       uint8_t matchShiftValue = _systemShift;
-
       // Traverse actions in state behaviour
       while (!shiftLevelMatch) {
+        uint8_t actIdx = 0;
         uint8_t sShift = 0;
         uint8_t lptr = 0;
-        uint8_t actIdx = 0;
         while (lptr < stateLen) {
           if (actIdx >= SK_MAXACTIONS)
             break; // actIdx at or over SK_MAXACTIONS would result in memory leaks in various evaluation functions which would trust HWc and actIdx to not exceed the bounds of the _systemHWcActionCache array
+          if(specificAction)
           if (lptr > 0 && (globalConfigMem[stateBehaviourPtr + lptr] & 16) > 0)
             sShift++; // If a shift divider is found (cannot be the first element)
           if ((specificAction == 0 && matchShiftValue == sShift) || (specificAction == actIdx + 1)) {
             shiftLevelMatch = true;
             // Traverse actions in shift level:
-
             uint8_t devIdx = globalConfigMem[stateBehaviourPtr + lptr] & 15;
             if (devIdx > 0 && devIdx < sizeof(deviceArray) && deviceEn[devIdx]) {
               if (deviceEn[devIdx] && deviceReady[devIdx]) {
