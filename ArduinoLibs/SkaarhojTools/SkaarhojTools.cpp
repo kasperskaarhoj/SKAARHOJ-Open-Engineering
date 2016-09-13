@@ -89,12 +89,3 @@ void SkaarhojTools::runLoopCount()  {
 	  }
 	} 
 }
-
-/**
- * Integer-in-range function
- */
-int SkaarhojTools::shapeInt(int inputInteger, int low, int high)  {
-  if (inputInteger<low)  return low;
-  if (inputInteger>high)  return high;
-  return inputInteger;
-}

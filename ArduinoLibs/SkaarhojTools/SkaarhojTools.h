@@ -45,8 +45,17 @@ private:
 	bool serLevel(uint8_t level);
 	bool hasTimedOut(unsigned long &time, const unsigned long timeout, bool updateTime=false);
 	void runLoopCount();
-	int shapeInt(int inputInteger, int low, int high);
+	template<typename T> T shapeInt(T inputInteger, T low, T high);
 };
+
+/**
+ * Integer-in-range function
+ */
+template<typename T> T SkaarhojTools::shapeInt(T inputInteger, T low, T high)  {
+  if (inputInteger<low)  return low;
+  if (inputInteger>high)  return high;
+  return inputInteger;
+}
 
 #endif
 
