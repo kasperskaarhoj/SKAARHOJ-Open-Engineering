@@ -70,9 +70,9 @@ void SkaarhojEncoders::begin(uint8_t address) {
 void SkaarhojEncoders::runLoop() {
   bool directionUp;
   // Serial.print("*");
-  word buttonStatus = _GPIOchip.getGPInterruptTriggerPin();
+  uint16_t buttonStatus = _GPIOchip.getGPInterruptTriggerPin();
   if (buttonStatus) {                                 // Some interrupt was triggered at all...
-    word capture = _GPIOchip.getGPInterruptCapture(); // Capture states of GPI at the time of interrupt
+    uint16_t capture = _GPIOchip.getGPInterruptCapture(); // Capture states of GPI at the time of interrupt
                                                       //		Serial.print("!");
                                                       /*   Serial << _BINPADL(buttonStatus,16,0) << F("\n");
                                                          Serial << _BINPADL(capture,16,0) << F("\n");
@@ -108,7 +108,7 @@ void SkaarhojEncoders::runLoop() {
           direction = ((capture >> 8) & (B10 << (b << 1)));
         } else {
           polarity = !((capture >> 8) & (B10 << (b << 1)));
-          direction = !((capture >> 8) & (B1 << (b << 1)));
+          direction = ((capture >> 8) & (B1 << (b << 1)));
         }
 
         if (polarity) { // Check pin A polarity and pin B direction
@@ -201,14 +201,14 @@ bool SkaarhojEncoders::reset(uint8_t encNum) {
 /**
  *
  */
-int SkaarhojEncoders::state(uint8_t encNum) { return state(encNum, 0); }
+int16_t SkaarhojEncoders::state(uint8_t encNum) { return state(encNum, 0); }
 
 /**
  *
  */
-int SkaarhojEncoders::state(uint8_t encNum, unsigned int buttonPushTriggerDelay) {
+int16_t SkaarhojEncoders::state(uint8_t encNum, uint32_t buttonPushTriggerDelay) {
   // Check:
-  int retVal = 0;
+  int16_t retVal = 0;
   if (encNum < 5 && hasTimedOut(_stateCheckTime[encNum], _stateCheckDelay)) { // This delay allows us a way to detect "fast" rotations because the interrupt may have increased the counters more than one time between each check.
                                                                               // If rotations has been detected in either direction:
     if (_interruptStateNumMem[encNum] != _interruptStateNum[encNum]) {
@@ -234,13 +234,13 @@ int SkaarhojEncoders::state(uint8_t encNum, unsigned int buttonPushTriggerDelay)
         }
         if (!_pushOnTriggerTimeFired[encNum] && buttonPushTriggerDelay > 0 && hasTimedOut(_pushOnMillis[encNum], buttonPushTriggerDelay)) {
           _pushOnTriggerTimeFired[encNum] = true;
-          retVal = (unsigned long)millis() - _pushOnMillis[encNum];
+          retVal = (uint32_t)millis() - _pushOnMillis[encNum];
         }
       } else {
         if (_pushOn[encNum]) {
           _pushOn[encNum] = false;
           if (!_pushOnTriggerTimeFired[encNum]) {
-            retVal = (unsigned long)millis() - _pushOnMillis[encNum];
+            retVal = (uint32_t)millis() - _pushOnMillis[encNum];
           }
         }
       }
@@ -256,7 +256,7 @@ int SkaarhojEncoders::state(uint8_t encNum, unsigned int buttonPushTriggerDelay)
 /**
  *
  */
-int SkaarhojEncoders::lastCount(uint8_t encNum, uint8_t boost) {
+int16_t SkaarhojEncoders::lastCount(uint8_t encNum, uint8_t boost) {
   if (boost <= 1) {
     return _interruptStateLastCount[encNum];
   } else {
@@ -271,7 +271,7 @@ int SkaarhojEncoders::lastCount(uint8_t encNum, uint8_t boost) {
 /**
  *
  */
-int SkaarhojEncoders::totalCount(uint8_t encNum) { return _interruptStateNum[encNum]; }
+int16_t SkaarhojEncoders::totalCount(uint8_t encNum) { return _interruptStateNum[encNum]; }
 
 /**
  *
@@ -281,8 +281,8 @@ void SkaarhojEncoders::setStateCheckDelay(uint16_t delayTime) { _stateCheckDelay
 /**
  * Timeout check
  */
-bool SkaarhojEncoders::hasTimedOut(unsigned long time, unsigned long timeout) {
-  if ((unsigned long)(time + timeout) <= (unsigned long)millis()) { // This should "wrap around" if time+timout is larger than the size of unsigned-longs, right?
+bool SkaarhojEncoders::hasTimedOut(uint32_t time, uint32_t timeout) {
+  if ((uint32_t)(time + timeout) <= (uint32_t)millis()) { // This should "wrap around" if time+timout is larger than the size of unsigned-longs, right?
     return true;
   } else {
     return false;

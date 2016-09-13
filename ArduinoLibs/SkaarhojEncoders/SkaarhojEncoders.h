@@ -38,13 +38,13 @@ class SkaarhojEncoders
   private:
 	MCP23017 _GPIOchip;
 	  
-	unsigned long _interruptStateTime[5];
-	unsigned long _stateCheckTime[5];
-	int _interruptStateNum[5];
-	int _interruptStateNumMem[5];
-	int _interruptStateLastCount[5];
+	uint32_t _interruptStateTime[5];
+	uint32_t _stateCheckTime[5];
+	int16_t _interruptStateNum[5];
+	int16_t _interruptStateNumMem[5];
+	int16_t _interruptStateLastCount[5];
 
-	unsigned long _pushOnMillis[5];
+	uint32_t _pushOnMillis[5];
 	bool _countOn[5];
 	bool _pushOn[5];
 	bool _pushOnTriggerTimeFired[5];
@@ -61,13 +61,13 @@ class SkaarhojEncoders
 	
 		// Encoder functions:
 	bool reset(uint8_t encNum);
-	int state(uint8_t encNum);
-	int state(uint8_t encNum, unsigned int buttonPushTriggerDelay);
-	int lastCount(uint8_t encNum,uint8_t boost=0);
-	int totalCount(uint8_t encNum);
+	int16_t state(uint8_t encNum);
+	int16_t state(uint8_t encNum, uint32_t buttonPushTriggerDelay);
+	int16_t lastCount(uint8_t encNum,uint8_t boost=0);
+	int16_t totalCount(uint8_t encNum);
 	void setReverseMode(bool mode);
 	
-	bool hasTimedOut(unsigned long time, unsigned long timeout);
+	bool hasTimedOut(uint32_t time, uint32_t timeout);
 	void setStateCheckDelay(uint16_t delayTime);
 	void serialOutput(uint8_t level);
 	
