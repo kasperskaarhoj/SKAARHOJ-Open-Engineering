@@ -425,14 +425,11 @@ size_t WebServer::write(const uint8_t *buffer, size_t size)
 {
   if(m_bufFill + size > sizeof(m_buffer)) {
     flushBuf();
-  }
-
-  if(size < (sizeof(m_buffer) - m_bufFill)) {
+    return m_client.write(buffer, size);
+  } else {
     memcpy(m_buffer + m_bufFill, buffer, size);
     m_bufFill += size;
     return size;
-  }  else {
-    return m_client.write(buffer, size);
   }
 }
 
