@@ -1372,7 +1372,8 @@ uint8_t HWsetup() {
 #endif
 #if (SK_HWEN_SLIDER)
   Serial << F("Init Slider\n");
-  slider.uniDirectionalSlider_init();
+  uint16_t(&cal1)[3] = getAnalogComponentCalibration(1);
+  slider.uniDirectionalSlider_init(cal1[2], cal1[0], cal1[1], A0);
   slider.uniDirectionalSlider_hasMoved();
   statusLED(QUICKBLANK);
 #endif
