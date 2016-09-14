@@ -177,3 +177,13 @@ void HWrunLoop() {
   HWrunLoop_SSWMenu(32);
 #endif
 }
+
+uint8_t HWnumOfAnalogComponents() { return 1; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  switch (num) {
+  case 1:
+    return analogRead(A0);
+    break;
+  }
+}
