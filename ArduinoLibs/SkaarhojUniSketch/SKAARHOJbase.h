@@ -683,10 +683,10 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     int xOffset = 0;
     if (strlen(_extRetTxt[a])) {
       if (_extRetPair > 0) {
-        xOffset = sTools.shapeInt(strlen(_strCache) ? 2 : (tw >> 1) - strlen(_extRetTxt[a]) * 3, 2, tw);
+        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - strlen(_extRetTxt[a]) * 3, 2, tw);
         disp.setCursor(xOffset, 14 - (isTitle ? 0 : 5) + a * 9 - hShrink);
       } else {
-        xOffset = sTools.shapeInt(strlen(_strCache) ? 2 : (tw >> 1) - strlen((_extRetPair == 0 && size == 0) ? _extRetTxtShort : _extRetTxt[a]) * 6, 2, tw);
+        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - strlen((_extRetPair == 0 && size == 0) ? _extRetTxtShort : _extRetTxt[a]) * 6, 2, tw);
         disp.setCursor(xOffset, 16 - (isTitle ? 0 : 5) - hShrink);
       }
       disp << ((_extRetPair == 0 && size == 0) ? _extRetTxtShort : _extRetTxt[a]);
@@ -695,15 +695,15 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     // Print value string:
     if (strlen(_strCache)) {
       if (_extRetPair > 0) {
-        disp.setCursor(sTools.shapeInt(tw - 2 - strlen(_strCache) * 6 - wShrink, 0, 100), 14 - (isTitle ? 0 : 5) + a * 9 - hShrink);
+        disp.setCursor(constrain(tw - 2 - strlen(_strCache) * 6 - wShrink, 0, 100), 14 - (isTitle ? 0 : 5) + a * 9 - hShrink);
         disp << _strCache;
       } else {
         xOffset = strlen(_extRetTxt[a]) ? tw - 2 - strlen(_strCache) * 12 : (tw >> 1) - strlen(_strCache) * 6;
-        disp.setCursor(sTools.shapeInt(xOffset, 0, 100), 16 - (isTitle ? 0 : 5) - (_extRetScaleType > 0 ? 2 : 0) - hShrink);
+        disp.setCursor(constrain(xOffset, 0, 100), 16 - (isTitle ? 0 : 5) - (_extRetScaleType > 0 ? 2 : 0) - hShrink);
         disp << _strCache;
         if ((_extRetFormat & 0xF) == 5) {
           disp.setTextSize(1);
-          disp.setCursor(sTools.shapeInt(xOffset - 12, 0, 100), 13 - (isTitle ? 0 : 5) - hShrink);
+          disp.setCursor(constrain(xOffset - 12, 0, 100), 13 - (isTitle ? 0 : 5) - hShrink);
           disp << F("1/");
         }
       }
@@ -721,21 +721,21 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
         //          disp.drawRoundRect(0, 29, 64, 3, 0, WHITE); // Base rectangle
         disp.drawRoundRect(0, 31 - hShrink, tw, 1, 0, WHITE); // Base rectangle
 
-        uint8_t w = sTools.shapeInt(((float)(_extRetValue[a] - _extRetRangeLow) / (_extRetRangeHigh - _extRetRangeLow) * tw), 0, tw - wShrink);
+        uint8_t w = constrain(((float)(_extRetValue[a] - _extRetRangeLow) / (_extRetRangeHigh - _extRetRangeLow) * tw), 0, tw - wShrink);
         if (w > 0) {
           if (_extRetScaleType == 1)
             disp.fillRoundRect(0, 29 - hShrink, w, 3, 0, WHITE); // In-fill
         }
         if (_extRetScaleType == 2)
-          disp.fillRoundRect(sTools.shapeInt(w - 1, 0, tw - 3), 29 - hShrink, 3, 3, 0, WHITE); // In-fill
+          disp.fillRoundRect(constrain(w - 1, 0, tw - 3), 29 - hShrink, 3, 3, 0, WHITE); // In-fill
 
         if (_extRetRangeHigh != _extRetLimitHigh) {
-          uint8_t w = sTools.shapeInt(((float)(_extRetLimitHigh - _extRetRangeLow) / (_extRetRangeHigh - _extRetRangeLow) * tw), 0, tw - wShrink);
-          disp.fillRoundRect(sTools.shapeInt(w, 0, tw - 1 - wShrink), 28 - hShrink, 1, 3, 0, WHITE); // In-fill
+          uint8_t w = constrain(((float)(_extRetLimitHigh - _extRetRangeLow) / (_extRetRangeHigh - _extRetRangeLow) * tw), 0, tw - wShrink);
+          disp.fillRoundRect(constrain(w, 0, tw - 1 - wShrink), 28 - hShrink, 1, 3, 0, WHITE); // In-fill
         }
         if (_extRetRangeLow != _extRetLimitLow) {
-          uint8_t w = sTools.shapeInt(((float)(_extRetLimitLow - _extRetRangeLow) / (_extRetRangeHigh - _extRetRangeLow) * tw), 0, tw - wShrink);
-          disp.fillRoundRect(sTools.shapeInt(w, 0, tw - 1 - wShrink), 28 - hShrink, 1, 3, 0, WHITE); // In-fill
+          uint8_t w = constrain(((float)(_extRetLimitLow - _extRetRangeLow) / (_extRetRangeHigh - _extRetRangeLow) * tw), 0, tw - wShrink);
+          disp.fillRoundRect(constrain(w, 0, tw - 1 - wShrink), 28 - hShrink, 1, 3, 0, WHITE); // In-fill
         }
       }
     }
@@ -2008,8 +2008,8 @@ void initActionCache() {
   memset(_systemHWcActionFineFlag, 0, SK_HWCCOUNT);
 }
 
-long pulsesHelper(long inValue, const long lower, const long higher, const bool cycle, const int pulses, const int scaleFine, const int scaleNormal) {
-  int scale = pulses & B1 ? scaleFine : scaleNormal;
+long pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine, const int16_t scaleNormal) {
+  int16_t scale = pulses & B1 ? scaleFine : scaleNormal;
   inValue += (pulses >> 1) * scale;
   if (cycle) {
     if (inValue < lower) {
@@ -2027,12 +2027,12 @@ void storeMemory(uint8_t memPtr) {
     Serial << F("Memory ") << char(65 + memPtr) << F(" saved\n");
 }
 uint8_t cycleMemHelper(uint8_t actionPtr, uint8_t idx = 255) {
-  int values;
-  values += (globalConfigMem[actionPtr + 3] != 0 || abs((int)globalConfigMem[actionPtr + 2] - (int)globalConfigMem[actionPtr + 3])) ? abs((int)globalConfigMem[actionPtr + 2] - (int)globalConfigMem[actionPtr + 3]) + 1 : 0;
+  int16_t values;
+  values += (globalConfigMem[actionPtr + 3] != 0 || abs((int16_t)globalConfigMem[actionPtr + 2] - (int16_t)globalConfigMem[actionPtr + 3])) ? abs((int16_t)globalConfigMem[actionPtr + 2] - (int16_t)globalConfigMem[actionPtr + 3]) + 1 : 0;
   if (idx < values) {
     return (globalConfigMem[actionPtr + 2] < globalConfigMem[actionPtr + 3] ? globalConfigMem[actionPtr + 3] - (values - idx - 1) : globalConfigMem[actionPtr + 3] + (values - idx - 1));
   }
-  values += (globalConfigMem[actionPtr + 5] != 0 || abs((int)globalConfigMem[actionPtr + 4] - (int)globalConfigMem[actionPtr + 5])) ? abs((int)globalConfigMem[actionPtr + 4] - (int)globalConfigMem[actionPtr + 5]) + 1 : 0;
+  values += (globalConfigMem[actionPtr + 5] != 0 || abs((int16_t)globalConfigMem[actionPtr + 4] - (int16_t)globalConfigMem[actionPtr + 5])) ? abs((int16_t)globalConfigMem[actionPtr + 4] - (int16_t)globalConfigMem[actionPtr + 5]) + 1 : 0;
   if (idx < values) {
     return (globalConfigMem[actionPtr + 4] < globalConfigMem[actionPtr + 5] ? globalConfigMem[actionPtr + 5] - (values - idx - 1) : globalConfigMem[actionPtr + 5] + (values - idx - 1));
   }
@@ -2058,7 +2058,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
   case 0: // Set Shift
     if (actDown) {
       if (value != 0x8000) { // Value input
-        _systemShift = sTools.shapeInt(constrain(map(value, 0, 1000, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1) + 1), 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1)), 0, SK_MAXACTIONS - 1);
+        _systemShift = constrain(constrain(map(value, 0, 1000, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)) + 1), 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1))), (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
       } else {
         if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
           _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
@@ -2066,21 +2066,21 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
         } else if (globalConfigMem[actionPtr + 2] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
           _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
           _systemHWcActionCache[HWc][actIdx] = _systemShift;
-          _systemShift = sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1);
+          _systemShift = constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1));
         } else {
-          _systemShift = sTools.shapeInt(_systemHWcActionCache[HWc][actIdx], 0, SK_MAXACTIONS - 1);
+          _systemShift = constrain(_systemHWcActionCache[HWc][actIdx], (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
           _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
       }
     }
     if (actUp && globalConfigMem[actionPtr + 2] == 1) { // "Hold Down"
-      _systemShift = sTools.shapeInt(_systemHWcActionCache[HWc][actIdx], 0, SK_MAXACTIONS - 1);
+      _systemShift = constrain(_systemHWcActionCache[HWc][actIdx], (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
     }
     if (actUp && (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) { // "Cycle"
       _systemHWcActionCacheFlag[HWc][actIdx] = false;
     }
     if (pulses & 0xFFFE) {
-      _systemShift = pulsesHelper(_systemShift, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXACTIONS - 1), true, pulses, 1, 1);
+      _systemShift = pulsesHelper(_systemShift, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)), true, pulses, 1, 1);
     }
     if (debugMode && (actDown || (pulses & 0xFFFE)))
       Serial << F("SHIFT: ") << _systemShift << F("\n");
@@ -2112,7 +2112,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
   case 1: // Set State
     if (actDown) {
       if (value != 0x8000) { // Value input
-        _systemState = sTools.shapeInt(constrain(map(value, 0, 1000, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1) + 1), 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1)), 0, SK_MAXSTATES - 1);
+        _systemState = constrain(map(value, 0, 1000, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1)) + 1), 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1)));
       } else {
         if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
           _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
@@ -2120,21 +2120,21 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
         } else if (globalConfigMem[actionPtr + 2] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
           _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
           _systemPrevState = _systemState;
-          _systemState = sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1);
+          _systemState = constrain(globalConfigMem[actionPtr + 1],  (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1));
         } else {
-          _systemState = sTools.shapeInt(_systemPrevState, 0, SK_MAXSTATES - 1);
+          _systemState = constrain(_systemPrevState, (uint16_t)0, (uint16_t)(SK_MAXSTATES - 1));
           _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
       }
     }
     if (actUp && globalConfigMem[actionPtr + 2] == 1) { // "Hold Down"
-      _systemState = sTools.shapeInt(_systemPrevState, 0, SK_MAXSTATES - 1);
+      _systemState = constrain(_systemPrevState, (uint16_t)0, (uint16_t)(SK_MAXSTATES - 1));
     }
     if (actUp && (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) { // "Cycle"
       _systemHWcActionCacheFlag[HWc][actIdx] = false;
     }
     if (pulses & 0xFFFE) {
-      _systemState = pulsesHelper(_systemState, 0, sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, SK_MAXSTATES - 1), true, pulses, 1, 1);
+      _systemState = pulsesHelper(_systemState, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1)), true, pulses, 1, 1);
     }
     if (debugMode && (actDown || (pulses & 0xFFFE)))
       Serial << F("STATE: ") << _systemState << F("\n");
@@ -2338,7 +2338,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
     break;
   case 8: // Wait
     if (actDown || (pulses & 0xFFFE))
-      lDelay(sTools.shapeInt(globalConfigMem[actionPtr + 1], 0, 250) * 100);
+      lDelay(constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)250) * 100);
     break;
   case 9: // Custom function
     return customActionHandler(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
