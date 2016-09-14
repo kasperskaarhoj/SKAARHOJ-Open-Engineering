@@ -78,7 +78,7 @@
 #endif // WEBDUINO_SERVER_ERROR_MESSAGE
 
 #ifndef WEBDUINO_OUTPUT_BUFFER_SIZE
-#define WEBDUINO_OUTPUT_BUFFER_SIZE 64
+#define WEBDUINO_OUTPUT_BUFFER_SIZE 32
 #endif // WEBDUINO_OUTPUT_BUFFER_SIZE
 
 // add '#define WEBDUINO_FAVICON_DATA ""' to your application
@@ -423,7 +423,7 @@ size_t WebServer::write(uint8_t ch)
 
 size_t WebServer::write(const uint8_t *buffer, size_t size)
 {
-  if(m_bufFill + size > sizeof(m_buffer)) {
+  if(m_bufFill + size >= sizeof(m_buffer)) {
     flushBuf();
     return m_client.write(buffer, size);
   } else {
