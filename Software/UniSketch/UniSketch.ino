@@ -6,9 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21SSW
-
-
+#define SK_MODEL SK_RCP
 
 
 
@@ -299,9 +297,9 @@ bool _calibrateMode = false;
 bool debugMode = SK_SERIAL_OUTPUT;
 
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
-long pulsesHelper(long inValue, const long lower, const long higher, const bool cycle, const int pulses, const int scaleFine = 1, const int scaleNormal = 1);
+long pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);
 uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const uint16_t value = 0);
-uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const bool actUp = false, const int pulses = 0, const int value = 0x8000, const uint8_t specificAction = 0);
+uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const bool actUp = false, const int16_t pulses = 0, const int16_t value = 0x8000, const uint8_t specificAction = 0);
 uint16_t getNumOfActions(const uint8_t HWcNum);
 void lDelay(uint16_t delayVal);
 uint8_t HWsetupL();
@@ -326,16 +324,16 @@ int16_t HWAnalogComponentValue(uint8_t num);
    Related to "extended return values", or what is basically driving complex outputs like displays.
 
  ****************************************/
-int _extRetValue[2] = {0, 0};
+int16_t _extRetValue[2] = {0, 0};
 bool _extRetValIsWanted = false;
 bool _extRetValIsLabel = false;
 uint8_t _extRetPair = 0;
 uint8_t _extRetFormat = 0;
 uint8_t _extRetScaleType = 0;
-int _extRetRangeLow = 0;
-int _extRetRangeHigh = 0;
-int _extRetLimitLow = 0;
-int _extRetLimitHigh = 0;
+int16_t _extRetRangeLow = 0;
+int16_t _extRetRangeHigh = 0;
+int16_t _extRetLimitLow = 0;
+int16_t _extRetLimitHigh = 0;
 char _extRetLong[17];
 char _extRetShort[11];
 uint8_t _extRetLongPtr = 0;
@@ -356,7 +354,7 @@ void extRetValPrefersLabel(uint8_t HWc) {
    Format: 0=integer XX, 1=float from 10^3 (X.XX), 2=XX%, 3=XXdb, 4=XXf, 5=1/XX, 6=XXK, 7=Blank (not printed)
    Fine: Fine-flag
 */
-void extRetVal(int value, uint8_t format = 0, bool fine = 0)  {
+void extRetVal(int16_t value, uint8_t format = 0, bool fine = 0)  {
   _extRetValue[0] = value;
   _extRetFormat = (format & B1111) | (fine ? B10000 : 0);
   // Resetting:
@@ -399,7 +397,7 @@ void extRetValSetLabel(bool flag)    {
    Sets the extended return value (long) and initializes everything else.
    scaleType: 0=no scale, 1=fill, 2=center
 */
-void extRetValScale(const uint8_t scaleType, const int rangeLow, const int rangeHigh, const int limitLow, const int limitHigh)  {
+void extRetValScale(const uint8_t scaleType, const int16_t rangeLow, const int16_t rangeHigh, const int16_t limitLow, const int16_t limitHigh)  {
   _extRetScaleType = scaleType;
   _extRetRangeLow = rangeLow;
   _extRetRangeHigh = rangeHigh;
@@ -411,7 +409,7 @@ void extRetValScale(const uint8_t scaleType, const int rangeLow, const int range
     Sets secondary value. Values are printed in smaller size.
     Pair: 1=two values shown, 2=box around first value, 3=box around second value, 4=box around both values
 */
-void extRetVal2(int value2, uint8_t pair = 1)  {
+void extRetVal2(int16_t value2, uint8_t pair = 1)  {
   _extRetValue[1] = value2;
   _extRetPair = pair;
 }
@@ -419,7 +417,7 @@ void extRetVal2(int value2, uint8_t pair = 1)  {
 /**
     Sets short label
 */
-void extRetValLongLabel(const char *longLabel, const int number = 0x8000)  {
+void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000)  {
   if (17 - 1 - _extRetLongPtr > 0)  {
     strncpy_P(_extRetLong + _extRetLongPtr, longLabel, 17 - 1 - _extRetLongPtr);
     _extRetLongPtr += strlen_P(longLabel);
@@ -436,7 +434,7 @@ void extRetValLongLabel(const char *longLabel, const int number = 0x8000)  {
 /**
     Sets long label
 */
-void extRetValShortLabel(const char *shortLabel, const int number = 0) {
+void extRetValShortLabel(const char *shortLabel, const int16_t number = 0) {
   if (11 - 1 - _extRetShortPtr > 0)  {
     strncpy_P(_extRetShort + _extRetShortPtr, shortLabel, 11 - 1 - _extRetShortPtr);
     _extRetShortPtr += strlen_P(shortLabel);

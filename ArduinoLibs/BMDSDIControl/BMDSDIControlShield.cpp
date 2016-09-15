@@ -44,7 +44,7 @@ namespace BMD
 		while (regRead32(kRegIDENTIFIER) != expectedIdentifier)
 		{
 			if(millis() - startTime > 2000) {
-				Serial.println("Timeout connecting to BMD SDI Shield");
+				Serial.println("\nTimeout connecting to BMD SDI Shield\n");
 				return;
 			}
 		}
