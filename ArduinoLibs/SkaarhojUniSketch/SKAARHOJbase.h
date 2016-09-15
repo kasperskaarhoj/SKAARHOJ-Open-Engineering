@@ -40,6 +40,13 @@ void resetFunc() {
 void (*resetFunc)(void) = 0; // declare reset function @ address 0
 #endif
 
+
+// The constrain macro takes up too much ram
+#define constrain constrain
+int32_t constrain(int32_t amt, int32_t low, int32_t high) {
+  return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
+}
+
 // MAC address and IP address for this *particular* SKAARDUINO
 byte mac[6] = {};                   // Loaded from EEPROM
 IPAddress ip(192, 168, 10, 99);     // This is the default IP address in case config mode 2 is entered
