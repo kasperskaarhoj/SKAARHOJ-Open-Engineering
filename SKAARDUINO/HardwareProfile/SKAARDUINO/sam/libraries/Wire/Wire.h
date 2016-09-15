@@ -27,7 +27,7 @@
 #include "Stream.h"
 #include "variant.h"
 
-#define BUFFER_LENGTH 32
+#define BUFFER_LENGTH 64
 
 class TwoWire : public Stream {
 public:
