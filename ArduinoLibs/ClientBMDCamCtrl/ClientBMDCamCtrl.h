@@ -8,6 +8,8 @@
 
 class ClientBMDCamCtrl {
 private:
+  void initColourCorrection(int cam);
+
   BMD_SDICameraControl_I2C _cameraControl;
   BMD_SDITallyControl_I2C _tallyControl;
   bool _hasInitialized;
@@ -15,6 +17,7 @@ private:
   float cameraIrisValue[ClientBMDCamCtrl_Cams];
   float cameraFocusValue[ClientBMDCamCtrl_Cams];
   float cameraZoomValue[ClientBMDCamCtrl_Cams];
+  float cameraContinuousZoomValue[ClientBMDCamCtrl_Cams];
 
   int8_t cameraSensorGainValue[ClientBMDCamCtrl_Cams];
   int16_t cameraWBValue[ClientBMDCamCtrl_Cams];
@@ -90,6 +93,7 @@ public:
   void setNormZoom(uint8_t camera, float zoom, bool offset = false);
   float getNormZoom(uint8_t camera);
   void setContinuousZoom(uint8_t camera, float rate, bool offset = false); // -1.0 wide, 0.0 stop, 1.0 tele
+  float getContinuousZoom(uint8_t camera);
 
   // Video controls
   void setVideoMode(uint8_t camera, int8_t (&mode)[5]);

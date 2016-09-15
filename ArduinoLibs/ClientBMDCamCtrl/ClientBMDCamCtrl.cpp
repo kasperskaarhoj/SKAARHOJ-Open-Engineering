@@ -3,7 +3,6 @@
 ClientBMDCamCtrl::ClientBMDCamCtrl() { _hasInitialized = false; }
 
 void ClientBMDCamCtrl::begin(uint8_t address) {
-
   for (int i = 0; i < ClientBMDCamCtrl_Cams; i++) {
     cameraIrisValue[i] = 0.00;
     cameraContrastValue[i][0] = 0.5;
@@ -26,6 +25,24 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
   _cameraControl.setOverride(true);
 
   _hasInitialized = true;
+}
+
+void ClientBMDCamCtrl::initColourCorrection(int cam) {
+  //cameraIrisValue[cam] = 0.00;
+  cameraContrastValue[cam-1][0] = 0.5;
+  cameraContrastValue[cam-1][1] = 1.0;
+  cameraWBValue[cam-1] = 3200;
+  cameraExposureValue[cam-1] = 10000;
+  //cameraSensorGainValue[cam] = 2; // Apparently this is the lowest value
+
+  for (int j = 0; j < 4; j++) {
+    cameraGainValue[cam-1][j] = 1.00;
+    cameraGammaValue[cam-1][j] = 0.0;
+    cameraLiftValue[cam-1][j] = 0.0;
+  }
+
+  cameraColourAdjustValue[cam-1][0] = 0.0;
+  cameraColourAdjustValue[cam-1][1] = 1.0;
 }
 
 char* ClientBMDCamCtrl::getOutputBuffer() {
@@ -155,6 +172,7 @@ void ClientBMDCamCtrl::setNormZoom(uint8_t camera, float zoom, bool offset) {
 
 void ClientBMDCamCtrl::setContinuousZoom(uint8_t camera, float rate, bool offset) { // -1.0 wide, 0.0 stop, 1.0 tele
   clampValue(&rate, -1.0f, 1.0f);
+  cameraContinuousZoomValue[camera - 1] = rate;
   _cameraControl.writeCommandFixed16(camera, 0, 9, (offset ? 1 : 0), rate);
 }
 
@@ -378,7 +396,10 @@ void ClientBMDCamCtrl::setCameraColourAdjust(uint8_t camera, float (&value)[2], 
 
   _cameraControl.writeCommandFixed16(camera, 8, 6, (offset ? 1 : 0), existing);
 }
-void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) { _cameraControl.writeCommandVoid(camera, 8, 7); }
+void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) { 
+  _cameraControl.writeCommandVoid(camera, 8, 7); 
+  initColourCorrection(camera);
+}
 
 // ------------------------
 // Getter commands
@@ -389,6 +410,7 @@ void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) { _cameraControl
 float ClientBMDCamCtrl::getIris(uint8_t camera) { return cameraIrisValue[camera - 1]; }
 float ClientBMDCamCtrl::getFocus(uint8_t camera) { return cameraFocusValue[camera - 1]; }
 float ClientBMDCamCtrl::getNormZoom(uint8_t camera) { return cameraZoomValue[camera - 1]; }
+float ClientBMDCamCtrl::getContinuousZoom(uint8_t camera) {return cameraContinuousZoomValue[camera - 1]; }
 
 // Video controls
 int8_t ClientBMDCamCtrl::getSensorGain(uint8_t camera) { return cameraSensorGainValue[camera - 1]; }
