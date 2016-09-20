@@ -1347,7 +1347,7 @@ uint8_t HWsetup() {
 // ++++++++++++++++++++++
 #if (SK_HWEN_STDOLEDDISPLAY)
   Serial << F("Init Info OLED Display\n");
-#if SK_MODEL == SK_MICROMONITOR || SK_MODEL == SK_RCP
+#if SK_MODEL == SK_MICROMONITOR || SK_MODEL == SK_RCP || SK_MODEL == SK_E21SSW
   infoDisplay.begin(0, 1);
 #else
   infoDisplay.begin(4, 1);
@@ -1967,8 +1967,12 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
 
 void HWrunLoop_BI8(SkaarhojBI8 &buttons, const uint8_t *HWcMap, uint8_t theSize) {
   uint16_t bUp, bDown;
-  bUp = buttons.buttonUpAll();
-  bDown = buttons.buttonDownAll();
+
+  // Get all button up/down states at once, prevents inconsistencies
+  uint32_t allButtons = buttons.buttonAll();
+  bUp = allButtons >> 16;
+  bDown = allButtons & 0xFFFF;
+
   for (uint8_t a = 0; a < theSize; a++) {
     extRetValPrefersLabel(HWcMap[a]);
     uint8_t color = actionDispatch(HWcMap[a], bDown & (B1 << a), bUp & (B1 << a));
@@ -2090,9 +2094,9 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
     if (pulses & 0xFFFE) {
       _systemShift = pulsesHelper(_systemShift, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)), true, pulses, 1, 1);
     }
-    if (debugMode && (actDown || (pulses & 0xFFFE)))
+    if (debugMode && (actDown || (pulses & 0xFFFE))) {
       Serial << F("SHIFT: ") << _systemShift << F("\n");
-
+    }
     retVal = (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (_systemShift == globalConfigMem[actionPtr + 1] ? (4 | 0x20) : 5);
 
     if (extRetValIsWanted()) {
@@ -2453,7 +2457,6 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
         while (lptr < stateLen) {
           if (actIdx >= SK_MAXACTIONS)
             break; // actIdx at or over SK_MAXACTIONS would result in memory leaks in various evaluation functions which would trust HWc and actIdx to not exceed the bounds of the _systemHWcActionCache array
-          if(specificAction)
           if (lptr > 0 && (globalConfigMem[stateBehaviourPtr + lptr] & 16) > 0)
             sShift++; // If a shift divider is found (cannot be the first element)
           if ((specificAction == 0 && matchShiftValue == sShift) || (specificAction == actIdx + 1)) {
@@ -2515,6 +2518,7 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, in
                 retValue = retValueT; // Use first ever return value in case of multiple actions.
             }
           } else if ((specificAction == 0 && matchShiftValue < sShift) || (specificAction > 0 && specificAction < actIdx + 1)) {
+
             break;
           }
 
