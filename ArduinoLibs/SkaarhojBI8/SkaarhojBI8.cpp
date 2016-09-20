@@ -311,22 +311,30 @@ bool SkaarhojBI8::buttonIsReleasedAgo(uint8_t buttonNumber, uint16_t timeout) {
 	return false;
 }
 
-uint16_t SkaarhojBI8::buttonUpAll() {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been released since last check
+uint32_t SkaarhojBI8::buttonAll() {
 	_readButtonStatus();
+	return (((uint32_t)buttonUpAll(false) << 16)| ((uint32_t) buttonDownAll(false) & 0xFFFF));
+}
+
+uint16_t SkaarhojBI8::buttonUpAll(bool read = true) {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been released since last check
+	if(read)
+		_readButtonStatus();
 	
 	uint16_t buttonChange = _buttonStatusLastUp ^ _buttonStatus;
 	_buttonStatusLastUp = _buttonStatus;
 
 	return buttonChange & ~_buttonStatus;
 }
-uint16_t SkaarhojBI8::buttonDownAll() {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been pressed since last check
-	_readButtonStatus();
+uint16_t SkaarhojBI8::buttonDownAll(bool read = true) {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been pressed since last check
+	if(read)
+		_readButtonStatus();
 	
 	uint16_t buttonChange = _buttonStatusLastDown ^ _buttonStatus;
 	_buttonStatusLastDown = _buttonStatus;
 	
 	return buttonChange & _buttonStatus;
 }
+
 uint16_t SkaarhojBI8::buttonIsPressedAll() {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) is currently pressed since last check
 	_readButtonStatus();
 	

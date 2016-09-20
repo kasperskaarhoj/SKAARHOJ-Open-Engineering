@@ -93,8 +93,9 @@ class SkaarhojBI8
 	bool buttonIsPressed(uint8_t buttonNumber);
 	bool buttonIsHeldFor(uint8_t buttonNumber, uint16_t timeout);
 	bool buttonIsReleasedAgo(uint8_t buttonNumber, uint16_t timeout);
-	uint16_t buttonUpAll();
-	uint16_t buttonDownAll();
+	uint16_t buttonUpAll(bool read = true);
+	uint16_t buttonDownAll(bool read = true);
+	uint32_t buttonAll();
 	uint16_t buttonIsPressedAll();
 	bool isButtonIn(uint8_t buttonNumber, uint16_t allButtonsState);
 	void testProgramme(uint16_t buttonMask);
