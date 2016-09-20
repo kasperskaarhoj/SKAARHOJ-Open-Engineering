@@ -56,20 +56,29 @@ void SkaarhojUtils::uniDirectionalSlider_disableUnidirectionality(bool disable)	
 
 bool SkaarhojUtils::uniDirectionalSlider_hasMoved()	{
 	int sliderValue = analogRead(_uniDirectionalSlider_analogInputPin);
-	//Serial.println(sliderValue);
-	if (sliderValue >= _uniDirectionalSlider_previousSliderValue+_uniDirectionalSlider_sliderTolerance || sliderValue <= _uniDirectionalSlider_previousSliderValue-_uniDirectionalSlider_sliderTolerance)  {
+
+	bool toleranceReached = sliderValue >= _uniDirectionalSlider_previousSliderValue+_uniDirectionalSlider_sliderTolerance || sliderValue <= _uniDirectionalSlider_previousSliderValue-_uniDirectionalSlider_sliderTolerance;
+	bool closeToLower = sliderValue <= _uniDirectionalSlider_sliderLowEndOffset;
+	bool closeToUpper = sliderValue >= 1023 - _uniDirectionalSlider_sliderHighEndOffset;
+
+	if (toleranceReached || (closeToLower && !_uniDirectionalSlider_sliderDirectionUp) || (closeToUpper && _uniDirectionalSlider_sliderDirectionUp))  {
 
 		// Find direction:
-		if (!_uniDirectionalSlider_disableUnidirectionality && sliderValue >= _uniDirectionalSlider_previousSliderValue+_uniDirectionalSlider_sliderTolerance && (_uniDirectionalSlider_previousSliderValue==-1 || _uniDirectionalSlider_previousSliderValue<_uniDirectionalSlider_sliderLowEndOffset))  {
-			_uniDirectionalSlider_sliderDirectionUp = true;
-		}
-		if (!_uniDirectionalSlider_disableUnidirectionality && sliderValue <= _uniDirectionalSlider_previousSliderValue-_uniDirectionalSlider_sliderTolerance && (_uniDirectionalSlider_previousSliderValue==-1 || _uniDirectionalSlider_previousSliderValue>1024-_uniDirectionalSlider_sliderHighEndOffset))  {
-			_uniDirectionalSlider_sliderDirectionUp = false;
+		if (!_uniDirectionalSlider_disableUnidirectionality) {
+			if((toleranceReached  && _uniDirectionalSlider_previousSliderValue==-1) || _uniDirectionalSlider_previousCloseToLower)  {
+				_uniDirectionalSlider_sliderDirectionUp = true;
+			}
+			if ((toleranceReached && _uniDirectionalSlider_previousSliderValue==-1) || _uniDirectionalSlider_previousCloseToUpper) {
+					_uniDirectionalSlider_sliderDirectionUp = false;
+			}
 		}
 
 		_uniDirectionalSlider_previousSliderValue = sliderValue;
 
-		int transitionPosition = (long)1000*(long)(sliderValue-_uniDirectionalSlider_sliderLowEndOffset)/(long)(1024-_uniDirectionalSlider_sliderLowEndOffset-_uniDirectionalSlider_sliderHighEndOffset);
+		_uniDirectionalSlider_previousCloseToUpper = closeToUpper;
+		_uniDirectionalSlider_previousCloseToLower = closeToLower;
+
+		int transitionPosition = (long)1000*(long)(sliderValue-_uniDirectionalSlider_sliderLowEndOffset)/(long)(1023-_uniDirectionalSlider_sliderLowEndOffset-_uniDirectionalSlider_sliderHighEndOffset);
 		if (transitionPosition>1000) transitionPosition=1000;
 		if (transitionPosition<0) transitionPosition=0;
 		if (!_uniDirectionalSlider_sliderDirectionUp)  transitionPosition = 1000-transitionPosition;

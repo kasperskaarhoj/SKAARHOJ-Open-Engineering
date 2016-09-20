@@ -41,6 +41,8 @@ class SkaarhojUtils
 	int _uniDirectionalSlider_previousTransitionPosition;
 	bool _uniDirectionalSlider_sliderDirectionUp;
 	bool _uniDirectionalSlider_disableUnidirectionality;
+	bool _uniDirectionalSlider_previousCloseToUpper;
+	bool _uniDirectionalSlider_previousCloseToLower;
 	
 	uint8_t _joystick_analogInputPin[2];
 	uint8_t _joystick_digitalInputPin;
