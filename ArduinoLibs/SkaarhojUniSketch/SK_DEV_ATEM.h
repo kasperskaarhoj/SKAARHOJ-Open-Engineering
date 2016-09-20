@@ -685,7 +685,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if (extRetValIsWanted()) {
       extRetVal(0, 7);
       extRetValShortLabel(PSTR("MPlayer "), (globalConfigMem[actionPtr + 1]) + 1);
-      extRetValLongLabel(PSTR("Media Player "), (globalConfigMem[actionPtr + 2]) + 1);
+      extRetValLongLabel(PSTR("Media Player "), (globalConfigMem[actionPtr + 1]) + 1);
       memset(_strCache, 0, 22);
       strcpy_P(_strCache, PSTR("Index "));
 
