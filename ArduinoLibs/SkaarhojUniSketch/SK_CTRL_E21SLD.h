@@ -78,3 +78,13 @@ void HWrunLoop() {
   HWrunLoop_128x32OLED(infoDisplay, 10, infoDisplay_prevHash, infoDisplay_written);
 #endif
 }
+
+uint8_t HWnumOfAnalogComponents() { return 1; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  switch (num) {
+  case 1:
+    return analogRead(A0);
+    break;
+  }
+}
