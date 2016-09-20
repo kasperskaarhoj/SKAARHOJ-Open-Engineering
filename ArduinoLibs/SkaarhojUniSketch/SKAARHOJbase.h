@@ -269,16 +269,18 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     }
     break;
   case 12:
-    int a, b;
+    int a, b, da, db;
     a = (average[0] + average[2]) / 2;
     b = (average[1] + average[3]) / 2;
+    da = (maxDeviation[0] + maxDeviation[2]) / 2;
+    db = (maxDeviation[1] + maxDeviation[3]) / 2;
 
     if (a > b) {
-      start = b;
-      end = 1023 - a;
+      start = b + da;
+      end = (1023 - a) + db;
     } else {
-      start = a;
-      end = 1023 - b;
+      start = a + da;
+      end = (1023 - b) + db;
     }
 
     hysteresis = 0;
