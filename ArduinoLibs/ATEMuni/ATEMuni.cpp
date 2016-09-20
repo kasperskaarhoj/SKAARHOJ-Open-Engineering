@@ -1904,12 +1904,14 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemAudioMixerInputMixOption[getAudioSrcIndex(audioSource)];
 					#endif
+					/*
 					Serial.print("Audio Source: ");
 					Serial.print(audioSource);
 					Serial.print(" Index: ");
 					Serial.print(getAudioSrcIndex(audioSource));
 					Serial.print(" Options: ");
 					Serial.println(_packetBuffer[8]);
+					*/
 					atemAudioMixerInputMixOption[getAudioSrcIndex(audioSource)] = _packetBuffer[8];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemAudioMixerInputMixOption[getAudioSrcIndex(audioSource)]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
