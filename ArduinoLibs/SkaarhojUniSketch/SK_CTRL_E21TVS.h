@@ -83,3 +83,13 @@ void HWrunLoop() {
   HWrunLoop_GPIO(GPIOboard, 18, gpioStates);
 #endif
 }
+
+uint8_t HWnumOfAnalogComponents() { return 1; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  switch (num) {
+  case 1:
+    return analogRead(A0);
+    break;
+  }
+}
