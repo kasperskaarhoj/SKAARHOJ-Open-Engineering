@@ -269,18 +269,16 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     }
     break;
   case 12:
-    int a, b, da, db;
+    int a, b;
     a = (average[0] + average[2]) / 2;
     b = (average[1] + average[3]) / 2;
-    da = (maxDeviation[0] + maxDeviation[2]) / 2;
-    db = (maxDeviation[1] + maxDeviation[3]) / 2;
 
     if (a > b) {
-      start = b + da;
-      end = (1023 - a) + db;
+      start = b;
+      end = (1023 - a);
     } else {
-      start = a + da;
-      end = (1023 - b) + db;
+      start = a;
+      end = (1023 - b);
     }
 
     hysteresis = 0;
@@ -291,6 +289,9 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     }
 
     hysteresis = hysteresis * 2;
+
+    start += hysteresis;
+    end += hysteresis;
 
     Serial << F("Calibration results:\n");
     Serial << F("Start offset: ") << start << "\n";
