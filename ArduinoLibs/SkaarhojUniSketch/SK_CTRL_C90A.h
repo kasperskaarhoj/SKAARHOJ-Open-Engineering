@@ -113,3 +113,13 @@ void HWrunLoop() {
   uint8_t b16MapAC2c[] = {17, 21, 18, 22, 19, 20, 23, 0}; // These numbers refer to the drawing in the web interface in this order: Potmeter A, Potmeter B, Peak Diode A, Peak Diode B, left button A, right button A, left button B, right button B right button A
   HWrunLoop_AudioControl(audio_c, audioPot_c1, audioPot_c2, b16MapAC2c, sizeof(b16MapAC2c));
 }
+
+uint8_t HWnumOfAnalogComponents() { return 1; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  switch (num) {
+  case 1:
+    return analogRead(A0);
+    break;
+  }
+}
