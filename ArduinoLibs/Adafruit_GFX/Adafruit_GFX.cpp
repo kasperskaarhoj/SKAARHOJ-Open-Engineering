@@ -377,11 +377,11 @@ void Adafruit_GFX::write(uint8_t c) {
 // Draw a character
 void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size) {
 
-  if ((x >= getBWidth()) ||            // Clip right
-      (y >= _height) ||           // Clip bottom
+  if ((x+size*6 >= getBWidth()) ||            // Clip right
+      (y+size*8 > _height) ||           // Clip bottom
       ((x + 6 * size - 1) < 0) || // Clip left
       ((y + 8 * size - 1) < 0))   // Clip top
-    return;
+     return;
 
   for (int8_t i = 0; i < 6; i++) {
     uint8_t line;

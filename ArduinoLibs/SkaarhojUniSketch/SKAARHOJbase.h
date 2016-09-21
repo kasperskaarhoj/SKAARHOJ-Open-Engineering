@@ -616,7 +616,7 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
 
   uint8_t wShrink = shrink & 1 ? 1 : 0;
   uint8_t hShrink = shrink & 2 ? 1 : 0;
-  uint8_t tw = size > 0 ? 128 : 64;
+  int16_t tw = size > 0 ? 128 : 64; // Needs to be signed, as string length is subtracted
 
   // Write basics:
   disp.setBoundingBox(x, y, tw, 32); // sets tile area
@@ -693,10 +693,10 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     int xOffset = 0;
     if (strlen(_extRetTxt[a])) {
       if (_extRetPair > 0) {
-        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - strlen(_extRetTxt[a]) * 3, 2, tw);
+        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - (int16_t)constrain(strlen(_extRetTxt[a]), 1, tw/6) * 3, 2, tw);
         disp.setCursor(xOffset, 14 - (isTitle ? 0 : 5) + a * 9 - hShrink);
       } else {
-        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - strlen((_extRetPair == 0 && size == 0) ? _extRetTxtShort : _extRetTxt[a]) * 6, 2, tw);
+        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - (int16_t)strlen((_extRetPair == 0 && size == 0) ? _extRetTxtShort : _extRetTxt[a]) * 6, 2, tw);
         disp.setCursor(xOffset, 16 - (isTitle ? 0 : 5) - hShrink);
       }
       disp << ((_extRetPair == 0 && size == 0) ? _extRetTxtShort : _extRetTxt[a]);
@@ -705,10 +705,10 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     // Print value string:
     if (strlen(_strCache)) {
       if (_extRetPair > 0) {
-        disp.setCursor(constrain(tw - 2 - strlen(_strCache) * 6 - wShrink, 0, 100), 14 - (isTitle ? 0 : 5) + a * 9 - hShrink);
+        disp.setCursor(constrain(tw - 2 - (int16_t)strlen(_strCache) * 6 - wShrink, 0, 100), 14 - (isTitle ? 0 : 5) + a * 9 - hShrink);
         disp << _strCache;
       } else {
-        xOffset = strlen(_extRetTxt[a]) ? tw - 2 - strlen(_strCache) * 12 : (tw >> 1) - strlen(_strCache) * 6;
+        xOffset = strlen(_extRetTxt[a]) ? tw - 2 - (int16_t)strlen(_strCache) * 12 : (tw >> 1) - (int16_t)strlen(_strCache) * 6;
         disp.setCursor(constrain(xOffset, 0, 100), 16 - (isTitle ? 0 : 5) - (_extRetScaleType > 0 ? 2 : 0) - hShrink);
         disp << _strCache;
         if ((_extRetFormat & 0xF) == 5) {
