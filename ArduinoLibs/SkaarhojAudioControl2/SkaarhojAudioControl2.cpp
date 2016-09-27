@@ -166,7 +166,7 @@ void SkaarhojAudioControl2::setChannelIndicatorLight(uint8_t ledNumber, uint8_t 
 			tempLedFlags |= ((redGreenBits&B11) << (3+4*(ledNumber-1)));
 		}
 	} else {
-		if (ledNumber>=1 && ledNumber <= 2)	{
+		if (ledNumber == 1 || ledNumber == 2)	{
 			tempLedFlags &= 255 ^ (B11 << (2+4*((ledNumber)-1)));
 			tempLedFlags |= ((redGreenBits&B11) << (2+4*((ledNumber)-1)));
 		}
