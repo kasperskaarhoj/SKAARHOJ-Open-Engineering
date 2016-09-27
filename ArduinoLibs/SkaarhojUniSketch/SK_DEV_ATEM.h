@@ -220,7 +220,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     retVal = globalConfigMem[actionPtr + 3] == 3 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (2 | 0x20) : 5) : (AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? (2 | 0x20) : 5);
     
     // The availabilty should not affect the color in cycle mode
-    if (globalConfigMem[actionPtr + 3] != 1 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
+    if (globalConfigMem[actionPtr + 3] != 3 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
       retVal = 0;
     }
 
