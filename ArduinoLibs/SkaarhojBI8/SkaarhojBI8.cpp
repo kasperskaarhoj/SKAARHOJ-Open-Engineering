@@ -316,7 +316,7 @@ uint32_t SkaarhojBI8::buttonAll() {
 	return (((uint32_t)buttonUpAll(false) << 16)| ((uint32_t) buttonDownAll(false) & 0xFFFF));
 }
 
-uint16_t SkaarhojBI8::buttonUpAll(bool read = true) {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been released since last check
+uint16_t SkaarhojBI8::buttonUpAll(bool read) {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been released since last check
 	if(read)
 		_readButtonStatus();
 	
@@ -325,7 +325,7 @@ uint16_t SkaarhojBI8::buttonUpAll(bool read = true) {	// Returns a word where ea
 
 	return buttonChange & ~_buttonStatus;
 }
-uint16_t SkaarhojBI8::buttonDownAll(bool read = true) {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been pressed since last check
+uint16_t SkaarhojBI8::buttonDownAll(bool read) {	// Returns a word where each bit indicates if a button 1-16 (bits 0-9) has been pressed since last check
 	if(read)
 		_readButtonStatus();
 	
