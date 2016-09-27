@@ -59,7 +59,6 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
       if (value != 0x8000) { // Value input
-        Serial << "Iris: " << value << "\n";
         BMDCamCtrl[devIndex].setIris(cam, 1.0 - (float)value / 1000.0);
       } else { // Binary - auto iris
         Serial << F("Perform Auto Iris... \n");
