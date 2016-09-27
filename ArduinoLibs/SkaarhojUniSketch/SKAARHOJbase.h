@@ -119,7 +119,7 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
 }
 
 uint16_t (&getAnalogComponentCalibration(uint8_t num))[3] {
-  uint16_t calibration[3] = {0, 0, 0};
+  uint16_t calibration[3] = {30, 30, 15};
 
   num -= 1;
   if (num > 9)
@@ -286,6 +286,10 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
       if (maxDeviation[i] > hysteresis) {
         hysteresis = maxDeviation[i];
       }
+    }
+
+    if(hysteresis == 0) {
+      hysteresis = 1;
     }
 
     hysteresis = hysteresis * 2;
@@ -1350,7 +1354,7 @@ uint8_t HWsetup() {
 // ++++++++++++++++++++++
 #if (SK_HWEN_STDOLEDDISPLAY)
   Serial << F("Init Info OLED Display\n");
-#if SK_MODEL == SK_MICROMONITOR || SK_MODEL == SK_RCP || SK_MODEL == SK_E21SSW
+#if SK_MODEL == SK_MICROMONITOR || SK_MODEL == SK_RCP
   infoDisplay.begin(0, 1);
 #else
   infoDisplay.begin(4, 1);
@@ -1457,12 +1461,21 @@ uint8_t HWsetup() {
   SSWbuttons.setButtonBrightness(7, B11);
   SSWbuttons.setButtonColor(0, 2, 3, B11);
   for (uint8_t i = 0; i < 64; i++) {
-    SSWbuttons.clearDisplay();
-    SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
-    SSWbuttons.display(B10); // Write
-    SSWbuttons.clearDisplay();
-    SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
-    SSWbuttons.display(B01); // Write
+    #if (SK_MODEL == SK_MICROSMARTV || SK_MODEL == SK_C15)
+      SSWbuttons.clearDisplay();
+      SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
+      SSWbuttons.display(B10); // Write
+      SSWbuttons.clearDisplay();
+      SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
+      SSWbuttons.display(B01); // Write
+    #else
+      SSWbuttons.clearDisplay();
+      SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
+      SSWbuttons.display(B01); // Write
+      SSWbuttons.clearDisplay();
+      SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
+      SSWbuttons.display(B10); // Write
+    #endif      
   }
   statusLED(QUICKBLANK);
 #endif
@@ -1476,7 +1489,9 @@ uint8_t HWsetup() {
   AudioMasterControl.begin(3, 0);
 #endif
   AudioMasterControl.setIsMasterBoard();
-  AudioMasterPot.uniDirectionalSlider_init(10, 35, 35, 0, 0);
+
+  uint16_t (&cal)[3] = getAnalogComponentCalibration(2);
+  AudioMasterPot.uniDirectionalSlider_init(cal[2], cal[0], cal[1], 0, 0);
   AudioMasterPot.uniDirectionalSlider_disableUnidirectionality(true);
 
   if (getConfigMode()) {
@@ -1736,6 +1751,7 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
       SSWmenu.display(B10000);
       Serial << F("Write SSWmenu gfx!\n");
     }
+
     if (prevColor != _extRetColor) {
       prevColor = _extRetColor;
       SSWmenuEnc.runLoop();
@@ -1952,7 +1968,7 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
   for (int a = 0; a < 2; a++) {
     if (HWcMap[2 + a]) { // Channel Indicator light
       uint16_t retVal = actionDispatch(HWcMap[2 + a]);
-      control.setChannelIndicatorLight(1 + a, retVal & 0x20 ? constrain((retVal & 0xF) - 1, 0, 3) : 0);
+      control.setChannelIndicatorLight(1 + a, retVal & 0x20 ? constrain((int16_t)(retVal & 0xF) - 1, 0, 3) : 0);
     }
   }
 
@@ -2419,7 +2435,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
  * Dispatching actions in general
  * (Notice; is already declared in main sketch!)
  */
-uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int pulses, int value, const uint8_t specificAction) {
+uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses, int16_t value, const uint8_t specificAction) {
   uint8_t actionMirrorC = 0;
   actionMirror = 0;
   _inactivePanel_actDown = actDown;
