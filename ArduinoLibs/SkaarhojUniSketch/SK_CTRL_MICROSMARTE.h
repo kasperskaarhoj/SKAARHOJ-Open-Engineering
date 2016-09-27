@@ -32,3 +32,9 @@ void HWrunLoop() {
   HWrunLoop_SSWMenu(1);
 #endif
 }
+
+uint8_t HWnumOfAnalogComponents() { return 0; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  return 0;
+}

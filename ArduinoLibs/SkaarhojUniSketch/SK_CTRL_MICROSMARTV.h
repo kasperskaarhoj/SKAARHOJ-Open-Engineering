@@ -26,3 +26,9 @@ void HWrunLoop() {
   uint8_t b16Map2[] = {2, 1}; // These numbers refer to the drawing in the web interface
   HWrunLoop_SSWbuttons(b16Map2);
 }
+
+uint8_t HWnumOfAnalogComponents() { return 0; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  return 0;
+}
