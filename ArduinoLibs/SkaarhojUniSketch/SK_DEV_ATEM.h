@@ -218,7 +218,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
 
     retVal = globalConfigMem[actionPtr + 3] == 3 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (2 | 0x20) : 5) : (AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? (2 | 0x20) : 5);
-    if (!(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
+    
+    // The availabilty should not affect the color in cycle mode
+    if (globalConfigMem[actionPtr + 3] != 1 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
       retVal = 0;
     }
 
@@ -258,9 +260,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
 
     retVal = globalConfigMem[actionPtr + 3] == 1 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (3 | 0x20) : 5) : (AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? (3 | 0x20) : 5);
-    if (!(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
+
+    // The availabilty should not affect the color in cycle mode
+    if (globalConfigMem[actionPtr + 3] != 1 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
       retVal = 0;
     }
+
 
     if (extRetValIsWanted()) {
       extRetVal(0, 7);
@@ -313,7 +318,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       retVal |= 0x20; // Add binary output bit
     if ((retVal & 0xF) == 3)
       retVal |= 0x10; // Bit 4 is a "mono-color blink flag" so a mono color button can indicate this special state.
-    if (!(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
+    
+    // The availabilty should not affect the color in cycle mode
+    if (globalConfigMem[actionPtr + 3] != 1 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
       retVal = 0;
     }
 
@@ -1079,7 +1086,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
       if (pulses & 0xFFFE) {
         outValue = pulsesHelper(round((AtemSwitcher[devIndex].audioWord2Db(audioVol)*10.0)), -600, 60, false, pulses, 2, 10);
-        Serial << "Audio source options: " << AtemSwitcher[devIndex].getAudioMixerInputMixOption(aSrc) << "\n";
       }
 
       switch (globalConfigMem[actionPtr + 1]) {
@@ -1214,7 +1220,11 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       retVal = ((((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterLeft()) + 60) & 0xFF) << 8) | (((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterRight()) + 60) & 0xFF);
       break;
     default:
-      retVal = ((((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]))) + 60) & 0xFF) << 8) | (((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]))) + 60) & 0xFF);
+      uint8_t source = globalConfigMem[actionPtr + 1];
+      if(source < 20) {
+        source -= 1;
+      }
+      retVal = ((((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF) << 8) | (((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF);
       break;
     }
     return retVal;
