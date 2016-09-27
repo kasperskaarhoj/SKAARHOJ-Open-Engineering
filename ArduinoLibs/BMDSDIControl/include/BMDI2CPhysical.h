@@ -52,6 +52,14 @@ private:
 template <typename T> void I2CPhysical<T>::begin(int wireAddress) {
   m_wireAddress = wireAddress;
   Wire.begin();
+
+    // Enable output on I2C level converter chip
+    Wire.beginTransmission(0x70);
+    Wire.write(1);
+    Wire.endTransmission();
+
+    delay(2);
+
   T::begin();
 }
 
