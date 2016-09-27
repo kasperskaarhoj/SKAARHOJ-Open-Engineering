@@ -23,7 +23,7 @@ void SkaarhojAnalog::debugMode() { _debugMode = true; }
  * Joystick
  * i2cAddress: 0-3
  */
-void SkaarhojAnalog::joystick_init(int tolerance, uint8_t i2cAddress, uint8_t index) {
+void SkaarhojAnalog::joystick_init(int16_t tolerance, uint8_t i2cAddress, uint8_t index) {
 
   ADS7828 analogConv; // Address
   _analogConv = analogConv;
@@ -127,7 +127,7 @@ int SkaarhojAnalog::joystick_AnalogRead(uint8_t index) {
 /**
  * Slider functions:
  */
-void SkaarhojAnalog::uniDirectionalSlider_init(int sliderTolerance, int sliderLowEndOffset, int sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex) {
+void SkaarhojAnalog::uniDirectionalSlider_init(int16_t sliderTolerance, int16_t sliderLowEndOffset, int16_t sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex) {
 
   ADS7828 analogConv; // Address
   _analogConv = analogConv;
@@ -171,13 +171,13 @@ bool SkaarhojAnalog::uniDirectionalSlider_hasMoved() {
     if (!_uniDirectionalSlider_disableUnidirectionality && sliderValue >= _uniDirectionalSlider_previousSliderValue + _uniDirectionalSlider_sliderTolerance && (_uniDirectionalSlider_previousSliderValue == -1 || _uniDirectionalSlider_previousSliderValue < _uniDirectionalSlider_sliderLowEndOffset)) {
       _uniDirectionalSlider_sliderDirectionUp = true;
     }
-    if (!_uniDirectionalSlider_disableUnidirectionality && sliderValue <= _uniDirectionalSlider_previousSliderValue - _uniDirectionalSlider_sliderTolerance && (_uniDirectionalSlider_previousSliderValue == -1 || _uniDirectionalSlider_previousSliderValue > 1024 - _uniDirectionalSlider_sliderHighEndOffset)) {
+    if (!_uniDirectionalSlider_disableUnidirectionality && sliderValue <= _uniDirectionalSlider_previousSliderValue - _uniDirectionalSlider_sliderTolerance && (_uniDirectionalSlider_previousSliderValue == -1 || _uniDirectionalSlider_previousSliderValue > 1023 - _uniDirectionalSlider_sliderHighEndOffset)) {
       _uniDirectionalSlider_sliderDirectionUp = false;
     }
 
     _uniDirectionalSlider_previousSliderValue = sliderValue;
 
-    int transitionPosition = (long)1000 * (long)(sliderValue - _uniDirectionalSlider_sliderLowEndOffset) / (long)(1024 - _uniDirectionalSlider_sliderLowEndOffset - _uniDirectionalSlider_sliderHighEndOffset);
+    int transitionPosition = (long)1000 * (long)(sliderValue - _uniDirectionalSlider_sliderLowEndOffset) / (long)(1023 - _uniDirectionalSlider_sliderLowEndOffset - _uniDirectionalSlider_sliderHighEndOffset);
     transitionPosition = constrain(transitionPosition, 0, 1000);
 
     if (!_uniDirectionalSlider_sliderDirectionUp)
