@@ -1430,7 +1430,7 @@ uint8_t HWsetup() {
   SSWmenuChip.inputPolarityMask((B00010000 << 8) | B00000000);    // Reverse polarity for inputs.
   SSWmenuChip.setGPInterruptEnable((B00000001 << 8) | B00000001); // Set up which pins triggers interrupt (GPINTEN)
 
-#if (SK_MODEL == SK_MICROSMARTE)
+#if (SK_MODEL == SK_MICROSMARTE || SK_MODEL == SK_E201M16)
   SSWmenu.setRotation(0);
 #else
   SSWmenu.setRotation(2);
@@ -1931,7 +1931,14 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
 
   if (HWcMap[1]) { // Channel Indicator light
     uint16_t retVal = actionDispatch(HWcMap[1]);
-    control.setChannelIndicatorLight(1, retVal & 0x20 ? constrain((retVal & 0xF) - 1, 0, 3) : 0);
+    uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
+    uint8_t ledBits = 0;
+
+    if(average > 20) ledBits = 2;
+    if(average > 40) ledBits = 3;
+    if(average > 50) ledBits = 1;
+
+    control.setChannelIndicatorLight(1 + a, ledBits);
   }
 
   if (HWcMap[2]) { // VU
@@ -1968,7 +1975,14 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
   for (int a = 0; a < 2; a++) {
     if (HWcMap[2 + a]) { // Channel Indicator light
       uint16_t retVal = actionDispatch(HWcMap[2 + a]);
-      control.setChannelIndicatorLight(1 + a, retVal & 0x20 ? constrain((int16_t)(retVal & 0xF) - 1, 0, 3) : 0);
+      uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
+      uint8_t ledBits = 0;
+
+      if(average > 20) ledBits = 2;
+      if(average > 40) ledBits = 3;
+      if(average > 50) ledBits = 1;
+
+      control.setChannelIndicatorLight(1 + a, ledBits);
     }
   }
 
