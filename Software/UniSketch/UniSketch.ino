@@ -8,8 +8,6 @@
 // Define model (according to list further down):
 #define SK_MODEL SK_RCP
 
-
-
 // ****************************
 // NO USER CHANGE BELOW!
 // ****************************
@@ -30,7 +28,7 @@
 #define SK_E201M16 14
 #define SK_E201S16 17
 #define SK_MICROAUDIO 20
-#define SK_MICROBI16  21
+#define SK_MICROBI16 21
 #define SK_MICROGPIO 22
 #define SK_MICROKP01 23
 #define SK_MICROLEVELS 24
@@ -47,9 +45,10 @@
 #define SK_C15 52
 #define SK_RCP 60
 #define SK_WINGMAN 61
+#define SK_WINGMANTOUCH 62
 #define SK_CCUX 63
 #define SK_TALLY 70
-#define SK_CUSTOMHW 1000  // Custom HARDWARE option - where the SK_CTRL_ file is also custom (located in sketch folder then). That file is normally a generic file.
+#define SK_CUSTOMHW 1000 // Custom HARDWARE option - where the SK_CTRL_ file is also custom (located in sketch folder then). That file is normally a generic file.
 #define SK_DUMMY 1001
 
 // Definition of the hardware devices we support:
@@ -73,9 +72,6 @@
 // Customization file, located in sketch folder:
 #include "customization.h"
 
-
-
-
 /****************************************
 
    INCLUDING HARDWARE RELATED LIBRARIES, I
@@ -88,7 +84,7 @@
 #include "Ethernet.h"
 #include "utility/w5100.h"
 #include "Streaming.h"
-#ifdef __arm__  /* Arduino DUE */
+#ifdef __arm__ /* Arduino DUE */
 #include "SkaarhojDueEEPROM.h"
 SkaarhojDueEEPROM EEPROM;
 #else
@@ -107,70 +103,68 @@ SkaarhojTools sTools(0);
 #include "SkaarhojBI16.h"
 #include "SkaarhojEncoders.h"
 
-
-
 // Includes per model:
 #if (SK_MODEL == SK_E21TVS)
 #include "SK_CFGDEF_E21TVS.h"
-#elif (SK_MODEL == SK_E21KP01)
+#elif(SK_MODEL == SK_E21KP01)
 #include "SK_CFGDEF_E21KP01.h"
-#elif (SK_MODEL == SK_E21SLD)
+#elif(SK_MODEL == SK_E21SLD)
 #include "SK_CFGDEF_E21SLD.h"
-#elif (SK_MODEL == SK_E21SSW)
+#elif(SK_MODEL == SK_E21SSW)
 #include "SK_CFGDEF_E21SSW.h"
-#elif (SK_MODEL == SK_E21CMB6)
+#elif(SK_MODEL == SK_E21CMB6)
 #include "SK_CFGDEF_E21CMB6.h"
-#elif (SK_MODEL == SK_E21GPIO)
+#elif(SK_MODEL == SK_E21GPIO)
 #include "SkaarhojGPIO2x8.h"
 #include "SK_CFGDEF_E21GPIO.h"
-#elif (SK_MODEL == SK_E201M16)
+#elif(SK_MODEL == SK_E201M16)
 #include "SK_CFGDEF_E201M16.h"
-#elif (SK_MODEL == SK_E201L2)
+#elif(SK_MODEL == SK_E201L2)
 #include "SK_CFGDEF_E201L2.h"
 #define MCU_ETM 1
-#elif (SK_MODEL == SK_E201S16)
+#elif(SK_MODEL == SK_E201S16)
 #include "SK_CFGDEF_E201S16.h"
-#elif (SK_MODEL == SK_MICROAUDIO)
+#elif(SK_MODEL == SK_MICROAUDIO)
 #include "SkaarhojAudioControl.h"
 #include "SkaarhojAnalog.h"
 #include "ADS7828.h"
 #include "SK_CFGDEF_MICROAUDIO.h"
-#elif (SK_MODEL == SK_MICROBI16)
+#elif(SK_MODEL == SK_MICROBI16)
 #include "SK_CFGDEF_MICROBI16.h"
-#elif (SK_MODEL == SK_MICROGPIO)
+#elif(SK_MODEL == SK_MICROGPIO)
 #include "SK_CFGDEF_MICROGPIO.h"
-#elif (SK_MODEL == SK_MICROKP01)
+#elif(SK_MODEL == SK_MICROKP01)
 #include "SK_CFGDEF_MICROKP01.h"
-#elif (SK_MODEL == SK_MICROLEVELS)
+#elif(SK_MODEL == SK_MICROLEVELS)
 #include "SkaarhojAudioControl.h"
 #include "SK_CFGDEF_MICROLEVELS.h"
-#elif (SK_MODEL == SK_MICROMONITOR)
+#elif(SK_MODEL == SK_MICROMONITOR)
 #include "SK_CFGDEF_MICROMONITOR.h"
-#elif (SK_MODEL == SK_MICROSMARTE)
+#elif(SK_MODEL == SK_MICROSMARTE)
 #include "SK_CFGDEF_MICROSMARTE.h"
-#elif (SK_MODEL == SK_MICROSMARTH)
+#elif(SK_MODEL == SK_MICROSMARTH)
 #include "SK_CFGDEF_MICROSMARTH.h"
-#elif (SK_MODEL == SK_MICROSMARTV)
+#elif(SK_MODEL == SK_MICROSMARTV)
 #include "SK_CFGDEF_MICROSMARTV.h"
-#elif (SK_MODEL == SK_MICROTALLY)
+#elif(SK_MODEL == SK_MICROTALLY)
 #include "SkaarhojGPIO2x8.h"
 #include "SK_CFGDEF_MICROTALLY.h"
-#elif (SK_MODEL == SK_C90)
+#elif(SK_MODEL == SK_C90)
 #include "SK_CFGDEF_C90.h"
-#elif (SK_MODEL == SK_C90A)
+#elif(SK_MODEL == SK_C90A)
 #include "SkaarhojAudioControl2.h"
 #include "SkaarhojAnalog.h"
 #include "ADS7828.h"
 #include "SK_CFGDEF_C90A.h"
-#elif (SK_MODEL == SK_C90SM)
+#elif(SK_MODEL == SK_C90SM)
 #include "SK_CFGDEF_C90SM.h"
-#elif (SK_MODEL == SK_C31)
+#elif(SK_MODEL == SK_C31)
 #include "SK_CFGDEF_C31.h"
-#elif (SK_MODEL == SK_C10)
+#elif(SK_MODEL == SK_C10)
 #include "SK_CFGDEF_C10.h"
-#elif (SK_MODEL == SK_C15)
+#elif(SK_MODEL == SK_C15)
 #include "SK_CFGDEF_C15.h"
-#elif (SK_MODEL == SK_RCP)
+#elif(SK_MODEL == SK_RCP)
 #include "SkaarhojUHB.h"
 #include "SkaarhojEADOGMDisplay.h"
 #include "SkaarhojAnalog.h"
@@ -178,32 +172,37 @@ SkaarhojTools sTools(0);
 #include "Adafruit_GFX.h"
 #include "SkaarhojOLED64x256.h"
 #include "SK_CFGDEF_RCP.h"
-#elif (SK_MODEL == SK_WINGMAN)
+#elif(SK_MODEL == SK_WINGMAN)
+#include "Adafruit_GFX.h"
+#include "SkaarhojOLED64x256.h"
+#include "SkaarhojDome.h"
+#include "SK_CFGDEF_WINGMAN.h"
+#elif(SK_MODEL == SK_WINGMANTOUCH)
 #include "Adafruit_GFX.h"
 #include "SkaarhojOLED64x256.h"
 #include "SkaarhojDisplayArray.h"
 #include "SkaarhojDome.h"
 #include "Adafruit_STMPE610.h"
+#include "SK_CFGDEF_WINGMANTOUCH.h"
 #include "SK_CFGDEF_WINGMAN.h"
-#elif (SK_MODEL == SK_CCUX)
+#elif(SK_MODEL == SK_CCUX)
 #include "SkaarhojDisplayArray.h"
 #include "SkaarhojAnalog.h"
 #include "ADS7828.h"
 #include "Adafruit_GFX.h"
 #include "SkaarhojOLEDRocker.h"
 #include "SkaarhojSmartSwitch2.h"
-#include "SK_CFGDEF_CCU.h"  // TODO: Change to CCU-X when ready....
-#elif (SK_MODEL == SK_TALLY)
+#include "SK_CFGDEF_CCU.h" // TODO: Change to CCU-X when ready....
+#elif(SK_MODEL == SK_TALLY)
 #include "SkaarhojGPIO1x16.h"
 #include "SK_CFGDEF_TALLY.h"
-#elif (SK_MODEL == SK_CUSTOMHW)
+#elif(SK_MODEL == SK_CUSTOMHW)
 #include "SK_CFGDEF_CUSTOMHW.h"
-#elif (SK_MODEL == SK_DUMMY)
+#elif(SK_MODEL == SK_DUMMY)
 #include "SK_CFGDEF_DUMMY.h"
 #endif
 
-
-#if SK_HWEN_STDOLEDDISPLAY || SK_HWEN_SSWMENU || SK_HWEN_SSWBUTTONS || SK_MODEL == SK_RCP || SK_MODEL == SK_CCUX || SK_MODEL == SK_WINGMAN
+#if SK_HWEN_STDOLEDDISPLAY || SK_HWEN_SSWMENU || SK_HWEN_SSWBUTTONS || SK_MODEL == SK_RCP || SK_MODEL == SK_CCUX || SK_MODEL == SK_WINGMAN || SK_MODEL == SK_WINGMANTOUCH
 #define SK_HWEN_GRAPHICS 1
 #else
 #define SK_HWEN_GRAPHICS 0
@@ -233,7 +232,6 @@ SkaarhojEncoders menuEncoders;
 SkaarhojEADOGMDisplay menuDisplay;
 #endif
 
-
 #if SK_HWEN_SSWMENU
 #include "Adafruit_GFX.h"
 #include "SkaarhojSmartSwitch2.h"
@@ -261,18 +259,6 @@ SkaarhojAnalog AudioMasterPot;
 SkaarhojGPIO2x8 GPIOboard;
 #endif
 
-
-
-
-
-
-
-
-
-
-
-
-
 /****************************************
 
    GLOBAL VARIABLES and FUNCTION DEFINITIONS
@@ -283,7 +269,7 @@ SkaarhojGPIO2x8 GPIOboard;
 uint8_t globalConfigMem[SK_CONFIG_MEMORY_SIZE];
 uint8_t _systemState = 0;
 uint8_t _systemShift = 0;
-uint8_t _systemMem[4] = {0, 0, 0, 0}; // Mem A-D
+uint8_t _systemMem[4] = {0, 0, 0, 0};              // Mem A-D
 uint8_t _systemBits[8] = {0, 0, 0, 0, 0, 0, 0, 0}; // 64 system bits
 uint16_t _systemHWcActionCache[SK_HWCCOUNT][SK_MAXACTIONS];
 uint8_t _systemHWcActionCacheFlag[SK_HWCCOUNT][SK_MAXACTIONS];
@@ -309,14 +295,6 @@ void HWcfgDisplay();
 // Pre-declaring functions defined in the individual hardware files
 uint8_t HWnumOfAnalogComponents();
 int16_t HWAnalogComponentValue(uint8_t num);
-
-
-
-
-
-
-
-
 
 /****************************************
 
@@ -354,7 +332,7 @@ void extRetValPrefersLabel(uint8_t HWc) {
    Format: 0=integer XX, 1=float from 10^3 (X.XX), 2=XX%, 3=XXdb, 4=XXf, 5=1/XX, 6=XXK, 7=Blank (not printed)
    Fine: Fine-flag
 */
-void extRetVal(int16_t value, uint8_t format = 0, bool fine = 0)  {
+void extRetVal(int16_t value, uint8_t format = 0, bool fine = 0) {
   _extRetValue[0] = value;
   _extRetFormat = (format & B1111) | (fine ? B10000 : 0);
   // Resetting:
@@ -379,25 +357,24 @@ void extRetVal(int16_t value, uint8_t format = 0, bool fine = 0)  {
 /**
    Returns isWanted flag (but sets it first to input value)
 */
-bool extRetValIsWanted(bool set = false)    {
+bool extRetValIsWanted(bool set = false) {
   bool v = _extRetValIsWanted;
   _extRetValIsWanted = set;
-  if (set)    extRetVal(0, 7);    // init/clear display
+  if (set)
+    extRetVal(0, 7); // init/clear display
   return v;
 }
 
 /**
    Returns isWanted flag (but sets it first to input value)
 */
-void extRetValSetLabel(bool flag)    {
-  _extRetValIsLabel = flag;
-}
+void extRetValSetLabel(bool flag) { _extRetValIsLabel = flag; }
 
 /**
    Sets the extended return value (long) and initializes everything else.
    scaleType: 0=no scale, 1=fill, 2=center
 */
-void extRetValScale(const uint8_t scaleType, const int16_t rangeLow, const int16_t rangeHigh, const int16_t limitLow, const int16_t limitHigh)  {
+void extRetValScale(const uint8_t scaleType, const int16_t rangeLow, const int16_t rangeHigh, const int16_t limitLow, const int16_t limitHigh) {
   _extRetScaleType = scaleType;
   _extRetRangeLow = rangeLow;
   _extRetRangeHigh = rangeHigh;
@@ -409,7 +386,7 @@ void extRetValScale(const uint8_t scaleType, const int16_t rangeLow, const int16
     Sets secondary value. Values are printed in smaller size.
     Pair: 1=two values shown, 2=box around first value, 3=box around second value, 4=box around both values
 */
-void extRetVal2(int16_t value2, uint8_t pair = 1)  {
+void extRetVal2(int16_t value2, uint8_t pair = 1) {
   _extRetValue[1] = value2;
   _extRetPair = pair;
 }
@@ -417,14 +394,14 @@ void extRetVal2(int16_t value2, uint8_t pair = 1)  {
 /**
     Sets short label
 */
-void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000)  {
-  if (17 - 1 - _extRetLongPtr > 0)  {
+void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000) {
+  if (17 - 1 - _extRetLongPtr > 0) {
     strncpy_P(_extRetLong + _extRetLongPtr, longLabel, 17 - 1 - _extRetLongPtr);
     _extRetLongPtr += strlen_P(longLabel);
   }
-  if (number != 0x8000)  {
+  if (number != 0x8000) {
     itoa(number, _strCache, 10);
-    if (17 - 1 - _extRetLongPtr > 0)  {
+    if (17 - 1 - _extRetLongPtr > 0) {
       strncpy(_extRetLong + _extRetLongPtr, _strCache, 17 - 1 - _extRetLongPtr);
       _extRetLongPtr += strlen(_strCache);
     }
@@ -435,13 +412,13 @@ void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000)  {
     Sets long label
 */
 void extRetValShortLabel(const char *shortLabel, const int16_t number = 0) {
-  if (11 - 1 - _extRetShortPtr > 0)  {
+  if (11 - 1 - _extRetShortPtr > 0) {
     strncpy_P(_extRetShort + _extRetShortPtr, shortLabel, 11 - 1 - _extRetShortPtr);
     _extRetShortPtr += strlen_P(shortLabel);
   }
-  if (number != 0)  {
+  if (number != 0) {
     itoa(number, _strCache, 10);
-    if (11 - 1 - _extRetShortPtr > 0)  {
+    if (11 - 1 - _extRetShortPtr > 0) {
       strncpy(_extRetShort + _extRetShortPtr, _strCache, 11 - 1 - _extRetShortPtr);
       _extRetShortPtr += strlen(_strCache);
     }
@@ -451,14 +428,12 @@ void extRetValShortLabel(const char *shortLabel, const int16_t number = 0) {
 /**
     Alternative Prefix labels for values in case of 64 pixels wide displays
 */
-void extRetValTxtShort(const char *txt)  {
-  strncpy(_extRetTxtShort, txt, 5);
-}
+void extRetValTxtShort(const char *txt) { strncpy(_extRetTxtShort, txt, 5); }
 
 /**
     Prefix labels for values
 */
-void extRetValTxt(const char *txt, uint8_t i)  {
+void extRetValTxt(const char *txt, uint8_t i) {
   strncpy(_extRetTxt[i], txt, 17 - 1);
   extRetValTxtShort(txt);
 }
@@ -466,26 +441,21 @@ void extRetValTxt(const char *txt, uint8_t i)  {
 /**
     Alternative Prefix labels for values in case of 64 pixels wide displays
 */
-void extRetValTxtShort_P(const char *txt)  {
-  strncpy_P(_extRetTxtShort, txt, 5);
-}
+void extRetValTxtShort_P(const char *txt) { strncpy_P(_extRetTxtShort, txt, 5); }
 
 /**
     Prefix labels, PROGMEM input
 */
-void extRetValTxt_P(const char *txt, uint8_t i)  {
+void extRetValTxt_P(const char *txt, uint8_t i) {
   strncpy_P(_extRetTxt[i], txt, 17 - 1);
   extRetValTxtShort_P(txt);
 }
-
 
 /**
     Button color (if RGB SmartSwitch)
     xxRRGGBB
 */
-void extRetValColor(uint8_t col)  {
-  _extRetColor = col;
-}
+void extRetValColor(uint8_t col) { _extRetColor = col; }
 
 /**
     Calculating change hash
@@ -494,11 +464,11 @@ void extRetValColor(uint8_t col)  {
 uint16_t extRetValHash() {
   uint16_t cs = 0;
 
-  cs ^= pgm_read_word_near(cs)^lowByte(_extRetValue[0]);
-  cs ^= pgm_read_word_near(cs)^highByte(_extRetValue[0]);
+  cs ^= pgm_read_word_near(cs) ^ lowByte(_extRetValue[0]);
+  cs ^= pgm_read_word_near(cs) ^ highByte(_extRetValue[0]);
 
-  cs ^= pgm_read_word_near(cs)^lowByte(_extRetValue[1]);
-  cs ^= pgm_read_word_near(cs)^highByte(_extRetValue[1]);
+  cs ^= pgm_read_word_near(cs) ^ lowByte(_extRetValue[1]);
+  cs ^= pgm_read_word_near(cs) ^ highByte(_extRetValue[1]);
 
   cs += _extRetPair;
   cs += _extRetFormat;
@@ -508,21 +478,18 @@ uint16_t extRetValHash() {
   cs += _extRetLimitLow;
   cs += _extRetLimitHigh;
 
-  for (uint8_t a = 0; a < 16; a++)   {
-    cs ^= pgm_read_word_near(cs)^_extRetLong[a];
-    cs ^= pgm_read_word_near(cs)^_extRetTxt[0][a];
-    cs ^= pgm_read_word_near(cs)^_extRetTxt[1][a];
+  for (uint8_t a = 0; a < 16; a++) {
+    cs ^= pgm_read_word_near(cs) ^ _extRetLong[a];
+    cs ^= pgm_read_word_near(cs) ^ _extRetTxt[0][a];
+    cs ^= pgm_read_word_near(cs) ^ _extRetTxt[1][a];
   }
-  for (uint8_t a = 0; a < 10; a++)   {
-    cs ^= pgm_read_word_near(cs)^_extRetShort[a];
+  for (uint8_t a = 0; a < 10; a++) {
+    cs ^= pgm_read_word_near(cs) ^ _extRetShort[a];
   }
-  for (uint8_t a = 0; a < 5; a++)   {
-    cs ^= pgm_read_word_near(cs)^_extRetTxtShort[a];
+  for (uint8_t a = 0; a < 5; a++) {
+    cs ^= pgm_read_word_near(cs) ^ _extRetTxtShort[a];
   }
   cs += _extRetValIsLabel << 4;
-
-
-
 
   /*  cs += lowByte(~_extRetValue[0]);
     cs += highByte(~_extRetValue[0]);
@@ -554,12 +521,6 @@ uint16_t extRetValHash() {
 
   return cs;
 }
-
-
-
-
-
-
 
 /****************************************
 
@@ -621,18 +582,6 @@ uint8_t SonyRCP_initIdx = 0;
 #include "SK_DEV_SONYRCP.h";
 #endif
 
-
-
-
-
-
-
-
-
-
-
-
-
 /****************************************
 
    INCLUDING BASIC FUNCTIONS
@@ -640,13 +589,6 @@ uint8_t SonyRCP_initIdx = 0;
  ****************************************/
 #include "SKAARHOJbase.h"
 #include "SKAARHOJwebserver.h"
-
-
-
-
-
-
-
 
 /****************************************
 
@@ -659,78 +601,75 @@ uint8_t SonyRCP_initIdx = 0;
 // Includes per model:
 #if (SK_MODEL == SK_E21TVS)
 #include "SK_CTRL_E21TVS.h"
-#elif (SK_MODEL == SK_E21KP01)
+#elif(SK_MODEL == SK_E21KP01)
 #include "SK_CTRL_E21KP01.h"
-#elif (SK_MODEL == SK_E21SLD)
+#elif(SK_MODEL == SK_E21SLD)
 #include "SK_CTRL_E21SLD.h"
-#elif (SK_MODEL == SK_E21SSW)
+#elif(SK_MODEL == SK_E21SSW)
 #include "SK_CTRL_E21SSW.h"
-#elif (SK_MODEL == SK_E21CMB6)
+#elif(SK_MODEL == SK_E21CMB6)
 #include "SK_CTRL_E21CMB6.h"
-#elif (SK_MODEL == SK_E21GPIO)
+#elif(SK_MODEL == SK_E21GPIO)
 #include "SK_CTRL_E21GPIO.h"
-#elif (SK_MODEL == SK_E201M16)
+#elif(SK_MODEL == SK_E201M16)
 #include "SK_CTRL_E201M16.h"
-#elif (SK_MODEL == SK_E201L2)
+#elif(SK_MODEL == SK_E201L2)
 #include "SK_CTRL_E201L2.h"
-#elif (SK_MODEL == SK_E201S16)
+#elif(SK_MODEL == SK_E201S16)
 #include "SK_CTRL_E201S16.h"
-#elif (SK_MODEL == SK_MICROAUDIO)
+#elif(SK_MODEL == SK_MICROAUDIO)
 #include "SK_CTRL_MICROAUDIO.h"
-#elif (SK_MODEL == SK_MICROBI16)
+#elif(SK_MODEL == SK_MICROBI16)
 #include "SK_CTRL_MICROBI16.h"
-#elif (SK_MODEL == SK_MICROGPIO)
+#elif(SK_MODEL == SK_MICROGPIO)
 #include "SK_CTRL_MICROGPIO.h"
-#elif (SK_MODEL == SK_MICROKP01)
+#elif(SK_MODEL == SK_MICROKP01)
 #include "SK_CTRL_MICROKP01.h"
-#elif (SK_MODEL == SK_MICROLEVELS)
+#elif(SK_MODEL == SK_MICROLEVELS)
 #include "SK_CTRL_MICROLEVELS.h"
-#elif (SK_MODEL == SK_MICROMONITOR)
+#elif(SK_MODEL == SK_MICROMONITOR)
 #include "SK_CTRL_MICROMONITOR.h"
-#elif (SK_MODEL == SK_MICROSMARTE)
+#elif(SK_MODEL == SK_MICROSMARTE)
 #include "SK_CTRL_MICROSMARTE.h"
-#elif (SK_MODEL == SK_MICROSMARTH)
+#elif(SK_MODEL == SK_MICROSMARTH)
 #include "SK_CTRL_MICROSMARTH.h"
-#elif (SK_MODEL == SK_MICROSMARTV)
+#elif(SK_MODEL == SK_MICROSMARTV)
 #include "SK_CTRL_MICROSMARTV.h"
-#elif (SK_MODEL == SK_MICROTALLY)
+#elif(SK_MODEL == SK_MICROTALLY)
 #include "SK_CTRL_MICROTALLY.h"
-#elif (SK_MODEL == SK_C90)
+#elif(SK_MODEL == SK_C90)
 #include "SK_CTRL_C90.h"
-#elif (SK_MODEL == SK_C90A)
+#elif(SK_MODEL == SK_C90A)
 #include "SK_CTRL_C90A.h"
-#elif (SK_MODEL == SK_C90SM)
+#elif(SK_MODEL == SK_C90SM)
 #include "SK_CTRL_C90SM.h"
-#elif (SK_MODEL == SK_C31)
+#elif(SK_MODEL == SK_C31)
 #include "SK_CTRL_C31.h"
-#elif (SK_MODEL == SK_C10)
+#elif(SK_MODEL == SK_C10)
 #include "SK_CTRL_C10.h"
-#elif (SK_MODEL == SK_C15)
+#elif(SK_MODEL == SK_C15)
 #include "SK_CTRL_C15.h"
-#elif (SK_MODEL == SK_RCP)
+#elif(SK_MODEL == SK_RCP)
 #include "SK_CTRL_RCP.h"
-#elif (SK_MODEL == SK_WINGMAN)
+#elif(SK_MODEL == SK_WINGMAN)
 #include "SK_CTRL_WINGMAN.h"
-#elif (SK_MODEL == SK_CCUX)
+#elif (SK_MODEL == SK_WINGMANTOUCH)
+#include "SK_CTRL_WINGMANTOUCH.h"
+#elif(SK_MODEL == SK_CCUX)
 #include "SK_CTRL_CCUX.h"
-#elif (SK_MODEL == SK_TALLY)
+#elif(SK_MODEL == SK_TALLY)
 #include "SK_CTRL_TALLY.h"
-#elif (SK_MODEL == SK_CUSTOMHW)
+#elif(SK_MODEL == SK_CUSTOMHW)
 #include "SK_CTRL_CUSTOMHW.h"
-#elif (SK_MODEL == SK_DUMMY)
+#elif(SK_MODEL == SK_DUMMY)
 #include "SK_CTRL_DUMMY.h"
 #endif
-
-
 
 // Custom handlers
 #include "customhandler.h"
 #ifndef SK_CUSTOM_HANDLER
-uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value)    {
-}
+uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
 #endif
-
-
 
 /**
    Standard Arduino setup() function
@@ -740,12 +679,12 @@ void setup() {
   initController(); // Initializes Serial, Hardware, Config mode, Ethernet
   Serial << F("Compiled: ") << __DATE__ << F(" ") << __TIME__ << F("\n");
 
-  if (getConfigMode())  {
+  if (getConfigMode()) {
     webserver.begin();
     webserver.setDefaultCommand(&defaultCmd);
     webserver.addCommand("script.js", &scriptCmd);
   } else {
-    deviceSetup();  // Sets up hardware devices (those enabled) we communicate to. No initialization though, this must happen automatically in the runloop of each device
+    deviceSetup(); // Sets up hardware devices (those enabled) we communicate to. No initialization though, this must happen automatically in the runloop of each device
   }
   Serial << F("setup() Done\n-----------------------------\n");
 }
@@ -756,19 +695,19 @@ void setup() {
 void loop() {
   checkIncomingSerial();
   statusSerial();
-  
-  if (getConfigMode())  {
+
+  if (getConfigMode()) {
     statusLED(defaultStatusColor(), 1);
     HWtest();
     webserver.processConnection();
   } else {
-    if (getDevUnconnected())  {
+    if (getDevUnconnected()) {
       statusLED(LED_YELLOW, 4);
     } else {
       statusLED(defaultStatusColor(), 1);
     }
 
-    deviceRunLoop();    // Keeping in touch with enabled hardware devices and updating the deviceReady booleans so we know which devices can be safely talked to.
+    deviceRunLoop(); // Keeping in touch with enabled hardware devices and updating the deviceReady booleans so we know which devices can be safely talked to.
     HWrunLoop();
   }
 }
