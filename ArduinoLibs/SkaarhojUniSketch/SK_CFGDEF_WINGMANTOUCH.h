@@ -651,5 +651,7 @@ static const uint8_t defaultControllerConfig[] PROGMEM = {
 #endif
 
 
-SkaarhojDome buttons[2];
+SkaarhojDome buttons[2][2];
 SkaarhojOLED64x256 labelDisp[2] = {SkaarhojOLED64x256(), SkaarhojOLED64x256()};
+SkaarhojDisplayArray infoDisplay[2] = {SkaarhojDisplayArray(), SkaarhojDisplayArray()};
+Adafruit_STMPE610 touch[2] = {Adafruit_STMPE610(),Adafruit_STMPE610()};
