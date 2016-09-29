@@ -133,9 +133,6 @@ uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int pulseCount, uin
  * Searches for the media still up/down in list
  */
 uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int pulseCount, uint8_t limit) {
-
-  Serial << "Input source: " << srcI << "\n";
-
   uint8_t c = 0, initSrc = srcI;
   for (uint8_t a = 0; a < abs(pulseCount); a++) {
     do {
