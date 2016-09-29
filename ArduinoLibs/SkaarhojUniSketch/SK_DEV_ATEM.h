@@ -134,7 +134,9 @@ uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int pulseCount, uin
  */
 uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int pulseCount, uint8_t limit) {
 
-  uint8_t c = 0;
+  Serial << "Input source: " << srcI << "\n";
+
+  uint8_t c = 0, initSrc = srcI;
   for (uint8_t a = 0; a < abs(pulseCount); a++) {
     do {
       c++;
@@ -146,9 +148,11 @@ uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int pulseCount, u
           srcI = limit;
       }
     } while (!AtemSwitcher[devIndex].getMediaPlayerStillFilesIsUsed(srcI) && c < 32);
+
+    if(c == 32) break;
   }
 
-  return srcI;
+  return (c >= 32?initSrc:srcI);
 }
 
 /**
