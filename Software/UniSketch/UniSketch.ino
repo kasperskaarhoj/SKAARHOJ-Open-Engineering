@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_E21CMB6
 
 
 
@@ -309,6 +309,7 @@ void HWcfgDisplay();
 // Pre-declaring functions defined in the individual hardware files
 uint8_t HWnumOfAnalogComponents();
 int16_t HWAnalogComponentValue(uint8_t num);
+uint16_t (&HWMinCalibrationValues(uint8_t num))[3];
 
 
 

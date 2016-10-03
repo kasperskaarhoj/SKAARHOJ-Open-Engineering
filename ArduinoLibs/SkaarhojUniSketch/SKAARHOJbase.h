@@ -235,6 +235,11 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     calibrationState = 1;
   }
 
+  if(num+1 > HWnumOfAnalogComponents()) {
+    Serial << F("Analog component #") << num+1 << F(" does not exist!\n");
+    return;
+  }
+
   switch (calibrationState) {
   case 1: // Start calibration
     memset(average, 0x00, sizeof(average));
@@ -296,6 +301,11 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
 
     start += hysteresis;
     end += hysteresis;
+
+    uint16_t minimumValues[3] = HWMinCalibrationValues(currentAnalogComponent);
+    if(start < minimumValues[0]) start = minimumValues[0];
+    if(end < minimumValues[1]) end = minimumValues[1];
+    if(hysteresis < minimumValues[2]) hysteresis = minimumValues[2];
 
     Serial << F("Calibration results:\n");
     Serial << F("Start offset: ") << start << "\n";
