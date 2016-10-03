@@ -1848,7 +1848,12 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
 #if SK_HWEN_SLIDER
 void HWrunLoop_slider(const uint8_t HWc) {
   // Slider:
-  bool hasMoved = slider.uniDirectionalSlider_hasMoved();
+  bool hasMoved = false;
+  static unsigned long timer = 0;
+  if (sTools.hasTimedOut(timer,40))	{
+	 hasMoved = slider.uniDirectionalSlider_hasMoved();
+	 if (hasMoved)	timer = millis();
+  }
   actionDispatch(HWc, hasMoved, hasMoved && slider.uniDirectionalSlider_isAtEnd(), 0, slider.uniDirectionalSlider_position());
 }
 #endif
