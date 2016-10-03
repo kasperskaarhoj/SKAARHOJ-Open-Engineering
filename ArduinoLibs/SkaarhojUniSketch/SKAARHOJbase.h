@@ -40,12 +40,9 @@ void resetFunc() {
 void (*resetFunc)(void) = 0; // declare reset function @ address 0
 #endif
 
-
 // The constrain macro takes up too much ram
 #define constrain constrain
-int32_t constrain(int32_t amt, int32_t low, int32_t high) {
-  return ((amt)<(low)?(low):((amt)>(high)?(high):(amt)));
-}
+int32_t constrain(int32_t amt, int32_t low, int32_t high) { return ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt))); }
 
 // MAC address and IP address for this *particular* SKAARDUINO
 byte mac[6] = {};                   // Loaded from EEPROM
@@ -64,13 +61,13 @@ IPAddress subnet(255, 255, 255, 0); // This is the default subnet address
 #define DONTCHANGE 255
 
 #if defined(ARDUINO_SKAARDUINO_DUE)
-static const uint8_t PIN_RED=2;
-static const uint8_t PIN_GREEN=22;
-static const uint8_t PIN_BLUE=13;
+static const uint8_t PIN_RED = 2;
+static const uint8_t PIN_GREEN = 22;
+static const uint8_t PIN_BLUE = 13;
 #else
-static const uint8_t PIN_RED=13;
-static const uint8_t PIN_GREEN=15;
-static const uint8_t PIN_BLUE=14;
+static const uint8_t PIN_RED = 13;
+static const uint8_t PIN_GREEN = 15;
+static const uint8_t PIN_BLUE = 14;
 #endif
 
 /**
@@ -118,7 +115,7 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
   EEPROM.write(20 + num * 4 + 4, 193 ^ EEPROM.read(20 + num * 4 + 1) ^ EEPROM.read(20 + num * 4 + 2) ^ EEPROM.read(20 + num * 4 + 3));
 }
 
-uint16_t (&getAnalogComponentCalibration(uint8_t num))[3] {
+uint16_t(&getAnalogComponentCalibration(uint8_t num))[3] {
   uint16_t calibration[3] = {30, 30, 15};
 
   num -= 1;
@@ -293,7 +290,7 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
       }
     }
 
-    if(hysteresis == 0) {
+    if (hysteresis == 0) {
       hysteresis = 1;
     }
 
@@ -459,45 +456,45 @@ void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
       }
 #else
       switch (color) {
-      case 1:                 //  red
-        digitalWrite(PIN_RED, 0);  // Red
-        digitalWrite(grn, 1); // Green
-        digitalWrite(blu, 1); // Blue
+      case 1:                     //  red
+        digitalWrite(PIN_RED, 0); // Red
+        digitalWrite(grn, 1);     // Green
+        digitalWrite(blu, 1);     // Blue
         break;
-      case 2:                 //  green
-        digitalWrite(PIN_RED, 1);  // Red
-        digitalWrite(grn, 0); // Green
-        digitalWrite(blu, 1); // Blue
+      case 2:                     //  green
+        digitalWrite(PIN_RED, 1); // Red
+        digitalWrite(grn, 0);     // Green
+        digitalWrite(blu, 1);     // Blue
         break;
-      case 3:                 //  blue
-        digitalWrite(PIN_RED, 1);  // Red
-        digitalWrite(grn, 1); // Green
-        digitalWrite(blu, 0); // Blue
+      case 3:                     //  blue
+        digitalWrite(PIN_RED, 1); // Red
+        digitalWrite(grn, 1);     // Green
+        digitalWrite(blu, 0);     // Blue
         break;
-      case 4:                 //  white
-        digitalWrite(PIN_RED, 0);  // Red
-        digitalWrite(grn, 0); // Green
-        digitalWrite(blu, 0); // Blue
+      case 4:                     //  white
+        digitalWrite(PIN_RED, 0); // Red
+        digitalWrite(grn, 0);     // Green
+        digitalWrite(blu, 0);     // Blue
         break;
-      case 5:                 //  yellow
-        digitalWrite(PIN_RED, 0);  // Red
-        digitalWrite(grn, 0); // Green
-        digitalWrite(blu, 1); // Blue
+      case 5:                     //  yellow
+        digitalWrite(PIN_RED, 0); // Red
+        digitalWrite(grn, 0);     // Green
+        digitalWrite(blu, 1);     // Blue
         break;
-      case 6:                 //  cyan
-        digitalWrite(PIN_RED, 1);  // Red
-        digitalWrite(grn, 0); // Green
-        digitalWrite(blu, 0); // Blue
+      case 6:                     //  cyan
+        digitalWrite(PIN_RED, 1); // Red
+        digitalWrite(grn, 0);     // Green
+        digitalWrite(blu, 0);     // Blue
         break;
-      case 7:                 //  purple
-        digitalWrite(PIN_RED, 0);  // Red
-        digitalWrite(grn, 1); // Green
-        digitalWrite(blu, 0); // Blue
+      case 7:                     //  purple
+        digitalWrite(PIN_RED, 0); // Red
+        digitalWrite(grn, 1);     // Green
+        digitalWrite(blu, 0);     // Blue
         break;
-      default:                //  off
-        digitalWrite(PIN_RED, 1);  // Red
-        digitalWrite(grn, 1); // Green
-        digitalWrite(blu, 1); // Blue
+      default:                    //  off
+        digitalWrite(PIN_RED, 1); // Red
+        digitalWrite(grn, 1);     // Green
+        digitalWrite(blu, 1);     // Blue
         break;
       }
 #endif
@@ -506,9 +503,9 @@ void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
       digitalWrite(3, !1); // Red
       digitalWrite(2, !1); // Green
 #else
-      digitalWrite(PIN_RED, 1);  // Red
-      digitalWrite(grn, 1); // Green
-      digitalWrite(blu, 1); // Blue
+      digitalWrite(PIN_RED, 1); // Red
+      digitalWrite(grn, 1);     // Green
+      digitalWrite(blu, 1);     // Blue
 #endif
     }
     if (incolor == QUICKBLANK) {
@@ -559,7 +556,7 @@ bool isConfigButtonPushed() {
   return (analogRead(A1) < 500) || (EEPROM.read(0) != 0);
 #elif defined(ARDUINO_SKAARDUINO_DUE)
   return (!digitalRead(23)) || (EEPROM.read(0) != 0);
-#else 
+#else
   return (!digitalRead(18)) || (EEPROM.read(0) != 0);
 #endif
 }
@@ -707,7 +704,7 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     int xOffset = 0;
     if (strlen(_extRetTxt[a])) {
       if (_extRetPair > 0) {
-        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - (int16_t)constrain(strlen(_extRetTxt[a]), 1, tw/6) * 3, 2, tw);
+        xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - (int16_t)constrain(strlen(_extRetTxt[a]), 1, tw / 6) * 3, 2, tw);
         disp.setCursor(xOffset, 14 - (isTitle ? 0 : 5) + a * 9 - hShrink);
       } else {
         xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - (int16_t)strlen((_extRetPair == 0 && size == 0) ? _extRetTxtShort : _extRetTxt[a]) * 6, 2, tw);
@@ -1250,7 +1247,6 @@ void deviceSetup() {
         Serial << F(": ATEM") << AtemSwitcher_initIdx;
         deviceMap[a] = AtemSwitcher_initIdx++;
         AtemSwitcher[deviceMap[a]].begin(deviceIP[a]);
-        AtemSwitcher[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
       case SK_DEV_HYPERDECK:
@@ -1258,7 +1254,6 @@ void deviceSetup() {
         Serial << F(": HYPERDECK") << HyperDeck_initIdx;
         deviceMap[a] = HyperDeck_initIdx++;
         HyperDeck[deviceMap[a]].begin(deviceIP[a]);
-        HyperDeck[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
       case SK_DEV_VIDEOHUB:
@@ -1266,7 +1261,6 @@ void deviceSetup() {
         Serial << F(": VIDEOHUB") << VideoHub_initIdx;
         deviceMap[a] = VideoHub_initIdx++;
         VideoHub[deviceMap[a]].begin(deviceIP[a]);
-        VideoHub[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
       case SK_DEV_SMARTSCOPE:
@@ -1274,7 +1268,6 @@ void deviceSetup() {
         Serial << F(": SMARTSCOPE") << SmartView_initIdx;
         deviceMap[a] = SmartView_initIdx++;
         SmartView[deviceMap[a]].begin(deviceIP[a]);
-        SmartView[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
       case SK_DEV_BMDCAMCTRL:
@@ -1282,7 +1275,6 @@ void deviceSetup() {
         Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
         deviceMap[a] = BMDCamCtrl_initIdx++;
         BMDCamCtrl[deviceMap[a]].begin(0x6E); // TODO doesn't make sense
-        BMDCamCtrl[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
       case SK_DEV_SONYRCP:
@@ -1290,11 +1282,55 @@ void deviceSetup() {
         Serial << F(": SONYRCP") << SonyRCP_initIdx;
         deviceMap[a] = SonyRCP_initIdx++;
 //  SonyRCP[deviceMap[a]].begin();
-//  SonyRCP[deviceMap[a]].serialOutput(debugMode);
 #endif
         break;
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
+    }
+  }
+  
+  deviceDebugLevel(debugMode);
+}
+
+/**
+ * Set up devices debug state
+ */
+void deviceDebugLevel(uint8_t debugLevel) {
+
+  for (uint8_t a = 1; a < sizeof(deviceArray); a++) {
+    if (deviceEn[a]) {
+      switch (pgm_read_byte_near(deviceArray + a)) {
+#if SK_DEVICES_ATEM
+      case SK_DEV_ATEM:
+        AtemSwitcher[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_HYPERDECK
+      case SK_DEV_HYPERDECK:
+        HyperDeck[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_VIDEOHUB
+      case SK_DEV_VIDEOHUB:
+        VideoHub[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_SMARTSCOPE
+      case SK_DEV_SMARTSCOPE:
+        SmartView[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_BMDCAMCTRL
+      case SK_DEV_BMDCAMCTRL:
+        BMDCamCtrl[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_SONYRCP
+      case SK_DEV_SONYRCP:
+//  SonyRCP[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+      }
     }
   }
 }
@@ -1423,7 +1459,7 @@ uint8_t HWsetup() {
   SSWmenu.begin(2);
   SSWmenuEnc.begin(2);
   SSWmenuChip.begin(2);
-#elif (SK_MODEL == SK_E201M16)
+#elif(SK_MODEL == SK_E201M16)
   SSWmenu.begin(6);
   SSWmenuEnc.begin(6);
   SSWmenuChip.begin(6);
@@ -1471,21 +1507,21 @@ uint8_t HWsetup() {
   SSWbuttons.setButtonBrightness(7, B11);
   SSWbuttons.setButtonColor(0, 2, 3, B11);
   for (uint8_t i = 0; i < 64; i++) {
-    #if (SK_MODEL == SK_MICROSMARTV || SK_MODEL == SK_C15)
-      SSWbuttons.clearDisplay();
-      SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
-      SSWbuttons.display(B10); // Write
-      SSWbuttons.clearDisplay();
-      SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
-      SSWbuttons.display(B01); // Write
-    #else
-      SSWbuttons.clearDisplay();
-      SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
-      SSWbuttons.display(B01); // Write
-      SSWbuttons.clearDisplay();
-      SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
-      SSWbuttons.display(B10); // Write
-    #endif      
+#if (SK_MODEL == SK_MICROSMARTV || SK_MODEL == SK_C15)
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
+    SSWbuttons.display(B10); // Write
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
+    SSWbuttons.display(B01); // Write
+#else
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
+    SSWbuttons.display(B01); // Write
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
+    SSWbuttons.display(B10); // Write
+#endif
   }
   statusLED(QUICKBLANK);
 #endif
@@ -1493,14 +1529,14 @@ uint8_t HWsetup() {
   Serial << F("Init Audio Master Control\n");
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
-#elif (SK_MODEL == SK_MICROLEVELS)
-//  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
+#elif(SK_MODEL == SK_MICROLEVELS)
+                             //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
 #endif
   AudioMasterControl.setIsMasterBoard();
 
-  uint16_t (&cal)[3] = getAnalogComponentCalibration(2);
+  uint16_t(&cal)[3] = getAnalogComponentCalibration(2);
   AudioMasterPot.uniDirectionalSlider_init(cal[2], cal[0], cal[1], 0, 0);
   AudioMasterPot.uniDirectionalSlider_disableUnidirectionality(true);
 
@@ -1725,10 +1761,10 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
       SSWMenuItemPtr = (SSWMenuItemPtr + 1) % getNumOfActions(HWc);
     }
 
-    if(SSWMenuItemPtr+1 > getNumOfActions(HWc)) {
+    if (SSWMenuItemPtr + 1 > getNumOfActions(HWc)) {
       SSWMenuItemPtr = 0;
     }
-    
+
     static bool voidVar = SSWmenuEnc.reset(0);
 
     int clicks = 0;
@@ -1749,7 +1785,7 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
       break;
     }
     extRetValIsWanted(true);
-    
+
     actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], 0x8000, SSWMenuItemPtr + 1);
     SSWmenuEnc.runLoop();
     static uint16_t prevHash = 0;
@@ -1858,7 +1894,13 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
 #if SK_HWEN_SLIDER
 void HWrunLoop_slider(const uint8_t HWc) {
   // Slider:
-  bool hasMoved = slider.uniDirectionalSlider_hasMoved();
+  bool hasMoved = false;
+  static unsigned long timer = 0;
+  if (sTools.hasTimedOut(timer, 40)) {
+    hasMoved = slider.uniDirectionalSlider_hasMoved();
+    if (hasMoved)
+      timer = millis();
+  }
   actionDispatch(HWc, hasMoved, hasMoved && slider.uniDirectionalSlider_isAtEnd(), 0, slider.uniDirectionalSlider_position());
 }
 #endif
@@ -1944,9 +1986,12 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
     uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
     uint8_t ledBits = 0;
 
-    if(average > 20) ledBits = 2;
-    if(average > 40) ledBits = 3;
-    if(average > 50) ledBits = 1;
+    if (average > 20)
+      ledBits = 2;
+    if (average > 40)
+      ledBits = 3;
+    if (average > 50)
+      ledBits = 1;
 
     control.setChannelIndicatorLight(1 + a, ledBits);
   }
@@ -1988,9 +2033,12 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
       uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
       uint8_t ledBits = 0;
 
-      if(average > 20) ledBits = 2;
-      if(average > 40) ledBits = 3;
-      if(average > 50) ledBits = 1;
+      if (average > 20)
+        ledBits = 2;
+      if (average > 40)
+        ledBits = 3;
+      if (average > 50)
+        ledBits = 1;
 
       control.setChannelIndicatorLight(1 + a, ledBits);
     }
@@ -2175,7 +2223,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
         } else if (globalConfigMem[actionPtr + 2] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
           _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
           _systemPrevState = _systemState;
-          _systemState = constrain(globalConfigMem[actionPtr + 1],  (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1));
+          _systemState = constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1));
         } else {
           _systemState = constrain(_systemPrevState, (uint16_t)0, (uint16_t)(SK_MAXSTATES - 1));
           _systemHWcActionCacheFlag[HWc][actIdx] = false;
@@ -2470,7 +2518,7 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
     value = 0x8000;
   }
 
-  if(specificAction > getNumOfActions(HWcNum)) {
+  if (specificAction > getNumOfActions(HWcNum)) {
     Serial << "Unreachable specificAction=" << specificAction << " from HWc " << HWcNum << ". Breaking...\n";
     return 0;
   }
@@ -2636,7 +2684,7 @@ void initController() {
 #elif defined(ARDUINO_SKAARDUINO_DUE)
   pinMode(23, INPUT);  // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
 #else
-  pinMode(18, INPUT);  // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
+  pinMode(18, INPUT); // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
 #endif
 
 // Setup LED pins:
