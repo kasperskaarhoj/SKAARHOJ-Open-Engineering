@@ -295,7 +295,7 @@ void HWcfgDisplay();
 // Pre-declaring functions defined in the individual hardware files
 uint8_t HWnumOfAnalogComponents();
 int16_t HWAnalogComponentValue(uint8_t num);
-uint16_t (&HWMinCalibrationValues(uint8_t num))[3];
+uint16_t *HWMinCalibrationValues(uint8_t num);
 
 /****************************************
 

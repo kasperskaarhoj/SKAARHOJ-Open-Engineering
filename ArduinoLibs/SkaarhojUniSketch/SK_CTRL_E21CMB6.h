@@ -135,3 +135,16 @@ int16_t HWAnalogComponentValue(uint8_t num) {
     break;
   }
 }
+
+uint16_t *HWMinCalibrationValues(uint8_t num) {
+  static uint16_t values[3] = {0,0,0};
+  switch(num) {
+    case 1:
+      values[0] = 35; // Start
+      values[1] = 35; // End
+      values[2] = 15; // Hysteresis
+      break;
+  }
+  return values;
+}
+

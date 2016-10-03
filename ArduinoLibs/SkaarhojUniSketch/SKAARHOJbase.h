@@ -70,6 +70,9 @@ static const uint8_t PIN_GREEN = 15;
 static const uint8_t PIN_BLUE = 14;
 #endif
 
+// Pre declaration
+void deviceDebugLevel(uint8_t debugLevel);
+
 /**
  * Reading serial buffer for commands
  */
@@ -115,8 +118,8 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
   EEPROM.write(20 + num * 4 + 4, 193 ^ EEPROM.read(20 + num * 4 + 1) ^ EEPROM.read(20 + num * 4 + 2) ^ EEPROM.read(20 + num * 4 + 3));
 }
 
-uint16_t(&getAnalogComponentCalibration(uint8_t num))[3] {
-  uint16_t calibration[3] = {30, 30, 15};
+uint16_t *getAnalogComponentCalibration(uint8_t num) {
+  static uint16_t calibration[3] = {30, 30, 15};
 
   num -= 1;
   if (num > 9)
@@ -143,52 +146,113 @@ uint16_t(&getAnalogComponentCalibration(uint8_t num))[3] {
 
 uint8_t currentAnalogComponent = 0;
 unsigned long lastAnalogPrint = 0;
-uint16_t average = 0xFFFF;
-uint8_t currentIndex = 0;
 uint8_t hysteresis = 0;
+int prevSensorValue;
+int recentDiffValues[40];
+uint16_t recentDiffValuesCounter = 0;
+uint8_t initialDebugState;
+//uint16_t hysteresis = 0;
+
 void listAnalogHWComponent(uint8_t num = 0) {
-  if (num > 0) {
+  if(num > 0) {
     currentAnalogComponent = num;
-    average = 0xFFFF;
-    uint16_t(&calibration)[3] = getAnalogComponentCalibration(num);
-    hysteresis = calibration[2];
+
+    initialDebugState = debugMode;
+    deviceDebugLevel(0);
+    debugMode = 0;
   }
 
-  if (average == 0xFFFF) {
-    average = 0;
-    for (uint8_t i = 0; i < 10; i++) {
-      average += HWAnalogComponentValue(currentAnalogComponent);
-    }
-    average = average / 10;
-    Serial << average - 40 << F("                                     ") << average << F("                                     ") << average + 40 << "\n";
+  // Read the input on analog pin 0:
+  int sensorValue = HWAnalogComponentValue(currentAnalogComponent);  // Change this to the analog input pin used by the T-bar/Slider (if different)
+
+  // Print out the value you read:
+  Serial.print(sensorValue);
+
+  // Print padding:
+  if (sensorValue<1000)  {
+    Serial.print(" ");
+  }
+  if (sensorValue<100)  {
+    Serial.print(" ");
+  }
+  if (sensorValue<10)  {
+    Serial.print(" ");
   }
 
-  if (sTools.hasTimedOut(lastAnalogPrint, 200)) {
-    int startPos = HWAnalogComponentValue(currentAnalogComponent) - average;
+  Serial.print(": ");
 
-    if (startPos < -40) {
-      startPos = -40;
-    }
-    if (startPos > 40) {
-      startPos = 40;
-    }
-    for (int i = -40; i <= 40; i++) {
-      if (i == 0 || abs(i) == hysteresis) {
-        Serial << "|";
-      } else if ((i < 0 && startPos < 0 && startPos < i) || (i > 0 && startPos > 0 && startPos > i)) {
-        Serial << "-";
-      } else {
-        Serial << " ";
-      }
-    }
 
-    Serial << "\n";
+  // Min/Max:
+  int maxValue=0;
+  int minValue=0;
+  for(int i=0; i<40; i++)  {
+    if (recentDiffValues[i] > maxValue)  {
+        maxValue = recentDiffValues[i];
+    }
+    if (recentDiffValues[i] < minValue)  {
+        minValue = recentDiffValues[i];
+    }
   }
+  Serial.print("[ ");
+  Serial.print(minValue);
+  Serial.print(" | ");
+  Serial.print(maxValue);
+  Serial.print(" ] ");
+  
+  if (minValue>-1000)  {
+    Serial.print(" ");
+  }
+  if (minValue>-100)  {
+    Serial.print(" ");
+  }
+  if (minValue>-10)  {
+    Serial.print(" ");
+  }
+  if (minValue==0)  {
+    Serial.print(" ");
+  }
+  if (maxValue<1000)  {
+    Serial.print(" ");
+  }
+  if (maxValue<100)  {
+    Serial.print(" ");
+  }
+  if (maxValue<10)  {
+    Serial.print(" ");
+  }
+
+  Serial.print(" ");
+  
+
+  // Meter:
+  Serial.print(sensorValue-prevSensorValue+15+1 <= 0 ? "!" : " ");
+  for(int i=15; i>0; i--)  {
+    Serial.print(sensorValue-prevSensorValue+i <= 0 ? "=" : " ");
+  }
+
+  Serial.print("|");
+
+  for(int i=1; i<=15; i++)  {
+    Serial.print(sensorValue-prevSensorValue-i >= 0 ? "=" : " ");
+  }
+  Serial.print(sensorValue-prevSensorValue-15-1 >= 0 ? "!" : " ");
+
+  Serial.print(" (");
+  Serial.print(sensorValue-prevSensorValue);
+  Serial.print(" )");
+  Serial.println("");
+
+  recentDiffValues[(recentDiffValuesCounter%40)]=sensorValue-prevSensorValue;
+  recentDiffValuesCounter++;
+
+  prevSensorValue = sensorValue;
 }
 
 void hideAnalogHWComponent() {
   currentAnalogComponent = 0;
-  average = 0xFFFF;
+  deviceDebugLevel(initialDebugState);
+  debugMode = initialDebugState;
+  //average = 0xFFFF;
 }
 
 uint8_t calibrationState = 0;
@@ -226,19 +290,23 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
   static uint16_t average[5];
   static uint16_t maxDeviation[5];
   static uint16_t start, end, hysteresis;
+  static uint8_t initialDebugState = debugMode;
+  uint16_t *minimumValues;
 
   if (num > 0) {
     currentAnalogComponent = num;
     calibrationState = 1;
   }
 
-  if(num+1 > HWnumOfAnalogComponents()) {
-    Serial << F("Analog component #") << num+1 << F(" does not exist!\n");
+  if(num > HWnumOfAnalogComponents()) {
+    Serial << F("Analog component #") << num << F(" does not exist!\n");
     return;
   }
 
   switch (calibrationState) {
   case 1: // Start calibration
+    deviceDebugLevel(0);
+    debugMode = 0;
     memset(average, 0x00, sizeof(average));
     memset(maxDeviation, 0x00, sizeof(maxDeviation));
 
@@ -299,7 +367,8 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     start += hysteresis;
     end += hysteresis;
 
-    uint16_t minimumValues[3] = HWMinCalibrationValues(currentAnalogComponent);
+    minimumValues = HWMinCalibrationValues(currentAnalogComponent);
+
     if(start < minimumValues[0]) start = minimumValues[0];
     if(end < minimumValues[1]) end = minimumValues[1];
     if(hysteresis < minimumValues[2]) hysteresis = minimumValues[2];
@@ -313,9 +382,11 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     calibrationState++;
     break;
   case 14:
-    Serial << F("Calibration saved!\n");
+    Serial << F("Calibration saved! Please restart the controller for new new settings to take effect.\n");
     setAnalogComponentCalibration(currentAnalogComponent, start, end, hysteresis);
     serialState = 0;
+    deviceDebugLevel(initialDebugState);
+    debugMode = initialDebugState;
     break;
   }
 }
@@ -374,7 +445,7 @@ bool checkIncomingSerial() {
         Serial << F("Invalid analog component number\n");
       } else {
         Serial << F("Analog component chosen: ") << num << "\n";
-        listAnalogHWComponent(num);
+        listAnalogHWComponent(num);        
         serialState = 1;
       }
     } else if (!strncmp(serialBuffer, "hide analog", 11)) {
@@ -411,10 +482,30 @@ bool checkIncomingSerial() {
 
 bool variantLED() { return EEPROM.read(9) & 1; }
 
+static uint32_t lastAlarmLED;
+void alarmLED() {
+  #if SK_ETHMEGA
+  digitalWrite(3, 1);
+  digitalWrite(2, 0);
+  #else
+  static uint8_t grn = variantLED() ? PIN_BLUE : PIN_GREEN;
+  static uint8_t blu = variantLED() ? PIN_GREEN : PIN_BLUE;
+  digitalWrite(PIN_RED, 0);
+  digitalWrite(grn, 1);     // Green
+  digitalWrite(blu, 1);     // Blue
+  #endif
+
+  lastAlarmLED = millis();
+}
+
 /**
  * StatusLED function. Call it without parameters to just update the LED flashing. Call it with parameters to set a new value.
  */
 void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
+  if(!sTools.hasTimedOut(lastAlarmLED, 200)) {
+    return;
+  }
+
   static uint8_t color = 0;
   static uint8_t blnk = 0;
 
@@ -523,10 +614,11 @@ void statusSerial() {
   static uint8_t printsSinceLastLinebreak = 0;
   counter++;
   if (sTools.hasTimedOut(timer, 1000, true)) {
-    Serial << F(".");
-    if (debugMode)
+    if (debugMode) {
       Serial << counter << F("\n");
-    printsSinceLastLinebreak++;
+      Serial << F(".");
+      printsSinceLastLinebreak++;
+    }
     if (printsSinceLastLinebreak >= 60) { // TODO?: We could consider to rather make a line break whenever a minute has passed. If then less than 60 dots is printed, we know the loop() function has been stalled for longer than a second at some point.
       printsSinceLastLinebreak = 0;
       Serial << F("\n");
@@ -1223,6 +1315,49 @@ uint8_t getDevUnconnected() {
 }
 
 /**
+ * Set up devices debug state
+ */
+void deviceDebugLevel(uint8_t debugLevel) {
+
+  for (uint8_t a = 1; a < sizeof(deviceArray); a++) {
+    if (deviceEn[a]) {
+      switch (pgm_read_byte_near(deviceArray + a)) {
+#if SK_DEVICES_ATEM
+      case SK_DEV_ATEM:
+        AtemSwitcher[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_HYPERDECK
+      case SK_DEV_HYPERDECK:
+        HyperDeck[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_VIDEOHUB
+      case SK_DEV_VIDEOHUB:
+        VideoHub[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_SMARTSCOPE
+      case SK_DEV_SMARTSCOPE:
+        SmartView[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_BMDCAMCTRL
+      case SK_DEV_BMDCAMCTRL:
+        BMDCamCtrl[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
+#if SK_DEVICES_SONYRCP
+      case SK_DEV_SONYRCP:
+//  SonyRCP[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+      }
+    }
+  }
+}
+
+/**
  * Set up devices
  * ...Call ONLY once - or we will overflow memory...
  */
@@ -1290,49 +1425,6 @@ void deviceSetup() {
   }
   
   deviceDebugLevel(debugMode);
-}
-
-/**
- * Set up devices debug state
- */
-void deviceDebugLevel(uint8_t debugLevel) {
-
-  for (uint8_t a = 1; a < sizeof(deviceArray); a++) {
-    if (deviceEn[a]) {
-      switch (pgm_read_byte_near(deviceArray + a)) {
-#if SK_DEVICES_ATEM
-      case SK_DEV_ATEM:
-        AtemSwitcher[deviceMap[a]].serialOutput(debugLevel);
-        break;
-#endif
-#if SK_DEVICES_HYPERDECK
-      case SK_DEV_HYPERDECK:
-        HyperDeck[deviceMap[a]].serialOutput(debugLevel);
-        break;
-#endif
-#if SK_DEVICES_VIDEOHUB
-      case SK_DEV_VIDEOHUB:
-        VideoHub[deviceMap[a]].serialOutput(debugLevel);
-        break;
-#endif
-#if SK_DEVICES_SMARTSCOPE
-      case SK_DEV_SMARTSCOPE:
-        SmartView[deviceMap[a]].serialOutput(debugLevel);
-        break;
-#endif
-#if SK_DEVICES_BMDCAMCTRL
-      case SK_DEV_BMDCAMCTRL:
-        BMDCamCtrl[deviceMap[a]].serialOutput(debugLevel);
-        break;
-#endif
-#if SK_DEVICES_SONYRCP
-      case SK_DEV_SONYRCP:
-//  SonyRCP[deviceMap[a]].serialOutput(debugMode);
-        break;
-#endif
-      }
-    }
-  }
 }
 
 /**
@@ -1432,7 +1524,7 @@ uint8_t HWsetup() {
 #endif
 #if (SK_HWEN_SLIDER)
   Serial << F("Init Slider\n");
-  uint16_t(&cal1)[3] = getAnalogComponentCalibration(1);
+  uint16_t *cal1 = getAnalogComponentCalibration(1);
   slider.uniDirectionalSlider_init(cal1[2], cal1[0], cal1[1], A0);
   slider.uniDirectionalSlider_hasMoved();
   statusLED(QUICKBLANK);
@@ -1536,7 +1628,7 @@ uint8_t HWsetup() {
 #endif
   AudioMasterControl.setIsMasterBoard();
 
-  uint16_t(&cal)[3] = getAnalogComponentCalibration(2);
+  uint16_t *cal = getAnalogComponentCalibration(2);
   AudioMasterPot.uniDirectionalSlider_init(cal[2], cal[0], cal[1], 0, 0);
   AudioMasterPot.uniDirectionalSlider_disableUnidirectionality(true);
 
@@ -1898,8 +1990,10 @@ void HWrunLoop_slider(const uint8_t HWc) {
   static unsigned long timer = 0;
   if (sTools.hasTimedOut(timer, 40)) {
     hasMoved = slider.uniDirectionalSlider_hasMoved();
-    if (hasMoved)
+    if (hasMoved) {
       timer = millis();
+      alarmLED();
+    }
   }
   actionDispatch(HWc, hasMoved, hasMoved && slider.uniDirectionalSlider_isAtEnd(), 0, slider.uniDirectionalSlider_position());
 }

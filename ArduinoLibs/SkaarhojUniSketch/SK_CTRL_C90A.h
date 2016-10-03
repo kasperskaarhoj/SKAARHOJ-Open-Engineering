@@ -59,22 +59,22 @@ uint8_t HWsetupL() {
   audio_a.begin(2, 0);
   audio_b.begin(3, 0);
   audio_c.begin(4, 0);
-  uint16_t(&cal1)[3] = getAnalogComponentCalibration(3);
+  uint16_t *cal1 = getAnalogComponentCalibration(3);
   audioPot_a1.uniDirectionalSlider_init(cal1[2], cal1[0], cal1[1], 1, 0);
   audioPot_a1.uniDirectionalSlider_disableUnidirectionality(true);
-  uint16_t(&cal2)[3] = getAnalogComponentCalibration(4);
+  uint16_t *cal2 = getAnalogComponentCalibration(4);
   audioPot_a2.uniDirectionalSlider_init(cal2[2], cal2[0], cal2[1], 1, 1);
   audioPot_a2.uniDirectionalSlider_disableUnidirectionality(true);
-  uint16_t(&cal3)[3] = getAnalogComponentCalibration(5);
+  uint16_t *cal3 = getAnalogComponentCalibration(5);
   audioPot_b1.uniDirectionalSlider_init(cal3[2], cal3[0], cal3[1], 2, 0);
   audioPot_b1.uniDirectionalSlider_disableUnidirectionality(true);
-  uint16_t(&cal4)[3] = getAnalogComponentCalibration(6);
+  uint16_t *cal4 = getAnalogComponentCalibration(6);
   audioPot_b2.uniDirectionalSlider_init(cal4[2], cal4[0], cal4[1], 2, 1);
   audioPot_b2.uniDirectionalSlider_disableUnidirectionality(true);
-  uint16_t(&cal5)[3] = getAnalogComponentCalibration(7);
+  uint16_t *cal5 = getAnalogComponentCalibration(7);
   audioPot_c1.uniDirectionalSlider_init(cal5[2], cal5[0], cal5[1], 3, 0);
   audioPot_c1.uniDirectionalSlider_disableUnidirectionality(true);
-  uint16_t(&cal6)[3] = getAnalogComponentCalibration(8);
+  uint16_t *cal6 = getAnalogComponentCalibration(8);
   audioPot_c2.uniDirectionalSlider_init(cal6[2], cal6[0], cal6[1], 3, 1);
   audioPot_c2.uniDirectionalSlider_disableUnidirectionality(true);
 

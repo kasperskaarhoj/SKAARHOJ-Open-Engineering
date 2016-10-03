@@ -132,12 +132,12 @@ uint8_t HWsetupL() {
 
   Serial << F("Init Joystick\n");
 
-  uint16_t(&cal1)[3] = getAnalogComponentCalibration(1);
+  uint16_t *cal1 = getAnalogComponentCalibration(1);
   //  joystick.uniDirectionalSlider_init(10, 35, 35, 0, 1);
   joystick.uniDirectionalSlider_init(cal1[2], cal1[0], cal1[1], 0, 2);
   joystick.uniDirectionalSlider_disableUnidirectionality(true);
 
-  uint16_t(&cal2)[3] = getAnalogComponentCalibration(2);
+  uint16_t *cal2 = getAnalogComponentCalibration(2);
   wheel.uniDirectionalSlider_init(cal2[2], cal1[0], cal2[1], 0, 3);
   wheel.uniDirectionalSlider_disableUnidirectionality(true);
 
@@ -419,4 +419,21 @@ int16_t HWAnalogComponentValue(uint8_t num) {
     return wheel.uniDirectionalSlider_rawValue();
     break;
   }
+}
+
+uint16_t *HWMinCalibrationValues(uint8_t num) {
+  static uint16_t values[3] = {0,0,0};
+  switch(num) {
+    case 1:
+      values[0] = 35; // Start
+      values[1] = 35; // End
+      values[2] = 15; // Hysteresis
+      break;
+    case 2:
+      values[0] = 35; // Start
+      values[1] = 35; // End
+      values[2] = 15; // Hysteresis
+      break;
+  }
+  return values;
 }
