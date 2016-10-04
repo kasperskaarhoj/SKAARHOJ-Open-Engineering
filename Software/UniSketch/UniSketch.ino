@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_WINGMANTOUCH
+#define SK_MODEL SK_MICROGPIO
 
 // ****************************
 // NO USER CHANGE BELOW!

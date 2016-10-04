@@ -1673,6 +1673,7 @@ uint8_t HWsetup() {
 #else
   GPIOboard.begin(0);
 #endif
+  GPIOboard.setOutputAll(0);
 
   /*  if (getConfigMode()) {	// Cannot allow this in normal mode!
       Serial << F("Test: GPIO relays\n");
@@ -1810,7 +1811,7 @@ void HWtest() {
 
 #endif
 #if (SK_HWEN_GPIO)
-    GPIOboard.setOutputAll(GPIOboard.inputIsActiveAll() ^ (millis() >> 12));
+    GPIOboard.setOutputAll(GPIOboard.inputIsActiveAll());
 #endif
 
 #if (SK_HWEN_ACM)
