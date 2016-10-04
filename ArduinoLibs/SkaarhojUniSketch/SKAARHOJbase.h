@@ -151,10 +151,10 @@ int prevSensorValue;
 int recentDiffValues[40];
 uint16_t recentDiffValuesCounter = 0;
 uint8_t initialDebugState;
-//uint16_t hysteresis = 0;
+// uint16_t hysteresis = 0;
 
 void listAnalogHWComponent(uint8_t num = 0) {
-  if(num > 0) {
+  if (num > 0) {
     currentAnalogComponent = num;
 
     initialDebugState = debugMode;
@@ -163,34 +163,33 @@ void listAnalogHWComponent(uint8_t num = 0) {
   }
 
   // Read the input on analog pin 0:
-  int sensorValue = HWAnalogComponentValue(currentAnalogComponent);  // Change this to the analog input pin used by the T-bar/Slider (if different)
+  int sensorValue = HWAnalogComponentValue(currentAnalogComponent); // Change this to the analog input pin used by the T-bar/Slider (if different)
 
   // Print out the value you read:
   Serial.print(sensorValue);
 
   // Print padding:
-  if (sensorValue<1000)  {
+  if (sensorValue < 1000) {
     Serial.print(" ");
   }
-  if (sensorValue<100)  {
+  if (sensorValue < 100) {
     Serial.print(" ");
   }
-  if (sensorValue<10)  {
+  if (sensorValue < 10) {
     Serial.print(" ");
   }
 
   Serial.print(": ");
 
-
   // Min/Max:
-  int maxValue=0;
-  int minValue=0;
-  for(int i=0; i<40; i++)  {
-    if (recentDiffValues[i] > maxValue)  {
-        maxValue = recentDiffValues[i];
+  int maxValue = 0;
+  int minValue = 0;
+  for (int i = 0; i < 40; i++) {
+    if (recentDiffValues[i] > maxValue) {
+      maxValue = recentDiffValues[i];
     }
-    if (recentDiffValues[i] < minValue)  {
-        minValue = recentDiffValues[i];
+    if (recentDiffValues[i] < minValue) {
+      minValue = recentDiffValues[i];
     }
   }
   Serial.print("[ ");
@@ -198,51 +197,50 @@ void listAnalogHWComponent(uint8_t num = 0) {
   Serial.print(" | ");
   Serial.print(maxValue);
   Serial.print(" ] ");
-  
-  if (minValue>-1000)  {
+
+  if (minValue > -1000) {
     Serial.print(" ");
   }
-  if (minValue>-100)  {
+  if (minValue > -100) {
     Serial.print(" ");
   }
-  if (minValue>-10)  {
+  if (minValue > -10) {
     Serial.print(" ");
   }
-  if (minValue==0)  {
+  if (minValue == 0) {
     Serial.print(" ");
   }
-  if (maxValue<1000)  {
+  if (maxValue < 1000) {
     Serial.print(" ");
   }
-  if (maxValue<100)  {
+  if (maxValue < 100) {
     Serial.print(" ");
   }
-  if (maxValue<10)  {
+  if (maxValue < 10) {
     Serial.print(" ");
   }
 
   Serial.print(" ");
-  
 
   // Meter:
-  Serial.print(sensorValue-prevSensorValue+15+1 <= 0 ? "!" : " ");
-  for(int i=15; i>0; i--)  {
-    Serial.print(sensorValue-prevSensorValue+i <= 0 ? "=" : " ");
+  Serial.print(sensorValue - prevSensorValue + 15 + 1 <= 0 ? "!" : " ");
+  for (int i = 15; i > 0; i--) {
+    Serial.print(sensorValue - prevSensorValue + i <= 0 ? "=" : " ");
   }
 
   Serial.print("|");
 
-  for(int i=1; i<=15; i++)  {
-    Serial.print(sensorValue-prevSensorValue-i >= 0 ? "=" : " ");
+  for (int i = 1; i <= 15; i++) {
+    Serial.print(sensorValue - prevSensorValue - i >= 0 ? "=" : " ");
   }
-  Serial.print(sensorValue-prevSensorValue-15-1 >= 0 ? "!" : " ");
+  Serial.print(sensorValue - prevSensorValue - 15 - 1 >= 0 ? "!" : " ");
 
   Serial.print(" (");
-  Serial.print(sensorValue-prevSensorValue);
+  Serial.print(sensorValue - prevSensorValue);
   Serial.print(" )");
   Serial.println("");
 
-  recentDiffValues[(recentDiffValuesCounter%40)]=sensorValue-prevSensorValue;
+  recentDiffValues[(recentDiffValuesCounter % 40)] = sensorValue - prevSensorValue;
   recentDiffValuesCounter++;
 
   prevSensorValue = sensorValue;
@@ -252,7 +250,7 @@ void hideAnalogHWComponent() {
   currentAnalogComponent = 0;
   deviceDebugLevel(initialDebugState);
   debugMode = initialDebugState;
-  //average = 0xFFFF;
+  // average = 0xFFFF;
 }
 
 uint8_t calibrationState = 0;
@@ -298,7 +296,7 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     calibrationState = 1;
   }
 
-  if(num > HWnumOfAnalogComponents()) {
+  if (num > HWnumOfAnalogComponents()) {
     Serial << F("Analog component #") << num << F(" does not exist!\n");
     return;
   }
@@ -369,9 +367,12 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
 
     minimumValues = HWMinCalibrationValues(currentAnalogComponent);
 
-    if(start < minimumValues[0]) start = minimumValues[0];
-    if(end < minimumValues[1]) end = minimumValues[1];
-    if(hysteresis < minimumValues[2]) hysteresis = minimumValues[2];
+    if (start < minimumValues[0])
+      start = minimumValues[0];
+    if (end < minimumValues[1])
+      end = minimumValues[1];
+    if (hysteresis < minimumValues[2])
+      hysteresis = minimumValues[2];
 
     Serial << F("Calibration results:\n");
     Serial << F("Start offset: ") << start << "\n";
@@ -445,7 +446,7 @@ bool checkIncomingSerial() {
         Serial << F("Invalid analog component number\n");
       } else {
         Serial << F("Analog component chosen: ") << num << "\n";
-        listAnalogHWComponent(num);        
+        listAnalogHWComponent(num);
         serialState = 1;
       }
     } else if (!strncmp(serialBuffer, "hide analog", 11)) {
@@ -484,16 +485,16 @@ bool variantLED() { return EEPROM.read(9) & 1; }
 
 static uint32_t lastAlarmLED;
 void alarmLED() {
-  #if SK_ETHMEGA
+#if SK_ETHMEGA
   digitalWrite(3, 1);
   digitalWrite(2, 0);
-  #else
+#else
   static uint8_t grn = variantLED() ? PIN_BLUE : PIN_GREEN;
   static uint8_t blu = variantLED() ? PIN_GREEN : PIN_BLUE;
   digitalWrite(PIN_RED, 0);
-  digitalWrite(grn, 1);     // Green
-  digitalWrite(blu, 1);     // Blue
-  #endif
+  digitalWrite(grn, 1); // Green
+  digitalWrite(blu, 1); // Blue
+#endif
 
   lastAlarmLED = millis();
 }
@@ -502,7 +503,7 @@ void alarmLED() {
  * StatusLED function. Call it without parameters to just update the LED flashing. Call it with parameters to set a new value.
  */
 void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
-  if(!sTools.hasTimedOut(lastAlarmLED, 200)) {
+  if (!sTools.hasTimedOut(lastAlarmLED, 200)) {
     return;
   }
 
@@ -1070,9 +1071,14 @@ uint16_t getConfigMemPresetTitleIndex() {
  * 1: Boot in debug mode flag. (Is always reset back to zero)
  * 2-5: Not used in UniSketch, but in SKAARDUINO TestRig sketch, this is the IP address of the SKAARDUINO. Reserved.
  * 9: HW Variant: bit0: If set, swaps green and blue status LED pins.
- * 10-16: MAC address (+ checksum on 16, used in SKAARDUINO TestRig sketch only)
+ * 10-15: MAC address (+ checksum on 16, used in SKAARDUINO TestRig sketch only)
+ * 16-20: Memory Bank A-D + checksum byte
+ * 21-60: Analog Component calibration (10 pcs)
+ * 
  * EEPROM_PRESET_START: Start of presets
  */
+#define EEPROM_FILEBANK_START 4095-6*48
+#define EEPROM_FILEBANK_NUM 6
 #define EEPROM_PRESET_START 100
 #define EEPROM_PRESET_TOKEN 0x24 // Just some random value that is used for a checksum offset. Change this and existing configuration will be invalidated and has to be rewritten.
 void loadDefaultConfig() {
@@ -1349,7 +1355,7 @@ void deviceDebugLevel(uint8_t debugLevel) {
 #endif
 #if SK_DEVICES_SONYRCP
       case SK_DEV_SONYRCP:
-//  SonyRCP[deviceMap[a]].serialOutput(debugMode);
+        //  SonyRCP[deviceMap[a]].serialOutput(debugMode);
         break;
 #endif
       }
@@ -1423,7 +1429,7 @@ void deviceSetup() {
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }
   }
-  
+
   deviceDebugLevel(debugMode);
 }
 
