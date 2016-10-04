@@ -74,3 +74,15 @@ void HWrunLoop() {
     buttons.setButtonColor(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 3) : 0); // This implements the mono color blink bit
   }
 }
+
+uint8_t HWnumOfAnalogComponents() { return 0; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  return 0;
+}
+
+uint16_t *HWMinCalibrationValues(uint8_t num) {
+  static uint16_t values[3] = {0,0,0};
+  return values;
+}
+

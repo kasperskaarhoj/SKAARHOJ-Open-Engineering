@@ -41,3 +41,18 @@ void HWrunLoop() {
     audio_a.setButtonLight(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 0) : 0);
   }
 }
+
+uint8_t HWnumOfAnalogComponents() { return 1; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  switch(num) {
+    case 1:
+      return analogRead(A0);
+  }
+}
+
+uint16_t *HWMinCalibrationValues(uint8_t num) {
+  static uint16_t values[3] = {35,65,15};
+  return values;
+}
+

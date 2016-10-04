@@ -67,3 +67,15 @@ void HWrunLoop() {
     uint8_t b16Map[] = {8, 6, 4, 2, 7, 5, 3, 1}; // These numbers refer to the drawing in the web interface
   HWrunLoop_BI8(buttons, b16Map, sizeof(b16Map));
 }
+
+uint8_t HWnumOfAnalogComponents() { return 0; }
+
+int16_t HWAnalogComponentValue(uint8_t num) {
+  return 0;
+}
+
+uint16_t *HWMinCalibrationValues(uint8_t num) {
+  static uint16_t values[3] = {0,0,0};
+  return values;
+}
+

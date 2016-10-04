@@ -325,7 +325,7 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     break;
   case 7: // Second endpoint 1 sampling
     if (sampleComponent(currentAnalogComponent, average + 2, maxDeviation + 2)) {
-      Serial << F("Please move the control to the other, and send 'ok'\n");
+      Serial << F("Please move the control to the other endpoint, and send 'ok'\n");
     }
     break;
   case 9: // Second endpoint 2 sampling

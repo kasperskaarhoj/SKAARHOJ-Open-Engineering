@@ -88,3 +88,9 @@ int16_t HWAnalogComponentValue(uint8_t num) {
     break;
   }
 }
+
+uint16_t *HWMinCalibrationValues(uint8_t num) {
+  static uint16_t values[3] = {35,35,15};
+  return values;
+}
+

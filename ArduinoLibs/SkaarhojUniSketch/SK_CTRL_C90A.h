@@ -151,3 +151,15 @@ int16_t HWAnalogComponentValue(uint8_t num) {
     break;
   }
 }
+
+uint16_t *HWMinCalibrationValues(uint8_t num) {
+  static uint16_t values[3] = {35,65,15}; // Default for audio knobs
+  switch(num) {
+    case 1: // Slider
+      values[0] = 35;
+      values[1] = 35;
+      values[2] = 15;
+      break;
+  }
+  return values;
+}
