@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21CMB6
+#define SK_MODEL SK_WINGMANTOUCH
 
 // ****************************
 // NO USER CHANGE BELOW!
@@ -184,7 +184,6 @@ SkaarhojTools sTools(0);
 #include "SkaarhojDome.h"
 #include "Adafruit_STMPE610.h"
 #include "SK_CFGDEF_WINGMANTOUCH.h"
-#include "SK_CFGDEF_WINGMAN.h"
 #elif(SK_MODEL == SK_CCUX)
 #include "SkaarhojDisplayArray.h"
 #include "SkaarhojAnalog.h"

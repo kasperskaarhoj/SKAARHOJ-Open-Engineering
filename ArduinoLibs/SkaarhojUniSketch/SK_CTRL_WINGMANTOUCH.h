@@ -32,10 +32,6 @@ uint16_t getTouchCoordinate(uint8_t i) {
   return retVal;
 }
 
-uint8_t HWnumOfAnalogComponents() { return 2; }
-
-int16_t HWAnalogComponentValue(uint8_t num) { return 0; }
-
 /**
  * Hardware setup, config mode and preset settings
  */
@@ -48,7 +44,7 @@ bool panelFound[2] = {false, false}; // Used to track which panel is found and s
 uint8_t HWsetupL() {
   uint8_t retVal = 0;
 
-  for (uint8_t i = 0; i < 1; i++) {
+  for (uint8_t i = 0; i < 2; i++) {
 
     // Set up I2C port for A or B monitor:
     Wire.beginTransmission(0x70);
@@ -166,7 +162,7 @@ uint8_t HWsetupL() {
  * Hardware test
  */
 void HWtestL() {
-  for (uint8_t i = 0; i < 1; i++) {
+  for (uint8_t i = 0; i < 2; i++) {
     // Set up I2C port for A or B monitor:
     Wire.beginTransmission(0x70);
     Wire.write(1 << i); // Port 1 or 2
@@ -241,7 +237,7 @@ void HWrunLoop() {
   uint16_t touch_status, buttonChange;
   uint8_t coordinate;
 
-  for (uint8_t i = 0; i < 1; i++) {
+  for (uint8_t i = 0; i < 2; i++) {
     // Set up I2C port for A or B monitor:
     Wire.beginTransmission(0x70);
     Wire.write(1 << i); // Port 0 or 1
