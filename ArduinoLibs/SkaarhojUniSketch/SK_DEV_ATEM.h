@@ -238,7 +238,6 @@ bool recallCameraPreset(uint8_t camera, uint8_t preset) {
 // 5 = dimmed
 // 1,2,3,4 = full (yellow), red, green, yellow
 // Bit 4 (16) = blink flag, filter out for KP01 buttons.
-// Bit 5 (32) = output bit; If this is set, a binary output will be set if coupled with this hwc.
 uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
   uint16_t retVal = 0;
   int tempInt = 0;
@@ -1908,8 +1907,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if(CCUPresetExists(globalConfigMem[actionPtr + 3])) {
       retVal = 5;
     }
-
     if(actDown) {
+      _systemHWcActionCacheFlag[HWc][actIdx] = true;
+      Serial << "Value: " << value << " Setting: " << globalConfigMem[actionPtr + 2] << "\n";
       if(value == 0x8000) { // Holddown on default setting
         switch(globalConfigMem[actionPtr + 2]) {
           case 0:
@@ -1959,6 +1959,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
     }
     break;
+#endif
   case 45: // Video Tally
     retVal = 5;
 
@@ -2054,7 +2055,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     return retVal;
     break;
-#endif
 #if SK_MODEL != SK_RCP
   case 47: // Chroma Settings
     break;
