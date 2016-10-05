@@ -1077,8 +1077,6 @@ uint16_t getConfigMemPresetTitleIndex() {
  * 
  * EEPROM_PRESET_START: Start of presets
  */
-#define EEPROM_FILEBANK_START 4095-6*48
-#define EEPROM_FILEBANK_NUM 6
 #define EEPROM_PRESET_START 100
 #define EEPROM_PRESET_TOKEN 0x24 // Just some random value that is used for a checksum offset. Change this and existing configuration will be invalidated and has to be rewritten.
 void loadDefaultConfig() {

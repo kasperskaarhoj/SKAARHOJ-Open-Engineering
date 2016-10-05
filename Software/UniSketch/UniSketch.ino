@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_WINGMANTOUCH
+#define SK_MODEL SK_MICROTALLY
 
 // ****************************
 // NO USER CHANGE BELOW!
@@ -184,6 +184,7 @@ SkaarhojTools sTools(0);
 #include "SkaarhojDome.h"
 #include "Adafruit_STMPE610.h"
 #include "SK_CFGDEF_WINGMANTOUCH.h"
+#include "SK_CFGDEF_WINGMAN.h"
 #elif(SK_MODEL == SK_CCUX)
 #include "SkaarhojDisplayArray.h"
 #include "SkaarhojAnalog.h"
@@ -521,6 +522,13 @@ uint16_t extRetValHash() {
 
   return cs;
 }
+
+/**
+ * EEPROM location pointers required for device libraries
+ */
+
+#define EEPROM_FILEBANK_START 4095-6*48
+#define EEPROM_FILEBANK_NUM 6
 
 /****************************************
 
