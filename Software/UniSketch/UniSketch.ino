@@ -6,7 +6,11 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_MICROGPIO
+<<<<<<< HEAD
+#define SK_MODEL SK_RCP
+=======
+#define SK_MODEL SK_MICROTALLY
+>>>>>>> origin/master
 
 // ****************************
 // NO USER CHANGE BELOW!
@@ -184,6 +188,7 @@ SkaarhojTools sTools(0);
 #include "SkaarhojDome.h"
 #include "Adafruit_STMPE610.h"
 #include "SK_CFGDEF_WINGMANTOUCH.h"
+#include "SK_CFGDEF_WINGMAN.h"
 #elif(SK_MODEL == SK_CCUX)
 #include "SkaarhojDisplayArray.h"
 #include "SkaarhojAnalog.h"
@@ -522,6 +527,13 @@ uint16_t extRetValHash() {
   return cs;
 }
 
+/**
+ * EEPROM location pointers required for device libraries
+ */
+
+#define EEPROM_FILEBANK_START 4095-6*48
+#define EEPROM_FILEBANK_NUM 6
+
 /****************************************
 
    INCLUDING DEVICE RELATED LIBRARIES
@@ -686,6 +698,9 @@ void setup() {
   } else {
     deviceSetup(); // Sets up hardware devices (those enabled) we communicate to. No initialization though, this must happen automatically in the runloop of each device
   }
+
+  Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
+  
   Serial << F("setup() Done\n-----------------------------\n");
 }
 
