@@ -8,7 +8,7 @@ uint16_t evaluateAction_SMARTSCOPE(const uint8_t devIndex, const uint16_t action
   if (actDown || actUp) {
     Serial << "SMART SCOPE action " << globalConfigMem[actionPtr] << "\n";
   }
-  int val;
+  int16_t val;
 
   if (globalConfigMem[actionPtr] <= 2) {
     if (actDown) {
@@ -31,7 +31,7 @@ uint16_t evaluateAction_SMARTSCOPE(const uint8_t devIndex, const uint16_t action
         val += val < 0 ? 200 : (val > 100 ? -200 : 0);
         Serial << val << ",";
       }
-      val = sTools.shapeInt(val, 0, 100); // Conform to 0-100
+      val = constrain(val, 0, 100); // Conform to 0-100
       Serial << val << "\n";
 
       switch (globalConfigMem[actionPtr]) {

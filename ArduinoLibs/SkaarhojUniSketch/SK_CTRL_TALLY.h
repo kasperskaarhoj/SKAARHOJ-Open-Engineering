@@ -12,7 +12,7 @@ uint8_t HWsetupL() {
   GPIOboard.begin();
   if (getConfigMode()) {
     Serial << F("Test: GPIO boards\n");
-    for (int i = 1; i <= 16; i++) {
+    for (int16_t i = 1; i <= 16; i++) {
       GPIOboard.setOutput(i, HIGH);
       delay(200);
       GPIOboard.setOutput(i, LOW);
@@ -29,7 +29,7 @@ uint8_t HWsetupL() {
  */
 void HWtestL() {
 
-  for (int i = 1; i <= 16; i++) {
+  for (int16_t i = 1; i <= 16; i++) {
     GPIOboard.setOutput(i, ((millis() >> (i + 9)) % 16) + 1 == i);
   }
 }

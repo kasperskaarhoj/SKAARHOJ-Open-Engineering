@@ -210,7 +210,7 @@ void HWrunLoop() {
   // OLED Rocker
   static uint16_t oledDisplay_prevHash = 0;
   bDown = OLEDmenuDisplay.buttonDownAll(B1);
-  int pulses = 0;
+  int16_t pulses = 0;
   if (bDown & B1)
     pulses = -1;
   if (bDown & B100)

@@ -8,8 +8,8 @@ uint16_t evaluateAction_HYPERDECK(const uint8_t devIndex, const uint16_t actionP
   if (actDown || actUp) {
     Serial << "HYPERDECK action " << globalConfigMem[actionPtr] << "\n";
   }
-  int playspeeds[] = {100, 25, 50, 200, 400, 800, 1600, -25, -50, -100, -200, -400, -800, -1600};
-  int speed = 0;
+  int16_t playspeeds[] = {100, 25, 50, 200, 400, 800, 1600, -25, -50, -100, -200, -400, -800, -1600};
+  int16_t speed = 0;
 
   switch (globalConfigMem[actionPtr]) {
   case 0:

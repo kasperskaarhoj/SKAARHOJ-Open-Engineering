@@ -36,7 +36,7 @@ void HWrunLoop() {
   // Buttons:
   uint16_t bUp = audio_a.buttonUpAll();
   uint16_t bDown = audio_a.buttonDownAll();
-  for (int a = 0; a < 2; a++) {
+  for (int16_t a = 0; a < 2; a++) {
     uint16_t color = actionDispatch(a + 2, bDown & (B1 << a), bUp & (B1 << a));
     audio_a.setButtonLight(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 0) : 0);
   }

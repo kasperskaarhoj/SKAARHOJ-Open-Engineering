@@ -30,6 +30,7 @@ void HWrunLoop() {
     extRetValPrefersLabel(1 + a);
     uint8_t state = actionDispatch(1 + a);
     bool stateB = state & 0x20; // Output bit
+
     if (stateB != gpioStates[a]) {
       gpioStates[a] = stateB;
       GPIOboard.setOutput(a + 1, stateB);

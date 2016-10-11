@@ -3,7 +3,7 @@
  */
 
 uint8_t pca9672OutputByte = B11111111; // Bits: 7-0: GPO, GPI, PRV Tally, PGM Tally, Addr4, Addr3, Addr2, Addr1;
-int IOchipAddress = B100000;
+int16_t IOchipAddress = B100000;
 
 void addressSwitch_initIO() {
   Wire.beginTransmission(IOchipAddress);
@@ -41,6 +41,11 @@ void HWcfgDisplay() { Serial << F("SK_MODEL: SK_RCP\n"); }
  */
 uint8_t HWsetupL() {
   uint8_t retVal = 0;
+
+  // Set up I2C port for BMD Shield:
+  Wire.beginTransmission(0x70);
+  Wire.write(1); // Port 1
+  Wire.endTransmission();
 
   Serial << F("Init BI16 board\n");
   buttons.begin(4);

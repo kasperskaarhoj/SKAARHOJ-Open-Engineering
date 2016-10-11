@@ -43,12 +43,12 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
 
   if (type == WebServer::POST) {
     uint16_t globalConfigMemPtr = 2;
-    int HWCPtr = -1;
-    int HWCid = -1;
-    int stateIndex = -1;
-    int actionIndex = -1;
-    int len = -1;
-    int cStateIndex = -1;
+    int16_t HWCPtr = -1;
+    int16_t HWCid = -1;
+    int16_t stateIndex = -1;
+    int16_t actionIndex = -1;
+    int16_t len = -1;
+    int16_t cStateIndex = -1;
     uint16_t lastStateLengthIdx = 0xFFFF;
     uint16_t lastHWCLengthIdx = 0xFFFF;
     uint16_t valueDeviceIdx = 0xFFFF;
@@ -238,12 +238,12 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
   // Output config from memory:
   server << F("<script>var HWv=[");
   uint16_t ptr = 2;
-  int HWcIndex = -1;
+  int16_t HWcIndex = -1;
   while (ptr < SK_CONFIG_MEMORY_SIZE && globalConfigMem[ptr] != 255) {
     uint8_t HWcSegmentLength = globalConfigMem[ptr];
     uint16_t HWcSegmentStartPtr = ptr;
     HWcIndex++;
-    int stateIndex = -1;
+    int16_t stateIndex = -1;
     ptr++;
     server << "[";
 
@@ -251,7 +251,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
       uint8_t stateSegmentLength = globalConfigMem[ptr];
       uint16_t stateSegmentStartPtr = ptr;
       stateIndex++;
-      int actionIndex = -1;
+      int16_t actionIndex = -1;
       ptr++;
       server << "[";
 

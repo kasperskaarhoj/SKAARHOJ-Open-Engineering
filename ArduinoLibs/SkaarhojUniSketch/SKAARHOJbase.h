@@ -29,9 +29,11 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
  *
  ************************************/
 
-#if defined(__arm__)
+#if defined(ARDUINO_SKAARDUINO_DUE)
+#include <avr/dtostrf.h>
 void resetFunc() {
-  const int RSTC_KEY = 0xA5;
+  EEPROM.commitPage();
+  const int16_t RSTC_KEY = 0xA5;
   RSTC->RSTC_CR = RSTC_CR_KEY(RSTC_KEY) | RSTC_CR_PROCRST | RSTC_CR_PERRST;
   while (true)
     ;
@@ -115,6 +117,7 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
   EEPROM.write(20 + num * 4 + 1, start >> 1 & 0xFF);
   EEPROM.write(20 + num * 4 + 2, end >> 1 & 0xFF);
   EEPROM.write(20 + num * 4 + 3, hysteresis & 0x3F | (start & 1) << 7 | (end & 1) << 6);
+  
   EEPROM.write(20 + num * 4 + 4, 193 ^ EEPROM.read(20 + num * 4 + 1) ^ EEPROM.read(20 + num * 4 + 2) ^ EEPROM.read(20 + num * 4 + 3));
 }
 
@@ -147,8 +150,8 @@ uint16_t *getAnalogComponentCalibration(uint8_t num) {
 uint8_t currentAnalogComponent = 0;
 unsigned long lastAnalogPrint = 0;
 uint8_t hysteresis = 0;
-int prevSensorValue;
-int recentDiffValues[40];
+int16_t prevSensorValue;
+int16_t recentDiffValues[40];
 uint16_t recentDiffValuesCounter = 0;
 uint8_t initialDebugState;
 // uint16_t hysteresis = 0;
@@ -163,7 +166,7 @@ void listAnalogHWComponent(uint8_t num = 0) {
   }
 
   // Read the input on analog pin 0:
-  int sensorValue = HWAnalogComponentValue(currentAnalogComponent); // Change this to the analog input pin used by the T-bar/Slider (if different)
+  int16_t sensorValue = HWAnalogComponentValue(currentAnalogComponent); // Change this to the analog input pin used by the T-bar/Slider (if different)
 
   // Print out the value you read:
   Serial.print(sensorValue);
@@ -182,9 +185,9 @@ void listAnalogHWComponent(uint8_t num = 0) {
   Serial.print(": ");
 
   // Min/Max:
-  int maxValue = 0;
-  int minValue = 0;
-  for (int i = 0; i < 40; i++) {
+  int16_t maxValue = 0;
+  int16_t minValue = 0;
+  for (int16_t i = 0; i < 40; i++) {
     if (recentDiffValues[i] > maxValue) {
       maxValue = recentDiffValues[i];
     }
@@ -224,13 +227,13 @@ void listAnalogHWComponent(uint8_t num = 0) {
 
   // Meter:
   Serial.print(sensorValue - prevSensorValue + 15 + 1 <= 0 ? "!" : " ");
-  for (int i = 15; i > 0; i--) {
+  for (int16_t i = 15; i > 0; i--) {
     Serial.print(sensorValue - prevSensorValue + i <= 0 ? "=" : " ");
   }
 
   Serial.print("|");
 
-  for (int i = 1; i <= 15; i++) {
+  for (int16_t i = 1; i <= 15; i++) {
     Serial.print(sensorValue - prevSensorValue - i >= 0 ? "=" : " ");
   }
   Serial.print(sensorValue - prevSensorValue - 15 - 1 >= 0 ? "!" : " ");
@@ -337,7 +340,7 @@ void calibrateAnalogHWComponent(uint8_t num = 0) {
     }
     break;
   case 12:
-    int a, b;
+    int16_t a, b;
     a = (average[0] + average[2]) / 2;
     b = (average[1] + average[3]) / 2;
 
@@ -405,6 +408,7 @@ bool checkIncomingSerial() {
       for (uint8_t i = 0; i < 3; i++) {
         EEPROM.write(13 + i, random(0, 256));
       }
+
       Serial << F("MAC address updated to: ");
       for (uint8_t i = 0; i < 6; i++) {
         Serial << _HEXPADL(EEPROM.read(i + 10), 2, "0") << (i != 5 ? F(":") : F("\n"));
@@ -757,10 +761,7 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     memset(_strCache, 0, 11);
     switch (_extRetFormat & 0xF) {
     case 1:
-#ifdef __arm__ /* Arduino DUE */
-#else
       dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache); // Need to find alternative for Due Platform.
-#endif
       break;
     default:
       itoa(_extRetValue[a], _strCache, 10);
@@ -794,7 +795,7 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
     }
 
     // Print prefix-strings:
-    int xOffset = 0;
+    int16_t xOffset = 0;
     if (strlen(_extRetTxt[a])) {
       if (_extRetPair > 0) {
         xOffset = constrain(strlen(_strCache) ? 2 : (tw >> 1) - (int16_t)constrain(strlen(_extRetTxt[a]), 1, tw / 6) * 3, 2, tw);
@@ -885,10 +886,7 @@ void write3x16Display(SkaarhojEADOGMDisplay &disp) {
     memset(_strCache, 0, 11);
     switch (_extRetFormat & 0xF) {
     case 1:
-#ifdef __arm__ /* Arduino DUE */
-#else
       dtostrf((float)_extRetValue[a] / 1000, 4, 2, _strCache);
-#endif
       break;
     default:
       itoa(_extRetValue[a], _strCache, 10);
@@ -1000,13 +998,13 @@ void testGenerateExtRetVal(uint8_t seed) {
 uint16_t getConfigMemIndex(uint8_t HWcIdx, uint8_t stateIdx = 0) {
 
   uint16_t ptr = 2;
-  int HWcIndex = -1;
+  int16_t HWcIndex = -1;
 
   while (ptr < SK_CONFIG_MEMORY_SIZE && globalConfigMem[ptr] != 255) { // Traverses HW components
     uint8_t HWcSegmentLength = globalConfigMem[ptr];
     uint16_t HWcSegmentStartPtr = ptr;
     HWcIndex++;
-    int stateIndex = -1;
+    int16_t stateIndex = -1;
 
     if (HWcIdx == HWcIndex) { // Found it...
       ptr++;
@@ -1086,17 +1084,28 @@ void loadDefaultConfig() {
   // Copy default controller configuration to the global Config memory.
   memcpy_P(globalConfigMem, defaultControllerConfig, sizeof(defaultControllerConfig));
 }
-void moveEEPROMMemoryBlock(uint16_t from, uint16_t to, int offset) { // From is inclusive, To is exclusive, To>From, offset>0 = move forward
+void moveEEPROMMemoryBlock(uint16_t from, uint16_t to, int16_t offset) { // From is inclusive, To is exclusive, To>From, offset>0 = move forward
                                                                      //	Serial << "moveEEPROMMemoryBlock (" << from << "," << to << "," << offset << " )\n";
   if (offset > 0) {
     for (uint16_t a = to; a > from; a--) {
+      #ifdef ARDUINO_SKAARDUINO_DUE
+      EEPROM.writeBuffered(a - 1 + offset, EEPROM.read(a - 1));
+      #else
       EEPROM.write(a - 1 + offset, EEPROM.read(a - 1));
+      #endif
     }
   } else if (offset < 0) {
     for (uint16_t a = from; a < to; a++) {
+      #ifdef ARDUINO_SKAARDUINO_DUE
+      EEPROM.writeBuffered(a + offset, EEPROM.read(a));
+      #else
       EEPROM.write(a + offset, EEPROM.read(a));
+      #endif
     }
   }
+  #ifdef ARDUINO_SKAARDUINO_DUE
+  EEPROM.commitPage();
+  #endif
 }
 uint16_t getPresetOffsetAddress(uint8_t presetNum) {
   uint16_t offset = 0;
@@ -1265,9 +1274,16 @@ void savePreset(uint8_t presetNum, uint16_t len) { // Len is excluding CSC byte.
       // Store memory:
       uint8_t csc = EEPROM_PRESET_TOKEN;
       for (uint16_t a = 0; a < len; a++) {
-        EEPROM.write(EEPROM_PRESET_START + 7 + presetOffset + a, globalConfigMem[a]); // Loading memory with preset, byte by byte.
+        #ifdef ARDUINO_SKAARDUINO_DUE
+        EEPROM.writeBuffered(EEPROM_PRESET_START + 7 + presetOffset + a, globalConfigMem[a]); // Loading memory with preset, byte by byte.
+        #else
+        EEPROM.write(EEPROM_PRESET_START + 7 + presetOffset + a, globalConfigMem[a]);
+        #endif
         csc ^= globalConfigMem[a];
       }
+      #ifdef ARDUINO_SKAARDUINO_DUE
+      EEPROM.commitPage();
+      #endif
       EEPROM.write(EEPROM_PRESET_START + 7 + presetOffset + len, csc); // Checksum byte
       EEPROM.write(EEPROM_PRESET_START + 5 + presetOffset, highByte(len + 1));
       EEPROM.write(EEPROM_PRESET_START + 6 + presetOffset, lowByte(len + 1));
@@ -1641,16 +1657,16 @@ uint8_t HWsetup() {
 
   if (getConfigMode()) {
     Serial << F("Test: AudioMasterControl\n");
-    for (int j = 0; j < 5; j++) {
+    for (int16_t j = 0; j < 5; j++) {
       AudioMasterControl.setButtonLight(j + 1, true);
       delay(100);
     }
-    for (int j = 0; j < 5; j++) {
+    for (int16_t j = 0; j < 5; j++) {
       AudioMasterControl.setButtonLight(j + 1, false);
       delay(100);
     }
-    for (int i = 1; i <= 2; i++) {
-      for (int j = 0; j < 4; j++) {
+    for (int16_t i = 1; i <= 2; i++) {
+      for (int16_t j = 0; j < 4; j++) {
         AudioMasterControl.setChannelIndicatorLight(i, j);
         delay(100);
       }
@@ -1737,7 +1753,7 @@ void HWtest() {
 #if (SK_HWEN_SSWMENU)
     static uint8_t SSWmenuEncValueSum = 0;
     static bool SSWmenuEncX = false;
-    int SSWmenuEncValue = SSWmenuEnc.state(0, 1000);
+    int16_t SSWmenuEncValue = SSWmenuEnc.state(0, 1000);
     switch (SSWmenuEncValue) {
     case 1:
     case -1:
@@ -1786,7 +1802,7 @@ void HWtest() {
     static uint8_t menuEncValue[2] = {0, 0};
     for (uint8_t a = 0; a < 2; a++) {
       menuDisplay.gotoRowCol((1 - a) + 1, 0);
-      int encValue = menuEncoders.state(a, 1000);
+      int16_t encValue = menuEncoders.state(a, 1000);
       if (encValue) {
         Serial << F("Enc") << a << F(": ") << encValue << "," << menuEncoders.lastCount(a, 2) << F("=> ") << menuEncValue[a] << F("\n");
       }
@@ -1824,7 +1840,7 @@ void HWtest() {
     AudioMasterControl.setChannelIndicatorLight(1, (millis() >> 10) & B11);
 
     // Buttons:
-    for (int a = 0; a < 5; a++) {
+    for (int16_t a = 0; a < 5; a++) {
       AudioMasterControl.setButtonLight(a + 1, (millis() >> (10 + a)) & B1);
     }
 #endif
@@ -1852,7 +1868,7 @@ void HWtest() {
 
 #if (SK_HWEN_SSWMENU)
 void HWrunLoop_SSWMenu(const uint8_t HWc) {
-  uint16_t bDown;
+  int16_t bDown;
   if (getNumOfActions(HWc) > 0) {
     static uint8_t SSWMenuItemPtr = 0;
     SSWmenuEnc.runLoop();
@@ -1866,7 +1882,7 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
 
     static bool voidVar = SSWmenuEnc.reset(0);
 
-    int clicks = 0;
+    int16_t clicks = 0;
     bool actDown = false;
     bDown = SSWmenuEnc.state(0, 1000);
     switch (bDown) {
@@ -1885,7 +1901,7 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
     }
     extRetValIsWanted(true);
 
-    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], 0x8000, SSWMenuItemPtr + 1);
+    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], BINARY_EVENT, SSWMenuItemPtr + 1);
     SSWmenuEnc.runLoop();
     static uint16_t prevHash = 0;
     static uint8_t prevColor = 0;
@@ -1910,7 +1926,7 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
 
 #if (SK_HWEN_MENU)
 void HWrunLoop_Menu(const uint8_t HWc) {
-  uint16_t bDown;
+  int16_t bDown;
   if (getNumOfActions(HWc) > 0) {
     static uint8_t menuItemPtr = 0;
     switch (menuEncoders.state(1, 1000)) {
@@ -1921,7 +1937,7 @@ void HWrunLoop_Menu(const uint8_t HWc) {
       break;
     }
 
-    int clicks = 0;
+    int16_t clicks = 0;
     bool actDown = false;
     bDown = menuEncoders.state(0, 1000);
     switch (bDown) {
@@ -1939,7 +1955,7 @@ void HWrunLoop_Menu(const uint8_t HWc) {
       break;
     }
     extRetValIsWanted(true);
-    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], 0x8000, menuItemPtr + 1);
+    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], BINARY_EVENT, menuItemPtr + 1);
 
     static uint16_t prevHashTD = 0;
     if (prevHashTD != extRetValHash()) {
@@ -2105,7 +2121,7 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
   // Buttons:
   uint16_t bUp = control.buttonUpAll();
   uint16_t bDown = control.buttonDownAll();
-  for (int a = 0; a < 5; a++) {
+  for (int16_t a = 0; a < 5; a++) {
     if (HWcMap[3 + a]) {
       uint16_t color = actionDispatch(HWcMap[3 + a], bDown & (B1 << a), bUp & (B1 << a));
       control.setButtonLight(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 0) : 0);
@@ -2128,7 +2144,7 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
     actionDispatch(HWcMap[1], hasMoved, false, 0, mapPotHelper(pot2.uniDirectionalSlider_position()));
   }
 
-  for (int a = 0; a < 2; a++) {
+  for (int16_t a = 0; a < 2; a++) {
     if (HWcMap[2 + a]) { // Channel Indicator light
       uint16_t retVal = actionDispatch(HWcMap[2 + a]);
       uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
@@ -2148,7 +2164,7 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
   // Buttons:
   uint16_t bUp = control.buttonUpAll();
   uint16_t bDown = control.buttonDownAll();
-  for (int a = 0; a < 4; a++) {
+  for (int16_t a = 0; a < 4; a++) {
     if (HWcMap[4 + a]) {
       uint16_t color = actionDispatch(HWcMap[4 + a], bDown & (B1 << a), bUp & (B1 << a));
       control.setButtonLight(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 0) : 0);
@@ -2173,10 +2189,10 @@ void HWrunLoop_BI8(SkaarhojBI8 &buttons, const uint8_t *HWcMap, uint8_t theSize)
 }
 
 void HWrunLoop_encoders(SkaarhojEncoders &encoders, const uint8_t *encMap, uint8_t theSize, bool reverseFirst = false) {
-  uint16_t bDown;
+  int16_t bDown;
   for (uint8_t a = 0; a < theSize; a++) {
     if (encMap[a]) {
-      int clicks = 0;
+      int16_t clicks = 0;
       bool actDown = false;
       bDown = encoders.state(a, 1000);
       switch (bDown) {
@@ -2190,6 +2206,7 @@ void HWrunLoop_encoders(SkaarhojEncoders &encoders, const uint8_t *encMap, uint8
       default: // reset
         if (bDown >= 1000) {
           actDown = true;
+          Serial << "bDown: " << bDown << "\n";
         }
         break;
       }
@@ -2212,7 +2229,7 @@ void initActionCache() {
   memset(_systemHWcActionFineFlag, 0, SK_HWCCOUNT);
 }
 
-long pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine, const int16_t scaleNormal) {
+int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine, const int16_t scaleNormal) {
   int16_t scale = pulses & B1 ? scaleFine : scaleNormal;
   inValue += (pulses >> 1) * scale;
   if (cycle) {
@@ -2222,6 +2239,8 @@ long pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, co
       inValue = lower + (inValue - higher - 1);
     }
   }
+
+  //Serial << "In: " << inValue << " Lower: " << lower << " Upper: " << higher << " Result: " << constrain(inValue, lower, higher) << "\n";
   return constrain(inValue, lower, higher);
 }
 void storeMemory(uint8_t memPtr) {
@@ -2251,7 +2270,7 @@ uint8_t cycleMemHelper(uint8_t actionPtr, uint8_t idx = 255) {
 /**
  * Evaluates System Actions
  */
-uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
+uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value) {
   if (debugMode && (actDown || actUp)) {
     Serial << F("System action ") << globalConfigMem[actionPtr] << F("\n");
   }
@@ -2261,7 +2280,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
   switch (globalConfigMem[actionPtr]) {
   case 0: // Set Shift
     if (actDown) {
-      if (value != 0x8000) { // Value input
+      if (value != BINARY_EVENT) { // Value input
         _systemShift = constrain(constrain(map(value, 0, 1000, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)) + 1), 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1))), (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
       } else {
         if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
@@ -2315,7 +2334,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
     break;
   case 1: // Set State
     if (actDown) {
-      if (value != 0x8000) { // Value input
+      if (value != BINARY_EVENT) { // Value input
         _systemState = constrain(map(value, 0, 1000, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1)) + 1), 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXSTATES - 1)));
       } else {
         if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
@@ -2379,7 +2398,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
   case 2: // Set Memory
     if (globalConfigMem[actionPtr + 1] < 4) {
       if (actDown) {
-        if (value != 0x8000) { // Value input
+        if (value != BINARY_EVENT) { // Value input
           _systemMem[globalConfigMem[actionPtr + 1]] = constrain(map(value, 0, 1000, 0, globalConfigMem[actionPtr + 2] + 1), 0, globalConfigMem[actionPtr + 2]);
         } else {
           if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) { // Cycle up/down
@@ -2436,7 +2455,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
       uint8_t numValues = cycleMemHelper(actionPtr);
 
       if (actDown) {
-        if (value == 0x8000) { // Binary
+        if (value == BINARY_EVENT) { // Binary
           _systemHWcActionCache[HWc][actIdx] = pulsesHelper(_systemHWcActionCache[HWc][actIdx], 0, numValues - 1, true, 1 << 1);
         } else { // Value:
           _systemHWcActionCache[HWc][actIdx] = constrain(map(value, 0, 1000, 0, numValues), 0, numValues - 1);
@@ -2471,8 +2490,8 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
         switch (globalConfigMem[actionPtr + 2]) {
         case 0:
         case 1:
-          setSystemBit(globalConfigMem[actionPtr + 1], (!globalConfigMem[actionPtr + 3]) ^ ((value == 0x8000) ? false : (value < 500)));
-          //   Serial << "BIT A: " << ((!globalConfigMem[actionPtr + 3]) ^ ((value == 0x8000) ? false : (value < 500))) << "\n";
+          setSystemBit(globalConfigMem[actionPtr + 1], (!globalConfigMem[actionPtr + 3]) ^ ((value == BINARY_EVENT) ? false : (value < 500)));
+          //   Serial << "BIT A: " << ((!globalConfigMem[actionPtr + 3]) ^ ((value == BINARY_EVENT) ? false : (value < 500))) << "\n";
           break;
         case 2:
           setSystemBit(globalConfigMem[actionPtr + 1], !getSystemBit(globalConfigMem[actionPtr + 1]));
@@ -2616,7 +2635,7 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
     actDown = false;
     actUp = false;
     pulses = pulses & B1;
-    value = 0x8000;
+    value = BINARY_EVENT;
   }
 
   if (specificAction > getNumOfActions(HWcNum)) {
@@ -2816,10 +2835,10 @@ void initController() {
   // Check Config Button press (or hardware button press)
   delay(500); // Let people have time to release the button in case they just want to reset
   if (isConfigButtonPushed() || buttonPressUponBoot > 0) {
-
     configMode = EEPROM.read(0) == 2 ? 2 : (buttonPressUponBoot > 1 ? 2 : 1); // Current IP address
-    if (EEPROM.read(0) != 0)
+    if (EEPROM.read(0) != 0) {
       EEPROM.write(0, 0);
+    }
     statusLED(LED_BLUE); // In config mode 1, LED will be blue
     unsigned long cfgButtonPressTime = millis();
     Serial << F("Config Mode=1\n");

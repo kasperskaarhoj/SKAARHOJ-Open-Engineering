@@ -107,7 +107,7 @@ uint16_t ATEM_pullFromHoldGroup(uint8_t hgIdx, uint8_t HWc) {
 /**
  * Searches for the video sources up/down in list
  */
-uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int pulseCount, uint8_t filter, uint8_t filterME, uint8_t limit) {
+uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int16_t pulseCount, uint8_t filter, uint8_t filterME, uint8_t limit) {
 
   uint8_t srcI = AtemSwitcher[devIndex].getVideoSrcIndex(src);
   uint8_t c = 0;
@@ -132,7 +132,7 @@ uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int pulseCount, uin
 /**
  * Searches for the media still up/down in list
  */
-uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int pulseCount, uint8_t limit) {
+uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int16_t pulseCount, uint8_t limit) {
   uint8_t c = 0, initSrc = srcI;
   for (uint8_t a = 0; a < abs(pulseCount); a++) {
     do {
@@ -155,7 +155,7 @@ uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int pulseCount, u
 /**
  * Searches for macro up/down in list
  */
-uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int pulseCount, uint8_t limit) {
+uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int16_t pulseCount, uint8_t limit) {
 
   uint8_t c = 0;
   for (uint8_t a = 0; a < abs(pulseCount); a++) {
@@ -174,11 +174,11 @@ uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int pulseCount, ui
   return macroIdx;
 }
 
-uint16_t fletcher16( uint8_t *data, int count )
+uint16_t fletcher16( uint8_t *data, int16_t count )
 {
    uint16_t sum1 = 0;
    uint16_t sum2 = 0;
-   int index;
+   int16_t index;
 
    for( index = 0; index < count; ++index )
    {
@@ -189,42 +189,64 @@ uint16_t fletcher16( uint8_t *data, int count )
    return (sum2 << 8) | sum1;
 }
 
-static uint32_t lastSettingsRecall;
+static uint16_t lastSettingsRecall;
+static uint8_t lastLoadedPreset = 0;
 
-bool presetChecksumMatches(uint8_t preset) {
+bool presetChecksumMatches(uint8_t num) {
   uint8_t bytes[48];
-  for(int i = 0; i < 48; i++) {
-    bytes[i] = EEPROM.read(i);
+  for(int16_t i = 0; i < 48; i++) {
+    bytes[i] = EEPROM.read(EEPROM_FILEBANK_START + num*48 + i);
   }
   uint16_t checksum = (bytes[46] << 8) | bytes[47];
+  Serial << "Checksum " << checksum << " vs. " << fletcher16(bytes, 46) << "\n";
   return fletcher16(bytes, 46) == checksum;
 }
 
 void storeCameraPreset(uint8_t camera, uint8_t num) {
   uint8_t preset[48];
   memset(preset, 0, 48);
+
+  preset[0] = 1; // CCU preset data
+
   uint16_t checksum = fletcher16(preset, 46);
   preset[46] = checksum >> 8;
   preset[47] = checksum & 0xFF;
 
-  for(int i = 0; i < 48; i++) {
-    EEPROM.write(EEPROM_FILEBANK_START + num*48 + 1, preset[i]);
+
+  for(int16_t i = 0; i < 48; i++) {
+    #ifdef ARDUINO_SKAARDUINO_DUE
+    EEPROM.writeBuffered(EEPROM_FILEBANK_START + num*48 + i, preset[i]);
+    #else
+    EEPROM.write(EEPROM_FILEBANK_START + num*48 + i, preset[i]);
+    #endif
   }
+  #ifdef ARDUINO_SKAARDUINO_DUE
+  EEPROM.commitPage();
+  #endif
 }
 
 bool CCUPresetExists(uint8_t preset) {
   if(preset < EEPROM_FILEBANK_NUM) {
     if(EEPROM.read(EEPROM_FILEBANK_START + preset*48) == 1) {
-      Serial << "Preset " << preset << " exists!\n";
       return true;
-    } 
+    }
   }
   return false;
 }
 
 bool recallCameraPreset(uint8_t camera, uint8_t preset) {
+  Serial << "Recalling preset #" << preset << "\n";
   if(preset < EEPROM_FILEBANK_NUM) {
     if(CCUPresetExists(preset) && presetChecksumMatches(preset)) {
+      if(preset != 0) {
+        if((uint16_t)millis() - lastSettingsRecall > 10000) {
+          storeCameraPreset(camera, 0);
+          lastSettingsRecall = millis();
+        }
+      }
+
+      // Recall logic:
+
       Serial << "Recalled preset!!\n";
       return true;
     }
@@ -238,9 +260,10 @@ bool recallCameraPreset(uint8_t camera, uint8_t preset) {
 // 5 = dimmed
 // 1,2,3,4 = full (yellow), red, green, yellow
 // Bit 4 (16) = blink flag, filter out for KP01 buttons.
-uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
+// Bit 5 (32) = output bit; If this is set, a binary output will be set if coupled with this hwc.
+uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value) {
   uint16_t retVal = 0;
-  int tempInt = 0;
+  int16_t tempInt = 0;
   uint8_t tempByte = 0;
 
   uint8_t cam = 0;
@@ -427,7 +450,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     if (actUp && (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4)) { // "Hold Groups"
       uint16_t fallBackSrc = ATEM_pullFromHoldGroup(globalConfigMem[actionPtr + 3] - 3, HWc);
-      if (fallBackSrc != 0x8000)
+      if (fallBackSrc != BINARY_EVENT)
         AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], fallBackSrc);
     }
     if (actUp && globalConfigMem[actionPtr + 3] == 5) { // "Cycle"
@@ -892,7 +915,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 18:                   // Transition Pos
     if (actDown) {           // Use actDown as "has moved"
-      if (value != 0x8000) { // Value input
+      if (value != BINARY_EVENT) { // Value input
         AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], value * 10);
         if (actUp) { // Use actUp as "at end"
           AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], 0);
@@ -1138,9 +1161,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
 
     if (actDown || (pulses & 0xFFFE)) {
-      int outValue;
+      int16_t outValue;
       if (actDown) {
-        if (value != 0x8000) { // Value input
+        if (value != BINARY_EVENT) { // Value input
           outValue = constrain(map(value, 0, 1000, -600, 60), -600, 60);
         } else { // Binary - reset / toggle
           outValue = (uint16_t)AtemSwitcher[devIndex].audioWord2Db(audioVol) != 0 ? 0 : -600;
@@ -1215,8 +1238,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 24: // Audio Balance
     aSrc = ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
     if (actDown) {
-      if (value != 0x8000) { // Value input
-        int outValue = constrain(map(value, 0, 1000, -10000, 10000), -10000, 10000);
+      if (value != BINARY_EVENT) { // Value input
+        int16_t outValue = constrain(map(value, 0, 1000, -10000, 10000), -10000, 10000);
         AtemSwitcher[devIndex].setAudioMixerInputBalance(aSrc, outValue);
       } else { // Binary - reset
         AtemSwitcher[devIndex].setAudioMixerInputBalance(aSrc, 0);
@@ -1326,7 +1349,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           _systemHWcActionCacheFlag[HWc][actIdx] &= ~0x20;                                                                                                                                           // Clear "initial hold" flag
           _systemHWcActionCache[HWc][actIdx] = millis();                                                                                                                                             // Reset counter
         } else
-          tempInt = constrain(value != 0x8000 ? map(value, 0, 1000, 1, 250) : globalConfigMem[actionPtr + 3], 1, 250);
+          tempInt = constrain(value != BINARY_EVENT ? map(value, 0, 1000, 1, 250) : globalConfigMem[actionPtr + 3], 1, 250);
       }
       if (pulses & 0xFFFE) {
         tempInt = pulsesHelper(retVal, 1, 250, true, pulses, 1, 5);
@@ -1434,7 +1457,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 30: // Focus
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
-      if (value == 0x8000) { // Binary input
+      if (value == BINARY_EVENT) { // Binary input
         Serial << F("Perform Auto Focus...\n");
         AtemSwitcher[devIndex].setCameraControlAutoFocus(cam, 0);
       }
@@ -1453,8 +1476,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 31: // Iris
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
-      if (value != 0x8000) { // Value input
-        int outValue = constrain(map(value, 1000, 0, 0, 2048), 0, 2048);
+      if (value != BINARY_EVENT) { // Value input
+        int16_t outValue = constrain(map(value, 1000, 0, 0, 2048), 0, 2048);
         AtemSwitcher[devIndex].setCameraControlIris(cam, outValue);
       } else { // Binary - auto iris
         Serial << F("Perform Auto Iris...\n");
@@ -1485,7 +1508,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
 
-      if (actDown && value == 0x8000) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -1493,7 +1516,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
       if ((pulses & 0xFFFE)) {
-        AtemSwitcher[devIndex].setCameraControlGain(cam, pgm_read_word_near(sensorGains + pulsesHelper(currentGainIndex, 0, 4 - 1, true, pulses, 1, 1)));
+        AtemSwitcher[devIndex].setCameraControlGain(cam, pgm_read_word_near(sensorGains + pulsesHelper(currentGainIndex, 0, 4 - 1, false, pulses, 1, 1)));
       }
     }
     if (extRetValIsWanted()) {
@@ -1516,7 +1539,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
 
-      if (actDown && value == 0x8000) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -1524,7 +1547,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
       if ((pulses & 0xFFFE)) {
-        AtemSwitcher[devIndex].setCameraControlShutter(cam, pgm_read_word_near(shutterSpeeds + pulsesHelper(currentShutterSpeedIndex, 0, 15 - 1, true, pulses, 1, 1)));
+        AtemSwitcher[devIndex].setCameraControlShutter(cam, pgm_read_word_near(shutterSpeeds + pulsesHelper(currentShutterSpeedIndex, 0, 15 - 1, false, pulses, 1, 1)));
       }
     }
     if (extRetValIsWanted()) {
@@ -1547,7 +1570,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
 
-      if (actDown && value == 0x8000) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -1555,7 +1578,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
       if ((pulses & 0xFFFE)) {
-        AtemSwitcher[devIndex].setCameraControlWhiteBalance(cam, pgm_read_word_near(whiteBalances + pulsesHelper(currentWhiteBalanceIndex, 0, 18 - 1, true, pulses, 1, 1)));
+        AtemSwitcher[devIndex].setCameraControlWhiteBalance(cam, pgm_read_word_near(whiteBalances + pulsesHelper(currentWhiteBalanceIndex, 0, 18 - 1, false, pulses, 1, 1)));
       }
     }
     if (extRetValIsWanted()) {
@@ -1570,8 +1593,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 37: // Gain
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 2]);
     if (actDown) {                                                // Binary or Value input...
-      int outValue = globalConfigMem[actionPtr] == 37 ? 2048 : 0; // Binary (reset) value by default
-      if (value != 0x8000) {                                      // Value input different from -32768
+      int16_t outValue = globalConfigMem[actionPtr] == 37 ? 2048 : 0; // Binary (reset) value by default
+      if (value != BINARY_EVENT) {                                      // Value input different from -32768
         switch (globalConfigMem[actionPtr]) {
         case 35: // Lift:
           outValue = constrain(map(value, 0, 1000, -4096 / 8, 4096 / 8), -4096, 4096);
@@ -1774,8 +1797,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 38: // Hue
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
-      if (value != 0x8000) { // Value input
-        int outValue = constrain(map(value, 0, 1000, -2048, 2048), -2048, 2048);
+      if (value != BINARY_EVENT) { // Value input
+        int16_t outValue = constrain(map(value, 0, 1000, -2048, 2048), -2048, 2048);
         AtemSwitcher[devIndex].setCameraControlHue(cam, outValue);
       } else { // Binary - reset
         AtemSwitcher[devIndex].setCameraControlHue(cam, 0);
@@ -1795,8 +1818,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 39: // Contrast
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
-      if (value != 0x8000) { // Value input
-        int outValue = constrain(map(value, 0, 1000, 0, 4096), 0, 4096);
+      if (value != BINARY_EVENT) { // Value input
+        int16_t outValue = constrain(map(value, 0, 1000, 0, 4096), 0, 4096);
         AtemSwitcher[devIndex].setCameraControlContrast(cam, outValue);
       } else { // Binary - reset
         AtemSwitcher[devIndex].setCameraControlContrast(cam, 2048);
@@ -1816,8 +1839,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 40: // Saturation
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
-      if (value != 0x8000) { // Value input
-        int outValue = constrain(map(value, 0, 1000, 0, 4096), 0, 4096);
+      if (value != BINARY_EVENT) { // Value input
+        int16_t outValue = constrain(map(value, 0, 1000, 0, 4096), 0, 4096);
         AtemSwitcher[devIndex].setCameraControlSaturation(cam, outValue);
       } else { // Binary - reset
         AtemSwitcher[devIndex].setCameraControlSaturation(cam, globalConfigMem[actionPtr + 2] == 1 ? 2048 : 0);
@@ -1837,7 +1860,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 41: { // Bars
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     uint8_t duration = globalConfigMem[actionPtr + 3];
-    if (actDown && value == 0x8000) {
+    if (actDown && value == BINARY_EVENT) {
       switch (globalConfigMem[actionPtr + 2]) {
       case 0: // Toggle
         if (AtemSwitcher[devIndex].getCameraControlColorbars(cam) == 0) {
@@ -1866,7 +1889,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   }
   case 42: // Detail
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
-    if (actDown && value == 0x8000) { // Button push
+    if (actDown && value == BINARY_EVENT) { // Button push
       AtemSwitcher[devIndex].setCameraControlSharpeningLevel(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
     }
 
@@ -1904,42 +1927,88 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     break;
   case 43: // CCU Settings
-    if(CCUPresetExists(globalConfigMem[actionPtr + 3])) {
-      retVal = 5;
-    }
-    if(actDown) {
-      _systemHWcActionCacheFlag[HWc][actIdx] = true;
-      Serial << "Value: " << value << " Setting: " << globalConfigMem[actionPtr + 2] << "\n";
-      if(value == 0x8000) { // Holddown on default setting
-        switch(globalConfigMem[actionPtr + 2]) {
-          case 0:
-            storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
-            _systemHWcActionCacheFlag[HWc][actIdx] = false;
-            break;
-          case 2: // Store
-            storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
-            retVal = 2;
-            break;
-        }
-            break; 
-      } else if(value != 0x8000) { // Not hold down
-        _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        switch(globalConfigMem[actionPtr + 2]) {
-          case 1: // Recall
-            retVal = (recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3])?5:2|0x10);
-            break;
-        }
+    if(actDown && value == BINARY_EVENT) {
+      _systemHWcActionCache[HWc][actIdx] = millis();
+      switch(globalConfigMem[actionPtr + 2]) {
+        case 0:
+          // For holddown events, bit 0 must be set
+          _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
+          break;
+        case 1: // Recall
+          if(recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3])) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+          } else {
+            _systemHWcActionCacheFlag[HWc][actIdx] = 8;
+          }
+          break;
+        case 2: // Store
+          storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+          break;
       }
     }
 
-    if(actUp && _systemHWcActionCacheFlag[HWc][actIdx] && globalConfigMem[actionPtr + 2] == 0) {
-      recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+    if(_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
+      switch(globalConfigMem[actionPtr + 2]) {
+        case 0:
+          storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+          break;
+      }
     }
+
+    if(actUp) {
+      if(_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+        if(globalConfigMem[actionPtr + 2] == 0) {
+          if((uint16_t)millis() - lastSettingsRecall < 10000) {
+            recallCameraPreset(globalConfigMem[actionPtr + 1], 0);
+            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+          } else {
+            if(recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3])) {
+              _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+            } else {
+              _systemHWcActionCacheFlag[HWc][actIdx] = 8;
+            }
+          }
+        }
+      } else if(globalConfigMem[actionPtr + 2] == 2) {
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
+    }
+
+    if(_systemHWcActionCacheFlag[HWc][actIdx] & 16) {
+        retVal = 1;
+    }
+    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 8) {
+      retVal = 2 | 0x20;
+    }
+    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 4) {
+      Serial << ((uint16_t)millis() - lastSettingsRecall) << "\n";
+      if((uint16_t)millis() - lastSettingsRecall < 10000) {
+        retVal = (millis()%1000 > 500?4:0);
+      } else {
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
+    }
+    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 2) {
+      retVal = 3;
+    }
+    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+      retVal = 5;
+    } else {
+      if(globalConfigMem[actionPtr + 2] == 2) {
+        retVal = 5;
+      } else {
+        retVal = CCUPresetExists(globalConfigMem[actionPtr + 3])?5:0;
+      }
+    }
+
+    return retVal;
 
     break;
   case 44: // Reset
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
-    if (actDown && value == 0x8000) {
+    if (actDown && value == BINARY_EVENT) {
       switch (globalConfigMem[actionPtr + 2]) {
       case 0:
         Serial << F("Resetting Lift...\n");
@@ -2071,7 +2140,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       _systemHWcActionCache[HWc][actIdx] = 2; // Always only adjust w+H together in case of 100-200% zoom option for scaling.
 
     if (actDown) {
-      if (value == 0x8000) { // Binary input = reset:
+      if (value == BINARY_EVENT) { // Binary input = reset:
         switch (globalConfigMem[actionPtr + 3]) {
         case 0:                                                                                                         // Position
           AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0); // center
@@ -2091,10 +2160,10 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if (pulses & 0xFFFE) {
       uint16_t DVEsizeX = AtemSwitcher[devIndex].getKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
       uint16_t DVEsizeY = AtemSwitcher[devIndex].getKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
-      int DVEposX = round(AtemSwitcher[devIndex].getKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10.0);
-      int DVEposY = round(AtemSwitcher[devIndex].getKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10.0);
-      int DVEposXlim = globalConfigMem[actionPtr + 4] == 1 ? abs((long)(DVEsizeX - 1000) * 16 / 10) : 6400;
-      int DVEposYlim = globalConfigMem[actionPtr + 4] == 1 ? abs((long)(DVEsizeY - 1000) * 9 / 10) : 3600;
+      int16_t DVEposX = round(AtemSwitcher[devIndex].getKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10.0);
+      int16_t DVEposY = round(AtemSwitcher[devIndex].getKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10.0);
+      int16_t DVEposXlim = globalConfigMem[actionPtr + 4] == 1 ? abs((long)(DVEsizeX - 1000) * 16 / 10) : 6400;
+      int16_t DVEposYlim = globalConfigMem[actionPtr + 4] == 1 ? abs((long)(DVEsizeY - 1000) * 9 / 10) : 3600;
 
       switch (globalConfigMem[actionPtr + 3]) {
       case 0: // Position
