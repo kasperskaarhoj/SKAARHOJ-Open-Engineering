@@ -1074,10 +1074,11 @@ uint16_t getConfigMemPresetTitleIndex() {
  * 10-15: MAC address (+ checksum on 16, used in SKAARDUINO TestRig sketch only)
  * 16-20: Memory Bank A-D + checksum byte
  * 21-60: Analog Component calibration (10 pcs)
- * 
+ *
  * EEPROM_PRESET_START: Start of presets
  */
-#define EEPROM_FILEBANK_START 4095-6*48
+
+#define EEPROM_FILEBANK_START 4095 - 6 * 48
 #define EEPROM_FILEBANK_NUM 6
 #define EEPROM_PRESET_START 100
 #define EEPROM_PRESET_TOKEN 0x24 // Just some random value that is used for a checksum offset. Change this and existing configuration will be invalidated and has to be rewritten.
@@ -1673,7 +1674,6 @@ uint8_t HWsetup() {
 #else
   GPIOboard.begin(0);
 #endif
-  GPIOboard.setOutputAll(0);
 
   /*  if (getConfigMode()) {	// Cannot allow this in normal mode!
       Serial << F("Test: GPIO relays\n");
@@ -1811,7 +1811,7 @@ void HWtest() {
 
 #endif
 #if (SK_HWEN_GPIO)
-    GPIOboard.setOutputAll(GPIOboard.inputIsActiveAll());
+    GPIOboard.setOutputAll(GPIOboard.inputIsActiveAll() ^ (millis() >> 12));
 #endif
 
 #if (SK_HWEN_ACM)
