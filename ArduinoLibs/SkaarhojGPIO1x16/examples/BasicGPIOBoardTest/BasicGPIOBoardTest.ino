@@ -18,7 +18,7 @@ SkaarhojGPIO1x16 GPIOboard;
 void setup() { 
 
   // Start the Ethernet, Serial (debugging) and UDP:
-  Serial.begin(9600);  
+  Serial.begin(115200);  
   Serial.println("Serial started");
 
   Wire.begin(); // Start the wire library for communication with the GPIO chip.

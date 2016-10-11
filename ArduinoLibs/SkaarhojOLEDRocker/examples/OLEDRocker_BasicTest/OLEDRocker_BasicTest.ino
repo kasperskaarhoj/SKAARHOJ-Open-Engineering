@@ -37,17 +37,7 @@ static const unsigned char PROGMEM logo16_glcd_bmp[] =
   B11111111, B11111111
 };
 
-
-// No-cost stream operator as described at
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{
-  obj.print(arg);
-  return obj;
-}
-
-
+#include <Streaming.h>
 
 void setup()   {
   Serial.begin(115200);

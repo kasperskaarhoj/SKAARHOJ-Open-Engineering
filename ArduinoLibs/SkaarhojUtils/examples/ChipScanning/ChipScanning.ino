@@ -9,15 +9,6 @@
 #include <PCA9685.h>
 #include <Streaming.h>
 
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-//template<class T>
-//inline Print &operator <<(Print &obj, T arg)
-//{  
-//  obj.print(arg); 
-//  return obj; 
-//}
-
 MCP23017 GPIOchipArray[] = {
   MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017()}; 
 word MCP23017_states[8];

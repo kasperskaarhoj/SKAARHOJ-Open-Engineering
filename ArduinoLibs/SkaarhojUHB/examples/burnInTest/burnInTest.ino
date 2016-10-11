@@ -27,7 +27,7 @@ bool boardArrayEnabled[8];
 
 
 void setup() { 
-  Serial.begin(9600); // set up serial
+  Serial.begin(115200); // set up serial
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   // Shows free memory:  

@@ -15,7 +15,7 @@ SkaarhojBroadcastButtons board;
 
 
 void setup() { 
-  Serial.begin(9600); // set up serial
+  Serial.begin(115200); // set up serial
   Serial.println("Serial Started");
       
   // Set up the board:

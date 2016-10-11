@@ -22,16 +22,7 @@ SkaarhojUtils utils;
 
 
 
-
-// No-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
-
+#include <Streaming.h>
 
 
 
@@ -388,7 +379,7 @@ void _enc1active()  {
  **********************************************************/
 
 void setup() { 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
 

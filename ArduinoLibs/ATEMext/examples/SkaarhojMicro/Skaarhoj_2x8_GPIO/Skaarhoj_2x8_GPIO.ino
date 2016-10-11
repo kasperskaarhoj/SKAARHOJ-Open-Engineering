@@ -43,17 +43,6 @@ uint8_t mac[6];    // Will hold the Arduino Ethernet shield/board MAC address (l
 
 
 
-//// No-cost stream operator as described at
-//// http://arduiniana.org/libraries/streaming/
-//template<class T>
-//inline Print &operator <<(Print &obj, T arg)
-//{
-//  obj.print(arg);
-//  return obj;
-//}
-
-
-
 // All related to library "SkaarhojBI8":
 #include "Wire.h"
 #include "MCP23017.h"
@@ -1178,7 +1167,7 @@ void loop() {
   }
   else {
     // Check for packets, respond to them etc. Keeping the connection alive!
-    AtemSwitcher.runLoop();
+    lDelay(0);
 
     // If the switcher has been initialized, check for button presses as reflect status of switcher in button lights:
     if (AtemSwitcher.hasInitialized())  {
@@ -2812,6 +2801,30 @@ void checkGPI(uint8_t i)  {
         AtemSwitcher.setAuxSourceInput(5, 10011);
         break;
     }
+    lDelay(100);
   }
+}
+
+
+/**
+   Local delay function
+*/
+void lDelay(unsigned long timeout)  {
+  unsigned long thisTime = millis();
+  do {
+    if (isConfigMode)  {
+      webserver.processConnection();
+    } else {
+      AtemSwitcher.runLoop();
+    }
+    Serial << F(".");
+    static int k = 1;
+    k++;
+    if (k > 100) {
+      k = 1;
+      Serial << F("\n");
+    }
+  }
+  while (!sTools.hasTimedOut(thisTime, timeout));
 }
 

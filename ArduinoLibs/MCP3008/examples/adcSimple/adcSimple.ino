@@ -19,7 +19,7 @@ MCP3008 adc(CLOCK_PIN, MOSI_PIN, MISO_PIN, CS_PIN);
 void setup() {
  
  // open serial port
- Serial.begin(9600);
+ Serial.begin(115200);
   
 }
 

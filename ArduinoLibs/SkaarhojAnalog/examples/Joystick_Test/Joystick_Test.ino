@@ -7,14 +7,7 @@ SkaarhojAnalog joystick;
 
 //#include <MemoryFree.h>
 
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+#include <Streaming.h>
 
 
 
