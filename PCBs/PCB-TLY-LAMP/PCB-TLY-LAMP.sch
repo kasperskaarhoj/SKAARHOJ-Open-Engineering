@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -1404,8 +1404,8 @@ Manufacturer: TECONNECTIVITY</description>
 <part name="LED1" library="SKAARHOJ" deviceset="LED20" device="" value="Front Red"/>
 <part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
 <part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
-<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
-<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="1k"/>
+<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="3.3k"/>
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="3.3k"/>
 <part name="R5" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="330"/>
 <part name="U$1" library="SKAARHOJ" deviceset="RJ45-8_GND" device="" value="INPUT"/>
 <part name="U$2" library="SKAARHOJ" deviceset="RJ45-8_GND" device="" value="OUTPUT"/>
