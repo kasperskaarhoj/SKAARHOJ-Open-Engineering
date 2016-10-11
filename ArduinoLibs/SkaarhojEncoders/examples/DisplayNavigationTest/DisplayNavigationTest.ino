@@ -315,7 +315,7 @@ void menuChangeEvent(MenuChangeEvent changed)
 
 void menuNavigation() {
   // Read upper encoder value
-  int encValue = encoders.state(0,1000);
+  int encValue = encoders.state(1,1000);
   if (encValue)  {
      Serial << F("Encoder 0: ") << encValue << "\n"; 
   }  
@@ -351,8 +351,8 @@ void menuValues()  {
   int sVal;
   
   // Read lower encoder value
-  int encValue = encoders.state(1,1000);
-  int lastCount =  encoders.lastCount(1);
+  int encValue = encoders.state(0,1000);
+  int lastCount =  encoders.lastCount(0);
   if (encValue)  {
      Serial << F("Encoder 1: ") << encValue << " /  Count: " << lastCount << "\n";   // The longer this serial print, the more likely is a crash. I believe it's because I'm also serial-printing from within the interrupt functions and it can happen that the serial.print function is executed both places at the same time!
    }

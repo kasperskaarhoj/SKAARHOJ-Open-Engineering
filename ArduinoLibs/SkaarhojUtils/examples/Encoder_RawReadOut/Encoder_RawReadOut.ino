@@ -12,14 +12,7 @@
 
 
 
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+#include <Streaming.h>
 
 
 // Set up the pins:
@@ -31,7 +24,7 @@ int directionPin2 = 8;
 
 void setup() {
   // initialize serial communication at 9600 bits per second:
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   // make the pushbutton's pin an input:

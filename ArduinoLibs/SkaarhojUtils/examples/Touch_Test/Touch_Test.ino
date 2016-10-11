@@ -10,12 +10,12 @@
 SkaarhojUtils utils;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Serial started");
   Serial.println("Coordinate system origo should be lower left corner of screen");
   
   utils.touch_init();
-  //utils.touch_setExtended();
+  utils.touch_setExtended();
   
     // The line below is calibration numbers for a specific monitor. 
     // Substitute this with calibration for YOUR monitor (see example "Touch_Calibrate")

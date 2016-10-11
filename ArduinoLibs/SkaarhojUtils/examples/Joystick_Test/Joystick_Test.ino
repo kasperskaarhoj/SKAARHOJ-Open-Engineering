@@ -11,21 +11,13 @@ SkaarhojUtils utils;
 
 //#include <MemoryFree.h>
 
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
-
+#include <Streaming.h>
 
 
 void setup() { 
 
   // Start the Serial (debugging) and UDP:
-  Serial.begin(9600);  
+  Serial.begin(115200);  
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   // Initializing the joystick at A12(H) and A13(V) + 35 (Joystick 1). A14 and A15, 36 is also possible for Joystick 2

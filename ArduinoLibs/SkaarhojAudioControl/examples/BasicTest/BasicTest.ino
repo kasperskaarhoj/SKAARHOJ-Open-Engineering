@@ -15,17 +15,7 @@
 #include <SkaarhojAudioControl.h>
 SkaarhojAudioControl AudioControl;
 
-
-
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
-
+#include <Streaming.h>
 
 
 
@@ -33,7 +23,7 @@ inline Print &operator <<(Print &obj, T arg)
 void setup() {
 
   // Start the Serial (debugging) and UDP:
-  Serial.begin(9600);  
+  Serial.begin(115200);  
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   // Always initialize Wire before starting the AudioControl library

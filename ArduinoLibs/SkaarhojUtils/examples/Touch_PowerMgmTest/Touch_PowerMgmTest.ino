@@ -4,38 +4,27 @@
  * - kasper
  */
 
+/*
   // Pins for Arduino Breakout Shield 2:
 int greenLEDPin = 2;
 int redLEDPin = 3;
 int powerMgmPin = 4;
 int powerStatusDetectPin = A5;
+*/
 
-/*
   // Pins for Arduino Mega Extended Breakout Shield:
 int greenLEDPin = 22;
 int redLEDPin = 23;
 int powerMgmPin = 24;
 int powerStatusDetectPin = A10;
-*/
 
-
-
-
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
-
+#include <Streaming.h>
 
 void setup() { 
 
     
   // Start the Ethernet, Serial (debugging) and UDP:
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");  
   
   pinMode(powerMgmPin, INPUT);

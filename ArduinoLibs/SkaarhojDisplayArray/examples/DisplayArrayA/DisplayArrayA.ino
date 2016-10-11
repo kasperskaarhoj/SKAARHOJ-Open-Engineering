@@ -41,7 +41,7 @@ static const unsigned char PROGMEM logo16_glcd_bmp[] =
 
 
 void setup()   {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   Wire.begin();
 

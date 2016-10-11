@@ -8,14 +8,7 @@
 #include <MCP23017.h>
 
 
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+#include <Streaming.h>
 
 MCP23017 GPIOchipArray[] = {MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017()}; 
 
@@ -23,7 +16,7 @@ MCP23017 GPIOchipArray[] = {MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP2
 
 void setup()
 {
-  Serial.begin(9600); // set up serial
+  Serial.begin(115200); // set up serial
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   Wire.begin();           // Wire must be started!

@@ -11,17 +11,7 @@ SkaarhojUtils utils;
 
 #include <EEPROM.h>      // For storing IP numbers
 
-
-
-// No-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
-
+#include <Streaming.h>
 
 // Collects 16 samples, buffer:
 int roundRobinX[16];
@@ -34,7 +24,7 @@ int calibrationCoordinatesY[5];
 uint8_t checksumByte;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println(F("Welcome to the SKAARHOJ utils-library touchscreen calibration process!"));
   Serial.println(F("Please make sure your screen shows the SKAARHOJ monitor calibration chart edge to edge."));
   Serial.println(F("This chart is found in the same folder on your hard drive along with this example file (Monitor Calibration Chart.png)."));

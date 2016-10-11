@@ -1,16 +1,16 @@
 /*****************
- * Basis control for the SKAARHOJ E21TVS series devices
- * This example is programmed for ATEM TVS versions
- * The button rows are assumed to be configured as 1-2-3-4-5-6 (PGM) / 1-2-3-4-5-6 (PRV) / CUT, AUTO / KEY, MPL1
- *
- * This example also uses several custom libraries which you must install first.
- * Search for "#include" in this file to find the libraries. Then download the libraries from http://skaarhoj.com/wiki/index.php/Libraries_for_Arduino
- *
- * Works with ethernet-enabled arduino devices (Arduino Ethernet or a model with Ethernet shield)
- * Make sure to configure IP and addresses first using the sketch "ConfigEthernetAddresses"
- *
- * - kasper
- */
+   Basis control for the SKAARHOJ E21TVS series devices
+   This example is programmed for ATEM TVS versions
+   The button rows are assumed to be configured as 1-2-3-4-5-6 (PGM) / 1-2-3-4-5-6 (PRV) / CUT, AUTO / KEY, MPL1
+
+   This example also uses several custom libraries which you must install first.
+   Search for "#include" in this file to find the libraries. Then download the libraries from http://skaarhoj.com/wiki/index.php/Libraries_for_Arduino
+
+   Works with ethernet-enabled arduino devices (Arduino Ethernet or a model with Ethernet shield)
+   Make sure to configure IP and addresses first using the sketch "ConfigEthernetAddresses"
+
+   - kasper
+*/
 
 
 
@@ -21,13 +21,15 @@
 #include <EEPROM.h>      // For storing IP numbers
 #include <SkaarhojPgmspace.h>
 #include <Streaming.h>
+#include <SkaarhojTools.h>
+SkaarhojTools sTools(1);    // 0=No runtime serial logging, 1=Moderate runtime serial logging, 2=more verbose... etc.
 
 // Include ATEM library and make an instance:
 #include <ATEMbase.h>
 #include <ATEMext.h>
 ATEMext AtemSwitcher;
 
-//#include <MemoryFree.h>
+#include <MemoryFree.h>
 
 static uint8_t default_ip[] = {     // IP for Configuration Mode (192.168.10.99)
   192, 168, 10, 99
@@ -36,17 +38,6 @@ static uint8_t default_ip[] = {     // IP for Configuration Mode (192.168.10.99)
 uint8_t ip[4];        // Will hold the Arduino IP address
 uint8_t atem_ip[4];  // Will hold the ATEM IP address
 uint8_t mac[6];    // Will hold the Arduino Ethernet shield/board MAC address (loaded from EEPROM memory, set with ConfigEthernetAddresses example sketch)
-
-
-
-//// No-cost stream operator as described at
-//// http://arduiniana.org/libraries/streaming/
-//template<class T>
-//inline Print &operator <<(Print &obj, T arg)
-//{
-//  obj.print(arg);
-//  return obj;
-//}
 
 
 
@@ -68,21 +59,12 @@ int redled = 3;
 
 
 /*************************************************************
- *
- *
- *                     Webserver
- *
- *
+
+
+                       Webserver
+
+
  **********************************************************/
-
-MCP23017 GPIOchipArray[] = {
-  MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017()
-};
-word MCP23017_states[8];
-
-PCA9685 ledDriver;
-bool PCA9685_states[64];
-
 
 
 #define PREFIX ""
@@ -91,9 +73,9 @@ WebServer webserver(PREFIX, 80);
 void logoCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, bool tail_complete)
 {
   /* this data was taken from a PNG file that was converted to a C data structure
-   * by running it through the directfb-csource application.
-   * (Alternatively by PHPSH script "HeaderGraphicsWebInterfaceInUnitsPNG8.phpsh")
-   */
+     by running it through the directfb-csource application.
+     (Alternatively by PHPSH script "HeaderGraphicsWebInterfaceInUnitsPNG8.phpsh")
+  */
   P(logoData) = {
     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00,
     0x00, 0x0d, 0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x02, 0xa2,
@@ -1598,11 +1580,11 @@ void defaultCmd(WebServer & server, WebServer::ConnectionType type, char *url_ta
 
 
 /*************************************************************
- *
- *
- *                     MAIN PROGRAM CODE AHEAD
- *
- *
+
+
+                       MAIN PROGRAM CODE AHEAD
+
+
  **********************************************************/
 
 
@@ -1757,20 +1739,14 @@ void setup() {
   // Final Setup based on mode
   // *********************************
   if (isConfigMode)  {
-
-    for (uint8_t i = 0; i <= 7; i++)  {
-      GPIOchipArray[i].begin(i);
-      GPIOchipArray[i].init();
-      GPIOchipArray[i].internalPullupMask(65535);
-      GPIOchipArray[i].inputOutputMask(65535);  // All inputs
-    }
-
+    Serial << F("\nConfig mode\n");
     webserver.begin();
     webserver.setDefaultCommand(&defaultCmd);
     webserver.addCommand("form", &formCmd);
     webserver.addCommand("logo.png", &logoCmd);
   }
   else {
+    Serial << F("\nWork mode\n");
     // read buttons functions
     for (uint8_t i = 1; i <= 16; i++) {
       buttonsATEM[i - 1] = (EEPROM.read(600 + i));
@@ -1792,6 +1768,9 @@ void setup() {
       GPO1[i - 1] = EEPROM.read(300 + i);
       GPO2[i - 1] = EEPROM.read(310 + i);
     }
+    if (EEPROM.read(99) >1) {
+      EEPROM.write(99, 0);
+    }
     slider = EEPROM.read(99);
 
 
@@ -1809,11 +1788,6 @@ void setup() {
   }
 }
 
-bool firstTime = true;
-unsigned long counter = 0;
-bool deviation = false;
-int theSpeed = 10;
-
 bool AtemOnline = false;
 
 bool GPOstate[8] = {false, false, false, false, false, false, false, false};
@@ -1823,15 +1797,16 @@ void loop() {
   if (isConfigMode)  {
     webserver.processConnection();
     digitalWrite(redled, (((unsigned long)millis() >> 3) & B11000000) ? true : false);
+    if (millis() < 600000) {
     buttons.setDefaultColor((((unsigned long)millis() >> 3) & B11000000) ? 1 : 0); // Off by default
     buttons.setButtonColorsToDefault();
-    if (millis() > 600000) {
-      chipScan();
+    } else {
+      runTest();
     }
   }
   else {
     // Check for packets, respond to them etc. Keeping the connection alive!
-    AtemSwitcher.runLoop();
+    lDelay(0);
 
     // If the switcher has been initialized, check for button presses as reflect status of switcher in button lights:
     if (AtemSwitcher.hasInitialized())  {
@@ -1872,17 +1847,17 @@ void loop() {
 
 
 /*******************************
- * Set buttons functions
+   Set buttons functions
  *******************************/
 
 void commandDispatch() {
   // "T-bar" slider:
   if (utils.uniDirectionalSlider_hasMoved())  {
     AtemSwitcher.setTransitionPosition(slider, 10 * utils.uniDirectionalSlider_position());
-    //AtemSwitcher.delay(20);
+    lDelay(20);
     if (utils.uniDirectionalSlider_isAtEnd())  {
       AtemSwitcher.setTransitionPosition(slider, 0);
-      //AtemSwitcher.delay(5);
+      lDelay(5);
     }
   }
 
@@ -2286,7 +2261,7 @@ void commandDispatch() {
 }
 
 /*********************************
- * Set buttons colors
+   Set buttons colors
  *********************************/
 
 void setButtonColors() {
@@ -2579,7 +2554,7 @@ void setButtonColors() {
 
 
 /*************************
- * GPIO
+   GPIO
  *************************/
 
 void setTally()  {
@@ -4379,98 +4354,36 @@ void checkGPI()  {
           break;
       }
 
-      //AtemSwitcher.delay(100);  // to catch any rebounce from the switch
+      lDelay(100);  // to catch any rebounce from the switch
       break;  // Only send one command at a time!
     }
   }
 }
 
-void chipScan() {
-  if (firstTime)  Serial << "----\nMCP23017::\n";
-  for (uint8_t i = 0; i <= 7; i++)  {
-    word buttonStatus = GPIOchipArray[i].digitalWordRead();
-    if (firstTime)  {
-      Serial << "Board #" << i << ": ";
-      Serial.println(buttonStatus, BIN);
-      MCP23017_states[i] = buttonStatus;
-    }
-    else {
-      if (MCP23017_states[i] != buttonStatus)  {
-        Serial << "Iter." << counter << ": MCP23017, Board #" << i << ": ";
-        Serial.println(buttonStatus, BIN);
-        deviation = true;
-        theSpeed = 3;
-      }
-    }
-    delay(theSpeed);
-  }
-
-
-
-  if (firstTime)  Serial << "\n\nPCA9685::\n";
-  for (uint8_t i = 0; i <= 63; i++)  {
-    if (i != 48)  { // Don't address the broadcast address.
-      // Set up each board:
-      ledDriver.begin(i);  // Address pins A5-A0 set to B111000
-
-      if (firstTime)  {
-        if (ledDriver.init())  {
-          Serial << "\nBoard #" << i << " found\n";
-          PCA9685_states[i] = true;
-        }
-        else {
-          Serial << ".";
-          PCA9685_states[i] = false;
-        }
-      }
-      else {
-        bool ledDriverState = ledDriver.init();
-        if (ledDriverState != PCA9685_states[i])  {
-          Serial << "Iter." << counter << ": PCA9685, Board #" << i << " " << (ledDriver.init() ? "found" : "missing");
-          Serial << "\n";
-          deviation = true;
-          theSpeed = 3;
-        }
-        if (ledDriverState)  {
-          if (deviation)  {  // Blinks if there has been a deviation from expected:
-            for (uint8_t ii = 0; ii < 16; ii++)  {
-              ledDriver.setLEDDimmed(ii, counter % 2 ? 100 : 0);
-            }
-          }
-          else {
-            if (counter % 20 < 3)  { // 100% color: (3 seconds)
-              for (uint8_t ii = 0; ii < 16; ii++)  {
-                ledDriver.setLEDDimmed(ii, (counter % 20) * 50);
-              }
-            }
-            else if (counter % 20 < 15)  { // The random color programme:
-              for (uint8_t ii = 0; ii < 16; ii++)  {
-                ledDriver.setLEDDimmed(ii, random(0, 6) * 20);
-              }
-            }
-            else {  // Same intensity for all LEDs:
-              int randColor1 = random(0, 3) * 50;
-              int randColor2 = random(0, 3) * 50;
-              for (uint8_t ii = 0; ii < 16; ii++)  {
-                ledDriver.setLEDDimmed(ii, ii % 2 ? randColor1 : randColor2);
-              }
-            }
-          }
-        }
-      }
-    }
-    delay(theSpeed);
-  }
-  if (counter % 20 < 3)  {
-    delay(3000);
-  }
-
-
-  if (firstTime)  Serial << "\n\n----\nWaiting for Deviations:";
-  if (counter % (30 * 60) == 0)  Serial << "\n" << counter << " ";
-  if (counter % 30 == 0)  Serial << ".";
-
-  counter++;
-  firstTime = false;
+void runTest() {
+  buttons.testProgramme(65535);
+  lDelay(20);
 }
 
+
+/**
+   Local delay function
+*/
+void lDelay(unsigned long timeout)  {
+  unsigned long thisTime = millis();
+  do {
+    if (isConfigMode)  {
+      webserver.processConnection();
+    } else {
+      AtemSwitcher.runLoop();
+    }
+    Serial << F(".");
+    static int k = 1;
+    k++;
+    if (k > 100) {
+      k = 1;
+      Serial << F("\n");
+    }
+  }
+  while (!sTools.hasTimedOut(thisTime, timeout));
+}

@@ -41,17 +41,6 @@ uint8_t mac[6];    // Will hold the Arduino Ethernet shield/board MAC address (l
 
 
 
-//// No-cost stream operator as described at
-//// http://arduiniana.org/libraries/streaming/
-//template<class T>
-//inline Print &operator <<(Print &obj, T arg)
-//{
-//  obj.print(arg);
-//  return obj;
-//}
-
-
-
 // All related to library "SkaarhojBI8":
 #include "Wire.h"
 #include "MCP23017.h"
@@ -65,13 +54,6 @@ SkaarhojUtils utils;
 int greenled = 2;
 int redled = 3;
 
-MCP23017 GPIOchipArray[] = {
-  MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017(), MCP23017()
-};
-word MCP23017_states[8];
-
-PCA9685 ledDriver;
-bool PCA9685_states[64];
 
 /*************************************************************
  *
@@ -1008,10 +990,10 @@ void setup() {
   //  Serial << F("SKAARHOJ Device MAC address: ") << buffer << F(" - Checksum: ")
   //    << ((mac[0]+mac[1]+mac[2]+mac[3]+mac[4]+mac[5]) & 0xFF);
   if ((uint8_t)EEPROM.read(16) != ((mac[0] + mac[1] + mac[2] + mac[3] + mac[4] + mac[5]) & 0xFF))  {
-    /*    Serial << F("MAC address not found in EEPROM memory!\n") <<
+        Serial << F("MAC address not found in EEPROM memory!\n") <<
      F("Please load example sketch ConfigEthernetAddresses to set it.\n") <<
      F("The MAC address is found on the backside of your Ethernet Shield/Board\n (STOP)");
-     */    while (true);
+         while (true);
 
   }
 
@@ -1045,21 +1027,15 @@ void setup() {
   // Final Setup based on mode
   // *********************************
   if (isConfigMode)  {
-
-    for (uint8_t i = 0; i <= 7; i++)  {
-      GPIOchipArray[i].begin(i);
-      GPIOchipArray[i].init();
-      GPIOchipArray[i].internalPullupMask(65535);
-      GPIOchipArray[i].inputOutputMask(65535);  // All inputs
-    }
-
+    Serial << F("\nConfig mode\n");
     webserver.begin();
     webserver.setDefaultCommand(&defaultCmd);
     webserver.addCommand("form", &formCmd);
     webserver.addCommand("logo.png", &logoCmd);
   }
   else {
-
+    Serial << F("\nWork mode\n");
+    
     // Set Bi-color LED orange - indicates "connecting...":
     digitalWrite(redled, false);
     digitalWrite(greenled, false);
@@ -1069,6 +1045,9 @@ void setup() {
       buttonsATEM[i - 1] = (EEPROM.read(600 + i));
       buttons1function[i - 1] = (EEPROM.read(400 + i));
       buttons2function[i - 1] = (EEPROM.read(500 + i));
+    }
+    if (EEPROM.read(99) >1) {
+      EEPROM.write(99, 0);
     }
     slider = EEPROM.read(99);
 
@@ -1087,27 +1066,22 @@ void setup() {
   }
 }
 
-bool firstTime = true;
-unsigned long counter = 0;
-bool deviation = false;
-int theSpeed = 10;
-
 bool AtemOnline = false;
 
 void loop() {
   if (isConfigMode)  {
     webserver.processConnection();
+    digitalWrite(redled, (((unsigned long)millis() >> 3) & B11000000) ? true : false);
     if (millis() < 600000) {
-      digitalWrite(redled, (((unsigned long)millis() >> 3) & B11000000) ? true : false);
       buttons.setDefaultColor((((unsigned long)millis() >> 3) & B11000000) ? 1 : 0); // Off by default
       buttons.setButtonColorsToDefault();
     } else {
-      chipScan();
+      runTest();
     }
   }
   else {
     // Check for packets, respond to them etc. Keeping the connection alive!
-    AtemSwitcher.runLoop();
+    lDelay(0);
 
     // If the switcher has been initialized, check for button presses as reflect status of switcher in button lights:
     if (AtemSwitcher.hasInitialized())  {
@@ -1703,93 +1677,9 @@ void setButtonColors() {
   }
 }
 
-void chipScan() {
-  if (firstTime)  Serial << "----\nMCP23017::\n";
-  for (uint8_t i = 0; i <= 7; i++)  {
-    word buttonStatus = GPIOchipArray[i].digitalWordRead();
-    if (firstTime)  {
-      Serial << "Board #" << i << ": ";
-      Serial.println(buttonStatus, BIN);
-      MCP23017_states[i] = buttonStatus;
-    }
-    else {
-      if (MCP23017_states[i] != buttonStatus)  {
-        Serial << "Iter." << counter << ": MCP23017, Board #" << i << ": ";
-        Serial.println(buttonStatus, BIN);
-        deviation = true;
-        theSpeed = 3;
-      }
-    }
-    delay(theSpeed);
-  }
-
-
-
-  if (firstTime)  Serial << "\n\nPCA9685::\n";
-  for (uint8_t i = 0; i <= 63; i++)  {
-    if (i != 48)  { // Don't address the broadcast address.
-      // Set up each board:
-      ledDriver.begin(i);  // Address pins A5-A0 set to B111000
-
-      if (firstTime)  {
-        if (ledDriver.init())  {
-          Serial << "\nBoard #" << i << " found\n";
-          PCA9685_states[i] = true;
-        }
-        else {
-          Serial << ".";
-          PCA9685_states[i] = false;
-        }
-      }
-      else {
-        bool ledDriverState = ledDriver.init();
-        if (ledDriverState != PCA9685_states[i])  {
-          Serial << "Iter." << counter << ": PCA9685, Board #" << i << " " << (ledDriver.init() ? "found" : "missing");
-          Serial << "\n";
-          deviation = true;
-          theSpeed = 3;
-        }
-        if (ledDriverState)  {
-          if (deviation)  {  // Blinks if there has been a deviation from expected:
-            for (uint8_t ii = 0; ii < 16; ii++)  {
-              ledDriver.setLEDDimmed(ii, counter % 2 ? 100 : 0);
-            }
-          }
-          else {
-            if (counter % 20 < 3)  { // 100% color: (3 seconds)
-              for (uint8_t ii = 0; ii < 16; ii++)  {
-                ledDriver.setLEDDimmed(ii, (counter % 20) * 50);
-              }
-            }
-            else if (counter % 20 < 15)  { // The random color programme:
-              for (uint8_t ii = 0; ii < 16; ii++)  {
-                ledDriver.setLEDDimmed(ii, random(0, 6) * 20);
-              }
-            }
-            else {  // Same intensity for all LEDs:
-              int randColor1 = random(0, 3) * 50;
-              int randColor2 = random(0, 3) * 50;
-              for (uint8_t ii = 0; ii < 16; ii++)  {
-                ledDriver.setLEDDimmed(ii, ii % 2 ? randColor1 : randColor2);
-              }
-            }
-          }
-        }
-      }
-    }
-    delay(theSpeed);
-  }
-  if (counter % 20 < 3)  {
-    delay(3000);
-  }
-
-
-  if (firstTime)  Serial << "\n\n----\nWaiting for Deviations:";
-  if (counter % (30 * 60) == 0)  Serial << "\n" << counter << " ";
-  if (counter % 30 == 0)  Serial << ".";
-
-  counter++;
-  firstTime = false;
+void runTest() {
+  buttons.testProgramme(65535);
+  lDelay(20);
 }
 
 
@@ -1799,8 +1689,18 @@ void chipScan() {
 void lDelay(unsigned long timeout)  {
   unsigned long thisTime = millis();
   do {
-    AtemSwitcher.runLoop();
-    //Serial << F(".");
+    if (isConfigMode)  {
+      webserver.processConnection();
+    } else {
+      AtemSwitcher.runLoop();
+    }
+    Serial << F(".");
+    static int k = 1;
+    k++;
+    if (k > 100) {
+      k = 1;
+      Serial << F("\n");
+    }
   }
   while (!sTools.hasTimedOut(thisTime, timeout));
 }

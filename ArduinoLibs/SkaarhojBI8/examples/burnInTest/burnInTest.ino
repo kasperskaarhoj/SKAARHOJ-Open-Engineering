@@ -23,18 +23,10 @@ SkaarhojBI8 boardArray[] = {
   SkaarhojBI8(), SkaarhojBI8(), SkaarhojBI8(), SkaarhojBI8(), SkaarhojBI8(), SkaarhojBI8(), SkaarhojBI8(), SkaarhojBI8()};
 bool boardArrayEnabled[8];
 
-// no-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
-
+#include <Streaming.h>
 
 void setup() { 
-  Serial.begin(9600); // set up serial
+  Serial.begin(115200); // set up serial
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
   // Shows free memory:  

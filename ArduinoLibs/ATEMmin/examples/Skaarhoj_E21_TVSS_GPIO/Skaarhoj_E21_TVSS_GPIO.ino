@@ -18,29 +18,23 @@
 #include <Ethernet.h>
 #include <EEPROM.h>      // For storing IP numbers
 #include <SkaarhojPgmspace.h>
+#include <SkaarhojTools.h>
+#include <SkaarhojPgmspace.h>
+
+SkaarhojTools sTools(1);    // 0=No runtime serial logging, 1=Moderate runtime serial logging, 2=more verbose... etc.
 
 // Include ATEM library and make an instance:
 #include <ATEMbase.h>
 #include <ATEMmin.h>
 ATEMmin AtemSwitcher;
 
-//#include <MemoryFree.h>
+#include <MemoryFree.h>
+#include <Streaming.h>
 
 // Configure the IP addresses and MAC address with the sketch "ConfigEthernetAddresses":
 uint8_t ip[4];        // Will hold the Arduino IP address
 uint8_t atem_ip[4];  // Will hold the ATEM IP address
 uint8_t mac[6];    // Will hold the Arduino Ethernet shield/board MAC address (loaded from EEPROM memory, set with ConfigEthernetAddresses example sketch)
-
-
-
-// No-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
 
 
 
@@ -202,7 +196,7 @@ uint8_t buttonColorTracking[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 void loop() {
 
     // Check for packets, respond to them etc. Keeping the connection alive!
-    AtemSwitcher.runLoop();
+    lDelay(0);
   
       // If the switcher has been initialized, check for button presses as reflect status of switcher in button lights:
       if (AtemSwitcher.hasInitialized())  {
@@ -360,8 +354,10 @@ void slider()  {
   // "T-bar" slider:
   if (utils.uniDirectionalSlider_hasMoved())  {
     AtemSwitcher.setTransitionPosition(0, 10*utils.uniDirectionalSlider_position());
+    lDelay(20);
     if (utils.uniDirectionalSlider_isAtEnd())  {
       AtemSwitcher.setTransitionPosition(0, 0);
+      lDelay(5);
     }
   }
 }
@@ -418,34 +414,53 @@ void setTallyProgramOutputs()  {
 void checkGPI_setProgramBus()  {
   if (GPIOboard.inputDown(1))  {
     AtemSwitcher.setProgramInputVideoSource(0, 1);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
   if (GPIOboard.inputDown(2))  {
     AtemSwitcher.setProgramInputVideoSource(0, 2);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
   if (GPIOboard.inputDown(3))  {
     AtemSwitcher.setProgramInputVideoSource(0, 3);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
   if (GPIOboard.inputDown(4))  {
     AtemSwitcher.setProgramInputVideoSource(0, 4);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
   if (GPIOboard.inputDown(5))  {
     AtemSwitcher.setProgramInputVideoSource(0, 5);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
   if (GPIOboard.inputDown(6))  {
     AtemSwitcher.setProgramInputVideoSource(0, 6);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
   if (GPIOboard.inputDown(7))  {
     AtemSwitcher.setProgramInputVideoSource(0, 3010);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
   if (GPIOboard.inputDown(8))  {
     AtemSwitcher.setProgramInputVideoSource(0, 3020);
-    delay(3);  // to catch any rebounce from the switch
+    lDelay(100);  // to catch any rebounce from the switch
   }
+}
+
+
+/**
+   Local delay function
+*/
+void lDelay(unsigned long timeout)  {
+  unsigned long thisTime = millis();
+  do {
+    AtemSwitcher.runLoop();
+    Serial << F(".");
+    static int k = 1;
+    k++;
+    if (k > 100) {
+      k = 1;
+      Serial << F("\n");
+    }
+  }
+  while (!sTools.hasTimedOut(thisTime, timeout));
 }
