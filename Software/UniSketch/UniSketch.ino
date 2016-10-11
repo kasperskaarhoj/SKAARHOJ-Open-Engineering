@@ -6,11 +6,7 @@
 */
 
 // Define model (according to list further down):
-<<<<<<< HEAD
 #define SK_MODEL SK_RCP
-=======
-#define SK_MODEL SK_MICROTALLY
->>>>>>> origin/master
 
 // ****************************
 // NO USER CHANGE BELOW!

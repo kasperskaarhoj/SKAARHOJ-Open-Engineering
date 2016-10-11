@@ -174,12 +174,70 @@ uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int pulseCount, ui
   return macroIdx;
 }
 
+uint16_t fletcher16( uint8_t *data, int count )
+{
+   uint16_t sum1 = 0;
+   uint16_t sum2 = 0;
+   int index;
+
+   for( index = 0; index < count; ++index )
+   {
+      sum1 = (sum1 + data[index]) % 255;
+      sum2 = (sum2 + sum1) % 255;
+   }
+
+   return (sum2 << 8) | sum1;
+}
+
+static uint32_t lastSettingsRecall;
+
+bool presetChecksumMatches(uint8_t preset) {
+  uint8_t bytes[48];
+  for(int i = 0; i < 48; i++) {
+    bytes[i] = EEPROM.read(i);
+  }
+  uint16_t checksum = (bytes[46] << 8) | bytes[47];
+  return fletcher16(bytes, 46) == checksum;
+}
+
+void storeCameraPreset(uint8_t camera, uint8_t num) {
+  uint8_t preset[48];
+  memset(preset, 0, 48);
+  uint16_t checksum = fletcher16(preset, 46);
+  preset[46] = checksum >> 8;
+  preset[47] = checksum & 0xFF;
+
+  for(int i = 0; i < 48; i++) {
+    EEPROM.write(EEPROM_FILEBANK_START + num*48 + 1, preset[i]);
+  }
+}
+
+bool CCUPresetExists(uint8_t preset) {
+  if(preset < EEPROM_FILEBANK_NUM) {
+    if(EEPROM.read(EEPROM_FILEBANK_START + preset*48) == 1) {
+      Serial << "Preset " << preset << " exists!\n";
+      return true;
+    } 
+  }
+  return false;
+}
+
+bool recallCameraPreset(uint8_t camera, uint8_t preset) {
+  if(preset < EEPROM_FILEBANK_NUM) {
+    if(CCUPresetExists(preset) && presetChecksumMatches(preset)) {
+      Serial << "Recalled preset!!\n";
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // Button return colors:
 // 0 = off
 // 5 = dimmed
 // 1,2,3,4 = full (yellow), red, green, yellow
 // Bit 4 (16) = blink flag, filter out for KP01 buttons.
-// Bit 5 (32) = output bit; If this is set, a binary output will be set if coupled with this hwc.
 uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
   uint16_t retVal = 0;
   int tempInt = 0;
@@ -381,7 +439,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
 
     retVal = globalConfigMem[actionPtr + 3] == 5 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? (4 | 0x20) : 5);
-    if (!(AtemSwitcher[devIndex].getInputAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & B1)) {
+
+    // The availabilty should not affect the color in cycle mode
+    if (globalConfigMem[actionPtr + 3] != 5 && !(AtemSwitcher[devIndex].getInputAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & B1)) {
       retVal = 0;
     }
 
@@ -1844,6 +1904,38 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     break;
   case 43: // CCU Settings
+    if(CCUPresetExists(globalConfigMem[actionPtr + 3])) {
+      retVal = 5;
+    }
+    if(actDown) {
+      _systemHWcActionCacheFlag[HWc][actIdx] = true;
+      Serial << "Value: " << value << " Setting: " << globalConfigMem[actionPtr + 2] << "\n";
+      if(value == 0x8000) { // Holddown on default setting
+        switch(globalConfigMem[actionPtr + 2]) {
+          case 0:
+            storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+            break;
+          case 2: // Store
+            storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+            retVal = 2;
+            break;
+        }
+            break; 
+      } else if(value != 0x8000) { // Not hold down
+        _systemHWcActionCacheFlag[HWc][actIdx] = true;
+        switch(globalConfigMem[actionPtr + 2]) {
+          case 1: // Recall
+            retVal = (recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3])?5:2|0x10);
+            break;
+        }
+      }
+    }
+
+    if(actUp && _systemHWcActionCacheFlag[HWc][actIdx] && globalConfigMem[actionPtr + 2] == 0) {
+      recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+    }
+
     break;
   case 44: // Reset
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
@@ -1867,8 +1959,10 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
     }
     break;
+#endif
   case 45: // Video Tally
     retVal = 5;
+
     switch (globalConfigMem[actionPtr + 2]) {
     case 1:
     case 2:
@@ -1961,7 +2055,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     return retVal;
     break;
-#endif
 #if SK_MODEL != SK_RCP
   case 47: // Chroma Settings
     break;
