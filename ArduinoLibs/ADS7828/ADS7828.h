@@ -42,7 +42,7 @@ class ADS7828
     //pin states:
 
 	word analogRead();
-	word analogRead(uint8_t channel);
+	word analogRead(uint8_t channel, uint8_t oversampling=0);	// Oversampling from 0-4 (4=16 times, no more!!), 16 times = 9 ms, 1 time = 0,5ms
 	
 	//Our actual i2c address
 	byte _i2cAddress;
