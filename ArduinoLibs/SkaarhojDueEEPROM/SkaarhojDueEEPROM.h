@@ -26,6 +26,12 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #ifndef SkaarhojDueEEPROM_H
 #define SkaarhojDueEEPROM_H
 
+#ifdef ARDUINO_SKAARDUINO_DUE
+	#define I2C_BUFFER 32
+#else
+	#define I2C_BUFFER 30
+#endif
+
 #include "Arduino.h"
 
 #include "Wire.h"
@@ -35,14 +41,18 @@ class SkaarhojDueEEPROM
 
   private:
 	uint8_t _deviceaddress;
+	uint8_t _pageBuffer[I2C_BUFFER];
+	uint16_t _pageAddress;
 		
   public:
 	SkaarhojDueEEPROM();
 	
 	uint8_t read(uint16_t address);
 	void write(uint16_t address, uint8_t value);
+	void writeBuffered(uint16_t address, uint8_t value);
 	void writePage(uint16_t address, uint8_t * valueArray);
 	void readPage(uint16_t address, uint8_t * valueArray);
+	void commitPage();
 
 };
 #endif 
