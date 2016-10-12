@@ -117,7 +117,7 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
   EEPROM.write(20 + num * 4 + 1, start >> 1 & 0xFF);
   EEPROM.write(20 + num * 4 + 2, end >> 1 & 0xFF);
   EEPROM.write(20 + num * 4 + 3, hysteresis & 0x3F | (start & 1) << 7 | (end & 1) << 6);
-  
+
   EEPROM.write(20 + num * 4 + 4, 193 ^ EEPROM.read(20 + num * 4 + 1) ^ EEPROM.read(20 + num * 4 + 2) ^ EEPROM.read(20 + num * 4 + 3));
 }
 
@@ -1085,27 +1085,27 @@ void loadDefaultConfig() {
   memcpy_P(globalConfigMem, defaultControllerConfig, sizeof(defaultControllerConfig));
 }
 void moveEEPROMMemoryBlock(uint16_t from, uint16_t to, int16_t offset) { // From is inclusive, To is exclusive, To>From, offset>0 = move forward
-                                                                     //	Serial << "moveEEPROMMemoryBlock (" << from << "," << to << "," << offset << " )\n";
+                                                                         //	Serial << "moveEEPROMMemoryBlock (" << from << "," << to << "," << offset << " )\n";
   if (offset > 0) {
     for (uint16_t a = to; a > from; a--) {
-      #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
       EEPROM.writeBuffered(a - 1 + offset, EEPROM.read(a - 1));
-      #else
+#else
       EEPROM.write(a - 1 + offset, EEPROM.read(a - 1));
-      #endif
+#endif
     }
   } else if (offset < 0) {
     for (uint16_t a = from; a < to; a++) {
-      #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
       EEPROM.writeBuffered(a + offset, EEPROM.read(a));
-      #else
+#else
       EEPROM.write(a + offset, EEPROM.read(a));
-      #endif
+#endif
     }
   }
-  #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
   EEPROM.commitPage();
-  #endif
+#endif
 }
 uint16_t getPresetOffsetAddress(uint8_t presetNum) {
   uint16_t offset = 0;
@@ -1274,16 +1274,16 @@ void savePreset(uint8_t presetNum, uint16_t len) { // Len is excluding CSC byte.
       // Store memory:
       uint8_t csc = EEPROM_PRESET_TOKEN;
       for (uint16_t a = 0; a < len; a++) {
-        #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
         EEPROM.writeBuffered(EEPROM_PRESET_START + 7 + presetOffset + a, globalConfigMem[a]); // Loading memory with preset, byte by byte.
-        #else
+#else
         EEPROM.write(EEPROM_PRESET_START + 7 + presetOffset + a, globalConfigMem[a]);
-        #endif
+#endif
         csc ^= globalConfigMem[a];
       }
-      #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
       EEPROM.commitPage();
-      #endif
+#endif
       EEPROM.write(EEPROM_PRESET_START + 7 + presetOffset + len, csc); // Checksum byte
       EEPROM.write(EEPROM_PRESET_START + 5 + presetOffset, highByte(len + 1));
       EEPROM.write(EEPROM_PRESET_START + 6 + presetOffset, lowByte(len + 1));
@@ -1375,6 +1375,11 @@ void deviceDebugLevel(uint8_t debugLevel) {
         //  SonyRCP[deviceMap[a]].serialOutput(debugMode);
         break;
 #endif
+#if SK_DEVICES_VMIX
+      case SK_DEV_VMIX:
+        VMIX[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
       }
     }
   }
@@ -1442,6 +1447,13 @@ void deviceSetup() {
 //  SonyRCP[deviceMap[a]].begin();
 #endif
         break;
+      case SK_DEV_VMIX:
+#if SK_DEVICES_VMIX
+        Serial << F(": VMIX") << VMIX_initIdx;
+        deviceMap[a] = VMIX_initIdx++;
+		VMIX[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }
@@ -1492,6 +1504,12 @@ void deviceRunLoop() {
 //   deviceReady[a] = SonyRCP[deviceMap[a]].hasInitialized();
 #endif
         break;
+        case SK_DEV_VMIX:
+  #if SK_DEVICES_VMIX
+          VMIX[deviceMap[a]].runLoop();
+          deviceReady[a] = VMIX[deviceMap[a]].hasInitialized();
+  #endif
+          break;
       }
     }
   }
@@ -2240,7 +2258,7 @@ int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher,
     }
   }
 
-  //Serial << "In: " << inValue << " Lower: " << lower << " Upper: " << higher << " Result: " << constrain(inValue, lower, higher) << "\n";
+  // Serial << "In: " << inValue << " Lower: " << lower << " Upper: " << higher << " Result: " << constrain(inValue, lower, higher) << "\n";
   return constrain(inValue, lower, higher);
 }
 void storeMemory(uint8_t memPtr) {
@@ -2719,6 +2737,13 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
+                  case SK_DEV_VMIX:
+#if SK_DEVICES_VMIX
+                  retValueT = evaluateAction_VMIX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                    break;
                 }
               } else {
                 // Serial << "Device disabled!\n";

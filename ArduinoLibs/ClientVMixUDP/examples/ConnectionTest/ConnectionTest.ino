@@ -32,4 +32,18 @@ void setup() {
   VmixSwitcher.connect();
 }
 
-void loop() { VmixSwitcher.runLoop(); }
+void loop() {
+
+  VmixSwitcher.runLoop(1000);
+  Serial.println("SEND:CUT:");
+  VmixSwitcher.performCutAction(true);
+
+  VmixSwitcher.runLoop(1000);
+  Serial.println("SEND:FADER:");
+  VmixSwitcher.performFadeFader(2);
+
+  VmixSwitcher.runLoop(2000);
+  Serial.print("SEND:PREVIEW:"); Serial.println((VmixSwitcher.getPreviewInput() + 1) % 3); VmixSwitcher.setPreviewInput((VmixSwitcher.getPreviewInput() + 1) % 3);
+
+
+}

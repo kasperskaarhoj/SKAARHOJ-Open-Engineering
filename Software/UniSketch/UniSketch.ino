@@ -594,7 +594,10 @@ uint8_t SonyRCP_initIdx = 0;
 #endif
 
 #if SK_DEVICES_VMIX
-
+#include "ClientVMixUDP.h"
+ClientVMixUDP VMIX[SK_DEVICES_VMIX];
+uint8_t VMIX_initIdx = 0;
+#include "SK_DEV_VMIX.h";
 #endif
 
 /****************************************
