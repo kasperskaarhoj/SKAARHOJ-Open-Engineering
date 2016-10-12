@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -815,6 +815,9 @@ design rules under a new name.</description>
 <autorouter>
 <pass name="Default">
 <param name="RoutingGrid" value="4mil"/>
+<param name="AutoGrid" value="1"/>
+<param name="Efforts" value="0"/>
+<param name="TopRouterVariant" value="1"/>
 <param name="tpViaShape" value="round"/>
 <param name="PrefDir.1" value="*"/>
 <param name="PrefDir.2" value="0"/>
@@ -909,10 +912,12 @@ design rules under a new name.</description>
 <element name="SERIAL" library="SparkFun" package="2X4" value="M04X2" x="34.29" y="3.81" smashed="yes" rot="MR0">
 <attribute name="NAME" x="36.195" y="0" size="1.27" layer="26" ratio="10" rot="MR0"/>
 <attribute name="VALUE" x="39.37" y="-0.635" size="1.27" layer="28" rot="MR0"/>
+<attribute name="SKAARHOJ_ID" value="SK_2x4header" x="34.29" y="3.81" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="IC2" library="wsmith" package="TSSOP28" value="PCA9685" x="6.35" y="12.573" smashed="yes" rot="MR0">
 <attribute name="NAME" x="11.5206" y="10.4902" size="1.016" layer="26" ratio="10" rot="MR90"/>
 <attribute name="VALUE" x="0.1888" y="10.4902" size="1.016" layer="28" ratio="10" rot="MR90"/>
+<attribute name="SKAARHOJ_ID" value="SK_PCA9685" x="6.35" y="12.573" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="IC1" library="microchip" package="SSOP28" value="MCP23017SS" x="5.715" y="22.86" smashed="yes" rot="MR270">
 <attribute name="OC_NEWARK" value="31K2960" x="86.995" y="-69.85" size="1.778" layer="28" rot="MR270" display="off"/>
@@ -921,35 +926,71 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="1467674" x="86.995" y="-69.85" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="NAME" x="7.0749" y="25.796" size="1.27" layer="26" rot="MR0"/>
 <attribute name="VALUE" x="6.395" y="26.7599" size="1.27" layer="28" rot="MR270"/>
+<attribute name="SKAARHOJ_ID" value="SK_MCP23017" x="5.715" y="22.86" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="C1" library="SparkFun" package="0603-CAP" value="100nF" x="11.049" y="21.463" smashed="yes" rot="MR90">
 <attribute name="NAME" x="10.541" y="23.114" size="0.6096" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="9.906" y="20.447" size="0.4064" layer="28" font="vector" rot="MR90"/>
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="11.049" y="21.463" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="C2" library="SparkFun" package="0603-CAP" value="100nF" x="2.794" y="8.128" smashed="yes" rot="MR0">
 <attribute name="NAME" x="3.175" y="6.731" size="0.6096" layer="26" font="vector" rot="MR0"/>
 <attribute name="VALUE" x="3.81" y="6.985" size="0.4064" layer="28" font="vector" rot="MR0"/>
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="2.794" y="8.128" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="C3" library="SparkFun" package="0805" value="10uF" x="41.275" y="1.27" smashed="yes" rot="MR0">
 <attribute name="NAME" x="43.942" y="1.4605" size="0.7112" layer="26" rot="MR0"/>
 <attribute name="VALUE" x="42.291" y="-0.127" size="0.4064" layer="28" rot="MR0"/>
+<attribute name="SKAARHOJ_ID" value="SK_10uF" x="41.275" y="1.27" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
-<element name="R5" library="SparkFun" package="0603-RES" value="270" x="64.77" y="21.59" rot="MR0"/>
-<element name="R6" library="SparkFun" package="0603-RES" value="270" x="64.77" y="29.21" rot="MR0"/>
-<element name="R7" library="SparkFun" package="0603-RES" value="270" x="44.45" y="24.13" rot="MR0"/>
-<element name="R8" library="SparkFun" package="0603-RES" value="270" x="44.45" y="22.86" rot="MR0"/>
-<element name="R9" library="SparkFun" package="0603-RES" value="270" x="43.18" y="27.305" rot="MR90"/>
-<element name="R10" library="SparkFun" package="0603-RES" value="270" x="41.91" y="27.305" rot="MR90"/>
-<element name="R11" library="SparkFun" package="0603-RES" value="270" x="25.4" y="27.305" rot="MR90"/>
-<element name="R12" library="SparkFun" package="0603-RES" value="270" x="26.67" y="27.305" rot="MR90"/>
-<element name="R13" library="SparkFun" package="0603-RES" value="270" x="64.77" y="13.97" rot="MR0"/>
-<element name="R14" library="SparkFun" package="0603-RES" value="270" x="64.77" y="6.35" rot="MR0"/>
-<element name="R15" library="SparkFun" package="0603-RES" value="270" x="46.99" y="6.35" rot="MR0"/>
-<element name="R16" library="SparkFun" package="0603-RES" value="270" x="46.99" y="5.08" rot="MR0"/>
-<element name="R17" library="SparkFun" package="0603-RES" value="270" x="43.18" y="8.255" rot="MR90"/>
-<element name="R18" library="SparkFun" package="0603-RES" value="270" x="41.91" y="8.255" rot="MR90"/>
-<element name="R19" library="SparkFun" package="0603-RES" value="270" x="26.67" y="8.255" rot="MR90"/>
-<element name="R20" library="SparkFun" package="0603-RES" value="270" x="25.4" y="8.255" rot="MR90"/>
+<element name="R5" library="SparkFun" package="0603-RES" value="270" x="64.77" y="21.59" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="64.77" y="21.59" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R6" library="SparkFun" package="0603-RES" value="270" x="64.77" y="29.21" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="64.77" y="29.21" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R7" library="SparkFun" package="0603-RES" value="270" x="44.45" y="24.13" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="44.45" y="24.13" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R8" library="SparkFun" package="0603-RES" value="270" x="44.45" y="22.86" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="44.45" y="22.86" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R9" library="SparkFun" package="0603-RES" value="270" x="43.18" y="27.305" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="43.18" y="27.305" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R10" library="SparkFun" package="0603-RES" value="270" x="41.91" y="27.305" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="41.91" y="27.305" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R11" library="SparkFun" package="0603-RES" value="270" x="25.4" y="27.305" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="25.4" y="27.305" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R12" library="SparkFun" package="0603-RES" value="270" x="26.67" y="27.305" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="26.67" y="27.305" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R13" library="SparkFun" package="0603-RES" value="270" x="64.77" y="13.97" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="64.77" y="13.97" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R14" library="SparkFun" package="0603-RES" value="270" x="64.77" y="6.35" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="64.77" y="6.35" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R15" library="SparkFun" package="0603-RES" value="270" x="46.99" y="6.35" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="46.99" y="6.35" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R16" library="SparkFun" package="0603-RES" value="270" x="46.99" y="5.08" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="46.99" y="5.08" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R17" library="SparkFun" package="0603-RES" value="270" x="43.18" y="8.255" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="43.18" y="8.255" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R18" library="SparkFun" package="0603-RES" value="270" x="41.91" y="8.255" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="41.91" y="8.255" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R19" library="SparkFun" package="0603-RES" value="270" x="26.67" y="8.255" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="26.67" y="8.255" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R20" library="SparkFun" package="0603-RES" value="270" x="25.4" y="8.255" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="25.4" y="8.255" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
 <element name="B1" library="SKAARHOJ" package="NKK-KP01" value="KP01-RGB" x="19.05" y="10.16" rot="R90"/>
 <element name="B1ALT" library="SKAARHOJ" package="NKK-KP01" value="KP01-RGB" x="19.05" y="17.78" rot="R90"/>
 <element name="B2" library="SKAARHOJ" package="NKK-KP01" value="KP01-RGB" x="34.29" y="10.16" rot="R90"/>
@@ -970,25 +1011,55 @@ design rules under a new name.</description>
 <element name="IC3" library="wsmith" package="TSSOP28" value="PCA9685" x="93.218" y="20.701" smashed="yes" rot="MR270">
 <attribute name="NAME" x="94.4118" y="19.1406" size="1.016" layer="26" ratio="10" rot="MR0"/>
 <attribute name="VALUE" x="95.3008" y="14.5398" size="1.016" layer="28" ratio="10" rot="MR0"/>
+<attribute name="SKAARHOJ_ID" value="SK_PCA9685" x="93.218" y="20.701" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="C4" library="SparkFun" package="0603-CAP" value="100nF" x="93.218" y="26.289" smashed="yes" rot="MR180">
 <attribute name="NAME" x="90.043" y="26.416" size="0.6096" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="92.202" y="27.432" size="0.4064" layer="28" font="vector" rot="MR180"/>
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="93.218" y="26.289" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="R21" library="SparkFun" package="0603-RES" value="270" x="85.09" y="8.89" rot="MR180"/>
-<element name="R22" library="SparkFun" package="0603-RES" value="270" x="85.09" y="6.35" rot="MR180"/>
-<element name="R23" library="SparkFun" package="0603-RES" value="270" x="85.09" y="7.62" rot="MR180"/>
-<element name="R24" library="SparkFun" package="0603-RES" value="270" x="81.153" y="28.829" rot="MR180"/>
-<element name="R25" library="SparkFun" package="0603-RES" value="270" x="81.153" y="25.019" rot="MR180"/>
-<element name="R26" library="SparkFun" package="0603-RES" value="270" x="81.153" y="21.844" rot="MR180"/>
-<element name="R27" library="SparkFun" package="0603-RES" value="270" x="64.77" y="25.4" rot="MR0"/>
-<element name="R28" library="SparkFun" package="0603-RES" value="270" x="44.45" y="21.59" rot="MR0"/>
-<element name="R29" library="SparkFun" package="0603-RES" value="270" x="40.64" y="27.305" rot="MR90"/>
-<element name="R30" library="SparkFun" package="0603-RES" value="270" x="27.94" y="27.305" rot="MR90"/>
-<element name="R31" library="SparkFun" package="0603-RES" value="270" x="64.77" y="10.16" rot="MR0"/>
-<element name="R32" library="SparkFun" package="0603-RES" value="270" x="46.99" y="3.81" rot="MR0"/>
-<element name="R33" library="SparkFun" package="0603-RES" value="270" x="40.64" y="8.255" rot="MR90"/>
-<element name="R34" library="SparkFun" package="0603-RES" value="270" x="27.94" y="8.255" rot="MR90"/>
+<element name="R21" library="SparkFun" package="0603-RES" value="270" x="85.09" y="8.89" rot="MR180">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="85.09" y="8.89" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="R22" library="SparkFun" package="0603-RES" value="270" x="85.09" y="6.35" rot="MR180">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="85.09" y="6.35" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="R23" library="SparkFun" package="0603-RES" value="270" x="85.09" y="7.62" rot="MR180">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="85.09" y="7.62" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="R24" library="SparkFun" package="0603-RES" value="270" x="81.153" y="28.829" rot="MR180">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="81.153" y="28.829" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="R25" library="SparkFun" package="0603-RES" value="270" x="81.153" y="25.019" rot="MR180">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="81.153" y="25.019" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="R26" library="SparkFun" package="0603-RES" value="270" x="81.153" y="21.844" rot="MR180">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="81.153" y="21.844" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="R27" library="SparkFun" package="0603-RES" value="270" x="64.77" y="25.4" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="64.77" y="25.4" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R28" library="SparkFun" package="0603-RES" value="270" x="44.45" y="21.59" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="44.45" y="21.59" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R29" library="SparkFun" package="0603-RES" value="270" x="40.64" y="27.305" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="40.64" y="27.305" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R30" library="SparkFun" package="0603-RES" value="270" x="27.94" y="27.305" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="27.94" y="27.305" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R31" library="SparkFun" package="0603-RES" value="270" x="64.77" y="10.16" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="64.77" y="10.16" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R32" library="SparkFun" package="0603-RES" value="270" x="46.99" y="3.81" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="46.99" y="3.81" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R33" library="SparkFun" package="0603-RES" value="270" x="40.64" y="8.255" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="40.64" y="8.255" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="R34" library="SparkFun" package="0603-RES" value="270" x="27.94" y="8.255" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_270R" x="27.94" y="8.255" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
 <element name="B9" library="SKAARHOJ" package="NKK-KP01" value="KP01-RGB" x="80.01" y="10.16" smashed="yes" rot="R90">
 <attribute name="NAME" x="79.375" y="10.795" size="1.27" layer="21" rot="R180"/>
 </element>

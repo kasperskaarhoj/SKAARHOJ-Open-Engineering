@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -2471,7 +2471,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="L4" library="SparkFun" deviceset="INDUCTOR" device="0805" value="ILHB0805ER121V"/>
 <part name="C9" library="SparkFun" deviceset="CAP" device="0805" value="22uF"/>
 <part name="C10" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
-<part name="C12" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
+<part name="C12" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF">
+<attribute name="TEST2" value="testt2"/>
+</part>
 <part name="U$24" library="SparkFun" deviceset="5V" device=""/>
 <part name="SERIAL1" library="SKAARHOJ" deviceset="M04X2" device="M2X4SMALLER"/>
 </parts>
@@ -2518,7 +2520,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="L4" gate="G$1" x="116.84" y="101.6" rot="R90"/>
 <instance part="C9" gate="G$1" x="139.7" y="93.98"/>
 <instance part="C10" gate="G$1" x="127" y="93.98"/>
-<instance part="C12" gate="G$1" x="106.68" y="93.98"/>
+<instance part="C12" gate="G$1" x="106.68" y="93.98">
+<attribute name="TEST2" x="106.68" y="93.98" size="1.778" layer="96" display="off"/>
+</instance>
 <instance part="U$24" gate="G$1" x="139.7" y="104.14"/>
 <instance part="SERIAL1" gate="G$1" x="73.66" y="73.66"/>
 </instances>

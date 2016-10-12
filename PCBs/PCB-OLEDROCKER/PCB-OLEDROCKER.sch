@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -9886,7 +9886,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="C10" library="SparkFun" deviceset="CAP" device="0603-CAP" value="2.2uF"/>
 <part name="U$12" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$13" library="microbuilder" deviceset="GND" device=""/>
-<part name="C11" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C11" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$16" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$5" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$23" library="SKAARHOJ" deviceset="PCA9671" device=""/>
@@ -9894,7 +9894,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="U$1" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$6" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
-<part name="C1" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C1" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$11" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="U$18" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10K"/>
@@ -9909,7 +9909,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="C3" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C12" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$24" library="SparkFun" deviceset="5V" device=""/>
-<part name="C5" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C5" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$3" library="microbuilder" deviceset="GND" device=""/>
 <part name="L1" library="SparkFun" deviceset="INDUCTOR" device="0805" value="ILHB0805ER121V"/>
 <part name="C7" library="SparkFun" deviceset="CAP" device="0805" value="22uF"/>

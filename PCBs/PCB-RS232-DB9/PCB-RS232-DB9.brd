@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1148,38 +1148,85 @@ design rules under a new name.</description>
 <attribute name="MF" value="" x="16" y="4" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_FARNELL" value="unknown" x="16" y="4" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="C11" library="OPL" package="C0603" value="100nF/50V" x="28.65" y="32.242" rot="R270"/>
-<element name="U$32" library="SKAARHOJ" package="SSOP24" value="MAX3107" x="26.192" y="26.142" rot="R180"/>
-<element name="C13" library="OPL" package="C0603" value="100nF/50V" x="30.682" y="32.338" rot="R270"/>
-<element name="C14" library="OPL" package="C0603" value="100nF/50V" x="23.638" y="20.078"/>
-<element name="C15" library="OPL" package="C0603" value="100nF/50V" x="28.782" y="20.816" rot="R180"/>
+<element name="C11" library="OPL" package="C0603" value="100nF/50V" x="28.65" y="32.242" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="28.65" y="32.242" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
+<element name="U$32" library="SKAARHOJ" package="SSOP24" value="MAX3107" x="26.192" y="26.142" rot="R180">
+<attribute name="SKAARHOJ_ID" value="SK_MAX3107" x="26.192" y="26.142" size="1.778" layer="28" rot="R180" display="off"/>
+</element>
+<element name="C13" library="OPL" package="C0603" value="100nF/50V" x="30.682" y="32.338" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="30.682" y="32.338" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
+<element name="C14" library="OPL" package="C0603" value="100nF/50V" x="23.638" y="20.078">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="23.638" y="20.078" size="1.778" layer="28" display="off"/>
+</element>
+<element name="C15" library="OPL" package="C0603" value="100nF/50V" x="28.782" y="20.816" rot="R180">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="28.782" y="20.816" size="1.778" layer="28" rot="R180" display="off"/>
+</element>
 <element name="Y1" library="SparkFun" package="HC49US" value="" x="29.492" y="13.95" rot="R270"/>
-<element name="R4" library="microbuilder" package="0603" value="1K5" x="11.776" y="25.5" rot="R270"/>
-<element name="R1" library="microbuilder" package="0603" value="1K5" x="11.632" y="29.818" rot="R270"/>
-<element name="Q1" library="microbuilder" package="SOT23-R" value="BSS138" x="9.054" y="25.554" rot="R90"/>
-<element name="Q2" library="microbuilder" package="SOT23-R" value="BSS138" x="8.99" y="29.872" rot="R90"/>
-<element name="SERIAL1" library="SKAARHOJ" package="M2X4SMALLER" value="M04X2M2X4SMALLER" x="4.572" y="27.432"/>
-<element name="L4" library="SparkFun" package="0805" value="ILHB0805ER121V" x="13.884" y="33.358" rot="R270"/>
-<element name="C9" library="SparkFun" package="0805" value="22uF" x="15.916" y="33.454" rot="R270"/>
-<element name="C2" library="SparkFun" package="0603-CAP" value="100nF" x="11.916" y="33.358" rot="R270"/>
+<element name="R4" library="microbuilder" package="0603" value="1K5" x="11.776" y="25.5" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_1K5" x="11.776" y="25.5" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
+<element name="R1" library="microbuilder" package="0603" value="1K5" x="11.632" y="29.818" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_1K5" x="11.632" y="29.818" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
+<element name="Q1" library="microbuilder" package="SOT23-R" value="BSS138" x="9.054" y="25.554" rot="R90">
+<attribute name="SKAARHOJ_ID" value="SK_BSS138" x="9.054" y="25.554" size="1.778" layer="28" rot="R90" display="off"/>
+</element>
+<element name="Q2" library="microbuilder" package="SOT23-R" value="BSS138" x="8.99" y="29.872" rot="R90">
+<attribute name="SKAARHOJ_ID" value="SK_BSS138" x="8.99" y="29.872" size="1.778" layer="28" rot="R90" display="off"/>
+</element>
+<element name="SERIAL1" library="SKAARHOJ" package="M2X4SMALLER" value="M04X2M2X4SMALLER" x="4.572" y="27.432">
+<attribute name="SKAARHOJ_ID" value="SK_2x4header" x="4.572" y="27.432" size="1.778" layer="28" display="off"/>
+</element>
+<element name="L4" library="SparkFun" package="0805" value="ILHB0805ER121V" x="13.884" y="33.358" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_10uHBEAD" x="13.884" y="33.358" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
+<element name="C9" library="SparkFun" package="0805" value="22uF" x="15.916" y="33.454" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_22uF" x="15.916" y="33.454" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
+<element name="C2" library="SparkFun" package="0603-CAP" value="100nF" x="11.916" y="33.358" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="11.916" y="33.358" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
 <element name="U$19" library="SKAARHOJ" package="2BITADDR_SMALL" value="2BITADDRSMALL" x="20.85" y="34.004" rot="R90"/>
-<element name="U2" library="microbuilder" package="SOT23-5" value="MIC5205-3.3YM5" x="20.112" y="23.934"/>
-<element name="C5" library="SparkFun" package="0805" value="10uF" x="24.084" y="32.136"/>
-<element name="PC2" library="rcl" package="PANASONIC_D" value="47u" x="16.54" y="28.41"/>
+<element name="U2" library="microbuilder" package="SOT23-5" value="MIC5205-3.3YM5" x="20.112" y="23.934">
+<attribute name="SKAARHOJ_ID" value="SK_MIC5205_3.3YM5" x="20.112" y="23.934" size="1.778" layer="28" display="off"/>
+</element>
+<element name="C5" library="SparkFun" package="0805" value="10uF" x="24.084" y="32.136">
+<attribute name="SKAARHOJ_ID" value="SK_10uF" x="24.084" y="32.136" size="1.778" layer="28" display="off"/>
+</element>
+<element name="PC2" library="rcl" package="PANASONIC_D" value="47u" x="16.54" y="28.41">
+<attribute name="SKAARHOJ_ID" value="SK_47uF" x="16.54" y="28.41" size="1.778" layer="28" display="off"/>
+</element>
 <element name="SJ6" library="SparkFun" package="SJ_2S" value="SOLDERJUMPERNC" x="1" y="9" rot="R270"/>
 <element name="IC2" library="maxim" package="SO16L" value="MAX232ECWE" x="15.24" y="13.462" rot="R180">
 <attribute name="MPN" value="MAX232ECWE+" x="15.24" y="13.462" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_NEWARK" value="67K4440" x="15.24" y="13.462" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="OC_FARNELL" value="9724435" x="15.24" y="13.462" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="MAXIM" x="15.24" y="13.462" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="SKAARHOJ_ID" value="SK_MAX232" x="15.24" y="13.462" size="1.778" layer="28" rot="R180" display="off"/>
 </element>
-<element name="C19" library="SparkFun" package="0805" value="10uF" x="16.764" y="22.098" rot="R90"/>
-<element name="C20" library="SparkFun" package="0805" value="10uF/16V" x="14.478" y="21.336"/>
-<element name="C21" library="SparkFun" package="0805" value="10uF" x="19.304" y="20.828"/>
-<element name="C22" library="SparkFun" package="0805" value="10uF/16V" x="11.43" y="21.336"/>
-<element name="C23" library="SparkFun" package="0603-CAP" value="100nF" x="21.844" y="9.906" rot="R90"/>
-<element name="R2" library="microbuilder" package="0603" value="3K3" x="24.13" y="16.51" rot="R270"/>
-<element name="R3" library="microbuilder" package="0603" value="6K8" x="24.13" y="12.7" rot="R270"/>
+<element name="C19" library="SparkFun" package="0805" value="10uF" x="16.764" y="22.098" rot="R90">
+<attribute name="SKAARHOJ_ID" value="SK_10uF" x="16.764" y="22.098" size="1.778" layer="28" rot="R90" display="off"/>
+</element>
+<element name="C20" library="SparkFun" package="0805" value="10uF/16V" x="14.478" y="21.336">
+<attribute name="SKAARHOJ_ID" value="SK_10uF" x="14.478" y="21.336" size="1.778" layer="28" display="off"/>
+</element>
+<element name="C21" library="SparkFun" package="0805" value="10uF" x="19.304" y="20.828">
+<attribute name="SKAARHOJ_ID" value="SK_10uF" x="19.304" y="20.828" size="1.778" layer="28" display="off"/>
+</element>
+<element name="C22" library="SparkFun" package="0805" value="10uF/16V" x="11.43" y="21.336">
+<attribute name="SKAARHOJ_ID" value="SK_10uF" x="11.43" y="21.336" size="1.778" layer="28" display="off"/>
+</element>
+<element name="C23" library="SparkFun" package="0603-CAP" value="100nF" x="21.844" y="9.906" rot="R90">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="21.844" y="9.906" size="1.778" layer="28" rot="R90" display="off"/>
+</element>
+<element name="R2" library="microbuilder" package="0603" value="3K3" x="24.13" y="16.51" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_3K3" x="24.13" y="16.51" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
+<element name="R3" library="microbuilder" package="0603" value="6K8" x="24.13" y="12.7" rot="R270">
+<attribute name="SKAARHOJ_ID" value="SK_6K8" x="24.13" y="12.7" size="1.778" layer="28" rot="R270" display="off"/>
+</element>
 </elements>
 <signals>
 <signal name="GND" class="1">
