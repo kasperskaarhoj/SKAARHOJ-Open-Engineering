@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_E21SLD
 
 // ****************************
 // NO USER CHANGE BELOW!
@@ -58,6 +58,7 @@
 #define SK_DEV_SMARTSCOPE 4
 #define SK_DEV_BMDCAMCTRL 5
 #define SK_DEV_SONYRCP 6
+#define SK_DEV_VMIX 7
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -283,7 +284,7 @@ bool _calibrateMode = false;
 bool debugMode = SK_SERIAL_OUTPUT;
 
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
-long pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);
+int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);
 uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const uint16_t value = 0);
 uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const bool actUp = false, const int16_t pulses = 0, const int16_t value = 0x8000, const uint8_t specificAction = 0);
 uint16_t getNumOfActions(const uint8_t HWcNum);
@@ -400,7 +401,7 @@ void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000) {
     strncpy_P(_extRetLong + _extRetLongPtr, longLabel, 17 - 1 - _extRetLongPtr);
     _extRetLongPtr += strlen_P(longLabel);
   }
-  if (number != 0x8000) {
+  if (number != (int16_t)0x8000) {
     itoa(number, _strCache, 10);
     if (17 - 1 - _extRetLongPtr > 0) {
       strncpy(_extRetLong + _extRetLongPtr, _strCache, 17 - 1 - _extRetLongPtr);
@@ -530,6 +531,8 @@ uint16_t extRetValHash() {
 #define EEPROM_FILEBANK_START 4095-6*48
 #define EEPROM_FILEBANK_NUM 6
 
+#define BINARY_EVENT INT16_MIN
+
 /****************************************
 
    INCLUDING DEVICE RELATED LIBRARIES
@@ -590,11 +593,16 @@ uint8_t SonyRCP_initIdx = 0;
 #include "SK_DEV_SONYRCP.h";
 #endif
 
+#if SK_DEVICES_VMIX
+
+#endif
+
 /****************************************
 
    INCLUDING BASIC FUNCTIONS
 
  ****************************************/
+
 #include "SKAARHOJbase.h"
 #include "SKAARHOJwebserver.h"
 
@@ -684,6 +692,8 @@ uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const 
 */
 void setup() {
 
+  delay(10000);
+
   initController(); // Initializes Serial, Hardware, Config mode, Ethernet
   Serial << F("Compiled: ") << __DATE__ << F(" ") << __TIME__ << F("\n");
 
@@ -695,7 +705,7 @@ void setup() {
     deviceSetup(); // Sets up hardware devices (those enabled) we communicate to. No initialization though, this must happen automatically in the runloop of each device
   }
 
-  Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
+  //Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
   
   Serial << F("setup() Done\n-----------------------------\n");
 }
