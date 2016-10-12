@@ -49,10 +49,96 @@ class SkaarhojDueEEPROM
 	
 	uint8_t read(uint16_t address);
 	void write(uint16_t address, uint8_t value);
+
+	#ifdef ARDUINO_SKAARDUINO_DUE
 	void writeBuffered(uint16_t address, uint8_t value);
+	void commitPage();
+	#endif
+
 	void writePage(uint16_t address, uint8_t * valueArray);
 	void readPage(uint16_t address, uint8_t * valueArray);
-	void commitPage();
-
 };
+
+/**
+ * Constructor
+ */
+SkaarhojDueEEPROM::SkaarhojDueEEPROM() {
+	_deviceaddress = 87;
+  _pageAddress = 0xFFFF;
+}
+
+#ifdef ARDUINO_SKAARDUINO_DUE
+void SkaarhojDueEEPROM::writeBuffered(uint16_t address, uint8_t value) {
+  if(_pageAddress != 0xFFFF) {
+    if((address & ~31) != _pageAddress) {
+      commitPage();
+    }
+  }
+
+  if(_pageAddress == 0xFFFF) {
+    _pageAddress = (address & ~31);
+    readPage(_pageAddress, _pageBuffer);
+  }
+  _pageBuffer[address & 31] = value;
+}
+
+void SkaarhojDueEEPROM::commitPage() {
+  if(_pageAddress != 0xFFFF) {
+    Serial.println(_pageAddress);
+    writePage(_pageAddress, _pageBuffer);
+    _pageAddress = 0xFFFF;
+  }
+}
+#endif
+
+void SkaarhojDueEEPROM::write(uint16_t address, uint8_t value) {
+  Wire.beginTransmission(_deviceaddress);
+  Wire.write(address >> 8); // MSB
+  Wire.write(address & 0xFF); // LSB
+  Wire.write(value);
+  Wire.endTransmission();
+  
+  // Wait for EEPROM to be ready..
+  while(Wire.endTransmission() != 0);
+}
+
+uint8_t SkaarhojDueEEPROM::read(uint16_t address) {
+  Wire.beginTransmission(_deviceaddress);
+  Wire.write(address >> 8); // MSB
+  Wire.write(address & 0xFF); // LSB
+  Wire.endTransmission();
+  Wire.requestFrom(_deviceaddress, (uint8_t)1);
+  if (Wire.available()) {
+    return Wire.read();
+  } else return 0xFF;
+}
+
+void SkaarhojDueEEPROM::writePage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array (not 32, because last two bytes doesn't get written correctly for some reason - maybe the I2C buffers size on ARduino?)
+  Wire.beginTransmission(_deviceaddress);
+  Wire.write(address >> 8); // MSB
+  Wire.write(address & 0xE0); // LSB
+
+  for(uint8_t i=0; i<I2C_BUFFER; i++)	{
+	  Wire.write(valueArray[i]);
+  }
+  Wire.endTransmission();
+  
+  // Wait for EEPROM to be ready..
+  while(Wire.endTransmission() != 0);
+}
+
+void SkaarhojDueEEPROM::readPage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array
+	//delay(5);  	// Without this delay it has been seen that it a) could stall for up to 2 seconds in reading and b) that the read values are bogus!
+  Wire.beginTransmission(_deviceaddress);
+  Wire.write(address >> 8); // MSB
+  Wire.write(address & 0xE0); // LSB
+  Wire.endTransmission();
+
+  Wire.requestFrom(_deviceaddress, (uint8_t)I2C_BUFFER);
+
+  for(uint8_t i=0; i<I2C_BUFFER; i++)	{
+	  valueArray[i] = Wire.read();
+  }
+}
+
 #endif 
