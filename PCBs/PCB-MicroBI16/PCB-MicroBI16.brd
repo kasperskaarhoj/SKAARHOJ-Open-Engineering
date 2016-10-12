@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -914,19 +914,34 @@ design rules under a new name.</description>
 <element name="B1" library="SKAARHOJ" package="NKK-NP01_LESSHOLES3" value="NKK-NP01-SINGLECOLOR-LC1ONLYL" x="7" y="9.75" rot="R90"/>
 <element name="B2" library="SKAARHOJ" package="NKK-NP01_LESSHOLES3" value="NKK-NP01-SINGLECOLOR-LC1ONLYL" x="21.75" y="9.75" rot="R90"/>
 <element name="B4" library="SKAARHOJ" package="NKK-NP01_LESSHOLES2" value="NKK-NP01-SINGLECOLOR-LC1ONLY" x="36.5" y="9.75" rot="R90"/>
-<element name="U$1" library="SKAARHOJ" package="SKAARDUINO_BACK_PTH_SERIAL" value="SKAARDUINO_BACK_SERIAL" x="3.3401" y="-0.508" rot="MR90"/>
-<element name="IC2" library="wsmith" package="TSSOP28" value="PCA9685" x="4.39" y="5" rot="MR270"/>
+<element name="U$1" library="SKAARHOJ" package="SKAARDUINO_BACK_PTH_SERIAL" value="SKAARDUINO_BACK_SERIAL" x="3.3401" y="-0.508" rot="MR90">
+<attribute name="SKAARHOJ_ID" value="SK_2x4header" x="3.3401" y="-0.508" size="1.778" layer="28" rot="MR90" display="off"/>
+</element>
+<element name="IC2" library="wsmith" package="TSSOP28" value="PCA9685" x="4.39" y="5" rot="MR270">
+<attribute name="SKAARHOJ_ID" value="SK_PCA9685" x="4.39" y="5" size="1.778" layer="28" rot="MR270" display="off"/>
+</element>
 <element name="IC1" library="microchip" package="SSOP28" value="MCP23017SS" x="20.619" y="5.254" rot="MR180">
 <attribute name="MF" value="MICROCHIP" x="20.619" y="12.754" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="MCP23017-E/SS" x="20.619" y="12.754" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="OC_FARNELL" value="1467674" x="20.619" y="12.754" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="OC_NEWARK" value="31K2960" x="20.619" y="12.754" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="SKAARHOJ_ID" value="SK_MCP23017" x="20.619" y="5.254" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="C1" library="SparkFun" package="0603-CAP" value="100nF" x="22" y="11" rot="MR0"/>
-<element name="C2" library="SparkFun" package="0603-CAP" value="100nF" x="7.5" y="12" rot="MR270"/>
-<element name="R18" library="SparkFun" package="0603-RES" value="100R" x="11" y="2.5" rot="MR0"/>
-<element name="R19" library="SparkFun" package="0603-RES" value="100R" x="11" y="4.5" rot="MR0"/>
-<element name="R20" library="SparkFun" package="0603-RES" value="100R" x="11" y="6.5" rot="MR0"/>
+<element name="C1" library="SparkFun" package="0603-CAP" value="100nF" x="22" y="11" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="22" y="11" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="C2" library="SparkFun" package="0603-CAP" value="100nF" x="7.5" y="12" rot="MR270">
+<attribute name="SKAARHOJ_ID" value="SK_100nF" x="7.5" y="12" size="1.778" layer="28" rot="MR270" display="off"/>
+</element>
+<element name="R18" library="SparkFun" package="0603-RES" value="100R" x="11" y="2.5" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_100R" x="11" y="2.5" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R19" library="SparkFun" package="0603-RES" value="100R" x="11" y="4.5" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_100R" x="11" y="4.5" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
+<element name="R20" library="SparkFun" package="0603-RES" value="100R" x="11" y="6.5" rot="MR0">
+<attribute name="SKAARHOJ_ID" value="SK_100R" x="11" y="6.5" size="1.778" layer="28" rot="MR0" display="off"/>
+</element>
 </elements>
 <signals>
 <signal name="5V" class="1">

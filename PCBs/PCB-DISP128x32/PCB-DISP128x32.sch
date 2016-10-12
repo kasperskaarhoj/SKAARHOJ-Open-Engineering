@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -2458,7 +2458,7 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <part name="U$13" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$14" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$15" library="microbuilder" deviceset="3.3V" device=""/>
-<part name="C11" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C11" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$16" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$4" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$5" library="SparkFun" deviceset="5V" device=""/>
@@ -2467,7 +2467,7 @@ Basic Inductor/Choke - 0603 and 1206. Footprints are not proven and vary greatly
 <part name="U$1" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$6" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
-<part name="C1" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C1" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$18" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 <part name="C31" library="SparkFun" deviceset="CAP" device="0805" value="10uF"/>
 <part name="L4" library="SparkFun" deviceset="INDUCTOR" device="0805" value="ILHB0805ER121V"/>

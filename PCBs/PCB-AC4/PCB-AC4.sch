@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1823,7 +1823,7 @@ Source: www.ti.com .. ADS7828.pdf</description>
 <part name="U$1" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$6" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
-<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="IC1" library="burr-brown" deviceset="ADS7828" device=""/>
 <part name="C10" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C11" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
@@ -1857,7 +1857,7 @@ Source: www.ti.com .. ADS7828.pdf</description>
 <part name="U$11" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$12" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND8" library="SparkFun" deviceset="GND" device=""/>
-<part name="C7" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C7" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$19" library="SKAARHOJ" deviceset="2BITADDR" device="SMALL" value="2BITADDRSMALL"/>
 <part name="U$13" library="SKAARHOJ" deviceset="2BITADDR" device="SMALL"/>
 </parts>
