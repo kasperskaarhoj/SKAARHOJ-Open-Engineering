@@ -1372,12 +1372,32 @@ void deviceDebugLevel(uint8_t debugLevel) {
 #endif
 #if SK_DEVICES_SONYRCP
       case SK_DEV_SONYRCP:
-        //  SonyRCP[deviceMap[a]].serialOutput(debugMode);
+        SonyRCP[deviceMap[a]].serialOutput(debugMode);
         break;
 #endif
 #if SK_DEVICES_VMIX
       case SK_DEV_VMIX:
         VMIX[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_ROLANDVR50
+      case SK_DEV_ROLANDVR50:
+        ROLANDVR50[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_PANAAWHEX
+      case SK_DEV_PANAAWHEX:
+        PANAAWHEX[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_MATROXMONARCH
+      case SK_DEV_MATROXMONARCH:
+        MATROXMONARCH[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_H264REC
+      case SK_DEV_H264REC:
+        H264REC[deviceMap[a]].serialOutput(debugMode);
         break;
 #endif
       }
@@ -1444,14 +1464,42 @@ void deviceSetup() {
 #if SK_DEVICES_SONYRCP
         Serial << F(": SONYRCP") << SonyRCP_initIdx;
         deviceMap[a] = SonyRCP_initIdx++;
-//  SonyRCP[deviceMap[a]].begin();
+        SonyRCP[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       case SK_DEV_VMIX:
 #if SK_DEVICES_VMIX
         Serial << F(": VMIX") << VMIX_initIdx;
         deviceMap[a] = VMIX_initIdx++;
-		VMIX[deviceMap[a]].begin(deviceIP[a]);
+        VMIX[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_ROLANDVR50:
+#if SK_DEVICES_ROLANDVR50
+        Serial << F(": ROLANDVR50") << ROLANDVR50_initIdx;
+        deviceMap[a] = ROLANDVR50_initIdx++;
+        ROLANDVR50[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_PANAAWHEX:
+#if SK_DEVICES_PANAAWHEX
+        Serial << F(": PANAAWHEX") << PANAAWHEX_initIdx;
+        deviceMap[a] = PANAAWHEX_initIdx++;
+        PANAAWHEX[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_MATROXMONARCH:
+#if SK_DEVICES_MATROXMONARCH
+        Serial << F(": MATROXMONARCH") << MATROXMONARCH_initIdx;
+        deviceMap[a] = MATROXMONARCH_initIdx++;
+        MATROXMONARCH[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_H264REC:
+#if SK_DEVICES_H264REC
+        Serial << F(": H264REC") << H264REC_initIdx;
+        deviceMap[a] = H264REC_initIdx++;
+        //H264REC[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       }
@@ -1501,15 +1549,39 @@ void deviceRunLoop() {
         break;
       case SK_DEV_SONYRCP:
 #if SK_DEVICES_SONYRCP
-//   deviceReady[a] = SonyRCP[deviceMap[a]].hasInitialized();
+        deviceReady[a] = SonyRCP[deviceMap[a]].hasInitialized();
 #endif
         break;
-        case SK_DEV_VMIX:
-  #if SK_DEVICES_VMIX
-          VMIX[deviceMap[a]].runLoop();
-          deviceReady[a] = VMIX[deviceMap[a]].hasInitialized();
-  #endif
-          break;
+      case SK_DEV_VMIX:
+#if SK_DEVICES_VMIX
+        VMIX[deviceMap[a]].runLoop();
+        deviceReady[a] = VMIX[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_ROLANDVR50:
+#if SK_DEVICES_ROLANDVR50
+        ROLANDVR50[deviceMap[a]].runLoop();
+        deviceReady[a] = ROLANDVR50[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_PANAAWHEX:
+#if SK_DEVICES_PANAAWHEX
+        PANAAWHEX[deviceMap[a]].runLoop();
+    //    deviceReady[a] = PANAAWHEX[deviceMap[a]].???
+#endif
+        break;
+      case SK_DEV_MATROXMONARCH:
+#if SK_DEVICES_MATROXMONARCH
+        MATROXMONARCH[deviceMap[a]].runLoop();
+        deviceReady[a] = MATROXMONARCH[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_H264REC:
+#if SK_DEVICES_H264REC
+        H264REC[deviceMap[a]].runLoop();
+        deviceReady[a] = H264REC[deviceMap[a]].hasInitialized();
+#endif
+        break;
       }
     }
   }
@@ -2737,13 +2809,41 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
-                  case SK_DEV_VMIX:
+                case SK_DEV_VMIX:
 #if SK_DEVICES_VMIX
                   retValueT = evaluateAction_VMIX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (retValue == 0)
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
-                    break;
+                  break;
+                case SK_DEV_ROLANDVR50:
+#if SK_DEVICES_ROLANDVR50
+                  retValueT = evaluateAction_ROLANDVR50(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_PANAAWHEX:
+#if SK_DEVICES_PANAAWHEX
+                  retValueT = evaluateAction_PANAAWHEX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_MATROXMONARCH:
+#if SK_DEVICES_MATROXMONARCH
+                  retValueT = evaluateAction_MATROXMONARCH(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_H264REC:
+#if SK_DEVICES_H264REC
+                  retValueT = evaluateAction_H264REC(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
                 }
               } else {
                 // Serial << "Device disabled!\n";
