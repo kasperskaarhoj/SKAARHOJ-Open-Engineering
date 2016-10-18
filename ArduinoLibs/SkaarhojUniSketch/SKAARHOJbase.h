@@ -136,7 +136,7 @@ uint16_t *getAnalogComponentCalibration(uint8_t num) {
 
   if ((193 ^ c1 ^ c2 ^ c3) != c4) {
     Serial << F("Initialized calibration for analog component ") << num + 1 << "\n";
-    setAnalogComponentCalibration(num, 30, 30, 15);
+    setAnalogComponentCalibration(num+1, 30, 30, 15);
   }
 
   calibration[0] = EEPROM.read(20 + num * 4 + 1) << 1 | EEPROM.read(20 + num * 4 + 3) >> 7;     // Start
@@ -1447,7 +1447,8 @@ void deviceSetup() {
     }
   }
 
-  deviceDebugLevel(debugMode);
+  //deviceDebugLevel(debugMode);
+  deviceDebugLevel(0x80);
 }
 
 /**
@@ -2206,7 +2207,6 @@ void HWrunLoop_encoders(SkaarhojEncoders &encoders, const uint8_t *encMap, uint8
       default: // reset
         if (bDown >= 1000) {
           actDown = true;
-          Serial << "bDown: " << bDown << "\n";
         }
         break;
       }
