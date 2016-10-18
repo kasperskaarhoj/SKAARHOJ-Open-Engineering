@@ -1,12 +1,12 @@
-#ifndef ClientSonyRCP_h
-#define ClientSonyRCP_h
+#ifndef ClientMatroxMonarch_h
+#define ClientMatroxMonarch_h
 
-#define ClientSonyRCP_Cams 1
+#define ClientMatroxMonarch_Cams 1
 
 #include <Arduino.h>
 #include <EthernetUdp.h>
 
-class ClientSonyRCP {
+class ClientMatroxMonarch {
 private:
   bool _hasInitialized;
   IPAddress _switcherIP; // IP address of the switcher
@@ -14,7 +14,7 @@ private:
 
 
 public:
-  ClientSonyRCP();
+  ClientMatroxMonarch();
 
   void serialOutput(uint8_t level);
   bool hasInitialized();

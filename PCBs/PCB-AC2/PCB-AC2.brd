@@ -1031,7 +1031,7 @@ design rules under a new name.</description>
 <element name="R16" library="SparkFun" package="0603-RES" value="10K" x="29.21" y="31.75" rot="MR90">
 <attribute name="SKAARHOJ_ID" value="SK_10K" x="29.21" y="31.75" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
-<element name="C2" library="SparkFun" package="0603-CAP" value="0.1uF" x="21.717" y="32.385" rot="MR180">
+<element name="C2" library="SparkFun" package="0603-CAP" value="100nF" x="21.717" y="32.385" rot="MR180">
 <attribute name="SKAARHOJ_ID" value="SK_100nF" x="21.717" y="32.385" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="IC1" library="burr-brown" package="TSSOP16-PW" value="ADS7828" x="13.97" y="31.75" rot="MR270">

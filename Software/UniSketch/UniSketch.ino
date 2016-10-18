@@ -59,6 +59,10 @@
 #define SK_DEV_BMDCAMCTRL 5
 #define SK_DEV_SONYRCP 6
 #define SK_DEV_VMIX 7
+#define SK_DEV_ROLANDVR50 8
+#define SK_DEV_PANAAWHEX 9
+#define SK_DEV_MATROXMONARCH 10
+#define SK_DEV_H264REC 11
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -594,8 +598,47 @@ uint8_t SonyRCP_initIdx = 0;
 #endif
 
 #if SK_DEVICES_VMIX
-
+#include "ClientVMixUDP.h"
+ClientVMixUDP VMIX[SK_DEVICES_VMIX];
+uint8_t VMIX_initIdx = 0;
+#include "SK_DEV_VMIX.h";
 #endif
+
+#if SK_DEVICES_ROLANDVR50
+#include "ClientRolandVR50IP.h"
+ClientRolandVR50IP ROLANDVR50[SK_DEVICES_ROLANDVR50];
+uint8_t ROLANDVR50_initIdx = 0;
+#include "SK_DEV_ROLANDVR50.h";
+#endif
+
+#if SK_DEVICES_PANAAWHEX
+#include "ClientPanaAWHExTCP.h"
+ClientPanaAWHExTCP PANAAWHEX[SK_DEVICES_PANAAWHEX];
+uint8_t PANAAWHEX_initIdx = 0;
+#include "SK_DEV_PANAAWHEX.h";
+#endif
+
+#if SK_DEVICES_MATROXMONARCH
+#include "ClientMatroxMonarch.h"
+ClientMatroxMonarch MATROXMONARCH[SK_DEVICES_MATROXMONARCH];
+uint8_t MATROXMONARCH_initIdx = 0;
+#include "SK_DEV_MATROXMONARCH.h";
+#endif
+
+#if SK_DEVICES_H264REC
+#include "GenericHTTPClient.h"
+#include "ClientLLabH264Recorder.h"
+ClientLLabH264Recorder H264REC[SK_DEVICES_H264REC];
+uint8_t H264REC_initIdx = 0;
+#include "SK_DEV_H264REC.h";
+#endif
+
+
+#define SK_DEV_ROLANDVR50 8
+#define SK_DEV_PANAAWHEX 9
+#define SK_DEV_MATROXMONARCH 10
+#define SK_DEV_H264REC 11
+
 
 /****************************************
 

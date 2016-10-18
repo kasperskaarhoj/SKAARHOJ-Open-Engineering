@@ -1,12 +1,12 @@
-#ifndef ClientSonyRCP_h
-#define ClientSonyRCP_h
+#ifndef ClientRolandVR50IP_h
+#define ClientRolandVR50IP_h
 
-#define ClientSonyRCP_Cams 1
+#define ClientRolandVR50IP_Cams 1
 
 #include <Arduino.h>
 #include <EthernetUdp.h>
 
-class ClientSonyRCP {
+class ClientRolandVR50IP {
 private:
   bool _hasInitialized;
   IPAddress _switcherIP; // IP address of the switcher
@@ -14,7 +14,7 @@ private:
 
 
 public:
-  ClientSonyRCP();
+  ClientRolandVR50IP();
 
   void serialOutput(uint8_t level);
   bool hasInitialized();

@@ -117,7 +117,7 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
   EEPROM.write(20 + num * 4 + 1, start >> 1 & 0xFF);
   EEPROM.write(20 + num * 4 + 2, end >> 1 & 0xFF);
   EEPROM.write(20 + num * 4 + 3, hysteresis & 0x3F | (start & 1) << 7 | (end & 1) << 6);
-  
+
   EEPROM.write(20 + num * 4 + 4, 193 ^ EEPROM.read(20 + num * 4 + 1) ^ EEPROM.read(20 + num * 4 + 2) ^ EEPROM.read(20 + num * 4 + 3));
 }
 
@@ -1085,27 +1085,27 @@ void loadDefaultConfig() {
   memcpy_P(globalConfigMem, defaultControllerConfig, sizeof(defaultControllerConfig));
 }
 void moveEEPROMMemoryBlock(uint16_t from, uint16_t to, int16_t offset) { // From is inclusive, To is exclusive, To>From, offset>0 = move forward
-                                                                     //	Serial << "moveEEPROMMemoryBlock (" << from << "," << to << "," << offset << " )\n";
+                                                                         //	Serial << "moveEEPROMMemoryBlock (" << from << "," << to << "," << offset << " )\n";
   if (offset > 0) {
     for (uint16_t a = to; a > from; a--) {
-      #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
       EEPROM.writeBuffered(a - 1 + offset, EEPROM.read(a - 1));
-      #else
+#else
       EEPROM.write(a - 1 + offset, EEPROM.read(a - 1));
-      #endif
+#endif
     }
   } else if (offset < 0) {
     for (uint16_t a = from; a < to; a++) {
-      #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
       EEPROM.writeBuffered(a + offset, EEPROM.read(a));
-      #else
+#else
       EEPROM.write(a + offset, EEPROM.read(a));
-      #endif
+#endif
     }
   }
-  #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
   EEPROM.commitPage();
-  #endif
+#endif
 }
 uint16_t getPresetOffsetAddress(uint8_t presetNum) {
   uint16_t offset = 0;
@@ -1274,16 +1274,16 @@ void savePreset(uint8_t presetNum, uint16_t len) { // Len is excluding CSC byte.
       // Store memory:
       uint8_t csc = EEPROM_PRESET_TOKEN;
       for (uint16_t a = 0; a < len; a++) {
-        #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
         EEPROM.writeBuffered(EEPROM_PRESET_START + 7 + presetOffset + a, globalConfigMem[a]); // Loading memory with preset, byte by byte.
-        #else
+#else
         EEPROM.write(EEPROM_PRESET_START + 7 + presetOffset + a, globalConfigMem[a]);
-        #endif
+#endif
         csc ^= globalConfigMem[a];
       }
-      #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
       EEPROM.commitPage();
-      #endif
+#endif
       EEPROM.write(EEPROM_PRESET_START + 7 + presetOffset + len, csc); // Checksum byte
       EEPROM.write(EEPROM_PRESET_START + 5 + presetOffset, highByte(len + 1));
       EEPROM.write(EEPROM_PRESET_START + 6 + presetOffset, lowByte(len + 1));
@@ -1372,7 +1372,32 @@ void deviceDebugLevel(uint8_t debugLevel) {
 #endif
 #if SK_DEVICES_SONYRCP
       case SK_DEV_SONYRCP:
-        //  SonyRCP[deviceMap[a]].serialOutput(debugMode);
+        SonyRCP[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_VMIX
+      case SK_DEV_VMIX:
+        VMIX[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_ROLANDVR50
+      case SK_DEV_ROLANDVR50:
+        ROLANDVR50[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_PANAAWHEX
+      case SK_DEV_PANAAWHEX:
+        PANAAWHEX[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_MATROXMONARCH
+      case SK_DEV_MATROXMONARCH:
+        MATROXMONARCH[deviceMap[a]].serialOutput(debugMode);
+        break;
+#endif
+#if SK_DEVICES_H264REC
+      case SK_DEV_H264REC:
+        H264REC[deviceMap[a]].serialOutput(debugMode);
         break;
 #endif
       }
@@ -1439,7 +1464,42 @@ void deviceSetup() {
 #if SK_DEVICES_SONYRCP
         Serial << F(": SONYRCP") << SonyRCP_initIdx;
         deviceMap[a] = SonyRCP_initIdx++;
-//  SonyRCP[deviceMap[a]].begin();
+        SonyRCP[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_VMIX:
+#if SK_DEVICES_VMIX
+        Serial << F(": VMIX") << VMIX_initIdx;
+        deviceMap[a] = VMIX_initIdx++;
+        VMIX[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_ROLANDVR50:
+#if SK_DEVICES_ROLANDVR50
+        Serial << F(": ROLANDVR50") << ROLANDVR50_initIdx;
+        deviceMap[a] = ROLANDVR50_initIdx++;
+        ROLANDVR50[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_PANAAWHEX:
+#if SK_DEVICES_PANAAWHEX
+        Serial << F(": PANAAWHEX") << PANAAWHEX_initIdx;
+        deviceMap[a] = PANAAWHEX_initIdx++;
+        PANAAWHEX[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_MATROXMONARCH:
+#if SK_DEVICES_MATROXMONARCH
+        Serial << F(": MATROXMONARCH") << MATROXMONARCH_initIdx;
+        deviceMap[a] = MATROXMONARCH_initIdx++;
+        MATROXMONARCH[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
+      case SK_DEV_H264REC:
+#if SK_DEVICES_H264REC
+        Serial << F(": H264REC") << H264REC_initIdx;
+        deviceMap[a] = H264REC_initIdx++;
+        //H264REC[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       }
@@ -1490,7 +1550,37 @@ void deviceRunLoop() {
         break;
       case SK_DEV_SONYRCP:
 #if SK_DEVICES_SONYRCP
-//   deviceReady[a] = SonyRCP[deviceMap[a]].hasInitialized();
+        deviceReady[a] = SonyRCP[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_VMIX:
+#if SK_DEVICES_VMIX
+        VMIX[deviceMap[a]].runLoop();
+        deviceReady[a] = VMIX[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_ROLANDVR50:
+#if SK_DEVICES_ROLANDVR50
+        ROLANDVR50[deviceMap[a]].runLoop();
+        deviceReady[a] = ROLANDVR50[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_PANAAWHEX:
+#if SK_DEVICES_PANAAWHEX
+        PANAAWHEX[deviceMap[a]].runLoop();
+    //    deviceReady[a] = PANAAWHEX[deviceMap[a]].???
+#endif
+        break;
+      case SK_DEV_MATROXMONARCH:
+#if SK_DEVICES_MATROXMONARCH
+        MATROXMONARCH[deviceMap[a]].runLoop();
+        deviceReady[a] = MATROXMONARCH[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_H264REC:
+#if SK_DEVICES_H264REC
+        H264REC[deviceMap[a]].runLoop();
+        deviceReady[a] = H264REC[deviceMap[a]].hasInitialized();
 #endif
         break;
       }
@@ -2240,7 +2330,7 @@ int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher,
     }
   }
 
-  //Serial << "In: " << inValue << " Lower: " << lower << " Upper: " << higher << " Result: " << constrain(inValue, lower, higher) << "\n";
+  // Serial << "In: " << inValue << " Lower: " << lower << " Upper: " << higher << " Result: " << constrain(inValue, lower, higher) << "\n";
   return constrain(inValue, lower, higher);
 }
 void storeMemory(uint8_t memPtr) {
@@ -2715,6 +2805,41 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                 case SK_DEV_SONYRCP:
 #if SK_DEVICES_SONYRCP
                   retValueT = evaluateAction_SONYRCP(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_VMIX:
+#if SK_DEVICES_VMIX
+                  retValueT = evaluateAction_VMIX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_ROLANDVR50:
+#if SK_DEVICES_ROLANDVR50
+                  retValueT = evaluateAction_ROLANDVR50(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_PANAAWHEX:
+#if SK_DEVICES_PANAAWHEX
+                  retValueT = evaluateAction_PANAAWHEX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_MATROXMONARCH:
+#if SK_DEVICES_MATROXMONARCH
+                  retValueT = evaluateAction_MATROXMONARCH(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
+                case SK_DEV_H264REC:
+#if SK_DEVICES_H264REC
+                  retValueT = evaluateAction_H264REC(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (retValue == 0)
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
