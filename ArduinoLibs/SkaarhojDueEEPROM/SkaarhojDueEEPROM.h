@@ -62,13 +62,13 @@ class SkaarhojDueEEPROM
 /**
  * Constructor
  */
-SkaarhojDueEEPROM::SkaarhojDueEEPROM() {
+inline SkaarhojDueEEPROM::SkaarhojDueEEPROM() {
 	_deviceaddress = 87;
   _pageAddress = 0xFFFF;
 }
 
 #ifdef ARDUINO_SKAARDUINO_DUE
-void SkaarhojDueEEPROM::writeBuffered(uint16_t address, uint8_t value) {
+inline void SkaarhojDueEEPROM::writeBuffered(uint16_t address, uint8_t value) {
   if(_pageAddress != 0xFFFF) {
     if((address & ~31) != _pageAddress) {
       commitPage();
@@ -82,7 +82,7 @@ void SkaarhojDueEEPROM::writeBuffered(uint16_t address, uint8_t value) {
   _pageBuffer[address & 31] = value;
 }
 
-void SkaarhojDueEEPROM::commitPage() {
+inline void SkaarhojDueEEPROM::commitPage() {
   if(_pageAddress != 0xFFFF) {
     Serial.println(_pageAddress);
     writePage(_pageAddress, _pageBuffer);
@@ -91,7 +91,7 @@ void SkaarhojDueEEPROM::commitPage() {
 }
 #endif
 
-void SkaarhojDueEEPROM::write(uint16_t address, uint8_t value) {
+inline void SkaarhojDueEEPROM::write(uint16_t address, uint8_t value) {
   Wire.beginTransmission(_deviceaddress);
   Wire.write(address >> 8); // MSB
   Wire.write(address & 0xFF); // LSB
@@ -102,7 +102,7 @@ void SkaarhojDueEEPROM::write(uint16_t address, uint8_t value) {
   while(Wire.endTransmission() != 0);
 }
 
-uint8_t SkaarhojDueEEPROM::read(uint16_t address) {
+inline uint8_t SkaarhojDueEEPROM::read(uint16_t address) {
   Wire.beginTransmission(_deviceaddress);
   Wire.write(address >> 8); // MSB
   Wire.write(address & 0xFF); // LSB
@@ -113,7 +113,7 @@ uint8_t SkaarhojDueEEPROM::read(uint16_t address) {
   } else return 0xFF;
 }
 
-void SkaarhojDueEEPROM::writePage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array (not 32, because last two bytes doesn't get written correctly for some reason - maybe the I2C buffers size on ARduino?)
+inline void SkaarhojDueEEPROM::writePage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array (not 32, because last two bytes doesn't get written correctly for some reason - maybe the I2C buffers size on ARduino?)
   Wire.beginTransmission(_deviceaddress);
   Wire.write(address >> 8); // MSB
   Wire.write(address & 0xE0); // LSB
@@ -127,7 +127,7 @@ void SkaarhojDueEEPROM::writePage(uint16_t address, uint8_t * valueArray) {	// 3
   while(Wire.endTransmission() != 0);
 }
 
-void SkaarhojDueEEPROM::readPage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array
+inline void SkaarhojDueEEPROM::readPage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array
 	//delay(5);  	// Without this delay it has been seen that it a) could stall for up to 2 seconds in reading and b) that the read values are bogus!
   Wire.beginTransmission(_deviceaddress);
   Wire.write(address >> 8); // MSB
