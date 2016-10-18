@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -2714,7 +2714,7 @@ Source: www.ti.com .. ADS7828.pdf</description>
 <part name="U$5" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$6" library="SparkFun" deviceset="5V" device=""/>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
-<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="GND8" library="SparkFun" deviceset="GND" device=""/>
 <part name="IC1" library="burr-brown" deviceset="ADS7828" device=""/>
 <part name="C10" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
