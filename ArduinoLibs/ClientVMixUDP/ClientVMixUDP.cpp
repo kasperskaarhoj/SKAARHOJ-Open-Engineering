@@ -436,6 +436,9 @@ void ClientVMixUDP::_parseGetCommands(const char *cmdStr) {
   long temp;
 
   _readToPacketBuffer(); // Default
+  
+//  Serial.print(F("Incoming command: "));
+//	  Serial.println(cmdStr);
 
   if (!strcmp_P(cmdStr, PSTR("_ver"))) {
 

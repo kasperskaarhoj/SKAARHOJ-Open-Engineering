@@ -9,8 +9,13 @@
 // The MAC address is printed on a label on the shield or on the back of your device
 // The IP address should be an available address you choose on your subnet where the switcher is also present
 byte mac[] = {0x90, 0xA2, 0xDA, 0x0D, 0x6B, 0xB9}; // <= SETUP!  MAC address of the Arduino
-IPAddress clientIp(192, 168, 1, 99);              // <= SETUP!  IP address of the Arduino
-IPAddress switcherIp(192, 168, 1, 34);           // <= SETUP!  IP address of the ATEM Switcher
+IPAddress clientIp(10, 0, 10, 227);              // <= SETUP!  IP address of the Arduino
+IPAddress switcherIp(10, 0, 11, 227);           // <= SETUP!  IP address of the ATEM Switcher
+
+IPAddress dnsserver(0,0,0,0);        
+IPAddress gateway(0,0,0,0);    
+IPAddress subnet(255,255,0,0);  
+
 
 // Include ClientVMix library and make an instance:
 // The port number is chosen randomly among high numbers.
@@ -22,7 +27,7 @@ void setup() {
   randomSeed(analogRead(5)); // For random port selection
 
   // Start the Ethernet, Serial (debugging) and UDP:
-  Ethernet.begin(mac, clientIp);
+  Ethernet.begin(mac, clientIp, dnsserver, gateway, subnet);
   Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");
 
