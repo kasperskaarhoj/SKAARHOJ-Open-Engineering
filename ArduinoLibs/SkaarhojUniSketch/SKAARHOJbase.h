@@ -1499,7 +1499,7 @@ void deviceSetup() {
 #if SK_DEVICES_H264REC
         Serial << F(": H264REC") << H264REC_initIdx;
         deviceMap[a] = H264REC_initIdx++;
-        //H264REC[deviceMap[a]].begin(deviceIP[a]);
+// H264REC[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       }
@@ -1568,7 +1568,7 @@ void deviceRunLoop() {
       case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
         PANAAWHEX[deviceMap[a]].runLoop();
-    //    deviceReady[a] = PANAAWHEX[deviceMap[a]].???
+//    deviceReady[a] = PANAAWHEX[deviceMap[a]].???
 #endif
         break;
       case SK_DEV_MATROXMONARCH:
@@ -1918,7 +1918,7 @@ void HWtest() {
 
 #endif
 #if (SK_HWEN_GPIO)
-    GPIOboard.setOutputAll(GPIOboard.inputIsActiveAll() ^ (millis() >> 12));
+    GPIOboard.setOutputAll(GPIOboard.inputIsActiveAll());
 #endif
 
 #if (SK_HWEN_ACM)
@@ -2973,6 +2973,16 @@ void initController() {
         statusLED(LED_WHITE); // In config mode 2, LED will be white and blink
         Serial << F("Config Mode=2\n");
         configMode = 2;
+
+        while (isConfigButtonPushed()) {
+          if (millis() - cfgButtonPressTime > 10000) {
+	          statusLED(LED_RED);
+	          Serial << F("Clearing presets, revert to normal boot\n");
+			  clearPresets();
+			  configMode = 0;
+			  break;
+          }
+        }
         break;
       }
     }
@@ -3032,8 +3042,9 @@ void initController() {
   }
   //  }
 
-  // TODO: Add subnet - but only if it's valid!!
-  Ethernet.begin(mac, ip, subnet);
+  IPAddress gateway(0, 0, 0, 0);
+  IPAddress dnsIP(0, 0, 0, 0);
+  Ethernet.begin(mac, ip, dnsIP, gateway, subnet);
   statusLED(QUICKBLANK);
   delay(500);
 
