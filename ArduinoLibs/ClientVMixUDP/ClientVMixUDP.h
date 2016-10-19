@@ -114,7 +114,6 @@ protected:
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ClientVMixUDP.h:
@@ -126,11 +125,20 @@ private:
 	
 			// Private Variables in ClientVMixUDP.h:
 	
-			uint16_t vmixvMixVersionA;
-			uint16_t vmixvMixVersionB;
-			uint16_t vmixvMixVersionC;
-			uint16_t vmixvMixVersionD;
-			uint8_t vmixTopologyInputs;
+			uint8_t vmixActiveInput;
+			uint8_t vmixPreviewInput;
+			bool vmixFadeToBlackActive;
+			bool vmixOverlayActive[6];
+			uint8_t vmixOverlayInput[6];
+			bool vmixRecordActive;
+			bool vmixStreamActive;
+			int vmixAudioLevelsLeft[100];
+			int vmixAudioLevelsRight[100];
+			int vmixMasterAudioLevelsLeft;
+			int vmixMasterAudioLevelsRight;
+			uint16_t vmixInputPosition[100];
+			bool vmixReplayActive;
+			int vmixXamlValue[100][10];
 			char vmixInputPropertiesLongName[100][21];
 			char vmixInputPropertiesShortName[100][5];
 			bool vmixInputPropertiesLoop[100];
@@ -142,34 +150,53 @@ private:
 			int vmixAudioPropertiesVolume[100];
 			bool vmixAudioPropertiesMuted[100];
 			uint8_t vmixAudioPropertiesBusses[100];
-			int vmixAudioLevelsLeft[100];
-			int vmixAudioLevelsRight[100];
-			uint8_t vmixMasterAudioPropertiesVolume;
+			int vmixMasterAudioPropertiesVolume;
 			int vmixMasterAudioPropertiesHeadphoneVolume;
 			bool vmixMasterAudioPropertiesMuted;
-			uint16_t vmixMasterAudioLevelsLeft;
-			uint16_t vmixMasterAudioLevelsRight;
-			uint16_t vmixInputPosition[100];
-			uint8_t vmixActiveInput;
-			uint8_t vmixPreviewInput;
-			bool vmixOverlayActive[6];
-			uint8_t vmixOverlayInput[6];
-			bool vmixFadeToBlackActive;
-			bool vmixRecordActive;
-			bool vmixStreamActive;
-			bool vmixReplayActive;
-			int vmixXamlValue[100][10];
-			bool vmixTransitionInTransition;
-			uint8_t vmixTransitionPosition;
+			uint16_t vmixvMixVersionA;
+			uint16_t vmixvMixVersionB;
+			uint16_t vmixvMixVersionC;
+			uint16_t vmixvMixVersionD;
+			uint8_t vmixTopologyInputs;
 	
 public:
 			// Public Methods in ClientVMixUDP.h:
 	
-			uint16_t getvMixVersionA();
-			uint16_t getvMixVersionB();
-			uint16_t getvMixVersionC();
-			uint16_t getvMixVersionD();
-			uint8_t getTopologyInputs();
+			uint8_t getActiveInput();
+			void setActiveInput(uint8_t input);
+			uint8_t getPreviewInput();
+			void setPreviewInput(uint8_t input);
+			void performCutAction(bool action);
+			void performFadeFader(uint8_t fader);
+			void performFadeToBlackAction(bool action);
+			bool getFadeToBlackActive();
+			void setTransitionPosition(uint8_t position);
+			bool getOverlayActive(uint8_t overlay);
+			uint8_t getOverlayInput(uint8_t overlay);
+			void setOverlayInputOn(uint8_t overlay, uint8_t inputOn);
+			void setOverlayInputOff(uint8_t overlay, uint8_t inputOff);
+			void setOverlayInputInstantOff(uint8_t overlay, uint8_t inputInstantOff);
+			void setOverlayInputZoom(uint8_t overlay, uint8_t inputZoom);
+			void setOverlayInputPreview(uint8_t overlay, uint8_t inputPreview);
+			bool getRecordActive();
+			void performRecordAction(bool action);
+			bool getStreamActive();
+			void performStreamAction(bool action);
+			void setAudioLevelsEnable(bool enable);
+			int getAudioLevelsLeft(uint8_t input);
+			int getAudioLevelsRight(uint8_t input);
+			int getMasterAudioLevelsLeft();
+			int getMasterAudioLevelsRight();
+			uint16_t getInputPosition(uint8_t input);
+			void setInputPositionPosition(uint8_t input, uint16_t position);
+			void setInputPositionEnable(bool enable);
+			bool getReplayActive();
+			void performReplayAction(bool action);
+			void setReplayPropertiesSeconds(uint16_t seconds);
+			void setReplayPropertiesSpeed(uint16_t speed);
+			int getXamlValue(uint8_t input, uint8_t index);
+			void setXamlValue(uint8_t input, uint8_t index, uint16_t value);
+			void setCountDownMode(uint8_t input, uint8_t index, uint8_t mode);
 			char *  getInputPropertiesLongName(uint8_t input);
 			char *  getInputPropertiesShortName(uint8_t input);
 			bool getInputPropertiesLoop(uint8_t input);
@@ -188,49 +215,18 @@ public:
 			void setAudioPropertiesVolume(uint8_t input, int volume);
 			void setAudioPropertiesMuted(uint8_t input, bool muted);
 			void setAudioPropertiesBusses(uint8_t input, uint8_t busses);
-			void setAudioLevelsEnable(bool enable);
-			int getAudioLevelsLeft(uint8_t input);
-			int getAudioLevelsRight(uint8_t input);
-			uint8_t getMasterAudioPropertiesVolume();
+			int getMasterAudioPropertiesVolume();
 			int getMasterAudioPropertiesHeadphoneVolume();
 			bool getMasterAudioPropertiesMuted();
 			void setMasterAudioPropertiesVolume(int volume);
 			void setMasterAudioPropertiesHeadphoneVolume(int headphoneVolume);
 			void setMasterAudioPropertiesMuted(bool muted);
-			uint16_t getMasterAudioLevelsLeft();
-			uint16_t getMasterAudioLevelsRight();
-			uint16_t getInputPosition(uint8_t input);
-			void setInputPositionPosition(uint8_t input, uint16_t position);
-			void setInputPositionEnable(bool enable);
-			uint8_t getActiveInput();
-			void setActiveInput(uint8_t input);
-			uint8_t getPreviewInput();
-			void setPreviewInput(uint8_t input);
-			bool getOverlayActive(uint8_t overlay);
-			uint8_t getOverlayInput(uint8_t overlay);
-			void setOverlayInputOn(uint8_t overlay, uint8_t inputOn);
-			void setOverlayInputOff(uint8_t overlay, uint8_t inputOff);
-			void setOverlayInputInstantOff(uint8_t overlay, uint8_t inputInstantOff);
-			void setOverlayInputZoom(uint8_t overlay, uint8_t inputZoom);
-			void setOverlayInputPreview(uint8_t overlay, uint8_t inputPreview);
-			void performCutAction(bool action);
-			void performFadeFader(uint8_t fader);
-			void performFadeToBlackAction(bool action);
-			bool getFadeToBlackActive();
-			bool getRecordActive();
-			void performRecordAction(bool action);
-			bool getStreamActive();
-			void performStreamAction(bool action);
-			bool getReplayActive();
-			void performReplayAction(bool action);
-			void setReplayPropertiesSeconds(uint16_t seconds);
-			void setReplayPropertiesSpeed(uint16_t speed);
-			int getXamlValue(uint8_t input, uint8_t index);
-			void setXamlValue(uint8_t input, uint8_t index, uint16_t value);
-			void setCountDownMode(uint8_t input, uint8_t index, uint8_t mode);
-			bool getTransitionInTransition();
-			uint8_t getTransitionPosition();
-			void setTransitionPosition(uint8_t position);
+			uint16_t getvMixVersionA();
+			uint16_t getvMixVersionB();
+			uint16_t getvMixVersionC();
+			uint16_t getvMixVersionD();
+			uint8_t getTopologyInputs();
+
 
 };
 
