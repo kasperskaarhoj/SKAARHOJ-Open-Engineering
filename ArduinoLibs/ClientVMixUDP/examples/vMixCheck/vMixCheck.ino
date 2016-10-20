@@ -9,8 +9,7 @@
 
 
 #define TEST_ME 0
-
-
+#define TEST_RECORD_STREAM 1
 
 #define LOOP 1
 
@@ -214,8 +213,74 @@ void loop() {
     }
   }
 
+  Serial << F("Master audio properties:\n");
+  Serial << F("Master volume: ") << VmixSwitcher.getMasterAudioPropertiesVolume() << "\n";
+  Serial << F("Headph volume: ") << VmixSwitcher.getMasterAudioPropertiesHeadphoneVolume() << "\n";
+  Serial << F("Master muted : ") << (VmixSwitcher.getMasterAudioPropertiesMuted()?"yes":"no") << "\n";
+
   VmixSwitcher.runLoop();
   delay(1000);
+
+
+  #if TEST_STREAM_RECORD
+
+  timeout = millis();
+  Serial << F("\nStarting recording:\n");
+  VmixSwitcher.performRecordAction(true);
+  while (VmixSwitcher.getRecordActive() != true && !VmixSwitcher.hasTimedOut(timeout, timeOutDelay)) {
+    VmixSwitcher.runLoop();
+  }
+  if (VmixSwitcher.hasTimedOut(timeout, timeOutDelay))  {
+    Serial << F("ERROR");
+  } else {
+    Serial << F("OK");
+  }
+
+  delay(5000);
+
+  timeout = millis();
+  Serial << F("\nStopping recording:\n");
+  VmixSwitcher.performRecordAction(false);
+  while (VmixSwitcher.getRecordActive() != false && !VmixSwitcher.hasTimedOut(timeout, timeOutDelay)) {
+    VmixSwitcher.runLoop();
+  }
+  if (VmixSwitcher.hasTimedOut(timeout, timeOutDelay))  {
+    Serial << F("ERROR");
+  } else {
+    Serial << F("OK");
+  }
+
+  delay(1000);
+
+    timeout = millis();
+  Serial << F("\nStarting streaming:");
+  VmixSwitcher.performStreamAction(true);
+  while (VmixSwitcher.getStreamActive() != true && !VmixSwitcher.hasTimedOut(timeout, timeOutDelay)) {
+    VmixSwitcher.runLoop();
+  }
+  if (VmixSwitcher.hasTimedOut(timeout, timeOutDelay))  {
+    Serial << F("ERROR");
+  } else {
+    Serial << F("OK");
+  }
+
+  delay(5000);
+
+  timeout = millis();
+  Serial << F("\nStopping streaming: ");
+  VmixSwitcher.performStreamAction(false);
+  while (VmixSwitcher.getStreamActive() != false && !VmixSwitcher.hasTimedOut(timeout, timeOutDelay)) {
+    VmixSwitcher.runLoop();
+  }
+  if (VmixSwitcher.hasTimedOut(timeout, timeOutDelay))  {
+    Serial << F("ERROR");
+  } else {
+    Serial << F("OK");
+  }
+
+  delay(1000);
+
+#endif
 
 #if TEST_ME
   // Transition Position - Position
