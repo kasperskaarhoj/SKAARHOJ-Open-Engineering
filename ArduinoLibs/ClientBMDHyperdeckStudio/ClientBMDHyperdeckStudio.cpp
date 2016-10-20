@@ -256,7 +256,7 @@ void ClientBMDHyperdeckStudio::_parseline() {
           Serial.println(_Hyperdeck_playSpeed);
       }
 
-      else if (isNextPartOfBuffer_P(PSTR("slot id: "))) {
+      else if (isNextPartOfBuffer_P(PSTR("slot id: ")) || isNextPartOfBuffer_P(PSTR("active slot: "))) {
         _Hyperdeck_playBackSlotId = parseInt();
         if (_serialOutput > 1)
           Serial.print(F("_Hyperdeck_playBackSlotId="));
@@ -631,7 +631,7 @@ void ClientBMDHyperdeckStudio::askForClips(bool askForClips) { _askForClips = as
  GETTING VALUES
  ********************/
 
-uint8_t ClientBMDHyperdeckStudio::getCurrentSlotId() { return _Hyperdeck_currentSlotId; }
+//uint8_t ClientBMDHyperdeckStudio::getCurrentSlotId() { return _Hyperdeck_currentSlotId; }
 uint8_t ClientBMDHyperdeckStudio::getSlotStatus(uint8_t slotId) { return _Hyperdeck_slotStatus[slotId - 1]; }
 unsigned long ClientBMDHyperdeckStudio::getSlotRecordingTime(uint8_t slotId) { return _Hyperdeck_slotRecordingTime[slotId - 1]; }
 uint8_t ClientBMDHyperdeckStudio::getTransportStatus() { return _Hyperdeck_transportStatus; }
