@@ -8694,9 +8694,15 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="C10" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C12" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$24" library="SparkFun" deviceset="5V" device=""/>
-<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="?R"/>
-<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="?R"/>
-<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="?R"/>
+<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="120R">
+<attribute name="SKAARHOJ_ID" value="SK_120R"/>
+</part>
+<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="510R">
+<attribute name="SKAARHOJ_ID" value="SK_510R"/>
+</part>
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="200R">
+<attribute name="SKAARHOJ_ID" value="SK_200R"/>
+</part>
 </parts>
 <sheets>
 <sheet>
@@ -8740,9 +8746,15 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <instance part="IC2" gate="B" x="144.78" y="-119.38"/>
 <instance part="IC2" gate="C" x="121.92" y="-152.4"/>
 <instance part="IC2" gate="D" x="121.92" y="-170.18"/>
-<instance part="R1" gate="G$1" x="-12.7" y="-12.7"/>
-<instance part="R3" gate="G$1" x="-12.7" y="-20.32"/>
-<instance part="R4" gate="G$1" x="-12.7" y="-27.94"/>
+<instance part="R1" gate="G$1" x="-12.7" y="-12.7">
+<attribute name="SKAARHOJ_ID" x="-12.7" y="-12.7" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="R3" gate="G$1" x="-12.7" y="-20.32">
+<attribute name="SKAARHOJ_ID" x="-12.7" y="-20.32" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="R4" gate="G$1" x="-12.7" y="-27.94">
+<attribute name="SKAARHOJ_ID" x="-12.7" y="-27.94" size="1.778" layer="96" display="off"/>
+</instance>
 </instances>
 <busses>
 </busses>
