@@ -6,7 +6,14 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21SLD
+#define SK_MODEL SK_E21CMB6M
+
+
+#define SK_E21CMB6M_OPTION_VSLIDER 0
+#define SK_E21TVS_OPTION_GPIO 0
+#define SK_E21GPIO_OPTION_GPIO2 0
+
+
 
 // ****************************
 // NO USER CHANGE BELOW!
@@ -22,6 +29,7 @@
 #define SK_E21SLD 3
 #define SK_E21SSW 4
 #define SK_E21CMB6 5
+#define SK_E21CMB6M 6
 #define SK_E21GPIO 9
 #define SK_E201L16 10
 #define SK_E201L2 11
@@ -74,6 +82,8 @@
 #define SK_HWEN_ACM 0
 #define SK_HWEN_GPIO 0
 
+#define SK_MODCOUNT 1   // Must define at least 1 module, although the first module in index zero refers for the first actual external module for a controller.
+
 // Customization file, located in sketch folder:
 #include "customization.h"
 
@@ -119,6 +129,8 @@ SkaarhojTools sTools(0);
 #include "SK_CFGDEF_E21SSW.h"
 #elif(SK_MODEL == SK_E21CMB6)
 #include "SK_CFGDEF_E21CMB6.h"
+#elif(SK_MODEL == SK_E21CMB6M)
+#include "SK_CFGDEF_E21CMB6M.h"
 #elif(SK_MODEL == SK_E21GPIO)
 #include "SkaarhojGPIO2x8.h"
 #include "SK_CFGDEF_E21GPIO.h"
@@ -280,6 +292,8 @@ uint16_t _systemHWcActionCache[SK_HWCCOUNT][SK_MAXACTIONS];
 uint8_t _systemHWcActionCacheFlag[SK_HWCCOUNT][SK_MAXACTIONS];
 bool _systemHWcActionFineFlag[SK_HWCCOUNT];
 bool _systemHWcActionPrefersLabel[SK_HWCCOUNT];
+uint8_t HWdis[SK_HWCCOUNT];
+uint8_t MODdis[SK_MODCOUNT];
 uint16_t _systemPrevState = 0;
 uint8_t actionMirror = 0;
 bool _inactivePanel = false;
@@ -668,6 +682,8 @@ uint8_t H264REC_initIdx = 0;
 #include "SK_CTRL_E21SSW.h"
 #elif(SK_MODEL == SK_E21CMB6)
 #include "SK_CTRL_E21CMB6.h"
+#elif(SK_MODEL == SK_E21CMB6M)
+#include "SK_CTRL_E21CMB6M.h"
 #elif(SK_MODEL == SK_E21GPIO)
 #include "SK_CTRL_E21GPIO.h"
 #elif(SK_MODEL == SK_E201M16)
@@ -734,8 +750,10 @@ uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const 
    Standard Arduino setup() function
 */
 void setup() {
+
   initController(); // Initializes Serial, Hardware, Config mode, Ethernet
   Serial << F("Compiled: ") << __DATE__ << F(" ") << __TIME__ << F("\n");
+
   if (getConfigMode()) {
     webserver.begin();
     webserver.setDefaultCommand(&defaultCmd);
@@ -744,7 +762,7 @@ void setup() {
     deviceSetup(); // Sets up hardware devices (those enabled) we communicate to. No initialization though, this must happen automatically in the runloop of each device
   }
 
-  //Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
+  Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
   
   Serial << F("setup() Done\n-----------------------------\n");
 }
