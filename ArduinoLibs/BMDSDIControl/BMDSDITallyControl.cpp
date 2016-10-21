@@ -96,11 +96,10 @@ namespace BMD
 
 	bool SDITallyControl::getCameraTally(int cameraNumber, bool& programTally, bool& previewTally) const
 	{
+		if (! available()) return false;
+
 		programTally = false;
 		previewTally = false;
-
-		if (! available())
-			return false;
 
 		// Reject invalid camera numbers
 		if (cameraNumber <= 0 || cameraNumber > (int)kRegITDATA_Width)

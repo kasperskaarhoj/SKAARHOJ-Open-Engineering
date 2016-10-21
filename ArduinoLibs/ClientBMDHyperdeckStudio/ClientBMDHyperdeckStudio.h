@@ -121,7 +121,9 @@ public:
 
   // These commands get the internal state of this class. Those states are updated through subscription to updates (the "notify:" command) as well as asking periodically to pull status on all accounts (_pullStatus()). After sending  a command, these values will typically receive an update within a few hundred milliseconds.
 
-  uint8_t getCurrentSlotId();
+  // This function seems unuseful, it doesn't return the active slot
+  // Use getPlayBackSlotId() instead
+  //uint8_t getCurrentSlotId();
   uint8_t getSlotStatus(uint8_t slotId);
   unsigned long getSlotRecordingTime(uint8_t slotId);
   uint8_t getTransportStatus();

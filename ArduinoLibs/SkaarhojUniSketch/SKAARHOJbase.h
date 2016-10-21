@@ -136,7 +136,7 @@ uint16_t *getAnalogComponentCalibration(uint8_t num) {
 
   if ((193 ^ c1 ^ c2 ^ c3) != c4) {
     Serial << F("Initialized calibration for analog component ") << num + 1 << "\n";
-    setAnalogComponentCalibration(num, 30, 30, 15);
+    setAnalogComponentCalibration(num+1, 30, 30, 15);
   }
 
   calibration[0] = EEPROM.read(20 + num * 4 + 1) << 1 | EEPROM.read(20 + num * 4 + 3) >> 7;     // Start
@@ -1341,7 +1341,6 @@ uint8_t getDevUnconnected() {
  * Set up devices debug state
  */
 void deviceDebugLevel(uint8_t debugLevel) {
-
   for (uint8_t a = 1; a < sizeof(deviceArray); a++) {
     if (deviceEn[a]) {
       switch (pgm_read_byte_near(deviceArray + a)) {
@@ -1372,32 +1371,32 @@ void deviceDebugLevel(uint8_t debugLevel) {
 #endif
 #if SK_DEVICES_SONYRCP
       case SK_DEV_SONYRCP:
-        SonyRCP[deviceMap[a]].serialOutput(debugMode);
+        SonyRCP[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_VMIX
       case SK_DEV_VMIX:
-        VMIX[deviceMap[a]].serialOutput(debugMode);
+        VMIX[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_ROLANDVR50
       case SK_DEV_ROLANDVR50:
-        ROLANDVR50[deviceMap[a]].serialOutput(debugMode);
+        ROLANDVR50[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_PANAAWHEX
       case SK_DEV_PANAAWHEX:
-        PANAAWHEX[deviceMap[a]].serialOutput(debugMode);
+        PANAAWHEX[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_MATROXMONARCH
       case SK_DEV_MATROXMONARCH:
-        MATROXMONARCH[deviceMap[a]].serialOutput(debugMode);
+        MATROXMONARCH[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_H264REC
       case SK_DEV_H264REC:
-        H264REC[deviceMap[a]].serialOutput(debugMode);
+        H264REC[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
       }
@@ -1437,6 +1436,10 @@ void deviceSetup() {
         Serial << F(": HYPERDECK") << HyperDeck_initIdx;
         deviceMap[a] = HyperDeck_initIdx++;
         HyperDeck[deviceMap[a]].begin(deviceIP[a]);
+
+        // This is known to cause problems with 70+ clips,
+        // But is necessary for next/previous clip features
+        HyperDeck[deviceMap[a]].askForClips(true); 
 #endif
         break;
       case SK_DEV_VIDEOHUB:
@@ -1508,7 +1511,7 @@ void deviceSetup() {
   }
 
   deviceDebugLevel(debugMode);
-}
+  }
 
 /**
  * Device run loop
@@ -2296,7 +2299,6 @@ void HWrunLoop_encoders(SkaarhojEncoders &encoders, const uint8_t *encMap, uint8
       default: // reset
         if (bDown >= 1000) {
           actDown = true;
-          Serial << "bDown: " << bDown << "\n";
         }
         break;
       }
@@ -3051,7 +3053,8 @@ void initController() {
   // Check if debug mode is on, if so reset it for next reset:
   if (EEPROM.read(1) != 0) {
     Serial << F("Debug Mode=1\n");
-    debugMode = true;
+    //debugMode = true;
+    debugMode = 0x80;
     EEPROM.write(1, 0);
   }
 

@@ -285,7 +285,7 @@ uint8_t actionMirror = 0;
 bool _inactivePanel = false;
 bool _inactivePanel_actDown = false;
 bool _calibrateMode = false;
-bool debugMode = SK_SERIAL_OUTPUT;
+uint8_t debugMode = SK_SERIAL_OUTPUT;
 
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
 int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);
@@ -734,12 +734,8 @@ uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const 
    Standard Arduino setup() function
 */
 void setup() {
-
-  delay(10000);
-
   initController(); // Initializes Serial, Hardware, Config mode, Ethernet
   Serial << F("Compiled: ") << __DATE__ << F(" ") << __TIME__ << F("\n");
-
   if (getConfigMode()) {
     webserver.begin();
     webserver.setDefaultCommand(&defaultCmd);
