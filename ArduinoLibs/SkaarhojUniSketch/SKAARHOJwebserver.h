@@ -277,14 +277,24 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
     }
     server << "],";
   }
-  server << F("];var online=0;var SK_MAXACTIONS=") << SK_MAXACTIONS << ";</script>";
+  server << F("];var online=0;var SK_MAXACTIONS=") << SK_MAXACTIONS << ";";
 
-  server << F("<script>var ctrlCfg=[[");
+  server << F("var ctrlCfg=[[");
   ptr = getConfigMemIPIndex();
   for (uint8_t a = 0; a < 8; a++) {
     server << globalConfigMem[ptr + a] << (a == 3 ? "],[" : (a < 7 ? "," : ""));
   }
-  server << F("]];var devCfg=[[");
+
+  server << F("]];var HWdis=[");
+  for (uint8_t a = 0; a < SK_HWCCOUNT; a++) {
+    server << HWdis[a] << (a < SK_HWCCOUNT - 1 ? "," : "");
+  }
+  server << F("];var MODdis=[");
+  for (uint8_t a = 0; a < SK_MODCOUNT; a++) {
+    server << MODdis[a] << (a < SK_MODCOUNT - 1 ? "," : "");
+  }
+
+  server << F("];var devCfg=[[");
   for (uint8_t a = 0; a < SK_DEVICES; a++) {
     ptr = getConfigMemDevIndex(a);
     for (uint8_t b = 0; b < 5; b++) {
@@ -294,17 +304,17 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
   server << F("]];var states=[[\"");
   ptr = getConfigMemStateIndex();
   uint8_t nStates = globalConfigMem[ptr + 1];
-    //Serial << nStates << "\n";
-	//Serial << ptr << "\n";
-	//Serial << globalConfigMem[ptr] << "\n";
+  // Serial << nStates << "\n";
+  // Serial << ptr << "\n";
+  // Serial << globalConfigMem[ptr] << "\n";
   /*
-		for(uint8_t a=0; a<20; a++)	{
-		    Serial << ":" << globalConfigMem[ptr+a] << "\n";
-		}
-	*/	
-		
+                for(uint8_t a=0; a<20; a++)	{
+                    Serial << ":" << globalConfigMem[ptr+a] << "\n";
+                }
+        */
+
   for (uint8_t a = 0; a < nStates; a++) {
-//	Serial << F("'") << ((char *)&globalConfigMem[ptr + 2]) << F("'");
+    //	Serial << F("'") << ((char *)&globalConfigMem[ptr + 2]) << F("'");
     server << (char *)&globalConfigMem[ptr + 2] << (a + 1 < nStates ? F("\"],[\"") : F(""));
     ptr += strlen((char *)&globalConfigMem[ptr + 2]) + 1;
   }
