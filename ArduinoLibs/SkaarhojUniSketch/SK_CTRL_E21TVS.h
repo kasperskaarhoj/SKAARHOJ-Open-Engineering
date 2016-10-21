@@ -17,6 +17,16 @@ uint8_t HWsetupL() {
   }
   statusLED(QUICKBLANK);
 
+#if SK_E21TVS_OPTION_GPIO
+  Serial << F("Option: GPIO\n");
+#else
+  for (uint8_t a = 17; a < 17 + 16; a++) {	// a=17 is the index of the first GPIO pin in the HWc configuration
+    if (a < SK_HWCCOUNT) // Just making sure...
+      HWdis[a] = 1;	// Removes from web interface
+  }
+#endif
+
+
   // Look for a button press / sustained button press to bring the device into config/config default modes:
   uint8_t retVal = 0;
   unsigned long timer = millis();
@@ -50,6 +60,8 @@ uint8_t HWsetupL() {
       buttons.setButtonColorsToDefault();
     }
   }
+
+
   return retVal;
 }
 
