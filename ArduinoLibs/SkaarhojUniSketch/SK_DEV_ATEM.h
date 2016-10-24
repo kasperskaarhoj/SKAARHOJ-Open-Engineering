@@ -1,4 +1,4 @@
-uint16_t AtemSwitcher_vSrcMap[] = {1000, 2001, 2002, 3010, 3020, 6000, 7001, 7002, 10010, 10011, 10020, 10021};
+uint16_t AtemSwitcher_vSrcMap[] = {1000, 2001, 2002, 3010, 3011, 3020, 3021, 6000, 7001, 7002, 10010, 10011, 10020, 10021};
 uint16_t AtemSwitcher_aSrcMap[] = {1001, 1101, 1201, 2001, 2002};
 #define ATEM_HOLDGROUPSIZE 5
 uint16_t AtemSwitcher_holdGroup[2][ATEM_HOLDGROUPSIZE];
@@ -11,19 +11,19 @@ uint8_t AtemSwitcher_holdGroupPtr[2] = {0, 0};
 uint16_t ATEM_idxToVideoSrc(uint8_t devIndex, uint8_t idx) {
   if (idx <= 20) {
     return idx;
-  } else if (idx >= 21 && idx <= 28) {
+  } else if (idx >= 21 && idx <= 30) {
     return AtemSwitcher_vSrcMap[idx - 21];
-  } else if (idx >= 29 && idx <= 34) { // AUX's
-    return AtemSwitcher[devIndex].getAuxSourceInput(idx - 29);
-  } else if (idx >= 35 && idx <= 38) {
-    return AtemSwitcher_vSrcMap[idx - 27];
-  } else if (idx >= 39 && idx <= 46) { // MV1
-    return AtemSwitcher[devIndex].getMultiViewerInputVideoSource(0, idx - 39 + 2);
-  } else if (idx >= 47 && idx <= 54) { // MV2
-    return AtemSwitcher[devIndex].getMultiViewerInputVideoSource(1, idx - 47 + 2);
-  } else if (idx >= 55 && idx <= 58) { // MEM A-D
-    if (_systemMem[idx - 55] < 55)
-      return ATEM_idxToVideoSrc(devIndex, _systemMem[idx - 55]); // Recursive call, but making sure we are not asking for another memory value which would make the loop infinite
+  } else if (idx >= 31 && idx <= 36) { // AUX's
+    return AtemSwitcher[devIndex].getAuxSourceInput(idx - 31);
+  } else if (idx >= 37 && idx <= 40) {
+    return AtemSwitcher_vSrcMap[idx - 29];
+  } else if (idx >= 41 && idx <= 48) { // MV1
+    return AtemSwitcher[devIndex].getMultiViewerInputVideoSource(0, idx - 41 + 2);
+  } else if (idx >= 49 && idx <= 56) { // MV2
+    return AtemSwitcher[devIndex].getMultiViewerInputVideoSource(1, idx - 49 + 2);
+  } else if (idx >= 57 && idx <= 60) { // MEM A-D
+    if (_systemMem[idx - 57] < 57)
+      return ATEM_idxToVideoSrc(devIndex, _systemMem[idx - 57]); // Recursive call, but making sure we are not asking for another memory value which would make the loop infinite
   }
   return -1;
 }
