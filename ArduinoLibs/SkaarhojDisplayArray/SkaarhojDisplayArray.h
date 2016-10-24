@@ -42,6 +42,8 @@ class SkaarhojDisplayArray : public Adafruit_GFX {
 
  private:
 	uint8_t _boardAddress, _boardType, _dataPin, _clockPin, _cs;
+  // The memory buffer for the LCD
+  uint8_t buffer12832[SKAARHOJDISPARRAY_LCDHEIGHT * SKAARHOJDISPARRAY_LCDWIDTH / 8];
 	bool _dc, _rst, _vcc;
   void fastSPIwrite(uint8_t c);
 
