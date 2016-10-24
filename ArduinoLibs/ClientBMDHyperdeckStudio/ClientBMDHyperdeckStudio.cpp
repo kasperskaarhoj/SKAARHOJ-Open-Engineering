@@ -89,6 +89,7 @@ void ClientBMDHyperdeckStudio::_resetDeviceStateVariables() {
   _Hyperdeck_audioInput = 0;
   _Hyperdeck_videoInput = 0;
   _Hyperdeck_fileFormat = 0;
+  _Hyperdeck_lastJogDirection = 0;
 
   for (uint8_t clipNum = 0; clipNum < ClientBMDHyperdeckStudio_CLIPS; clipNum++) {
     _Hyperdeck_fileidlist[clipNum] = 0;
@@ -123,6 +124,12 @@ void ClientBMDHyperdeckStudio::_parseline() {
     if (_serialOutput)
       Serial.println(F("Rejected."));
     _wasRejected = true;
+  } else if(!strcmp_P(_buffer, PSTR("109 out of range"))) {
+    if(_Hyperdeck_lastJogDirection > 0) {
+      gotoTimelineEnd();
+    } else if(_Hyperdeck_lastJogDirection < 0) {
+      gotoTimelineStart();
+    }
   } else if (!strcmp_P(_buffer, PSTR("110 no input"))) {
     _noInput = 1;
   } else if (!strcmp_P(_buffer, PSTR("202 slot info:")) || !strcmp_P(_buffer, PSTR("502 slot info:"))) {
@@ -831,6 +838,8 @@ void ClientBMDHyperdeckStudio::gotoTimecode(uint8_t hh, uint8_t mm, uint8_t ss, 
   _addToBuffer_P(PSTR(":"));
   _addToBuffer_tcValue(ff);
   _addToBuffer_P(PSTR("\n"));
+
+  _Hyperdeck_lastJogDirection = relative;
 
   _sendBuffer();
 }

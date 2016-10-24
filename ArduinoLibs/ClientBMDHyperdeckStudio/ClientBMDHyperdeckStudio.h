@@ -91,6 +91,7 @@ private:
   uint8_t _Hyperdeck_audioInput;
   uint8_t _Hyperdeck_videoInput;
   uint8_t _Hyperdeck_fileFormat;
+  int8_t _Hyperdeck_lastJogDirection;
 
   uint8_t _Hyperdeck_clipCount;
   uint8_t _Hyperdeck_fileidlist[ClientBMDHyperdeckStudio_CLIPS];
