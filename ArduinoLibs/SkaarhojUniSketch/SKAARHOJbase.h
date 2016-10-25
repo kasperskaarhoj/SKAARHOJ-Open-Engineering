@@ -721,7 +721,6 @@ static const uint8_t speedGraphic[] PROGMEM = {
 
 void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask, uint8_t shrink = 0, uint8_t size = 0);
 void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask, uint8_t shrink, uint8_t size) {
-
   uint8_t wShrink = shrink & 1 ? 1 : 0;
   uint8_t hShrink = shrink & 2 ? 1 : 0;
   int16_t tw = size > 0 ? 128 : 64; // Needs to be signed, as string length is subtracted
@@ -858,8 +857,9 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
   if (_extRetValIsLabel) {
     disp.drawRoundRect(0, 0, tw - wShrink, 32 - hShrink, 1, WHITE);
   }
-  if (dispMask)
+  if (dispMask) {
     disp.display(dispMask);
+  }
 }
 #endif
 #if (SK_HWEN_MENU)
@@ -2067,11 +2067,16 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
 
   // Info display, 128x32 OLED:
   bool display_update = false;
+
+  bool disp_written[2] = {false, false};
+
   for (uint8_t a = 0; a < 3; a++) {
     extRetValIsWanted(true);
     retVal = actionDispatch(a + HWc);
-    if (a == 0)
+
+    if (a == 0) {
       display_written = false;
+    }
 
     if (display_prevHash[a] != extRetValHash()) {
       display_prevHash[a] = extRetValHash();
@@ -2088,14 +2093,27 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
       } else {
         if (!display_written || retVal != 0) { // Write if a) previous display was not written with non-blank content and b) if this display has non-blank content
           writeDisplayTile(display, ((a - 1) & 1) << 6, 0, B0, a == 1, 0);
+          disp_written[a-1] = true;
         }
       }
+
       if (debugMode)
         Serial << F("Write info disp! ") << a << F("\n");
     }
+
+    if(disp_written[0] || disp_written[1]) {
+      for(uint8_t i = 0; i < 2; i++) {
+        if(!disp_written[i]) {
+          display_prevHash[i+1]++;
+          a = 1; // Recheck display segments
+        }
+      }
+    }
   }
-  if (display_update)
+
+  if (display_update) {
     display.display(B1);
+  }
 }
 #endif
 

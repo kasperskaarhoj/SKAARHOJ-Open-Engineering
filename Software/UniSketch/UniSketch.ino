@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21CMB6M
+#define SK_MODEL SK_CCUX
 
 
 #define SK_E21CMB6M_OPTION_VSLIDER 0
@@ -412,7 +412,7 @@ void extRetVal2(int16_t value2, uint8_t pair = 1) {
 }
 
 /**
-    Sets short label
+    Sets long label
 */
 void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000) {
   if (17 - 1 - _extRetLongPtr > 0) {
@@ -429,7 +429,7 @@ void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000) {
 }
 
 /**
-    Sets long label
+    Sets short label
 */
 void extRetValShortLabel(const char *shortLabel, const int16_t number = 0) {
   if (11 - 1 - _extRetShortPtr > 0) {
