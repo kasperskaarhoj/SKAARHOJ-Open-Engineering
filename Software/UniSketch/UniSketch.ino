@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_CCUX
+#define SK_MODEL SK_E21SSW
 
 
 #define SK_E21CMB6M_OPTION_VSLIDER 0
@@ -310,6 +310,10 @@ void lDelay(uint16_t delayVal);
 uint8_t HWsetupL();
 void HWtestL();
 void HWcfgDisplay();
+void storePreset(uint8_t index, uint8_t type, uint8_t *buffer);
+bool recallPreset(uint8_t index, uint8_t type, char* buffer);
+bool presetChecksumMatches(uint8_t index);
+bool presetExists(uint8_t index, uint8_t type);
 
 // Pre-declaring functions defined in the individual hardware files
 uint8_t HWnumOfAnalogComponents();
@@ -548,6 +552,10 @@ uint16_t extRetValHash() {
 
 #define EEPROM_FILEBANK_START 4095-6*48
 #define EEPROM_FILEBANK_NUM 6
+
+// Preset types
+#define PRESET_CCU 1
+#define PRESET_VIDEOHUB 2
 
 #define BINARY_EVENT INT16_MIN
 

@@ -1076,8 +1076,6 @@ uint16_t getConfigMemPresetTitleIndex() {
  * EEPROM_PRESET_START: Start of presets
  */
 
-#define EEPROM_FILEBANK_START 4095 - 6 * 48
-#define EEPROM_FILEBANK_NUM 6
 #define EEPROM_PRESET_START 100
 #define EEPROM_PRESET_TOKEN 0x24 // Just some random value that is used for a checksum offset. Change this and existing configuration will be invalidated and has to be rewritten.
 void loadDefaultConfig() {
@@ -1316,6 +1314,94 @@ void presetCheck()	{
 
 /************************************
  *
+ * EEPROM PRESETS
+ *
+ ************************************/
+
+bool presetExists(uint8_t index, uint8_t type) {
+  if(index < EEPROM_FILEBANK_NUM) {
+    if(EEPROM.read(EEPROM_FILEBANK_START + index*48) == type) {
+      return true;
+    }
+  }
+  return false;
+}
+
+uint16_t fletcher16( uint8_t *data, int16_t count )
+{
+   uint16_t sum1 = 0;
+   uint16_t sum2 = 0;
+   int16_t index;
+
+   for( index = 0; index < count; ++index )
+   {
+      sum1 = (sum1 + data[index]) % 255;
+      sum2 = (sum2 + sum1) % 255;
+   }
+
+   return (sum2 << 8) | sum1;
+}
+
+bool presetChecksumMatches(uint8_t index) {
+  uint8_t bytes[48];
+  for(int16_t i = 0; i < 48; i++) {
+    bytes[i] = EEPROM.read(EEPROM_FILEBANK_START + index*48 + i);
+  }
+  uint16_t checksum = (bytes[46] << 8) | bytes[47];
+  bool match = fletcher16(bytes, 46) == checksum;
+  
+  if(!match) {
+    Serial << "Checksum mismatch for preset #" << index << "\n";
+  }
+
+  return match;
+}
+
+// The supplied buffer must be 45 bytes long
+bool recallPreset(uint8_t index, uint8_t type, char* buffer) {
+  if(index < EEPROM_FILEBANK_NUM) {
+    if(presetExists(index, type) && presetChecksumMatches(index)) {
+      // Recall logic:
+
+      // Don't include type byte or checksum, already checked
+      for(uint8_t i=1; i < 48-2; i++) {
+        buffer[i-1] = EEPROM.read(EEPROM_FILEBANK_START + index * 48  + i);
+      }
+      
+      Serial << "Recalled preset #" << index << "\n";
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void storePreset(uint8_t index, uint8_t type, uint8_t *buffer) {
+  uint8_t preset[48];
+  memset(preset, 0, 48);
+
+  preset[0] = type;
+
+  memcpy(preset+1, buffer, 45);
+
+  uint16_t checksum = fletcher16(preset, 46);
+  preset[46] = checksum >> 8;
+  preset[47] = checksum & 0xFF;
+
+
+  for(int16_t i = 0; i < 48; i++) {
+    #ifdef ARDUINO_SKAARDUINO_DUE
+    EEPROM.writeBuffered(EEPROM_FILEBANK_START + index*48 + i, preset[i]);
+    #else
+    EEPROM.write(EEPROM_FILEBANK_START + index*48 + i, preset[i]);
+    #endif
+  }
+  #ifdef ARDUINO_SKAARDUINO_DUE
+  EEPROM.commitPage();
+  #endif
+}
+/************************************
+ *
  * DEVICES SETUP
  *
  ************************************/
@@ -1440,6 +1526,7 @@ void deviceSetup() {
         // This is known to cause problems with 70+ clips,
         // But is necessary for next/previous clip features
         HyperDeck[deviceMap[a]].askForClips(true); 
+        //HyperDeck[deviceMap[a]].askForClipNames(true); 
 #endif
         break;
       case SK_DEV_VIDEOHUB:
@@ -2069,6 +2156,7 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
   bool display_update = false;
 
   bool disp_written[2] = {false, false};
+  bool second_run = false;
 
   for (uint8_t a = 0; a < 3; a++) {
     extRetValIsWanted(true);
@@ -2098,14 +2186,16 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
       }
 
       if (debugMode)
-        Serial << F("Write info disp! ") << a << F("\n");
+        Serial << F("Write info disp! ") << a << F(" HWc ") << HWc << F("\n");
     }
 
-    if(disp_written[0] || disp_written[1]) {
+    // Make sure that all segments are written
+    if(!second_run && (disp_written[0] || disp_written[1])) {
       for(uint8_t i = 0; i < 2; i++) {
         if(!disp_written[i]) {
           display_prevHash[i+1]++;
-          a = 1; // Recheck display segments
+          a = 0; // Recheck display segments
+          second_run = true;
         }
       }
     }
