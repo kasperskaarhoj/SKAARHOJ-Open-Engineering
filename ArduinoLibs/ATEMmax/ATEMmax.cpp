@@ -153,6 +153,26 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 		_finishCommandPacket();
 	}
 
+	void ATEMuni::setCameraControlHueSaturation(uint8_t input, int hue, int saturation) {
+  		_prepareCommandPacket(PSTR("CCmd"),24);
+
+			// Preset values:
+		_packetBuffer[12+_cBBO+4+4+1] = 8;
+		_packetBuffer[12+_cBBO+4+4+2] = 6;
+
+		_packetBuffer[12+_cBBO+4+4+4] = 0x80;
+		_packetBuffer[12+_cBBO+4+4+9] = 0x02;
+
+		_packetBuffer[12+_cBBO+4+4+0] = input;
+
+		_packetBuffer[12+_cBBO+4+4+16] = highByte(hue);
+		_packetBuffer[12+_cBBO+4+4+17] = lowByte(hue);
+
+		_packetBuffer[12+_cBBO+4+4+18] = highByte(saturation);
+		_packetBuffer[12+_cBBO+4+4+19] = lowByte(saturation);
+
+		_finishCommandPacket();
+	}
 
 
 
