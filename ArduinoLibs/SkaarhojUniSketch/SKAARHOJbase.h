@@ -136,7 +136,7 @@ uint16_t *getAnalogComponentCalibration(uint8_t num) {
 
   if ((193 ^ c1 ^ c2 ^ c3) != c4) {
     Serial << F("Initialized calibration for analog component ") << num + 1 << "\n";
-    setAnalogComponentCalibration(num+1, 30, 30, 15);
+    setAnalogComponentCalibration(num + 1, 30, 30, 15);
   }
 
   calibration[0] = EEPROM.read(20 + num * 4 + 1) << 1 | EEPROM.read(20 + num * 4 + 3) >> 7;     // Start
@@ -1399,6 +1399,11 @@ void deviceDebugLevel(uint8_t debugLevel) {
         H264REC[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
+#if SK_DEVICES_SONYVISCAIP
+      case SK_DEV_SONYVISCAIP:
+        SONYVISCAIP[deviceMap[a]].serialOutput(debugLevel);
+        break;
+#endif
       }
     }
   }
@@ -1439,7 +1444,7 @@ void deviceSetup() {
 
         // This is known to cause problems with 70+ clips,
         // But is necessary for next/previous clip features
-        HyperDeck[deviceMap[a]].askForClips(true); 
+        HyperDeck[deviceMap[a]].askForClips(true);
 #endif
         break;
       case SK_DEV_VIDEOHUB:
@@ -1505,13 +1510,20 @@ void deviceSetup() {
 // H264REC[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
+      case SK_DEV_SONYVISCAIP:
+#if SK_DEVICES_SONYVISCAIP
+        Serial << F(": SONYVISCAIP") << SONYVISCAIP_initIdx;
+        deviceMap[a] = SONYVISCAIP_initIdx++;
+        SONYVISCAIP[deviceMap[a]].begin(deviceIP[a]);
+#endif
+        break;
       }
       Serial << F(", IP=") << deviceIP[a] << F("\n");
     }
   }
 
   deviceDebugLevel(debugMode);
-  }
+}
 
 /**
  * Device run loop
@@ -1583,6 +1595,12 @@ void deviceRunLoop() {
 #if SK_DEVICES_H264REC
         H264REC[deviceMap[a]].runLoop();
         deviceReady[a] = H264REC[deviceMap[a]].hasInitialized();
+#endif
+        break;
+      case SK_DEV_SONYVISCAIP:
+#if SK_DEVICES_SONYVISCAIP
+        SONYVISCAIP[deviceMap[a]].runLoop();
+        deviceReady[a] = SONYVISCAIP[deviceMap[a]].hasInitialized();
 #endif
         break;
       }
@@ -2846,6 +2864,13 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
+                case SK_DEV_SONYVISCAIP:
+#if SK_DEVICES_SONYVISCAIP
+                  retValueT = evaluateAction_SONYVISCAIP(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  if (retValue == 0)
+                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+#endif
+                  break;
                 }
               } else {
                 // Serial << "Device disabled!\n";
@@ -2978,11 +3003,11 @@ void initController() {
 
         while (isConfigButtonPushed()) {
           if (millis() - cfgButtonPressTime > 10000) {
-	          statusLED(LED_RED);
-	          Serial << F("Clearing presets, revert to normal boot\n");
-			  clearPresets();
-			  configMode = 0;
-			  break;
+            statusLED(LED_RED);
+            Serial << F("Clearing presets, revert to normal boot\n");
+            clearPresets();
+            configMode = 0;
+            break;
           }
         }
         break;
@@ -3053,7 +3078,7 @@ void initController() {
   // Check if debug mode is on, if so reset it for next reset:
   if (EEPROM.read(1) != 0) {
     Serial << F("Debug Mode=1\n");
-    //debugMode = true;
+    // debugMode = true;
     debugMode = 0x80;
     EEPROM.write(1, 0);
   }
