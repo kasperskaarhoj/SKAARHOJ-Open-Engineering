@@ -57,7 +57,7 @@ class SkaarhojASCIIClient : public SkaarhojBufferTools
 	bool _pendingAnswer;			// If set, a command has been sent (assumed to provoke a response). Reset again by the _parselineDispatch() function (that is; when we get any response in return which confirms basic connection.)
 	bool _pendingEOT;	// Set false when we encounter end-of-transmission char
 	
-	uint8_t _section;
+	uint16_t _section;
 	
 	void (*_handlerPing)(void);
 	void (*_handlerStatus)(void);

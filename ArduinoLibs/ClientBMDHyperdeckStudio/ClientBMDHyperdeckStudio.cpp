@@ -44,6 +44,7 @@ void ClientBMDHyperdeckStudio::begin(IPAddress ip) {
 
   _wasRejected = false;
   _askForClips = false;
+  _askForClipNames = false;
 }
 
 /**
@@ -89,11 +90,14 @@ void ClientBMDHyperdeckStudio::_resetDeviceStateVariables() {
   _Hyperdeck_audioInput = 0;
   _Hyperdeck_videoInput = 0;
   _Hyperdeck_fileFormat = 0;
+  _Hyperdeck_lastJogDirection = 0;
 
   for (uint8_t clipNum = 0; clipNum < ClientBMDHyperdeckStudio_CLIPS; clipNum++) {
     _Hyperdeck_fileidlist[clipNum] = 0;
     memset(_Hyperdeck_filelist[clipNum], 0, ClientBMDHyperdeckStudio_CLIPNAMELEN);
   }
+
+  memset(_Hyperdeck_currentFile, 0, ClientBMDHyperdeckStudio_CLIPNAMELEN);
 }
 
 /**
@@ -123,6 +127,12 @@ void ClientBMDHyperdeckStudio::_parseline() {
     if (_serialOutput)
       Serial.println(F("Rejected."));
     _wasRejected = true;
+  } else if(!strcmp_P(_buffer, PSTR("109 out of range"))) {
+    if(_Hyperdeck_lastJogDirection > 0) {
+      gotoTimelineEnd();
+    } else if(_Hyperdeck_lastJogDirection < 0) {
+      gotoTimelineStart();
+    }
   } else if (!strcmp_P(_buffer, PSTR("110 no input"))) {
     _noInput = 1;
   } else if (!strcmp_P(_buffer, PSTR("202 slot info:")) || !strcmp_P(_buffer, PSTR("502 slot info:"))) {
@@ -131,8 +141,10 @@ void ClientBMDHyperdeckStudio::_parseline() {
     _section = 205;
     clipCounter = 0;
     clipIndex = 0;
-  } else if (!strcmp_P(_buffer, PSTR("208 transport info:")) || !strcmp_P(_buffer, PSTR("508 transport info:"))) {
+  } else if (!strcmp_P(_buffer, PSTR("208 transport info:"))) {
     _section = 208;
+  } else if(!strcmp_P(_buffer, PSTR("508 transport info:"))) {
+    _section = 508;
   } else if (!strcmp_P(_buffer, PSTR("209 notify:"))) {
     _section = 209;
   } else if (!strcmp_P(_buffer, PSTR("210 remote info:")) || !strcmp_P(_buffer, PSTR("510 remote info:"))) {
@@ -200,8 +212,17 @@ void ClientBMDHyperdeckStudio::_parseline() {
         _Hyperdeck_clipCount = parseInt();
       } else {
         clipCounter++;
+
+        // Saving the current file name separately
+        uint8_t fileIndex = parseInt();
+        if(fileIndex == getClipId()) {
+          uint8_t nameLen = strchr(_buffer + _bufferReadIndex + 2, ' ') - (_buffer + _bufferReadIndex + 2); // Substrating two pointer
+          strncpy(_Hyperdeck_currentFile, _buffer + _bufferReadIndex + 2, nameLen < (ClientBMDHyperdeckStudio_CLIPNAMELEN - 1) ? nameLen : (ClientBMDHyperdeckStudio_CLIPNAMELEN - 1));
+          _Hyperdeck_currentClipId = fileIndex;
+        }
+
         if (clipCounter > (int)(_Hyperdeck_clipCount - ClientBMDHyperdeckStudio_CLIPS) && clipIndex < ClientBMDHyperdeckStudio_CLIPS) { // Last comparison is a security check...
-          _Hyperdeck_fileidlist[clipIndex] = parseInt();
+          _Hyperdeck_fileidlist[clipIndex] = fileIndex;
           uint8_t nameLen = strchr(_buffer + _bufferReadIndex + 2, ' ') - (_buffer + _bufferReadIndex + 2); // Substrating two pointer
           strncpy(_Hyperdeck_filelist[clipIndex], _buffer + _bufferReadIndex + 2, nameLen < (ClientBMDHyperdeckStudio_CLIPNAMELEN - 1) ? nameLen : (ClientBMDHyperdeckStudio_CLIPNAMELEN - 1));
 
@@ -219,6 +240,7 @@ void ClientBMDHyperdeckStudio::_parseline() {
       }
       break;
     case 208: // Transport info:
+    case 508:
       if (isNextPartOfBuffer_P(PSTR("status: "))) {
         if (isNextPartOfBuffer_P(PSTR("preview"))) { // preview==1
           _Hyperdeck_transportStatus = ClientBMDHyperdeckStudio_TRANSPORT_PREVIEW;
@@ -269,7 +291,17 @@ void ClientBMDHyperdeckStudio::_parseline() {
       }
 
       else if (isNextPartOfBuffer_P(PSTR("clip id: "))) {
-        _Hyperdeck_clipId = parseInt();
+        if(isNextPartOfBuffer_P(PSTR("none"))) {
+          _Hyperdeck_clipId = 255;
+          // Reset current file name
+          memset(_Hyperdeck_currentFile, 0, ClientBMDHyperdeckStudio_CLIPNAMELEN);
+        } else {
+          _Hyperdeck_clipId = parseInt();
+          if(_section == 508 && _askForClipNames) {
+            _pullStatus(2);
+          }
+        }
+
         if (_serialOutput > 1)
           Serial.print(F("_Hyperdeck_clipId="));
         if (_serialOutput > 1)
@@ -626,6 +658,7 @@ void ClientBMDHyperdeckStudio::_pullStatus(uint8_t step) {
 
 // This functions is called if you wish to pull the list of clips from the HyperDeck. The reason why you may not want that is, that IF the harddrive has a LOT of files (in my test 70 files will be enough, maybe less), it will somehow mess up the communication so the connection is disconnected right after. It's still unknown why this happens and it needs to be bug-fixed. But for now, getting all clip names is also less typical for Arduino control, so it's not such a big deal.
 void ClientBMDHyperdeckStudio::askForClips(bool askForClips) { _askForClips = askForClips; }
+void ClientBMDHyperdeckStudio::askForClipNames(bool askForNames) { _askForClipNames = askForNames; }
 
 /********************
  GETTING VALUES
@@ -657,7 +690,22 @@ uint8_t ClientBMDHyperdeckStudio::getFileFormat() { return _Hyperdeck_fileFormat
 int ClientBMDHyperdeckStudio::getInputStatus() { return _noInput; }
 uint8_t ClientBMDHyperdeckStudio::getTotalClipCount() { return _Hyperdeck_clipCount; }
 uint8_t ClientBMDHyperdeckStudio::getFileClipId(uint8_t index) { return _Hyperdeck_fileidlist[index]; }
-char *ClientBMDHyperdeckStudio::getFileName(uint8_t index) { return _Hyperdeck_filelist[index]; }
+char *ClientBMDHyperdeckStudio::getFileName(uint8_t index) { 
+  if(index < ClientBMDHyperdeckStudio_CLIPS) {
+    return _Hyperdeck_filelist[index];
+  } else if(_Hyperdeck_currentClipId == _Hyperdeck_clipId) {
+    return _Hyperdeck_currentFile;
+  }
+
+  return "N/A";
+}
+char *ClientBMDHyperdeckStudio::getCurrentFileName() { 
+  if(_Hyperdeck_currentClipId != _Hyperdeck_clipId) {
+    return "Loading...";
+  } else {
+    return _Hyperdeck_currentFile; 
+  }
+}
 
 /********************
  SETTING VALUES
@@ -831,6 +879,8 @@ void ClientBMDHyperdeckStudio::gotoTimecode(uint8_t hh, uint8_t mm, uint8_t ss, 
   _addToBuffer_P(PSTR(":"));
   _addToBuffer_tcValue(ff);
   _addToBuffer_P(PSTR("\n"));
+
+  _Hyperdeck_lastJogDirection = relative;
 
   _sendBuffer();
 }

@@ -311,6 +311,10 @@ void lDelay(uint16_t delayVal);
 uint8_t HWsetupL();
 void HWtestL();
 void HWcfgDisplay();
+void storePreset(uint8_t index, uint8_t type, uint8_t *buffer);
+bool recallPreset(uint8_t index, uint8_t type, char* buffer);
+bool presetChecksumMatches(uint8_t index);
+bool presetExists(uint8_t index, uint8_t type);
 
 // Pre-declaring functions defined in the individual hardware files
 uint8_t HWnumOfAnalogComponents();
@@ -413,7 +417,7 @@ void extRetVal2(int16_t value2, uint8_t pair = 1) {
 }
 
 /**
-    Sets short label
+    Sets long label
 */
 void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000) {
   if (17 - 1 - _extRetLongPtr > 0) {
@@ -430,7 +434,7 @@ void extRetValLongLabel(const char *longLabel, const int16_t number = 0x8000) {
 }
 
 /**
-    Sets long label
+    Sets short label
 */
 void extRetValShortLabel(const char *shortLabel, const int16_t number = 0) {
   if (11 - 1 - _extRetShortPtr > 0) {
@@ -549,6 +553,10 @@ uint16_t extRetValHash() {
 
 #define EEPROM_FILEBANK_START 4095-6*48
 #define EEPROM_FILEBANK_NUM 6
+
+// Preset types
+#define PRESET_CCU 1
+#define PRESET_VIDEOHUB 2
 
 #define BINARY_EVENT INT16_MIN
 

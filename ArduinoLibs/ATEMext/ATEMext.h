@@ -47,6 +47,7 @@ private:
 	void setCameraControlLift(uint8_t input, int liftR, int liftG, int liftB, int liftY);
 	void setCameraControlGamma(uint8_t input, int gammaR, int gammaG, int gammaB, int gammaY);
 	void setCameraControlGain(uint8_t input, int gainR, int gainG, int gainB, int gainY);
+	void setCameraControlHueSaturation(uint8_t input, int hue, int saturation);
 
 
 

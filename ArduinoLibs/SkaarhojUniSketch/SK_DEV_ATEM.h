@@ -174,80 +174,85 @@ uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int16_t pulseCount
   return macroIdx;
 }
 
-uint16_t fletcher16( uint8_t *data, int16_t count )
-{
-   uint16_t sum1 = 0;
-   uint16_t sum2 = 0;
-   int16_t index;
-
-   for( index = 0; index < count; ++index )
-   {
-      sum1 = (sum1 + data[index]) % 255;
-      sum2 = (sum2 + sum1) % 255;
-   }
-
-   return (sum2 << 8) | sum1;
-}
-
 static uint16_t lastSettingsRecall;
 static uint8_t lastLoadedPreset = 0;
+static uint8_t lastLoadedCamera = 0;
 
-bool presetChecksumMatches(uint8_t num) {
-  uint8_t bytes[48];
-  for(int16_t i = 0; i < 48; i++) {
-    bytes[i] = EEPROM.read(EEPROM_FILEBANK_START + num*48 + i);
-  }
-  uint16_t checksum = (bytes[46] << 8) | bytes[47];
-  Serial << "Checksum " << checksum << " vs. " << fletcher16(bytes, 46) << "\n";
-  return fletcher16(bytes, 46) == checksum;
+void storeCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
+  uint8_t preset[45];
+  int16_t *p16 = (int16_t*) preset;
+
+  memset(preset, 0, 45);
+
+  p16[0] = AtemSwitcher[devIndex].getCameraControlLiftY(camera);
+  p16[1] = AtemSwitcher[devIndex].getCameraControlLiftR(camera);
+  p16[2] = AtemSwitcher[devIndex].getCameraControlLiftG(camera);
+  p16[3] = AtemSwitcher[devIndex].getCameraControlLiftB(camera);
+
+  p16[4] = AtemSwitcher[devIndex].getCameraControlGammaY(camera);
+  p16[5] = AtemSwitcher[devIndex].getCameraControlGammaR(camera);
+  p16[6] = AtemSwitcher[devIndex].getCameraControlGammaG(camera);
+  p16[7] = AtemSwitcher[devIndex].getCameraControlGammaB(camera);
+
+  p16[8] = AtemSwitcher[devIndex].getCameraControlGainY(camera);
+  p16[9] = AtemSwitcher[devIndex].getCameraControlGainR(camera);
+  p16[10] = AtemSwitcher[devIndex].getCameraControlGainG(camera);
+  p16[11] = AtemSwitcher[devIndex].getCameraControlGainB(camera);
+
+  p16[12] = AtemSwitcher[devIndex].getCameraControlContrast(camera);
+  p16[13] = AtemSwitcher[devIndex].getCameraControlSaturation(camera);
+  p16[14] = AtemSwitcher[devIndex].getCameraControlHue(camera);
+  p16[15] = AtemSwitcher[devIndex].getCameraControlLumMix(camera);
+
+  p16[16] = AtemSwitcher[devIndex].getCameraControlShutter(camera);
+  p16[17] = AtemSwitcher[devIndex].getCameraControlWhiteBalance(camera);
+  p16[18] = AtemSwitcher[devIndex].getCameraControlIris(camera);
+
+  preset[38] = AtemSwitcher[devIndex].getCameraControlGain(camera);
+
+  storePreset(num, PRESET_CCU, preset);
 }
 
-void storeCameraPreset(uint8_t camera, uint8_t num) {
-  uint8_t preset[48];
-  memset(preset, 0, 48);
-
-  preset[0] = 1; // CCU preset data
-
-  uint16_t checksum = fletcher16(preset, 46);
-  preset[46] = checksum >> 8;
-  preset[47] = checksum & 0xFF;
-
-
-  for(int16_t i = 0; i < 48; i++) {
-    #ifdef ARDUINO_SKAARDUINO_DUE
-    EEPROM.writeBuffered(EEPROM_FILEBANK_START + num*48 + i, preset[i]);
-    #else
-    EEPROM.write(EEPROM_FILEBANK_START + num*48 + i, preset[i]);
-    #endif
-  }
-  #ifdef ARDUINO_SKAARDUINO_DUE
-  EEPROM.commitPage();
-  #endif
-}
-
-bool CCUPresetExists(uint8_t preset) {
-  if(preset < EEPROM_FILEBANK_NUM) {
-    if(EEPROM.read(EEPROM_FILEBANK_START + preset*48) == 1) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool recallCameraPreset(uint8_t camera, uint8_t preset) {
-  Serial << "Recalling preset #" << preset << "\n";
-  if(preset < EEPROM_FILEBANK_NUM) {
-    if(CCUPresetExists(preset) && presetChecksumMatches(preset)) {
-      if(preset != 0) {
+bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
+  if(num < EEPROM_FILEBANK_NUM) {
+    if(presetExists(num, PRESET_CCU) && presetChecksumMatches(num)) {
+      if(num != 0) {
         if((uint16_t)millis() - lastSettingsRecall > 10000) {
-          storeCameraPreset(camera, 0);
-          lastSettingsRecall = millis();
+          storeCameraPreset(devIndex, camera, 0);
         }
+        lastSettingsRecall = millis();
+        lastLoadedPreset = num;
+        lastLoadedCamera = camera;
+      } else {
+        lastSettingsRecall = 0;
       }
 
       // Recall logic:
+      uint8_t preset[45];
 
-      Serial << "Recalled preset!!\n";
+      recallPreset(num, PRESET_CCU, preset);
+
+      int16_t *p16 = (int16_t*) preset;
+
+      //AtemSwitcher[devIndex].commandBundleStart();
+      
+      AtemSwitcher[devIndex].setCameraControlLift(camera, p16[1], p16[2], p16[3], p16[0]);
+      AtemSwitcher[devIndex].setCameraControlGamma(camera, p16[5], p16[6], p16[7], p16[4]);
+      AtemSwitcher[devIndex].setCameraControlGain(camera, p16[9], p16[10], p16[11], p16[8]);
+
+      AtemSwitcher[devIndex].setCameraControlContrast(camera, p16[12]);
+      AtemSwitcher[devIndex].setCameraControlSaturation(camera, p16[13]);
+      AtemSwitcher[devIndex].setCameraControlHue(camera, p16[14]);
+      AtemSwitcher[devIndex].setCameraControlLumMix(camera, p16[15]);
+
+      AtemSwitcher[devIndex].setCameraControlShutter(camera, p16[16]);
+      AtemSwitcher[devIndex].setCameraControlWhiteBalance(camera, p16[17]);
+      AtemSwitcher[devIndex].setCameraControlIris(camera, p16[18]);
+
+      AtemSwitcher[devIndex].setCameraControlGain(camera, preset[30]);
+
+      //AtemSwitcher[devIndex].commandBundleEnd();
+
       return true;
     }
   }
@@ -1453,7 +1458,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 29: // Downstream Keyer Parameters
     break;
 #endif
-#if SK_MODEL == SK_RCP
+#if SK_MODEL == SK_RCP || SK_MODEL == SK_E21SSW
   case 30: // Focus
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
@@ -1927,6 +1932,13 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     break;
   case 43: // CCU Settings
+    cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
+
+    // Reload grace period in progress
+    if(_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (lastLoadedCamera != cam || lastLoadedPreset != globalConfigMem[actionPtr + 3])) {
+      _systemHWcActionCacheFlag[HWc][actIdx] == 0; // Another reload occurred, cancel the grace period
+    }
+
     if(actDown && value == BINARY_EVENT) {
       _systemHWcActionCache[HWc][actIdx] = millis();
       switch(globalConfigMem[actionPtr + 2]) {
@@ -1935,14 +1947,19 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
           break;
         case 1: // Recall
-          if(recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3])) {
-            _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+          if(_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - lastSettingsRecall < 10000) {
+            recallCameraPreset(devIndex, cam, 0);
+            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
           } else {
-            _systemHWcActionCacheFlag[HWc][actIdx] = 8;
+            if(recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+              _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+            } else {
+              _systemHWcActionCacheFlag[HWc][actIdx] = 8;
+            }
           }
           break;
         case 2: // Store
-          storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
           _systemHWcActionCacheFlag[HWc][actIdx] = 2;
           break;
       }
@@ -1951,7 +1968,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if(_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
       switch(globalConfigMem[actionPtr + 2]) {
         case 0:
-          storeCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3]);
+          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
           _systemHWcActionCacheFlag[HWc][actIdx] = 2;
           break;
       }
@@ -1961,10 +1978,10 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       if(_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
         if(globalConfigMem[actionPtr + 2] == 0) {
           if((uint16_t)millis() - lastSettingsRecall < 10000) {
-            recallCameraPreset(globalConfigMem[actionPtr + 1], 0);
+            recallCameraPreset(devIndex, cam, 0);
             _systemHWcActionCacheFlag[HWc][actIdx] = 0;
           } else {
-            if(recallCameraPreset(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3])) {
+            if(recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
               _systemHWcActionCacheFlag[HWc][actIdx] = 4;
             } else {
               _systemHWcActionCacheFlag[HWc][actIdx] = 8;
@@ -1983,9 +2000,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       retVal = 2 | 0x20;
     }
     else if(_systemHWcActionCacheFlag[HWc][actIdx] & 4) {
-      Serial << ((uint16_t)millis() - lastSettingsRecall) << "\n";
       if((uint16_t)millis() - lastSettingsRecall < 10000) {
-        retVal = (millis()%1000 > 500?4:0);
+        retVal = (millis()&512?4:0);
       } else {
         _systemHWcActionCacheFlag[HWc][actIdx] = 0;
       }
@@ -1999,7 +2015,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       if(globalConfigMem[actionPtr + 2] == 2) {
         retVal = 5;
       } else {
-        retVal = CCUPresetExists(globalConfigMem[actionPtr + 3])?5:0;
+        retVal = presetExists(globalConfigMem[actionPtr + 3], PRESET_CCU)?5:0;
       }
     }
 

@@ -14,8 +14,8 @@ open-source hardware by purchasing products from Adafruit as well!
 #define _BV(bit) (1 << (bit))
 #endif
 
-// The memory buffer for the LCD
-static uint8_t buffer12832[SKAARHOJDISPARRAY_LCDHEIGHT * SKAARHOJDISPARRAY_LCDWIDTH / 8];
+  // The memory buffer for the LCD
+  static uint8_t buffer12832[SKAARHOJDISPARRAY_LCDHEIGHT * SKAARHOJDISPARRAY_LCDWIDTH / 8];
 
 // The most basic function, set a single pixel
 void SkaarhojDisplayArray::drawPixel(int16_t x, int16_t y, uint16_t color) {

@@ -91,6 +91,8 @@ private:
   uint8_t _Hyperdeck_audioInput;
   uint8_t _Hyperdeck_videoInput;
   uint8_t _Hyperdeck_fileFormat;
+  int8_t _Hyperdeck_lastJogDirection;
+  bool _askForClipNames;
 
   uint8_t _Hyperdeck_clipCount;
   uint8_t _Hyperdeck_fileidlist[ClientBMDHyperdeckStudio_CLIPS];
@@ -99,6 +101,9 @@ private:
   uint8_t _Hyperdeck_filelen_mm[ClientBMDHyperdeckStudio_CLIPS];
   uint8_t _Hyperdeck_filelen_ss[ClientBMDHyperdeckStudio_CLIPS];
   uint8_t _Hyperdeck_filelen_ff[ClientBMDHyperdeckStudio_CLIPS];
+
+  char _Hyperdeck_currentFile[ClientBMDHyperdeckStudio_CLIPNAMELEN];
+  uint8_t _Hyperdeck_currentClipId;
 
 public:
   ClientBMDHyperdeckStudio();
@@ -118,6 +123,7 @@ private:
 
 public:
   void askForClips(bool askForClips);
+  void askForClipNames(bool askForNames);
 
   // These commands get the internal state of this class. Those states are updated through subscription to updates (the "notify:" command) as well as asking periodically to pull status on all accounts (_pullStatus()). After sending  a command, these values will typically receive an update within a few hundred milliseconds.
 
@@ -148,6 +154,7 @@ public:
   uint8_t getTotalClipCount();
   uint8_t getFileClipId(uint8_t index);
   char *getFileName(uint8_t index);
+  char *getCurrentFileName();
 
   // These commands send commands to the device (no matter if the device is ready or not)
   void previewEnable(boolean enable);
