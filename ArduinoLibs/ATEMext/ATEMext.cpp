@@ -149,7 +149,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 		_finishCommandPacket();
 	}
 
-	void ATEMuni::setCameraControlHueSaturation(uint8_t input, int hue, int saturation) {
+	void ATEMext::setCameraControlHueSaturation(uint8_t input, int hue, int saturation) {
   		_prepareCommandPacket(PSTR("CCmd"),24);
 
 			// Preset values:
