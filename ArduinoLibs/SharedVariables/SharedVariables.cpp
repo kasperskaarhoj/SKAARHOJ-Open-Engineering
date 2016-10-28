@@ -1115,8 +1115,8 @@ void SharedVariables::getRemoteVariableOverUDP(const uint8_t slaveAddress, const
 	}
 }
 
-int SharedVariables::read_int(const uint8_t *dataArray)	{
-	return *((int *)dataArray);
+int16_t SharedVariables::read_int(const uint8_t *dataArray)	{
+	return *((int16_t *)dataArray);
 }
 bool SharedVariables::read_bool(const uint8_t *dataArray)	{
 	return dataArray[0]?true:false;
