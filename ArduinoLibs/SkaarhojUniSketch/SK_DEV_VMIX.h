@@ -105,7 +105,7 @@ uint16_t evaluateAction_VMIX(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-  case 2: // Preview Source
+  case 2: // Act/Preview Source
     if (actDown) {
       if (globalConfigMem[actionPtr + 2] == 3) {       // Source cycle by button push
         _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used to show button is highlighted here
@@ -160,54 +160,58 @@ uint16_t evaluateAction_VMIX(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-  case 3: // array(1,4,"Overlay"), array(1,100,"Input"), array("Toggle","In","Out","Off","Zoom","Preview","Hold Down")
+  case 3: // array(1+2+8, "OverlayInput", array(1,4,"Overlay"), array("Toggle","In","Out","Off","Zoom","Preview","Hold Down"), array(1,100,"Input"),array(1,100,"To")),	//
     if (actDown) {
-      switch (globalConfigMem[actionPtr + 3]) {
+      switch (globalConfigMem[actionPtr + 2]) {
       case 0: // Toggle
-        if (VMIX[devIndex].getOverlayActive(globalConfigMem[actionPtr + 1]) && VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1]) == globalConfigMem[actionPtr + 2]) {
-          VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        if (VMIX[devIndex].getOverlayActive(globalConfigMem[actionPtr + 1] - 1) && VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1) == (globalConfigMem[actionPtr + 3] - 1)) {
+          VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3]==101 ? VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1) : globalConfigMem[actionPtr + 3] - 1);
         } else {
-          VMIX[devIndex].setOverlayInputOn(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+          VMIX[devIndex].setOverlayInputOn(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3]==101 ? VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1) : globalConfigMem[actionPtr + 3] - 1);
         }
         break;
       case 1: // In
       case 6: // Hold down
-        VMIX[devIndex].setOverlayInputOn(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        VMIX[devIndex].setOverlayInputOn(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3]==101 ? VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1) : globalConfigMem[actionPtr + 3] - 1);
         break;
       case 2: // Out
-        VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1] - 1, true);
         break;
       case 3: // Off immediately
-        VMIX[devIndex].setOverlayInputInstantOff(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        VMIX[devIndex].setOverlayInputInstantOff(globalConfigMem[actionPtr + 1] - 1, true);
         break;
       case 4: // Zoom
-        VMIX[devIndex].setOverlayInputZoom(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        VMIX[devIndex].setOverlayInputZoom(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3] - 1);
         break;
       case 5: // Preview
-        VMIX[devIndex].setOverlayInputPreview(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        VMIX[devIndex].setOverlayInputPreview(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3] - 1);
         break;
       }
     }
-    if (actUp && globalConfigMem[actionPtr + 3] == 6) { // Hold down
-      VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+    if (actUp && globalConfigMem[actionPtr + 2] == 6) { // Hold down
+      VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3] - 1);
     }
     if (pulses & 0xFFFE) {
-      if (VMIX[devIndex].getOverlayActive(globalConfigMem[actionPtr + 1]) && VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1]) == globalConfigMem[actionPtr + 2]) {
-        VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+      if (globalConfigMem[actionPtr + 2] == 5) {
+        VMIX[devIndex].setOverlayInputPreview(globalConfigMem[actionPtr + 1] - 1, pulsesHelper(VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1), globalConfigMem[actionPtr + 3] - 1, globalConfigMem[actionPtr + 4] - 1, true, pulses, 1, 1));
       } else {
-        VMIX[devIndex].setOverlayInputOn(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        if (VMIX[devIndex].getOverlayActive(globalConfigMem[actionPtr + 1] - 1) && VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1) == (globalConfigMem[actionPtr + 3] - 1)) {
+          VMIX[devIndex].setOverlayInputOff(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3] - 1);
+        } else {
+          VMIX[devIndex].setOverlayInputOn(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 3] - 1);
+        }
       }
     }
-    retVal = (VMIX[devIndex].getOverlayActive(globalConfigMem[actionPtr + 1]) && VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1]) == globalConfigMem[actionPtr + 2]) ? (4 | 0x20) : 5;
+    retVal = (VMIX[devIndex].getOverlayActive(globalConfigMem[actionPtr + 1] - 1) && VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1) == globalConfigMem[actionPtr + 3] - 1) ? (4 | 0x20) : 5;
 
     if (extRetValIsWanted()) {
       extRetVal(0, 7);
-      extRetValShortLabel(PSTR("Overlay "), (globalConfigMem[actionPtr + 1]) + 1);
-      extRetValLongLabel(PSTR("Overlay "), (globalConfigMem[actionPtr + 1]) + 1);
+      extRetValShortLabel(PSTR("Overlay "), (globalConfigMem[actionPtr + 1] - 1) + 1);
+      extRetValLongLabel(PSTR("Overlay "), (globalConfigMem[actionPtr + 1] - 1) + 1);
       if (_systemHWcActionPrefersLabel[HWc]) {
         extRetValColor(retVal & 0x20 ? B110111 : B101010);
         extRetValSetLabel(true);
-        switch (globalConfigMem[actionPtr + 3]) {
+        switch (globalConfigMem[actionPtr + 2]) {
         case 0: // Toggle
           extRetValTxt_P(PSTR("OnOff"), 0);
           break;
@@ -233,8 +237,14 @@ uint16_t evaluateAction_VMIX(const uint8_t devIndex, const uint16_t actionPtr, c
           break;
         }
       } else {
-        extRetValColor(B101010);
-        extRetValTxt_P(retVal & 0x20 ? PSTR("On") : PSTR("Off"), 0);
+        if (globalConfigMem[actionPtr + 2] != 5) {
+          extRetValColor(B101010);
+          extRetValTxt_P(retVal & 0x20 ? PSTR("On") : PSTR("Off"), 0);
+        } else {
+          extRetValTxt(VMIX[devIndex].getInputPropertiesLongName(VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1)), 0);
+          extRetValTxtShort(VMIX[devIndex].getInputPropertiesShortName(VMIX[devIndex].getOverlayInput(globalConfigMem[actionPtr + 1] - 1)));
+          extRetVal2(0);
+        }
       }
     }
     return retVal;
@@ -261,7 +271,7 @@ uint16_t evaluateAction_VMIX(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 5: // Fade
     if (actDown || (pulses & 0xFFFE)) {
-      VMIX[devIndex].performFadeFader(true);
+      VMIX[devIndex].performFadeFader(globalConfigMem[actionPtr + 1] - 1);
       _systemHWcActionCacheFlag[HWc][actIdx] = true;
     }
     if (actUp) {
@@ -308,6 +318,80 @@ uint16_t evaluateAction_VMIX(const uint8_t devIndex, const uint16_t actionPtr, c
         VMIX[devIndex].setTransitionPosition(0);
       }
     }
+    break;
+  case 9: // Change Value
+    if (actDown) {
+      VMIX[devIndex].setXamlValue(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 2], VMIX[devIndex].getXamlValue(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 2]) + globalConfigMem[actionPtr + 4] * (globalConfigMem[actionPtr + 3] == 1 ? -1 : 1));
+    }
+    break;
+  case 10: // Count Down
+    if (actDown) {
+      uint8_t cDmode = 0;
+      if (globalConfigMem[actionPtr + 3] == 0) {
+        _systemHWcActionCache[HWc][actIdx] = (_systemHWcActionCache[HWc][actIdx] + 1) % 2;
+        cDmode = _systemHWcActionCache[HWc][actIdx] + 1;
+      } else {
+        cDmode = globalConfigMem[actionPtr + 3] - 1;
+      }
+      VMIX[devIndex].setCountDownMode(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 2], cDmode);
+    }
+    retVal = _systemHWcActionCache[HWc][actIdx] ? (4 | 0x20) : 5;
+    return retVal;
+    break;
+  case 11: // Stream
+    if (actDown) {
+      VMIX[devIndex].performStreamAction(!VMIX[devIndex].getStreamActive());
+    }
+    retVal = VMIX[devIndex].getStreamActive() ? (2 | 0x20) : 5;
+    return retVal;
+    break;
+  case 12: // Record
+    if (actDown) {
+      VMIX[devIndex].performRecordAction(!VMIX[devIndex].getRecordActive());
+    }
+    retVal = VMIX[devIndex].getRecordActive() ? (2 | 0x20) : 5;
+    return retVal;
+    break;
+  case 13: // Replay setup
+    if (actDown) {
+      VMIX[devIndex].setReplayPropertiesSeconds(globalConfigMem[actionPtr + 1]);
+      VMIX[devIndex].setReplayPropertiesSpeed(globalConfigMem[actionPtr + 2] == 0 ? 25 : 50);
+    }
+    break;
+  case 14: // Replay
+    if (actDown) {
+      VMIX[devIndex].performReplayAction(true);
+    }
+    break;
+  case 15: // Transition To
+    if (actDown) {
+      VMIX[devIndex].setActiveInputTransitionDuration(globalConfigMem[actionPtr + 1] - 1, globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 3] * 100);
+    }
+
+    retVal = VMIX[devIndex].getActiveInput() == (globalConfigMem[actionPtr + 1] - 1) ? (2 | 0x20) : 5;
+
+    // The availabilty should not affect the color in cycle mode
+    if (VMIX[devIndex].getInputPropertiesType(globalConfigMem[actionPtr + 1] - 1) == 0) {
+      retVal = 0;
+    }
+
+    if (extRetValIsWanted()) {
+      extRetVal(0, 7); // , pulses&B1 - not using this because it has no significance for this type of action.
+      extRetValShortLabel(PSTR("Trans. To"));
+      extRetValLongLabel(PSTR("Transition To"));
+
+      if (_systemHWcActionPrefersLabel[HWc] && globalConfigMem[actionPtr + 2] != 3) {
+        extRetValColor(!retVal ? 0 : (retVal & 0x20 ? B110000 : B101010));
+        extRetValSetLabel(true);
+        extRetValTxt(VMIX[devIndex].getInputPropertiesLongName(globalConfigMem[actionPtr + 1] - 1), 0);
+        extRetValTxtShort(VMIX[devIndex].getInputPropertiesShortName(globalConfigMem[actionPtr + 1] - 1));
+      } else {
+        extRetValColor(!retVal ? 0 : B110101);
+        extRetValTxt(VMIX[devIndex].getInputPropertiesLongName(VMIX[devIndex].getActiveInput()), 0);
+        extRetValTxtShort(VMIX[devIndex].getInputPropertiesShortName(VMIX[devIndex].getActiveInput()));
+      }
+    }
+    return retVal;
     break;
   }
 
