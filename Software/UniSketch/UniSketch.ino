@@ -568,11 +568,11 @@ uint16_t extRetValHash() {
 
  ****************************************/
 #if SK_DEVICES_ATEM
-#include "ATEMbase.h";
-#include "ATEMuni.h";
+#include "ATEMbase.h"
+#include "ATEMuni.h"
 ATEMuni AtemSwitcher[SK_DEVICES_ATEM];
 uint8_t AtemSwitcher_initIdx = 0;
-#include "SK_DEV_ATEM.h";
+#include "SK_DEV_ATEM.h"
 #endif
 
 #if SK_DEVICES_HYPERDECK
