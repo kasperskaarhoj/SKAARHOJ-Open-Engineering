@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21SSW
+#define SK_MODEL SK_E21CMB6
 
 
 #define SK_E21CMB6M_OPTION_VSLIDER 0
@@ -71,6 +71,7 @@
 #define SK_DEV_PANAAWHEX 9
 #define SK_DEV_MATROXMONARCH 10
 #define SK_DEV_H264REC 11
+#define SK_DEV_SONYVISCAIP 12
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -567,11 +568,11 @@ uint16_t extRetValHash() {
 
  ****************************************/
 #if SK_DEVICES_ATEM
-#include "ATEMbase.h";
-#include "ATEMuni.h";
+#include "ATEMbase.h"
+#include "ATEMuni.h"
 ATEMuni AtemSwitcher[SK_DEVICES_ATEM];
 uint8_t AtemSwitcher_initIdx = 0;
-#include "SK_DEV_ATEM.h";
+#include "SK_DEV_ATEM.h"
 #endif
 
 #if SK_DEVICES_HYPERDECK
@@ -655,11 +656,15 @@ uint8_t H264REC_initIdx = 0;
 #include "SK_DEV_H264REC.h";
 #endif
 
+#if SK_DEVICES_SONYVISCAIP
+#include "ClientSonyVISCAoverIP.h"
+ClientSonyVISCAoverIP SONYVISCAIP[SK_DEVICES_SONYVISCAIP];
+uint8_t SONYVISCAIP_initIdx = 0;
+#include "SK_DEV_SONYVISCAIP.h";
+#endif
 
-#define SK_DEV_ROLANDVR50 8
-#define SK_DEV_PANAAWHEX 9
-#define SK_DEV_MATROXMONARCH 10
-#define SK_DEV_H264REC 11
+
+
 
 
 /****************************************

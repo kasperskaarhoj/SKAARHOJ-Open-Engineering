@@ -432,1259 +432,1261 @@ void ClientVMixUDP::resetCommandBundle() {
 
 
 
+	// *********************************
+	// **
+	// ** Implementations in ClientVMixUDP.c:
+	// **
+	// *********************************
 
-
-
-
-
-// *********************************
-// **
-// ** Implementations in ClientVMixUDP.c:
-// **
-// *********************************
-
-void ClientVMixUDP::_parseGetCommands(const char *cmdStr)	{
-	uint8_t overlay,input,index;
-	
-	long temp;
-	
-	_readToPacketBuffer();	// Default
-
-
-
-	
-	if(!strcmp_P(cmdStr, PSTR("ActI"))) {
+	void ClientVMixUDP::_parseGetCommands(const char *cmdStr)	{
+		uint8_t input,transition,overlay,index;
 		
-			#if VMIX_debug
-			temp = vmixActiveInput;
-			#endif					
-			vmixActiveInput = _packetBuffer[0];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixActiveInput!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixActiveInput = "));
-				Serial.println(vmixActiveInput);
-			}
-			#endif
-			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("PrvI"))) {
+		long temp;
 		
-			#if VMIX_debug
-			temp = vmixPreviewInput;
-			#endif					
-			vmixPreviewInput = _packetBuffer[0];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixPreviewInput!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixPreviewInput = "));
-				Serial.println(vmixPreviewInput);
-			}
-			#endif
-			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("FtbS"))) {
+		_readToPacketBuffer();	// Default
+
+
+#if VMIX_debug
+	if ((_serialOutput==0x80 && vmixActiveInput!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+	Serial.print("VMix Incoming Cmd:");
+	Serial.println(cmdStr);
+	}
+#endif
+
+
 		
-			#if VMIX_debug
-			temp = vmixFadeToBlackActive;
-			#endif					
-			vmixFadeToBlackActive = _packetBuffer[0];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixFadeToBlackActive!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixFadeToBlackActive = "));
-				Serial.println(vmixFadeToBlackActive);
-			}
-			#endif
+		if(!strcmp_P(cmdStr, PSTR("ActI"))) {
 			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("OlAc"))) {
-		
-		overlay = _packetBuffer[0];
-		if (overlay<=5) {
-			#if VMIX_debug
-			temp = vmixOverlayActive[overlay];
-			#endif					
-			vmixOverlayActive[overlay] = _packetBuffer[1];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixOverlayActive[overlay]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixOverlayActive[overlay=")); Serial.print(overlay); Serial.print(F("] = "));
-				Serial.println(vmixOverlayActive[overlay]);
-			}
-			#endif
+				#if VMIX_debug
+				temp = vmixActiveInput;
+				#endif					
+				vmixActiveInput = _packetBuffer[0];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixActiveInput!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixActiveInput = "));
+					Serial.println(vmixActiveInput);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("PrvI"))) {
 			
-			#if VMIX_debug
-			temp = vmixOverlayInput[overlay];
-			#endif					
-			vmixOverlayInput[overlay] = _packetBuffer[2];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixOverlayInput[overlay]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixOverlayInput[overlay=")); Serial.print(overlay); Serial.print(F("] = "));
-				Serial.println(vmixOverlayInput[overlay]);
-			}
-			#endif
+				#if VMIX_debug
+				temp = vmixPreviewInput;
+				#endif					
+				vmixPreviewInput = _packetBuffer[0];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixPreviewInput!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixPreviewInput = "));
+					Serial.println(vmixPreviewInput);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("FtbS"))) {
 			
+				#if VMIX_debug
+				temp = vmixFadeToBlackActive;
+				#endif					
+				vmixFadeToBlackActive = _packetBuffer[0];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixFadeToBlackActive!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixFadeToBlackActive = "));
+					Serial.println(vmixFadeToBlackActive);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("OlAc"))) {
+			
+			overlay = _packetBuffer[0];
+			if (overlay<=5) {
+				#if VMIX_debug
+				temp = vmixOverlayActive[overlay];
+				#endif					
+				vmixOverlayActive[overlay] = _packetBuffer[1];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixOverlayActive[overlay]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixOverlayActive[overlay=")); Serial.print(overlay); Serial.print(F("] = "));
+					Serial.println(vmixOverlayActive[overlay]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixOverlayInput[overlay];
+				#endif					
+				vmixOverlayInput[overlay] = _packetBuffer[2];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixOverlayInput[overlay]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixOverlayInput[overlay=")); Serial.print(overlay); Serial.print(F("] = "));
+					Serial.println(vmixOverlayInput[overlay]);
+				}
+				#endif
+				
+			}
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("RecS"))) {
+			
+				#if VMIX_debug
+				temp = vmixRecordActive;
+				#endif					
+				vmixRecordActive = _packetBuffer[0];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixRecordActive!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixRecordActive = "));
+					Serial.println(vmixRecordActive);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("StrS"))) {
+			
+				#if VMIX_debug
+				temp = vmixStreamActive;
+				#endif					
+				vmixStreamActive = _packetBuffer[0];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixStreamActive!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixStreamActive = "));
+					Serial.println(vmixStreamActive);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("AuLv"))) {
+			
+			input = _packetBuffer[0];
+			if (input<=99) {
+				#if VMIX_debug
+				temp = vmixAudioLevelsLeft[input];
+				#endif					
+				vmixAudioLevelsLeft[input] = (int16_t) word(_packetBuffer[1], _packetBuffer[2]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixAudioLevelsLeft[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixAudioLevelsLeft[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixAudioLevelsLeft[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixAudioLevelsRight[input];
+				#endif					
+				vmixAudioLevelsRight[input] = (int16_t) word(_packetBuffer[3], _packetBuffer[4]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixAudioLevelsRight[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixAudioLevelsRight[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixAudioLevelsRight[input]);
+				}
+				#endif
+				
+			}
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("MAuL"))) {
+			
+				#if VMIX_debug
+				temp = vmixMasterAudioLevelsLeft;
+				#endif					
+				vmixMasterAudioLevelsLeft = (int16_t) word(_packetBuffer[0], _packetBuffer[1]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixMasterAudioLevelsLeft!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixMasterAudioLevelsLeft = "));
+					Serial.println(vmixMasterAudioLevelsLeft);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixMasterAudioLevelsRight;
+				#endif					
+				vmixMasterAudioLevelsRight = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixMasterAudioLevelsRight!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixMasterAudioLevelsRight = "));
+					Serial.println(vmixMasterAudioLevelsRight);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("InPs"))) {
+			
+			input = _packetBuffer[0];
+			if (input<=99) {
+				#if VMIX_debug
+				temp = vmixInputPosition[input];
+				#endif					
+				vmixInputPosition[input] = word(_packetBuffer[1], _packetBuffer[2]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixInputPosition[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixInputPosition[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixInputPosition[input]);
+				}
+				#endif
+				
+			}
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("XaVa"))) {
+			
+			input = _packetBuffer[0];
+			index = _packetBuffer[1];
+			if (input<=99 && index<=10) {
+				#if VMIX_debug
+				temp = vmixXamlValue[input][index];
+				#endif					
+				vmixXamlValue[input][index] = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixXamlValue[input][index]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixXamlValue[input=")); Serial.print(input); Serial.print(F("][index=")); Serial.print(index); Serial.print(F("] = "));
+					Serial.println(vmixXamlValue[input][index]);
+				}
+				#endif
+				
+			}
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("InPr"))) {
+			
+			input = _packetBuffer[0];
+			if (input<=99) {
+				memset(vmixInputPropertiesLongName[input],0,21);
+				strncpy(vmixInputPropertiesLongName[input], (char *)(_packetBuffer+1), 20);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
+					Serial.print(F("vmixInputPropertiesLongName[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixInputPropertiesLongName[input]);
+				}
+				#endif
+				
+				memset(vmixInputPropertiesShortName[input],0,5);
+				strncpy(vmixInputPropertiesShortName[input], (char *)(_packetBuffer+21), 4);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
+					Serial.print(F("vmixInputPropertiesShortName[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixInputPropertiesShortName[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixInputPropertiesLoop[input];
+				#endif					
+				vmixInputPropertiesLoop[input] = _packetBuffer[25];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixInputPropertiesLoop[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixInputPropertiesLoop[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixInputPropertiesLoop[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixInputPropertiesType[input];
+				#endif					
+				vmixInputPropertiesType[input] = _packetBuffer[26];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixInputPropertiesType[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixInputPropertiesType[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixInputPropertiesType[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixInputPropertiesState[input];
+				#endif					
+				vmixInputPropertiesState[input] = _packetBuffer[27];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixInputPropertiesState[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixInputPropertiesState[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixInputPropertiesState[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixInputPropertiesDuration[input];
+				#endif					
+				vmixInputPropertiesDuration[input] = word(_packetBuffer[28], _packetBuffer[29]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixInputPropertiesDuration[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixInputPropertiesDuration[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixInputPropertiesDuration[input]);
+				}
+				#endif
+				
+			}
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("AuPr"))) {
+			
+			input = _packetBuffer[0];
+			if (input<=99) {
+				#if VMIX_debug
+				temp = vmixAudioPropertiesSolo[input];
+				#endif					
+				vmixAudioPropertiesSolo[input] = _packetBuffer[1];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixAudioPropertiesSolo[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixAudioPropertiesSolo[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixAudioPropertiesSolo[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixAudioPropertiesBalance[input];
+				#endif					
+				vmixAudioPropertiesBalance[input] = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixAudioPropertiesBalance[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixAudioPropertiesBalance[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixAudioPropertiesBalance[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixAudioPropertiesVolume[input];
+				#endif					
+				vmixAudioPropertiesVolume[input] = (int16_t) word(_packetBuffer[4], _packetBuffer[5]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixAudioPropertiesVolume[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixAudioPropertiesVolume[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixAudioPropertiesVolume[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixAudioPropertiesMuted[input];
+				#endif					
+				vmixAudioPropertiesMuted[input] = _packetBuffer[6];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixAudioPropertiesMuted[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixAudioPropertiesMuted[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixAudioPropertiesMuted[input]);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixAudioPropertiesBusses[input];
+				#endif					
+				vmixAudioPropertiesBusses[input] = _packetBuffer[7];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixAudioPropertiesBusses[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixAudioPropertiesBusses[input=")); Serial.print(input); Serial.print(F("] = "));
+					Serial.println(vmixAudioPropertiesBusses[input]);
+				}
+				#endif
+				
+			}
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("MAuP"))) {
+			
+				#if VMIX_debug
+				temp = vmixMasterAudioPropertiesVolume;
+				#endif					
+				vmixMasterAudioPropertiesVolume = (int16_t) word(_packetBuffer[0], _packetBuffer[1]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixMasterAudioPropertiesVolume!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixMasterAudioPropertiesVolume = "));
+					Serial.println(vmixMasterAudioPropertiesVolume);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixMasterAudioPropertiesHeadphoneVolume;
+				#endif					
+				vmixMasterAudioPropertiesHeadphoneVolume = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixMasterAudioPropertiesHeadphoneVolume!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixMasterAudioPropertiesHeadphoneVolume = "));
+					Serial.println(vmixMasterAudioPropertiesHeadphoneVolume);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixMasterAudioPropertiesMuted;
+				#endif					
+				vmixMasterAudioPropertiesMuted = _packetBuffer[4];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixMasterAudioPropertiesMuted!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixMasterAudioPropertiesMuted = "));
+					Serial.println(vmixMasterAudioPropertiesMuted);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("_ver"))) {
+			
+				#if VMIX_debug
+				temp = vmixvMixVersionA;
+				#endif					
+				vmixvMixVersionA = word(_packetBuffer[0], _packetBuffer[1]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixvMixVersionA!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixvMixVersionA = "));
+					Serial.println(vmixvMixVersionA);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixvMixVersionB;
+				#endif					
+				vmixvMixVersionB = word(_packetBuffer[2], _packetBuffer[3]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixvMixVersionB!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixvMixVersionB = "));
+					Serial.println(vmixvMixVersionB);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixvMixVersionC;
+				#endif					
+				vmixvMixVersionC = word(_packetBuffer[4], _packetBuffer[5]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixvMixVersionC!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixvMixVersionC = "));
+					Serial.println(vmixvMixVersionC);
+				}
+				#endif
+				
+				#if VMIX_debug
+				temp = vmixvMixVersionD;
+				#endif					
+				vmixvMixVersionD = word(_packetBuffer[6], _packetBuffer[7]);
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixvMixVersionD!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixvMixVersionD = "));
+					Serial.println(vmixvMixVersionD);
+				}
+				#endif
+				
+		} else 
+		if(!strcmp_P(cmdStr, PSTR("_top"))) {
+			
+				#if VMIX_debug
+				temp = vmixTopologyInputs;
+				#endif					
+				vmixTopologyInputs = _packetBuffer[0];
+				#if VMIX_debug
+				if ((_serialOutput==0x80 && vmixTopologyInputs!=temp) || (_serialOutput==0x81 && !hasInitialized()) || _serialOutput==0x82)	{
+					Serial.print(F("vmixTopologyInputs = "));
+					Serial.println(vmixTopologyInputs);
+				}
+				#endif
+				
+		} else 
+		{}
+	}
+
+
+
+
+
+		/**
+		 * Get Active Input; Input
+		 */
+		uint8_t ClientVMixUDP::getActiveInput() {
+			return vmixActiveInput;
 		}
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("RecS"))) {
 		
-			#if VMIX_debug
-			temp = vmixRecordActive;
-			#endif					
-			vmixRecordActive = _packetBuffer[0];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixRecordActive!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixRecordActive = "));
-				Serial.println(vmixRecordActive);
-			}
-			#endif
-			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("StrS"))) {
+		/**
+		 * Set Active Input; Input
+		 * input 	0-99: 1-100 Input Index
+		 */
+		void ClientVMixUDP::setActiveInput(uint8_t input) {
 		
-			#if VMIX_debug
-			temp = vmixStreamActive;
-			#endif					
-			vmixStreamActive = _packetBuffer[0];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixStreamActive!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixStreamActive = "));
-				Serial.println(vmixStreamActive);
-			}
-			#endif
+  	  		_prepareCommandPacket(PSTR("CAcI"),1);
+	
+			_packetBuffer[12+_cBBO+4+4+0] = input;
 			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("AuLv"))) {
-		
-		input = _packetBuffer[0];
-		if (input<=99) {
-			#if VMIX_debug
-			temp = vmixAudioLevelsLeft[input];
-			#endif					
-			vmixAudioLevelsLeft[input] = (int16_t) word(_packetBuffer[1], _packetBuffer[2]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixAudioLevelsLeft[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixAudioLevelsLeft[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixAudioLevelsLeft[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixAudioLevelsRight[input];
-			#endif					
-			vmixAudioLevelsRight[input] = (int16_t) word(_packetBuffer[3], _packetBuffer[4]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixAudioLevelsRight[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixAudioLevelsRight[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixAudioLevelsRight[input]);
-			}
-			#endif
-			
+ 	   		_finishCommandPacket();
+	
 		}
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("MAuL"))) {
 		
-			#if VMIX_debug
-			temp = vmixMasterAudioLevelsLeft;
-			#endif					
-			vmixMasterAudioLevelsLeft = (int16_t) word(_packetBuffer[0], _packetBuffer[1]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixMasterAudioLevelsLeft!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixMasterAudioLevelsLeft = "));
-				Serial.println(vmixMasterAudioLevelsLeft);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixMasterAudioLevelsRight;
-			#endif					
-			vmixMasterAudioLevelsRight = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixMasterAudioLevelsRight!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixMasterAudioLevelsRight = "));
-				Serial.println(vmixMasterAudioLevelsRight);
-			}
-			#endif
-			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("InPs"))) {
+		/**
+		 * Set Transition To; Duration
+		 * input 	0-99: 1-100 Input Index
+		 * transition 	0: Cut, 1: Fade, 2: Zoom, 3: Wipe, 4: Slide, 5: Fly, 6: CrossZoom, 7: FlyRotate, 8: Cube, 9: CubeZoom, 10: VerticalWipe, 11: VerticalSlide, 12: Merge
+		 * duration 	0-9999: Time in ms
+		 */
+		void ClientVMixUDP::setActiveInputTransitionDuration(uint8_t input, uint8_t transition, uint16_t duration) {
 		
-		input = _packetBuffer[0];
-		if (input<=99) {
-			#if VMIX_debug
-			temp = vmixInputPosition[input];
-			#endif					
-			vmixInputPosition[input] = word(_packetBuffer[1], _packetBuffer[2]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixInputPosition[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixInputPosition[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixInputPosition[input]);
-			}
-			#endif
+  	  		_prepareCommandPacket(PSTR("TrTo"),4,(_packetBuffer[12+_cBBO+4+4+0]==input) && (_packetBuffer[12+_cBBO+4+4+1]==transition));
+	
+			_packetBuffer[12+_cBBO+4+4+0] = input;
 			
+			_packetBuffer[12+_cBBO+4+4+1] = transition;
+			
+			_packetBuffer[12+_cBBO+4+4+2] = highByte(duration);
+			_packetBuffer[12+_cBBO+4+4+3] = lowByte(duration);
+			
+ 	   		_finishCommandPacket();
+	
 		}
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("RplS"))) {
 		
-			#if VMIX_debug
-			temp = vmixReplayActive;
-			#endif					
-			vmixReplayActive = _packetBuffer[0];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixReplayActive!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixReplayActive = "));
-				Serial.println(vmixReplayActive);
-			}
-			#endif
-			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("XaVa"))) {
-		
-		input = _packetBuffer[0];
-		index = _packetBuffer[1];
-		if (input<=99 && index<=9) {
-			#if VMIX_debug
-			temp = vmixXamlValue[input][index];
-			#endif					
-			vmixXamlValue[input][index] = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixXamlValue[input][index]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixXamlValue[input=")); Serial.print(input); Serial.print(F("][index=")); Serial.print(index); Serial.print(F("] = "));
-				Serial.println(vmixXamlValue[input][index]);
-			}
-			#endif
-			
+		/**
+		 * Get Preview Input; Input
+		 */
+		uint8_t ClientVMixUDP::getPreviewInput() {
+			return vmixPreviewInput;
 		}
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("InPr"))) {
 		
-		input = _packetBuffer[0];
-		if (input<=99) {
-			memset(vmixInputPropertiesLongName[input],0,21);
-			strncpy(vmixInputPropertiesLongName[input], (char *)(_packetBuffer+1), 20);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixInputPropertiesLongName[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixInputPropertiesLongName[input]);
-			}
-			#endif
+		/**
+		 * Set Preview Input; Input
+		 * input 	0-99: 1-100 Input Index
+		 */
+		void ClientVMixUDP::setPreviewInput(uint8_t input) {
+		
+  	  		_prepareCommandPacket(PSTR("CPvI"),1);
+	
+			_packetBuffer[12+_cBBO+4+4+0] = input;
 			
-			memset(vmixInputPropertiesShortName[input],0,5);
-			strncpy(vmixInputPropertiesShortName[input], (char *)(_packetBuffer+21), 4);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixInputPropertiesShortName[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixInputPropertiesShortName[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixInputPropertiesLoop[input];
-			#endif					
-			vmixInputPropertiesLoop[input] = _packetBuffer[25];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixInputPropertiesLoop[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixInputPropertiesLoop[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixInputPropertiesLoop[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixInputPropertiesType[input];
-			#endif					
-			vmixInputPropertiesType[input] = _packetBuffer[26];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixInputPropertiesType[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixInputPropertiesType[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixInputPropertiesType[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixInputPropertiesState[input];
-			#endif					
-			vmixInputPropertiesState[input] = _packetBuffer[27];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixInputPropertiesState[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixInputPropertiesState[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixInputPropertiesState[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixInputPropertiesDuration[input];
-			#endif					
-			vmixInputPropertiesDuration[input] = word(_packetBuffer[28], _packetBuffer[29]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixInputPropertiesDuration[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixInputPropertiesDuration[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixInputPropertiesDuration[input]);
-			}
-			#endif
-			
+ 	   		_finishCommandPacket();
+	
 		}
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("AuPr"))) {
 		
-		input = _packetBuffer[0];
-		if (input<=99) {
-			#if VMIX_debug
-			temp = vmixAudioPropertiesSolo[input];
-			#endif					
-			vmixAudioPropertiesSolo[input] = _packetBuffer[1];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixAudioPropertiesSolo[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixAudioPropertiesSolo[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixAudioPropertiesSolo[input]);
-			}
-			#endif
+		/**
+		 * Set Cut; Action
+		 * action 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::performCutAction(bool action) {
+		
+  	  		_prepareCommandPacket(PSTR("DCut"),1);
+	
+			_packetBuffer[12+_cBBO+4+4+0] = action;
 			
-			#if VMIX_debug
-			temp = vmixAudioPropertiesBalance[input];
-			#endif					
-			vmixAudioPropertiesBalance[input] = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixAudioPropertiesBalance[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixAudioPropertiesBalance[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixAudioPropertiesBalance[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixAudioPropertiesVolume[input];
-			#endif					
-			vmixAudioPropertiesVolume[input] = (int16_t) word(_packetBuffer[4], _packetBuffer[5]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixAudioPropertiesVolume[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixAudioPropertiesVolume[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixAudioPropertiesVolume[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixAudioPropertiesMuted[input];
-			#endif					
-			vmixAudioPropertiesMuted[input] = _packetBuffer[6];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixAudioPropertiesMuted[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixAudioPropertiesMuted[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixAudioPropertiesMuted[input]);
-			}
-			#endif
-			
-			#if VMIX_debug
-			temp = vmixAudioPropertiesBusses[input];
-			#endif					
-			vmixAudioPropertiesBusses[input] = _packetBuffer[7];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixAudioPropertiesBusses[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixAudioPropertiesBusses[input=")); Serial.print(input); Serial.print(F("] = "));
-				Serial.println(vmixAudioPropertiesBusses[input]);
-			}
-			#endif
-			
+ 	   		_finishCommandPacket();
+	
 		}
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("MAuP"))) {
 		
-			#if VMIX_debug
-			temp = vmixMasterAudioPropertiesVolume;
-			#endif					
-			vmixMasterAudioPropertiesVolume = (int16_t) word(_packetBuffer[0], _packetBuffer[1]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixMasterAudioPropertiesVolume!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixMasterAudioPropertiesVolume = "));
-				Serial.println(vmixMasterAudioPropertiesVolume);
-			}
-			#endif
+		/**
+		 * Set Fade; Fader
+		 * fader 	0-3: Fader 1-4
+		 */
+		void ClientVMixUDP::performFadeFader(uint8_t fader) {
+		
+  	  		_prepareCommandPacket(PSTR("DFad"),1);
+	
+			_packetBuffer[12+_cBBO+4+4+0] = fader;
 			
-			#if VMIX_debug
-			temp = vmixMasterAudioPropertiesHeadphoneVolume;
-			#endif					
-			vmixMasterAudioPropertiesHeadphoneVolume = (int16_t) word(_packetBuffer[2], _packetBuffer[3]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixMasterAudioPropertiesHeadphoneVolume!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixMasterAudioPropertiesHeadphoneVolume = "));
-				Serial.println(vmixMasterAudioPropertiesHeadphoneVolume);
-			}
-			#endif
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Set Fade-To-Black; Action
+		 * action 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::performFadeToBlackAction(bool action) {
+		
+  	  		_prepareCommandPacket(PSTR("FtbA"),1);
+	
+			_packetBuffer[12+_cBBO+4+4+0] = action;
 			
-			#if VMIX_debug
-			temp = vmixMasterAudioPropertiesMuted;
-			#endif					
-			vmixMasterAudioPropertiesMuted = _packetBuffer[4];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixMasterAudioPropertiesMuted!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixMasterAudioPropertiesMuted = "));
-				Serial.println(vmixMasterAudioPropertiesMuted);
-			}
-			#endif
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Get Fade-To-Black; Active
+		 */
+		bool ClientVMixUDP::getFadeToBlackActive() {
+			return vmixFadeToBlackActive;
+		}
+		
+		/**
+		 * Set Transition Position; Position
+		 * position 	0-255
+		 */
+		void ClientVMixUDP::setTransitionPosition(uint8_t position) {
+		
+  	  		_prepareCommandPacket(PSTR("CTPs"),1);
+	
+			_packetBuffer[12+_cBBO+4+4+0] = position;
 			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("_ver"))) {
+ 	   		_finishCommandPacket();
+	
+		}
 		
-			#if VMIX_debug
-			temp = vmixvMixVersionA;
-			#endif					
-			vmixvMixVersionA = word(_packetBuffer[0], _packetBuffer[1]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixvMixVersionA!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixvMixVersionA = "));
-				Serial.println(vmixvMixVersionA);
-			}
-			#endif
+		/**
+		 * Get Overlay Active; Active
+		 * overlay 	0-5:1-6 Overlay
+		 */
+		bool ClientVMixUDP::getOverlayActive(uint8_t overlay) {
+			return vmixOverlayActive[overlay];
+		}
+		
+		/**
+		 * Get Overlay Active; Input
+		 * overlay 	0-5:1-6 Overlay
+		 */
+		uint8_t ClientVMixUDP::getOverlayInput(uint8_t overlay) {
+			return vmixOverlayInput[overlay];
+		}
+		
+		/**
+		 * Set Overlay Active; InputOn
+		 * overlay 	0-5:1-6 Overlay
+		 * inputOn 	0-99: 1-100 Input Index
+		 */
+		void ClientVMixUDP::setOverlayInputOn(uint8_t overlay, uint8_t inputOn) {
+		
+  	  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
+	
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = overlay;
 			
-			#if VMIX_debug
-			temp = vmixvMixVersionB;
-			#endif					
-			vmixvMixVersionB = word(_packetBuffer[2], _packetBuffer[3]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixvMixVersionB!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixvMixVersionB = "));
-				Serial.println(vmixvMixVersionB);
-			}
-			#endif
+			_packetBuffer[12+_cBBO+4+4+2] = inputOn;
 			
-			#if VMIX_debug
-			temp = vmixvMixVersionC;
-			#endif					
-			vmixvMixVersionC = word(_packetBuffer[4], _packetBuffer[5]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixvMixVersionC!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixvMixVersionC = "));
-				Serial.println(vmixvMixVersionC);
-			}
-			#endif
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Set Overlay Active; InputOff
+		 * overlay 	0-5:1-6 Overlay
+		 * inputOff 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setOverlayInputOff(uint8_t overlay, bool inputOff) {
+		
+  	  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
+	
+				// Set Mask: 2
+			_packetBuffer[12+_cBBO+4+4+0] |= 2;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = overlay;
 			
-			#if VMIX_debug
-			temp = vmixvMixVersionD;
-			#endif					
-			vmixvMixVersionD = word(_packetBuffer[6], _packetBuffer[7]);
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixvMixVersionD!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixvMixVersionD = "));
-				Serial.println(vmixvMixVersionD);
-			}
-			#endif
+			_packetBuffer[12+_cBBO+4+4+3] = inputOff;
 			
-	} else 
-	if(!strcmp_P(cmdStr, PSTR("_top"))) {
+ 	   		_finishCommandPacket();
+	
+		}
 		
-			#if VMIX_debug
-			temp = vmixTopologyInputs;
-			#endif					
-			vmixTopologyInputs = _packetBuffer[0];
-			#if VMIX_debug
-			if ((_serialOutput==0x80 && vmixTopologyInputs!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
-				Serial.print(F("vmixTopologyInputs = "));
-				Serial.println(vmixTopologyInputs);
-			}
-			#endif
+		/**
+		 * Set Overlay Active; InputInstantOff
+		 * overlay 	0-5:1-6 Overlay
+		 * inputInstantOff 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setOverlayInputInstantOff(uint8_t overlay, bool inputInstantOff) {
+		
+  	  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
+	
+				// Set Mask: 4
+			_packetBuffer[12+_cBBO+4+4+0] |= 4;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = overlay;
 			
-	} else 
-	{}
-}
-
-
-
-
-
-	/**
-	 * Get Active Input; Input
-	 */
-	uint8_t ClientVMixUDP::getActiveInput() {
-		return vmixActiveInput;
-	}
+			_packetBuffer[12+_cBBO+4+4+4] = inputInstantOff;
+			
+ 	   		_finishCommandPacket();
 	
-	/**
-	 * Set Active Input; Input
-	 * input 	0-99: 1-100 Input Index
-	 */
-	void ClientVMixUDP::setActiveInput(uint8_t input) {
-	
-  		_prepareCommandPacket(PSTR("CAcI"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = input;
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Preview Input; Input
-	 */
-	uint8_t ClientVMixUDP::getPreviewInput() {
-		return vmixPreviewInput;
-	}
-	
-	/**
-	 * Set Preview Input; Input
-	 * input 	0-99: 1-100 Input Index
-	 */
-	void ClientVMixUDP::setPreviewInput(uint8_t input) {
-	
-  		_prepareCommandPacket(PSTR("CPvI"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = input;
+		/**
+		 * Set Overlay Active; InputZoom
+		 * overlay 	0-5:1-6 Overlay
+		 * inputZoom 	0-99: 1-100 Input Index
+		 */
+		void ClientVMixUDP::setOverlayInputZoom(uint8_t overlay, uint8_t inputZoom) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
 	
-	/**
-	 * Set Cut; Action
-	 * action 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::performCutAction(bool action) {
+				// Set Mask: 8
+			_packetBuffer[12+_cBBO+4+4+0] |= 8;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = overlay;
+			
+			_packetBuffer[12+_cBBO+4+4+5] = inputZoom;
+			
+ 	   		_finishCommandPacket();
 	
-  		_prepareCommandPacket(PSTR("DCut"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = action;
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Fade; Fader
-	 * fader 	0-3: Fader 1-4
-	 */
-	void ClientVMixUDP::performFadeFader(uint8_t fader) {
-	
-  		_prepareCommandPacket(PSTR("DFad"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = fader;
+		/**
+		 * Set Overlay Active; InputPreview
+		 * overlay 	0-5:1-6 Overlay
+		 * inputPreview 	0-99: 1-100 Input Index
+		 */
+		void ClientVMixUDP::setOverlayInputPreview(uint8_t overlay, uint8_t inputPreview) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
 	
-	/**
-	 * Set Fade-To-Black; Action
-	 * action 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::performFadeToBlackAction(bool action) {
+				// Set Mask: 16
+			_packetBuffer[12+_cBBO+4+4+0] |= 16;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = overlay;
+			
+			_packetBuffer[12+_cBBO+4+4+6] = inputPreview;
+			
+ 	   		_finishCommandPacket();
 	
-  		_prepareCommandPacket(PSTR("FtbA"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = action;
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Fade-To-Black; Active
-	 */
-	bool ClientVMixUDP::getFadeToBlackActive() {
-		return vmixFadeToBlackActive;
-	}
-	
-	/**
-	 * Set Transition Position; Position
-	 * position 	0-255
-	 */
-	void ClientVMixUDP::setTransitionPosition(uint8_t position) {
-	
-  		_prepareCommandPacket(PSTR("CTPs"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = position;
+		/**
+		 * Get Record; Active
+		 */
+		bool ClientVMixUDP::getRecordActive() {
+			return vmixRecordActive;
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Overlay Active; Active
-	 * overlay 	0-5:1-6 Overlay
-	 */
-	bool ClientVMixUDP::getOverlayActive(uint8_t overlay) {
-		return vmixOverlayActive[overlay];
-	}
-	
-	/**
-	 * Get Overlay Active; Input
-	 * overlay 	0-5:1-6 Overlay
-	 */
-	uint8_t ClientVMixUDP::getOverlayInput(uint8_t overlay) {
-		return vmixOverlayInput[overlay];
-	}
-	
-	/**
-	 * Set Overlay Active; InputOn
-	 * overlay 	0-5:1-6 Overlay
-	 * inputOn 	0-99: 1-100 Input Index
-	 */
-	void ClientVMixUDP::setOverlayInputOn(uint8_t overlay, uint8_t inputOn) {
-	
-  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = overlay;
+		/**
+		 * Set Record; Action
+		 * action 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::performRecordAction(bool action) {
 		
-		_packetBuffer[12+_cBBO+4+4+2] = inputOn;
+  	  		_prepareCommandPacket(PSTR("RecA"),1);
+	
+			_packetBuffer[12+_cBBO+4+4+0] = action;
+			
+ 	   		_finishCommandPacket();
+	
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Overlay Active; InputOff
-	 * overlay 	0-5:1-6 Overlay
-	 * inputOff 	0-99: 1-100 Input Index
-	 */
-	void ClientVMixUDP::setOverlayInputOff(uint8_t overlay, uint8_t inputOff) {
-	
-  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
-
-			// Set Mask: 2
-		_packetBuffer[12+_cBBO+4+4+0] |= 2;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = overlay;
+		/**
+		 * Get Stream; Active
+		 */
+		bool ClientVMixUDP::getStreamActive() {
+			return vmixStreamActive;
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+3] = inputOff;
+		/**
+		 * Set Stream; Action
+		 * action 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::performStreamAction(bool action) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("StrA"),1);
 	
-	/**
-	 * Set Overlay Active; InputInstantOff
-	 * overlay 	0-5:1-6 Overlay
-	 * inputInstantOff 	0-99: 1-100 Input Index
-	 */
-	void ClientVMixUDP::setOverlayInputInstantOff(uint8_t overlay, uint8_t inputInstantOff) {
+			_packetBuffer[12+_cBBO+4+4+0] = action;
+			
+ 	   		_finishCommandPacket();
 	
-  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
-
-			// Set Mask: 4
-		_packetBuffer[12+_cBBO+4+4+0] |= 4;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = overlay;
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+4] = inputInstantOff;
+		/**
+		 * Set Audio Levels; Enable
+		 * enable 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setAudioLevelsEnable(bool enable) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("SALN"),1);
 	
-	/**
-	 * Set Overlay Active; InputZoom
-	 * overlay 	0-5:1-6 Overlay
-	 * inputZoom 	0-99: 1-100 Input Index
-	 */
-	void ClientVMixUDP::setOverlayInputZoom(uint8_t overlay, uint8_t inputZoom) {
+			_packetBuffer[12+_cBBO+4+4+0] = enable;
+			
+ 	   		_finishCommandPacket();
 	
-  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
-
-			// Set Mask: 8
-		_packetBuffer[12+_cBBO+4+4+0] |= 8;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = overlay;
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+5] = inputZoom;
+		/**
+		 * Get Audio Levels; Left
+		 * input 	0-99: 1-100 Input Index
+		 */
+		int ClientVMixUDP::getAudioLevelsLeft(uint8_t input) {
+			return vmixAudioLevelsLeft[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Overlay Active; InputPreview
-	 * overlay 	0-5:1-6 Overlay
-	 * inputPreview 	0-99: 1-100 Input Index
-	 */
-	void ClientVMixUDP::setOverlayInputPreview(uint8_t overlay, uint8_t inputPreview) {
-	
-  		_prepareCommandPacket(PSTR("COlA"),7,(_packetBuffer[12+_cBBO+4+4+1]==overlay));
-
-			// Set Mask: 16
-		_packetBuffer[12+_cBBO+4+4+0] |= 16;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = overlay;
+		/**
+		 * Get Audio Levels; Right
+		 * input 	0-99: 1-100 Input Index
+		 */
+		int ClientVMixUDP::getAudioLevelsRight(uint8_t input) {
+			return vmixAudioLevelsRight[input];
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+6] = inputPreview;
+		/**
+		 * Get Master Audio Levels; Left
+		 */
+		int ClientVMixUDP::getMasterAudioLevelsLeft() {
+			return vmixMasterAudioLevelsLeft;
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Record; Active
-	 */
-	bool ClientVMixUDP::getRecordActive() {
-		return vmixRecordActive;
-	}
-	
-	/**
-	 * Set Record; Action
-	 * action 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::performRecordAction(bool action) {
-	
-  		_prepareCommandPacket(PSTR("RecA"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = action;
+		/**
+		 * Get Master Audio Levels; Right
+		 */
+		int ClientVMixUDP::getMasterAudioLevelsRight() {
+			return vmixMasterAudioLevelsRight;
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Stream; Active
-	 */
-	bool ClientVMixUDP::getStreamActive() {
-		return vmixStreamActive;
-	}
-	
-	/**
-	 * Set Stream; Action
-	 * action 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::performStreamAction(bool action) {
-	
-  		_prepareCommandPacket(PSTR("StrA"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = action;
+		/**
+		 * Get Input Position; Position
+		 * input 	0-99: 1-100 Input Index
+		 */
+		uint16_t ClientVMixUDP::getInputPosition(uint8_t input) {
+			return vmixInputPosition[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Audio Levels; Enable
-	 * enable 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::setAudioLevelsEnable(bool enable) {
-	
-  		_prepareCommandPacket(PSTR("SALN"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = enable;
+		/**
+		 * Set Input Position; Position
+		 * input 	0-99: 1-100 Input Index
+		 * position 	Seconds
+		 */
+		void ClientVMixUDP::setInputPositionPosition(uint8_t input, uint16_t position) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("SInP"),4,(_packetBuffer[12+_cBBO+4+4+1]==input));
 	
-	/**
-	 * Get Audio Levels; Left
-	 * input 	0-99: 1-100 Input Index
-	 */
-	int ClientVMixUDP::getAudioLevelsLeft(uint8_t input) {
-		return vmixAudioLevelsLeft[input];
-	}
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+2] = highByte(position);
+			_packetBuffer[12+_cBBO+4+4+3] = lowByte(position);
+			
+ 	   		_finishCommandPacket();
 	
-	/**
-	 * Get Audio Levels; Right
-	 * input 	0-99: 1-100 Input Index
-	 */
-	int ClientVMixUDP::getAudioLevelsRight(uint8_t input) {
-		return vmixAudioLevelsRight[input];
-	}
-	
-	/**
-	 * Get Master Audio Levels; Left
-	 */
-	int ClientVMixUDP::getMasterAudioLevelsLeft() {
-		return vmixMasterAudioLevelsLeft;
-	}
-	
-	/**
-	 * Get Master Audio Levels; Right
-	 */
-	int ClientVMixUDP::getMasterAudioLevelsRight() {
-		return vmixMasterAudioLevelsRight;
-	}
-	
-	/**
-	 * Get Input Position; Position
-	 * input 	0-99: 1-100 Input Index
-	 */
-	uint16_t ClientVMixUDP::getInputPosition(uint8_t input) {
-		return vmixInputPosition[input];
-	}
-	
-	/**
-	 * Set Input Position; Position
-	 * input 	0-99: 1-100 Input Index
-	 * position 	Seconds
-	 */
-	void ClientVMixUDP::setInputPositionPosition(uint8_t input, uint16_t position) {
-	
-  		_prepareCommandPacket(PSTR("SInP"),4,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+2] = highByte(position);
-		_packetBuffer[12+_cBBO+4+4+3] = lowByte(position);
+		/**
+		 * Set Input Position; Enable
+		 * enable 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setInputPositionEnable(bool enable) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("SPoN"),1);
 	
-	/**
-	 * Set Input Position; Enable
-	 * enable 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::setInputPositionEnable(bool enable) {
+			_packetBuffer[12+_cBBO+4+4+0] = enable;
+			
+ 	   		_finishCommandPacket();
 	
-  		_prepareCommandPacket(PSTR("SPoN"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = enable;
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Replay; Active
-	 */
-	bool ClientVMixUDP::getReplayActive() {
-		return vmixReplayActive;
-	}
-	
-	/**
-	 * Set Replay; Action
-	 * action 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::performReplayAction(bool action) {
-	
-  		_prepareCommandPacket(PSTR("RplA"),1);
-
-		_packetBuffer[12+_cBBO+4+4+0] = action;
+		/**
+		 * Set Replay; Action
+		 * action 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::performReplayAction(bool action) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("RplA"),1);
 	
-	/**
-	 * Set Replay Properties; Seconds
-	 * seconds 	
-	 */
-	void ClientVMixUDP::setReplayPropertiesSeconds(uint16_t seconds) {
+			_packetBuffer[12+_cBBO+4+4+0] = action;
+			
+ 	   		_finishCommandPacket();
 	
-  		_prepareCommandPacket(PSTR("RplP"),5);
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = highByte(seconds);
-		_packetBuffer[12+_cBBO+4+4+2] = lowByte(seconds);
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Replay Properties; Speed
-	 * speed 	0-100: 0-1x speed
-	 */
-	void ClientVMixUDP::setReplayPropertiesSpeed(uint16_t speed) {
-	
-  		_prepareCommandPacket(PSTR("RplP"),5);
-
-			// Set Mask: 2
-		_packetBuffer[12+_cBBO+4+4+0] |= 2;
-				
-		_packetBuffer[12+_cBBO+4+4+3] = highByte(speed);
-		_packetBuffer[12+_cBBO+4+4+4] = lowByte(speed);
+		/**
+		 * Set Replay Properties; Seconds
+		 * seconds 	
+		 */
+		void ClientVMixUDP::setReplayPropertiesSeconds(uint16_t seconds) {
 		
-   		_finishCommandPacket();
-
-	}
+  	  		_prepareCommandPacket(PSTR("RplP"),5);
 	
-	/**
-	 * Get Xaml Values; Value
-	 * input 	0-99: 1-100 Input Index
-	 * index 	0-9: 1-10 Value Index
-	 */
-	int ClientVMixUDP::getXamlValue(uint8_t input, uint8_t index) {
-		return vmixXamlValue[input][index];
-	}
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = highByte(seconds);
+			_packetBuffer[12+_cBBO+4+4+2] = lowByte(seconds);
+			
+ 	   		_finishCommandPacket();
 	
-	/**
-	 * Set Xaml Values; Value
-	 * input 	0-30: 1-30 Source Index
-	 * index 	0-5: 1-6 Value Index
-	 * value 	
-	 */
-	void ClientVMixUDP::setXamlValue(uint8_t input, uint8_t index, uint16_t value) {
-	
-  		_prepareCommandPacket(PSTR("SXaV"),5,(_packetBuffer[12+_cBBO+4+4+1]==input) && (_packetBuffer[12+_cBBO+4+4+2]==index));
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+2] = index;
+		/**
+		 * Set Replay Properties; Speed
+		 * speed 	0-100: 0-1x speed
+		 */
+		void ClientVMixUDP::setReplayPropertiesSpeed(uint16_t speed) {
 		
-		_packetBuffer[12+_cBBO+4+4+3] = highByte(value);
-		_packetBuffer[12+_cBBO+4+4+4] = lowByte(value);
+  	  		_prepareCommandPacket(PSTR("RplP"),5);
+	
+				// Set Mask: 2
+			_packetBuffer[12+_cBBO+4+4+0] |= 2;
+					
+			_packetBuffer[12+_cBBO+4+4+3] = highByte(speed);
+			_packetBuffer[12+_cBBO+4+4+4] = lowByte(speed);
+			
+ 	   		_finishCommandPacket();
+	
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Count Down; Mode
-	 * input 	0-30: 1-30 Source Index
-	 * index 	0-5: 1-6 Value Index
-	 * mode 	0: Start, 1: Pause, 2: Stop+Reset
-	 */
-	void ClientVMixUDP::setCountDownMode(uint8_t input, uint8_t index, uint8_t mode) {
-	
-  		_prepareCommandPacket(PSTR("CntD"),4,(_packetBuffer[12+_cBBO+4+4+1]==input) && (_packetBuffer[12+_cBBO+4+4+2]==index));
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Get Xaml Values; Value
+		 * input 	0-99: 1-100 Input Index
+		 * index 	0-10: 0-10 Value Index
+		 */
+		int ClientVMixUDP::getXamlValue(uint8_t input, uint8_t index) {
+			return vmixXamlValue[input][index];
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+2] = index;
+		/**
+		 * Set Xaml Values; Value
+		 * input 	0-30: 1-30 Source Index
+		 * index 	0-10: 0-10 Value Index
+		 * value 	
+		 */
+		void ClientVMixUDP::setXamlValue(uint8_t input, uint8_t index, int value) {
 		
-		_packetBuffer[12+_cBBO+4+4+3] = mode;
+  	  		_prepareCommandPacket(PSTR("SXaV"),5,(_packetBuffer[12+_cBBO+4+4+1]==input) && (_packetBuffer[12+_cBBO+4+4+2]==index));
+	
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+2] = index;
+			
+			_packetBuffer[12+_cBBO+4+4+3] = highByte(value);
+			_packetBuffer[12+_cBBO+4+4+4] = lowByte(value);
+			
+ 	   		_finishCommandPacket();
+	
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Input Properties; Long Name
-	 * input 	0-99: 1-100 Input Index
-	 */
-	char *  ClientVMixUDP::getInputPropertiesLongName(uint8_t input) {
-		return vmixInputPropertiesLongName[input];
-	}
-	
-	/**
-	 * Get Input Properties; Short Name
-	 * input 	0-99: 1-100 Input Index
-	 */
-	char *  ClientVMixUDP::getInputPropertiesShortName(uint8_t input) {
-		return vmixInputPropertiesShortName[input];
-	}
-	
-	/**
-	 * Get Input Properties; Loop
-	 * input 	0-99: 1-100 Input Index
-	 */
-	bool ClientVMixUDP::getInputPropertiesLoop(uint8_t input) {
-		return vmixInputPropertiesLoop[input];
-	}
-	
-	/**
-	 * Get Input Properties; Type
-	 * input 	0-99: 1-100 Input Index
-	 */
-	uint8_t ClientVMixUDP::getInputPropertiesType(uint8_t input) {
-		return vmixInputPropertiesType[input];
-	}
-	
-	/**
-	 * Get Input Properties; State
-	 * input 	0-99: 1-100 Input Index
-	 */
-	uint8_t ClientVMixUDP::getInputPropertiesState(uint8_t input) {
-		return vmixInputPropertiesState[input];
-	}
-	
-	/**
-	 * Get Input Properties; Duration
-	 * input 	0-99: 1-100 Input Index
-	 */
-	uint16_t ClientVMixUDP::getInputPropertiesDuration(uint8_t input) {
-		return vmixInputPropertiesDuration[input];
-	}
-	
-	/**
-	 * Set Input Properties; Loop
-	 * input 	0-99: 1-100 Input Index
-	 * loop 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::setInputPropertiesLoop(uint8_t input, bool loop) {
-	
-  		_prepareCommandPacket(PSTR("CInP"),4,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Set Count Down; Mode
+		 * input 	0-30: 1-30 Source Index
+		 * index 	0-5: 1-6 Value Index
+		 * mode 	0: Start, 1: Pause, 2: Stop+Reset
+		 */
+		void ClientVMixUDP::setCountDownMode(uint8_t input, uint8_t index, uint8_t mode) {
 		
-		_packetBuffer[12+_cBBO+4+4+2] = loop;
+  	  		_prepareCommandPacket(PSTR("CntD"),4,(_packetBuffer[12+_cBBO+4+4+1]==input) && (_packetBuffer[12+_cBBO+4+4+2]==index));
+	
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+2] = index;
+			
+			_packetBuffer[12+_cBBO+4+4+3] = mode;
+			
+ 	   		_finishCommandPacket();
+	
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Input Properties; Play/Pause
-	 * input 	0-99: 1-100 Input Index
-	 * playPause 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::setInputPropertiesPlayPause(uint8_t input, bool playPause) {
-	
-  		_prepareCommandPacket(PSTR("CInP"),4,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 2
-		_packetBuffer[12+_cBBO+4+4+0] |= 2;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Get Input Properties; Long Name
+		 * input 	0-99: 1-100 Input Index
+		 */
+		char *  ClientVMixUDP::getInputPropertiesLongName(uint8_t input) {
+			return vmixInputPropertiesLongName[input];
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+3] = playPause;
+		/**
+		 * Get Input Properties; Short Name
+		 * input 	0-99: 1-100 Input Index
+		 */
+		char *  ClientVMixUDP::getInputPropertiesShortName(uint8_t input) {
+			return vmixInputPropertiesShortName[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Audio Properties; Solo
-	 * input 	0-99: 1-100 Input Index
-	 */
-	bool ClientVMixUDP::getAudioPropertiesSolo(uint8_t input) {
-		return vmixAudioPropertiesSolo[input];
-	}
-	
-	/**
-	 * Get Audio Properties; Balance
-	 * input 	0-99: 1-100 Input Index
-	 */
-	int ClientVMixUDP::getAudioPropertiesBalance(uint8_t input) {
-		return vmixAudioPropertiesBalance[input];
-	}
-	
-	/**
-	 * Get Audio Properties; Volume
-	 * input 	0-99: 1-100 Input Index
-	 */
-	int ClientVMixUDP::getAudioPropertiesVolume(uint8_t input) {
-		return vmixAudioPropertiesVolume[input];
-	}
-	
-	/**
-	 * Get Audio Properties; Muted
-	 * input 	0-99: 1-100 Input Index
-	 */
-	bool ClientVMixUDP::getAudioPropertiesMuted(uint8_t input) {
-		return vmixAudioPropertiesMuted[input];
-	}
-	
-	/**
-	 * Get Audio Properties; Busses
-	 * input 	0-99: 1-100 Input Index
-	 */
-	uint8_t ClientVMixUDP::getAudioPropertiesBusses(uint8_t input) {
-		return vmixAudioPropertiesBusses[input];
-	}
-	
-	/**
-	 * Set Audio Properties; Solo
-	 * input 	0-99: 1-100 Input Index
-	 * solo 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::setAudioPropertiesSolo(uint8_t input, bool solo) {
-	
-  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Get Input Properties; Loop
+		 * input 	0-99: 1-100 Input Index
+		 */
+		bool ClientVMixUDP::getInputPropertiesLoop(uint8_t input) {
+			return vmixInputPropertiesLoop[input];
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+2] = solo;
+		/**
+		 * Get Input Properties; Type
+		 * input 	0-99: 1-100 Input Index
+		 */
+		uint8_t ClientVMixUDP::getInputPropertiesType(uint8_t input) {
+			return vmixInputPropertiesType[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Audio Properties; Balance
-	 * input 	0-99: 1-100 Input Index
-	 * balance 	-100-100: Balance
-	 */
-	void ClientVMixUDP::setAudioPropertiesBalance(uint8_t input, int balance) {
-	
-  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 2
-		_packetBuffer[12+_cBBO+4+4+0] |= 2;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Get Input Properties; State
+		 * input 	0-99: 1-100 Input Index
+		 */
+		uint8_t ClientVMixUDP::getInputPropertiesState(uint8_t input) {
+			return vmixInputPropertiesState[input];
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+3] = highByte(balance);
-		_packetBuffer[12+_cBBO+4+4+4] = lowByte(balance);
+		/**
+		 * Get Input Properties; Duration
+		 * input 	0-99: 1-100 Input Index
+		 */
+		uint16_t ClientVMixUDP::getInputPropertiesDuration(uint8_t input) {
+			return vmixInputPropertiesDuration[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Audio Properties; Volume
-	 * input 	0-99: 1-100 Input Index
-	 * volume 	-60-0 db: Volume
-	 */
-	void ClientVMixUDP::setAudioPropertiesVolume(uint8_t input, int volume) {
-	
-  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 4
-		_packetBuffer[12+_cBBO+4+4+0] |= 4;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Set Input Properties; Loop
+		 * input 	0-99: 1-100 Input Index
+		 * loop 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setInputPropertiesLoop(uint8_t input, bool loop) {
 		
-		_packetBuffer[12+_cBBO+4+4+5] = highByte(volume);
-		_packetBuffer[12+_cBBO+4+4+6] = lowByte(volume);
+  	  		_prepareCommandPacket(PSTR("CInP"),4,(_packetBuffer[12+_cBBO+4+4+1]==input));
+	
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+2] = loop;
+			
+ 	   		_finishCommandPacket();
+	
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Audio Properties; Muted
-	 * input 	0-99: 1-100 Input Index
-	 * muted 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::setAudioPropertiesMuted(uint8_t input, bool muted) {
-	
-  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 8
-		_packetBuffer[12+_cBBO+4+4+0] |= 8;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Set Input Properties; Play/Pause
+		 * input 	0-99: 1-100 Input Index
+		 * playPause 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setInputPropertiesPlayPause(uint8_t input, bool playPause) {
 		
-		_packetBuffer[12+_cBBO+4+4+7] = muted;
+  	  		_prepareCommandPacket(PSTR("CInP"),4,(_packetBuffer[12+_cBBO+4+4+1]==input));
+	
+				// Set Mask: 2
+			_packetBuffer[12+_cBBO+4+4+0] |= 2;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+3] = playPause;
+			
+ 	   		_finishCommandPacket();
+	
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Audio Properties; Busses
-	 * input 	0-99: 1-100 Input Index
-	 * busses 	Bit 0: Master=On/Off, Bit 1: A=On/Off, Bit 2: B=On/Off
-	 */
-	void ClientVMixUDP::setAudioPropertiesBusses(uint8_t input, uint8_t busses) {
-	
-  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
-
-			// Set Mask: 16
-		_packetBuffer[12+_cBBO+4+4+0] |= 16;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = input;
+		/**
+		 * Get Audio Properties; Solo
+		 * input 	0-99: 1-100 Input Index
+		 */
+		bool ClientVMixUDP::getAudioPropertiesSolo(uint8_t input) {
+			return vmixAudioPropertiesSolo[input];
+		}
 		
-		_packetBuffer[12+_cBBO+4+4+8] = busses;
+		/**
+		 * Get Audio Properties; Balance
+		 * input 	0-99: 1-100 Input Index
+		 */
+		int ClientVMixUDP::getAudioPropertiesBalance(uint8_t input) {
+			return vmixAudioPropertiesBalance[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Get Master Audio Properties; Volume
-	 */
-	int ClientVMixUDP::getMasterAudioPropertiesVolume() {
-		return vmixMasterAudioPropertiesVolume;
-	}
-	
-	/**
-	 * Get Master Audio Properties; Headphone Volume
-	 */
-	int ClientVMixUDP::getMasterAudioPropertiesHeadphoneVolume() {
-		return vmixMasterAudioPropertiesHeadphoneVolume;
-	}
-	
-	/**
-	 * Get Master Audio Properties; Muted
-	 */
-	bool ClientVMixUDP::getMasterAudioPropertiesMuted() {
-		return vmixMasterAudioPropertiesMuted;
-	}
-	
-	/**
-	 * Set Master Audio Properties; Volume
-	 * volume 	-60-0 db: Volume
-	 */
-	void ClientVMixUDP::setMasterAudioPropertiesVolume(int volume) {
-	
-  		_prepareCommandPacket(PSTR("MSAP"),6);
-
-			// Set Mask: 1
-		_packetBuffer[12+_cBBO+4+4+0] |= 1;
-				
-		_packetBuffer[12+_cBBO+4+4+1] = highByte(volume);
-		_packetBuffer[12+_cBBO+4+4+2] = lowByte(volume);
+		/**
+		 * Get Audio Properties; Volume
+		 * input 	0-99: 1-100 Input Index
+		 */
+		int ClientVMixUDP::getAudioPropertiesVolume(uint8_t input) {
+			return vmixAudioPropertiesVolume[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Master Audio Properties; Headphone Volume
-	 * headphoneVolume 	-60-0 db: Volume
-	 */
-	void ClientVMixUDP::setMasterAudioPropertiesHeadphoneVolume(int headphoneVolume) {
-	
-  		_prepareCommandPacket(PSTR("MSAP"),6);
-
-			// Set Mask: 2
-		_packetBuffer[12+_cBBO+4+4+0] |= 2;
-				
-		_packetBuffer[12+_cBBO+4+4+3] = highByte(headphoneVolume);
-		_packetBuffer[12+_cBBO+4+4+4] = lowByte(headphoneVolume);
+		/**
+		 * Get Audio Properties; Muted
+		 * input 	0-99: 1-100 Input Index
+		 */
+		bool ClientVMixUDP::getAudioPropertiesMuted(uint8_t input) {
+			return vmixAudioPropertiesMuted[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
-	
-	/**
-	 * Set Master Audio Properties; Muted
-	 * muted 	Bit 0: On/Off
-	 */
-	void ClientVMixUDP::setMasterAudioPropertiesMuted(bool muted) {
-	
-  		_prepareCommandPacket(PSTR("MSAP"),6);
-
-			// Set Mask: 4
-		_packetBuffer[12+_cBBO+4+4+0] |= 4;
-				
-		_packetBuffer[12+_cBBO+4+4+5] = muted;
+		/**
+		 * Get Audio Properties; Busses
+		 * input 	0-99: 1-100 Input Index
+		 */
+		uint8_t ClientVMixUDP::getAudioPropertiesBusses(uint8_t input) {
+			return vmixAudioPropertiesBusses[input];
+		}
 		
-   		_finishCommandPacket();
-
-	}
+		/**
+		 * Set Audio Properties; Solo
+		 * input 	0-99: 1-100 Input Index
+		 * solo 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setAudioPropertiesSolo(uint8_t input, bool solo) {
+		
+  	  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
 	
-	/**
-	 * Get vMix Version; A
-	 */
-	uint16_t ClientVMixUDP::getvMixVersionA() {
-		return vmixvMixVersionA;
-	}
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+2] = solo;
+			
+ 	   		_finishCommandPacket();
 	
-	/**
-	 * Get vMix Version; B
-	 */
-	uint16_t ClientVMixUDP::getvMixVersionB() {
-		return vmixvMixVersionB;
-	}
+		}
+		
+		/**
+		 * Set Audio Properties; Balance
+		 * input 	0-99: 1-100 Input Index
+		 * balance 	-100-100: Balance
+		 */
+		void ClientVMixUDP::setAudioPropertiesBalance(uint8_t input, int balance) {
+		
+  	  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
 	
-	/**
-	 * Get vMix Version; C
-	 */
-	uint16_t ClientVMixUDP::getvMixVersionC() {
-		return vmixvMixVersionC;
-	}
+				// Set Mask: 2
+			_packetBuffer[12+_cBBO+4+4+0] |= 2;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+3] = highByte(balance);
+			_packetBuffer[12+_cBBO+4+4+4] = lowByte(balance);
+			
+ 	   		_finishCommandPacket();
 	
-	/**
-	 * Get vMix Version; D
-	 */
-	uint16_t ClientVMixUDP::getvMixVersionD() {
-		return vmixvMixVersionD;
-	}
+		}
+		
+		/**
+		 * Set Audio Properties; Volume
+		 * input 	0-99: 1-100 Input Index
+		 * volume 	-60-0 db: Volume
+		 */
+		void ClientVMixUDP::setAudioPropertiesVolume(uint8_t input, int volume) {
+		
+  	  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
 	
-	/**
-	 * Get Topology; Inputs
-	 */
-	uint8_t ClientVMixUDP::getTopologyInputs() {
-		return vmixTopologyInputs;
-	}
+				// Set Mask: 4
+			_packetBuffer[12+_cBBO+4+4+0] |= 4;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+5] = highByte(volume);
+			_packetBuffer[12+_cBBO+4+4+6] = lowByte(volume);
+			
+ 	   		_finishCommandPacket();
 	
+		}
+		
+		/**
+		 * Set Audio Properties; Muted
+		 * input 	0-99: 1-100 Input Index
+		 * muted 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setAudioPropertiesMuted(uint8_t input, bool muted) {
+		
+  	  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
+	
+				// Set Mask: 8
+			_packetBuffer[12+_cBBO+4+4+0] |= 8;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+7] = muted;
+			
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Set Audio Properties; Busses
+		 * input 	0-99: 1-100 Input Index
+		 * busses 	Bit 0: Master=On/Off, Bit 1: A=On/Off, Bit 2: B=On/Off
+		 */
+		void ClientVMixUDP::setAudioPropertiesBusses(uint8_t input, uint8_t busses) {
+		
+  	  		_prepareCommandPacket(PSTR("SAuP"),9,(_packetBuffer[12+_cBBO+4+4+1]==input));
+	
+				// Set Mask: 16
+			_packetBuffer[12+_cBBO+4+4+0] |= 16;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = input;
+			
+			_packetBuffer[12+_cBBO+4+4+8] = busses;
+			
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Get Master Audio Properties; Volume
+		 */
+		int ClientVMixUDP::getMasterAudioPropertiesVolume() {
+			return vmixMasterAudioPropertiesVolume;
+		}
+		
+		/**
+		 * Get Master Audio Properties; Headphone Volume
+		 */
+		int ClientVMixUDP::getMasterAudioPropertiesHeadphoneVolume() {
+			return vmixMasterAudioPropertiesHeadphoneVolume;
+		}
+		
+		/**
+		 * Get Master Audio Properties; Muted
+		 */
+		bool ClientVMixUDP::getMasterAudioPropertiesMuted() {
+			return vmixMasterAudioPropertiesMuted;
+		}
+		
+		/**
+		 * Set Master Audio Properties; Volume
+		 * volume 	-60-0 db: Volume
+		 */
+		void ClientVMixUDP::setMasterAudioPropertiesVolume(int volume) {
+		
+  	  		_prepareCommandPacket(PSTR("MSAP"),6);
+	
+				// Set Mask: 1
+			_packetBuffer[12+_cBBO+4+4+0] |= 1;
+					
+			_packetBuffer[12+_cBBO+4+4+1] = highByte(volume);
+			_packetBuffer[12+_cBBO+4+4+2] = lowByte(volume);
+			
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Set Master Audio Properties; Headphone Volume
+		 * headphoneVolume 	-60-0 db: Volume
+		 */
+		void ClientVMixUDP::setMasterAudioPropertiesHeadphoneVolume(int headphoneVolume) {
+		
+  	  		_prepareCommandPacket(PSTR("MSAP"),6);
+	
+				// Set Mask: 2
+			_packetBuffer[12+_cBBO+4+4+0] |= 2;
+					
+			_packetBuffer[12+_cBBO+4+4+3] = highByte(headphoneVolume);
+			_packetBuffer[12+_cBBO+4+4+4] = lowByte(headphoneVolume);
+			
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Set Master Audio Properties; Muted
+		 * muted 	Bit 0: On/Off
+		 */
+		void ClientVMixUDP::setMasterAudioPropertiesMuted(bool muted) {
+		
+  	  		_prepareCommandPacket(PSTR("MSAP"),6);
+	
+				// Set Mask: 4
+			_packetBuffer[12+_cBBO+4+4+0] |= 4;
+					
+			_packetBuffer[12+_cBBO+4+4+5] = muted;
+			
+ 	   		_finishCommandPacket();
+	
+		}
+		
+		/**
+		 * Get vMix Version; A
+		 */
+		uint16_t ClientVMixUDP::getvMixVersionA() {
+			return vmixvMixVersionA;
+		}
+		
+		/**
+		 * Get vMix Version; B
+		 */
+		uint16_t ClientVMixUDP::getvMixVersionB() {
+			return vmixvMixVersionB;
+		}
+		
+		/**
+		 * Get vMix Version; C
+		 */
+		uint16_t ClientVMixUDP::getvMixVersionC() {
+			return vmixvMixVersionC;
+		}
+		
+		/**
+		 * Get vMix Version; D
+		 */
+		uint16_t ClientVMixUDP::getvMixVersionD() {
+			return vmixvMixVersionD;
+		}
+		
+		/**
+		 * Get Topology; Inputs
+		 */
+		uint8_t ClientVMixUDP::getTopologyInputs() {
+			return vmixTopologyInputs;
+		}
+		

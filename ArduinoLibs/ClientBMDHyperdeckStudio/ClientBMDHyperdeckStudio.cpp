@@ -665,7 +665,7 @@ void ClientBMDHyperdeckStudio::askForClipNames(bool askForNames) { _askForClipNa
  ********************/
 
 // Use getPlaybackSlotId() instead!
-//uint8_t ClientBMDHyperdeckStudio::getCurrentSlotId() { return _Hyperdeck_currentSlotId; }
+// uint8_t ClientBMDHyperdeckStudio::getCurrentSlotId() { return _Hyperdeck_currentSlotId; }
 
 uint8_t ClientBMDHyperdeckStudio::getSlotStatus(uint8_t slotId) { return _Hyperdeck_slotStatus[slotId - 1]; }
 unsigned long ClientBMDHyperdeckStudio::getSlotRecordingTime(uint8_t slotId) { return _Hyperdeck_slotRecordingTime[slotId - 1]; }

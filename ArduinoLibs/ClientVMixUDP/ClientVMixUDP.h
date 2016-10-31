@@ -110,10 +110,6 @@ protected:
 
 
 
-
-
-
-
 // *********************************
 // **
 // ** Implementations in ClientVMixUDP.h:
@@ -137,8 +133,7 @@ private:
 			int vmixMasterAudioLevelsLeft;
 			int vmixMasterAudioLevelsRight;
 			uint16_t vmixInputPosition[100];
-			bool vmixReplayActive;
-			int vmixXamlValue[100][10];
+			int vmixXamlValue[100][11];
 			char vmixInputPropertiesLongName[100][21];
 			char vmixInputPropertiesShortName[100][5];
 			bool vmixInputPropertiesLoop[100];
@@ -164,6 +159,7 @@ public:
 	
 			uint8_t getActiveInput();
 			void setActiveInput(uint8_t input);
+			void setActiveInputTransitionDuration(uint8_t input, uint8_t transition, uint16_t duration);
 			uint8_t getPreviewInput();
 			void setPreviewInput(uint8_t input);
 			void performCutAction(bool action);
@@ -174,8 +170,8 @@ public:
 			bool getOverlayActive(uint8_t overlay);
 			uint8_t getOverlayInput(uint8_t overlay);
 			void setOverlayInputOn(uint8_t overlay, uint8_t inputOn);
-			void setOverlayInputOff(uint8_t overlay, uint8_t inputOff);
-			void setOverlayInputInstantOff(uint8_t overlay, uint8_t inputInstantOff);
+			void setOverlayInputOff(uint8_t overlay, bool inputOff);
+			void setOverlayInputInstantOff(uint8_t overlay, bool inputInstantOff);
 			void setOverlayInputZoom(uint8_t overlay, uint8_t inputZoom);
 			void setOverlayInputPreview(uint8_t overlay, uint8_t inputPreview);
 			bool getRecordActive();
@@ -190,12 +186,11 @@ public:
 			uint16_t getInputPosition(uint8_t input);
 			void setInputPositionPosition(uint8_t input, uint16_t position);
 			void setInputPositionEnable(bool enable);
-			bool getReplayActive();
 			void performReplayAction(bool action);
 			void setReplayPropertiesSeconds(uint16_t seconds);
 			void setReplayPropertiesSpeed(uint16_t speed);
 			int getXamlValue(uint8_t input, uint8_t index);
-			void setXamlValue(uint8_t input, uint8_t index, uint16_t value);
+			void setXamlValue(uint8_t input, uint8_t index, int value);
 			void setCountDownMode(uint8_t input, uint8_t index, uint8_t mode);
 			char *  getInputPropertiesLongName(uint8_t input);
 			char *  getInputPropertiesShortName(uint8_t input);
@@ -226,7 +221,6 @@ public:
 			uint16_t getvMixVersionC();
 			uint16_t getvMixVersionD();
 			uint8_t getTopologyInputs();
-
 
 };
 

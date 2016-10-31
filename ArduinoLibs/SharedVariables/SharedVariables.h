@@ -169,7 +169,7 @@ class SharedVariables
 
 	  bool hasTimedOut(unsigned long time, unsigned long timeout);
 		  
-	  int read_int(const uint8_t *dataArray);
+	  int16_t read_int(const uint8_t *dataArray);
 	  bool read_bool(const uint8_t *dataArray);
 	  uint8_t read_uint8_t(const uint8_t *dataArray);
 	  uint16_t read_uint16_t(const uint8_t *dataArray);
