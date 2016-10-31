@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21CMB6
+#define SK_MODEL SK_E201M16
 
 
 #define SK_E21CMB6M_OPTION_VSLIDER 0
@@ -312,7 +312,7 @@ uint8_t HWsetupL();
 void HWtestL();
 void HWcfgDisplay();
 void storePreset(uint8_t index, uint8_t type, uint8_t *buffer);
-bool recallPreset(uint8_t index, uint8_t type, char* buffer);
+bool recallPreset(uint8_t index, uint8_t type, uint8_t* buffer);
 bool presetChecksumMatches(uint8_t index);
 bool presetExists(uint8_t index, uint8_t type);
 
@@ -393,7 +393,9 @@ bool extRetValIsWanted(bool set = false) {
 /**
    Returns isWanted flag (but sets it first to input value)
 */
-void extRetValSetLabel(bool flag) { _extRetValIsLabel = flag; }
+void extRetValSetLabel(bool flag) {
+  _extRetValIsLabel = flag;
+}
 
 /**
    Sets the extended return value (long) and initializes everything else.
@@ -453,7 +455,9 @@ void extRetValShortLabel(const char *shortLabel, const int16_t number = 0) {
 /**
     Alternative Prefix labels for values in case of 64 pixels wide displays
 */
-void extRetValTxtShort(const char *txt) { strncpy(_extRetTxtShort, txt, 5); }
+void extRetValTxtShort(const char *txt) {
+  strncpy(_extRetTxtShort, txt, 5);
+}
 
 /**
     Prefix labels for values
@@ -466,7 +470,9 @@ void extRetValTxt(const char *txt, uint8_t i) {
 /**
     Alternative Prefix labels for values in case of 64 pixels wide displays
 */
-void extRetValTxtShort_P(const char *txt) { strncpy_P(_extRetTxtShort, txt, 5); }
+void extRetValTxtShort_P(const char *txt) {
+  strncpy_P(_extRetTxtShort, txt, 5);
+}
 
 /**
     Prefix labels, PROGMEM input
@@ -480,7 +486,9 @@ void extRetValTxt_P(const char *txt, uint8_t i) {
     Button color (if RGB SmartSwitch)
     xxRRGGBB
 */
-void extRetValColor(uint8_t col) { _extRetColor = col; }
+void extRetValColor(uint8_t col) {
+  _extRetColor = col;
+}
 
 /**
     Calculating change hash
@@ -548,8 +556,8 @@ uint16_t extRetValHash() {
 }
 
 /**
- * EEPROM location pointers required for device libraries
- */
+   EEPROM location pointers required for device libraries
+*/
 
 #define EEPROM_FILEBANK_START 4095-6*48
 #define EEPROM_FILEBANK_NUM 6
@@ -776,7 +784,7 @@ void setup() {
   }
 
   Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
-  
+
   Serial << F("setup() Done\n-----------------------------\n");
 }
 
