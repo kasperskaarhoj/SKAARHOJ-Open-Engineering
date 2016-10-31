@@ -1358,7 +1358,7 @@ bool presetChecksumMatches(uint8_t index) {
 }
 
 // The supplied buffer must be 45 bytes long
-bool recallPreset(uint8_t index, uint8_t type, char* buffer) {
+bool recallPreset(uint8_t index, uint8_t type, uint8_t* buffer) {
   if(index < EEPROM_FILEBANK_NUM) {
     if(presetExists(index, type) && presetChecksumMatches(index)) {
       // Recall logic:
