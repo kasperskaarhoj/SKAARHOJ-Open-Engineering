@@ -8,6 +8,9 @@ open source code, so SKAARHOJ encourage you to support Adafruit and
 open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
+#ifndef SkaarhojOLED64x256_h
+#define SkaarhojOLED64x256_h
+
 #include "Arduino.h"
 #include "Wire.h"
 #include <Adafruit_GFX.h>
@@ -51,3 +54,5 @@ private:
   volatile uint8_t *mosiport, *clkport;
   uint8_t mosipinmask, clkpinmask;
 };
+
+#endif

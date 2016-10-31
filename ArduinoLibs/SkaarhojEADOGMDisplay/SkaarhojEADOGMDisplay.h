@@ -25,6 +25,8 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 */
 
 
+#ifndef SkaarhojEADOGMDisplay_h
+#define SkaarhojEADOGMDisplay_h
 
 #include "Arduino.h"
 
@@ -57,3 +59,5 @@ class SkaarhojEADOGMDisplay : public Print  {
    void _selectDisplay(uint8_t dispNum, bool enable);
    void _incDDRAMaddr();
 };
+
+#endif

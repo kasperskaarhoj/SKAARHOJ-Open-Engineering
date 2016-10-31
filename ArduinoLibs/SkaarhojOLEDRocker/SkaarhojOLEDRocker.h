@@ -8,6 +8,8 @@ open source code, so SKAARHOJ encourage you to support Adafruit and
 open-source hardware by purchasing products from Adafruit as well!
 *********************************************************************/
 
+#ifndef SkaarhojOLEDRocker_h
+#define SkaarhojOLEDRocker_h
 
 #include "Arduino.h"
 //  #include "SkaarhojPgmspace.h"  - 23/2 2014
@@ -82,3 +84,5 @@ class SkaarhojOLEDRocker : public Adafruit_GFX {
   volatile uint8_t *mosiport, *clkport;
   uint8_t mosipinmask, clkpinmask;
 };
+
+#endif
