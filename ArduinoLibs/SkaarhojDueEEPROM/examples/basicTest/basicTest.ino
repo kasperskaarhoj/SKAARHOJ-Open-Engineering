@@ -4,6 +4,9 @@
 
 SkaarhojDueEEPROM EEPROM;
 
+// REMEMBER to also change the bitshifts for addresses, 6 for 64 bytes, 5 for 32 bytes!
+#define PAGE_SIZE 64
+
 void setup() {
   delay(2000);
   Serial.begin(115200);
@@ -71,22 +74,22 @@ void setup() {
 
 
 
-  uint8_t valueWriteArray[30];
-  uint8_t valueReadArray[30];
+  uint8_t valueWriteArray[PAGE_SIZE];
+  uint8_t valueReadArray[PAGE_SIZE];
 
   for (uint16_t a = 0; a < 30; a++) {   // testing from 0-1024
 
-    for (uint8_t i = 0; i < 30; i++) {
-      valueWriteArray[i] = random(0, 256);
+    for (uint8_t i = 0; i < PAGE_SIZE; i++) {
+      valueWriteArray[i] = random(0, 255);
       valueReadArray[i] = 0;
     }
-
-    Serial << "Page: " << (a << 5) << "\n";
-    EEPROM.writePage(a << 5, valueWriteArray);
+  
+    Serial << "Page: " << (a << 6) << "\n";
+    EEPROM.writePage(a << 6, valueWriteArray);
     delay(10);
-    EEPROM.readPage(a << 5, valueReadArray);
+    EEPROM.readPage(a << 6, valueReadArray);
 
-    for (uint8_t i = 0; i < 30; i++) {
+    for (uint8_t i = 0; i < PAGE_SIZE; i++) {
       if (valueWriteArray[i] != valueReadArray[i])  {
         Serial << i << ": " << valueWriteArray[i] << "!=" << valueReadArray[i] << " - ERROR!\n";
       } else {
