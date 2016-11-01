@@ -27,9 +27,9 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #define SkaarhojDueEEPROM_H
 
 #ifdef ARDUINO_SKAARDUINO_DUE
-	#define I2C_BUFFER 32
+	#define PAGE_SIZE 64
 #else
-	#define I2C_BUFFER 30
+	#define PAGE_SIZE 30
 #endif
 
 #include "Arduino.h"
@@ -41,7 +41,7 @@ class SkaarhojDueEEPROM
 
   private:
 	uint8_t _deviceaddress;
-	uint8_t _pageBuffer[I2C_BUFFER];
+	uint8_t _pageBuffer[PAGE_SIZE];
 	uint16_t _pageAddress;
 		
   public:
@@ -70,16 +70,16 @@ inline SkaarhojDueEEPROM::SkaarhojDueEEPROM() {
 #ifdef ARDUINO_SKAARDUINO_DUE
 inline void SkaarhojDueEEPROM::writeBuffered(uint16_t address, uint8_t value) {
   if(_pageAddress != 0xFFFF) {
-    if((address & ~31) != _pageAddress) {
+    if((address & ~63) != _pageAddress) {
       commitPage();
     }
   }
 
   if(_pageAddress == 0xFFFF) {
-    _pageAddress = (address & ~31);
+    _pageAddress = (address & ~63);
     readPage(_pageAddress, _pageBuffer);
   }
-  _pageBuffer[address & 31] = value;
+  _pageBuffer[address & 63] = value;
 }
 
 inline void SkaarhojDueEEPROM::commitPage() {
@@ -116,9 +116,14 @@ inline uint8_t SkaarhojDueEEPROM::read(uint16_t address) {
 inline void SkaarhojDueEEPROM::writePage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array (not 32, because last two bytes doesn't get written correctly for some reason - maybe the I2C buffers size on ARduino?)
   Wire.beginTransmission(_deviceaddress);
   Wire.write(address >> 8); // MSB
+  
+  #ifdef ARDUINO_SKAARDUINO_DUE
+  Wire.write(address & 0xC0); // LSB
+  #else
   Wire.write(address & 0xE0); // LSB
+  #endif
 
-  for(uint8_t i=0; i<I2C_BUFFER; i++)	{
+  for(uint8_t i=0; i<PAGE_SIZE; i++)	{
 	  Wire.write(valueArray[i]);
   }
   Wire.endTransmission();
@@ -131,12 +136,18 @@ inline void SkaarhojDueEEPROM::readPage(uint16_t address, uint8_t * valueArray) 
 	//delay(5);  	// Without this delay it has been seen that it a) could stall for up to 2 seconds in reading and b) that the read values are bogus!
   Wire.beginTransmission(_deviceaddress);
   Wire.write(address >> 8); // MSB
+  
+  #ifdef ARDUINO_SKAARDUINO_DUE
+  Wire.write(address & 0xC0); // LSB
+  #else
   Wire.write(address & 0xE0); // LSB
+  #endif
+
   Wire.endTransmission();
 
-  Wire.requestFrom(_deviceaddress, (uint8_t)I2C_BUFFER);
+  Wire.requestFrom(_deviceaddress, (uint8_t)PAGE_SIZE);
 
-  for(uint8_t i=0; i<I2C_BUFFER; i++)	{
+  for(uint8_t i=0; i<PAGE_SIZE; i++)	{
 	  valueArray[i] = Wire.read();
   }
 }
