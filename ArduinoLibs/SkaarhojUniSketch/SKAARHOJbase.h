@@ -487,7 +487,7 @@ bool checkIncomingSerial() {
 
 bool variantLED() { return EEPROM.read(9) & 1; }
 
-static uint32_t lastAlarmLED;
+static uint32_t lastAlarmLED = 0;
 void alarmLED() {
 #if SK_ETHMEGA
   digitalWrite(3, 1);
@@ -3069,6 +3069,7 @@ void initController() {
 
   // Initialize serial communication at 115200 bits per second:
   Serial.begin(115200);
+  delay(200);	// This also prevents alarm-LED delay of 200 ms from messing with the blinking intro.
   Serial << F("\n\n*****************************\nSKAARHOJ Controller Booting \n*****************************\n");
 
 // Setup Config:
@@ -3086,14 +3087,16 @@ void initController() {
   pinMode(2, OUTPUT); // Green Status LED, active high
 #else
   statusLED(LED_OFF);  // To prevent brief light in LEDs upon boot
-  pinMode(13, OUTPUT); // Red Status LED, active low
-  pinMode(15, OUTPUT); // Green Status LED, active low
-  pinMode(14, OUTPUT); // Blue Status LED, active low
+  pinMode(PIN_RED, OUTPUT); // Red Status LED, active low
+  pinMode(PIN_GREEN, OUTPUT); // Green Status LED, active low
+  pinMode(PIN_BLUE, OUTPUT); // Blue Status LED, active low
 #endif
 
   HWcfgDisplay();
 
   statusLED(LED_PURPLE); // Normal mode, so far...
+
+
 
   // I2C setup:
   Wire.begin();
