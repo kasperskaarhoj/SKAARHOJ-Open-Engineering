@@ -1740,6 +1740,8 @@ uint8_t HWsetup() {
   infoDisplay << "E21-CMB6";
 #elif SK_MODEL == SK_RCP
   infoDisplay << "RCP";
+#elif SK_MODEL == SK_REFERENCE
+  infoDisplay << "REFERENCE";
 #endif
   infoDisplay.display(B1); // Write to all
   statusLED(QUICKBLANK);

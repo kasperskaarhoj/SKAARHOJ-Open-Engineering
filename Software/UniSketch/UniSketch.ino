@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_REFERENCE
 
 
 #define SK_E21CMB6M_OPTION_VSLIDER 0
