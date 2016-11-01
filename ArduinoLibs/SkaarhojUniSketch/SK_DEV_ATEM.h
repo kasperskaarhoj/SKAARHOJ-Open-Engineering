@@ -16,7 +16,7 @@ uint16_t ATEM_idxToVideoSrc(uint8_t devIndex, uint8_t idx) {
   } else if (idx >= 31 && idx <= 36) { // AUX's
     return AtemSwitcher[devIndex].getAuxSourceInput(idx - 31);
   } else if (idx >= 37 && idx <= 40) {
-    return AtemSwitcher_vSrcMap[idx - 29];
+    return AtemSwitcher_vSrcMap[idx - 27];
   } else if (idx >= 41 && idx <= 48) { // MV1
     return AtemSwitcher[devIndex].getMultiViewerInputVideoSource(0, idx - 41 + 2);
   } else if (idx >= 49 && idx <= 56) { // MV2
@@ -109,10 +109,12 @@ uint16_t ATEM_pullFromHoldGroup(uint8_t hgIdx, uint8_t HWc) {
  */
 uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int16_t pulseCount, uint8_t filter, uint8_t filterME, uint8_t limit) {
 
+//  Serial << "filter: " << filter << "," << filterME << "\n";
   uint8_t srcI = AtemSwitcher[devIndex].getVideoSrcIndex(src);
   uint8_t c = 0;
   for (uint8_t a = 0; a < abs(pulseCount); a++) {
     // Serial << "test 1\n";
+    bool filterMatch = false;
     do {
       c++;
       srcI = (srcI + AtemSwitcher[devIndex].maxAtemSeriesVideoInputs() + (pulseCount > 0 ? 1 : -1)) % AtemSwitcher[devIndex].maxAtemSeriesVideoInputs();
@@ -122,10 +124,11 @@ uint16_t ATEM_searchVideoSrc(uint8_t devIndex, uint16_t src, int16_t pulseCount,
         if (pulseCount < 0 && srcI > limit)
           srcI = limit;
       }
-      // Serial << srcI << "\n";
-    } while (!((AtemSwitcher[devIndex].getInputAvailability(AtemSwitcher[devIndex].getVideoIndexSrc(srcI)) & filter) == filter && (AtemSwitcher[devIndex].getInputMEAvailability(AtemSwitcher[devIndex].getVideoIndexSrc(srcI)) & filterME) == filterME) && c < AtemSwitcher[devIndex].maxAtemSeriesVideoInputs());
+      filterMatch = ((AtemSwitcher[devIndex].getInputAvailability(AtemSwitcher[devIndex].getVideoIndexSrc(srcI)) & filter) > 0) || ((AtemSwitcher[devIndex].getInputMEAvailability(AtemSwitcher[devIndex].getVideoIndexSrc(srcI)) & filterME) > 0);
+//      Serial << srcI << "," << filterMatch << "," << AtemSwitcher[devIndex].getVideoIndexSrc(srcI) << "\n";
+    } while (!filterMatch && (c < AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
   }
-  //	Serial << "Out: " << srcI << "," << AtemSwitcher[devIndex].getVideoIndexSrc(srcI)<<"\n";
+//  Serial << "Out: " << srcI << "," << AtemSwitcher[devIndex].getVideoIndexSrc(srcI) << "\n";
   return AtemSwitcher[devIndex].getVideoIndexSrc(srcI);
 }
 
@@ -146,10 +149,11 @@ uint16_t ATEM_searchMediaStill(uint8_t devIndex, uint8_t srcI, int16_t pulseCoun
       }
     } while (!AtemSwitcher[devIndex].getMediaPlayerStillFilesIsUsed(srcI) && c < 32);
 
-    if(c == 32) break;
+    if (c == 32)
+      break;
   }
 
-  return (c >= 32?initSrc:srcI);
+  return (c >= 32 ? initSrc : srcI);
 }
 
 /**
@@ -180,7 +184,7 @@ static uint8_t lastLoadedCamera = 0;
 
 void storeCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
   uint8_t preset[45];
-  int16_t *p16 = (int16_t*) preset;
+  int16_t *p16 = (int16_t *)preset;
 
   memset(preset, 0, 45);
 
@@ -216,10 +220,10 @@ void storeCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
 }
 
 bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
-  if(num < EEPROM_FILEBANK_NUM) {
-    if(presetExists(num, PRESET_CCU) && presetChecksumMatches(num)) {
-      if(num != 0) {
-        if((uint16_t)millis() - lastSettingsRecall > 10000) {
+  if (num < EEPROM_FILEBANK_NUM) {
+    if (presetExists(num, PRESET_CCU) && presetChecksumMatches(num)) {
+      if (num != 0) {
+        if ((uint16_t)millis() - lastSettingsRecall > 10000) {
           storeCameraPreset(devIndex, camera, 0);
         }
         lastSettingsRecall = millis();
@@ -234,10 +238,10 @@ bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
 
       recallPreset(num, PRESET_CCU, preset);
 
-      int16_t *p16 = (int16_t*) preset;
+      int16_t *p16 = (int16_t *)preset;
 
-      //AtemSwitcher[devIndex].commandBundleStart();
-      
+      // AtemSwitcher[devIndex].commandBundleStart();
+
       AtemSwitcher[devIndex].setCameraControlLift(camera, p16[1], p16[2], p16[3], p16[0]);
       AtemSwitcher[devIndex].setCameraControlGamma(camera, p16[5], p16[6], p16[7], p16[4]);
       AtemSwitcher[devIndex].setCameraControlGain(camera, p16[9], p16[10], p16[11], p16[8]);
@@ -251,7 +255,7 @@ bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
       AtemSwitcher[devIndex].setCameraControlIris(camera, p16[18]);
       AtemSwitcher[devIndex].setCameraControlGain(camera, p16[19]);
 
-      //AtemSwitcher[devIndex].commandBundleEnd();
+      // AtemSwitcher[devIndex].commandBundleEnd();
 
       return true;
     }
@@ -302,11 +306,11 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       _systemHWcActionCacheFlag[HWc][actIdx] = false;
     }
     if (pulses & 0xFFFE) {
-      AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 3 ? globalConfigMem[actionPtr + 2] : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
+      AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 3 ? AtemSwitcher[devIndex].getVideoSrcIndex(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
     }
 
     retVal = globalConfigMem[actionPtr + 3] == 3 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (2 | 0x20) : 5) : (AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? (2 | 0x20) : 5);
-    
+
     // The availabilty should not affect the color in cycle mode
     if (globalConfigMem[actionPtr + 3] != 3 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
       retVal = 0;
@@ -344,7 +348,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       _systemHWcActionCacheFlag[HWc][actIdx] = false;
     }
     if (pulses & 0xFFFE) {
-      AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 1 ? globalConfigMem[actionPtr + 2] : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
+      AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 1 ? AtemSwitcher[devIndex].getVideoSrcIndex(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
     }
 
     retVal = globalConfigMem[actionPtr + 3] == 1 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (3 | 0x20) : 5) : (AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? (3 | 0x20) : 5);
@@ -353,7 +357,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if (globalConfigMem[actionPtr + 3] != 1 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
       retVal = 0;
     }
-
 
     if (extRetValIsWanted()) {
       extRetVal(0, 7);
@@ -398,7 +401,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       _systemHWcActionCacheFlag[HWc][actIdx] = false;
     }
     if (pulses & 0xFFFE) {
-      AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 1 ? globalConfigMem[actionPtr + 2] : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
+      AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 1 ? AtemSwitcher[devIndex].getVideoSrcIndex(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
     }
 
     retVal = globalConfigMem[actionPtr + 3] == 1 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? 2 : (AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? 3 : 5));
@@ -406,7 +409,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       retVal |= 0x20; // Add binary output bit
     if ((retVal & 0xF) == 3)
       retVal |= 0x10; // Bit 4 is a "mono-color blink flag" so a mono color button can indicate this special state.
-    
+
     // The availabilty should not affect the color in cycle mode
     if (globalConfigMem[actionPtr + 3] != 1 && !(AtemSwitcher[devIndex].getInputMEAvailability(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) & (B1 << globalConfigMem[actionPtr + 1]))) {
       retVal = 0;
@@ -463,7 +466,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
 
     if (pulses & 0xFFFE) {
-      AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]), (pulses >> 1), B1, 0, globalConfigMem[actionPtr + 3] == 5 ? globalConfigMem[actionPtr + 2] : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
+	//	Serial << "...." << AtemSwitcher[devIndex].getVideoSrcIndex(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) << "," << ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) << "," << globalConfigMem[actionPtr + 2] << "\n";
+      AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], ATEM_searchVideoSrc(devIndex, AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]), (pulses >> 1), B1, 0, globalConfigMem[actionPtr + 3] == 5 ? AtemSwitcher[devIndex].getVideoSrcIndex(ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
     }
 
     retVal = globalConfigMem[actionPtr + 3] == 5 ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]) == ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) ? (4 | 0x20) : 5);
@@ -492,7 +496,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-  #if SK_MODEL != SK_RCP
+#if SK_MODEL != SK_RCP
   case 4: // USK settings
     if (globalConfigMem[actionPtr + 3] != 4) {
       if (actDown) {
@@ -918,8 +922,8 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     return retVal;
     break;
-  case 18:                   // Transition Pos
-    if (actDown) {           // Use actDown as "has moved"
+  case 18:                         // Transition Pos
+    if (actDown) {                 // Use actDown as "has moved"
       if (value != BINARY_EVENT) { // Value input
         AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], value * 10);
         if (actUp) { // Use actUp as "at end"
@@ -1175,7 +1179,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
       if (pulses & 0xFFFE) {
-        outValue = pulsesHelper(round((AtemSwitcher[devIndex].audioWord2Db(audioVol)*10.0)), -600, 60, false, pulses, 2, 10);
+        outValue = pulsesHelper(round((AtemSwitcher[devIndex].audioWord2Db(audioVol) * 10.0)), -600, 60, false, pulses, 2, 10);
       }
 
       switch (globalConfigMem[actionPtr + 1]) {
@@ -1311,7 +1315,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       break;
     default:
       uint8_t source = globalConfigMem[actionPtr + 1];
-      if(source < 20) {
+      if (source < 20) {
         source -= 1;
       }
       retVal = ((((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF) << 8) | (((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF);
@@ -1513,7 +1517,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
 
-      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {      // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -1544,7 +1548,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
 
-      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {      // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -1575,7 +1579,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
       }
 
-      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {      // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -1597,9 +1601,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 36: // Gamma
   case 37: // Gain
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 2]);
-    if (actDown) {                                                // Binary or Value input...
+    if (actDown) {                                                    // Binary or Value input...
       int16_t outValue = globalConfigMem[actionPtr] == 37 ? 2048 : 0; // Binary (reset) value by default
-      if (value != BINARY_EVENT) {                                      // Value input different from -32768
+      if (value != BINARY_EVENT) {                                    // Value input different from -32768
         switch (globalConfigMem[actionPtr]) {
         case 35: // Lift:
           outValue = constrain(map(value, 0, 1000, -4096 / 8, 4096 / 8), -4096, 4096);
@@ -1935,87 +1939,83 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
 
     // Reload grace period in progress
-    if(_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (lastLoadedCamera != cam || lastLoadedPreset != globalConfigMem[actionPtr + 3])) {
+    if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (lastLoadedCamera != cam || lastLoadedPreset != globalConfigMem[actionPtr + 3])) {
       _systemHWcActionCacheFlag[HWc][actIdx] == 0; // Another reload occurred, cancel the grace period
     }
 
-    if(actDown && value == BINARY_EVENT) {
+    if (actDown && value == BINARY_EVENT) {
       _systemHWcActionCache[HWc][actIdx] = millis();
-      switch(globalConfigMem[actionPtr + 2]) {
-        case 0:
-          // For holddown events, bit 0 must be set
-          _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
-          break;
-        case 1: // Recall
-          if(_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - lastSettingsRecall < 10000) {
-            recallCameraPreset(devIndex, cam, 0);
-            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      switch (globalConfigMem[actionPtr + 2]) {
+      case 0:
+        // For holddown events, bit 0 must be set
+        _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
+        break;
+      case 1: // Recall
+        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - lastSettingsRecall < 10000) {
+          recallCameraPreset(devIndex, cam, 0);
+          _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+        } else {
+          if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = 4;
           } else {
-            if(recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
-              _systemHWcActionCacheFlag[HWc][actIdx] = 4;
-            } else {
-              _systemHWcActionCacheFlag[HWc][actIdx] = 8;
-            }
+            _systemHWcActionCacheFlag[HWc][actIdx] = 8;
           }
-          break;
-        case 2: // Store
-          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
-          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
-          break;
+        }
+        break;
+      case 2: // Store
+        storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+        _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+        break;
       }
     }
 
-    if(_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
-      switch(globalConfigMem[actionPtr + 2]) {
-        case 0:
-          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
-          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
-          break;
+    if (_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
+      switch (globalConfigMem[actionPtr + 2]) {
+      case 0:
+        storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+        _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+        break;
       }
     }
 
-    if(actUp) {
-      if(_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
-        if(globalConfigMem[actionPtr + 2] == 0) {
-          if((uint16_t)millis() - lastSettingsRecall < 10000) {
+    if (actUp) {
+      if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+        if (globalConfigMem[actionPtr + 2] == 0) {
+          if ((uint16_t)millis() - lastSettingsRecall < 10000) {
             recallCameraPreset(devIndex, cam, 0);
             _systemHWcActionCacheFlag[HWc][actIdx] = 0;
           } else {
-            if(recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+            if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
               _systemHWcActionCacheFlag[HWc][actIdx] = 4;
             } else {
               _systemHWcActionCacheFlag[HWc][actIdx] = 8;
             }
           }
         }
-      } else if(globalConfigMem[actionPtr + 2] == 2) {
+      } else if (globalConfigMem[actionPtr + 2] == 2) {
         _systemHWcActionCacheFlag[HWc][actIdx] = 0;
       }
     }
 
-    if(_systemHWcActionCacheFlag[HWc][actIdx] & 16) {
-        retVal = 1;
-    }
-    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 8) {
+    if (_systemHWcActionCacheFlag[HWc][actIdx] & 16) {
+      retVal = 1;
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 8) {
       retVal = 2 | 0x20;
-    }
-    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 4) {
-      if((uint16_t)millis() - lastSettingsRecall < 10000) {
-        retVal = (millis()&512?4:0);
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 4) {
+      if ((uint16_t)millis() - lastSettingsRecall < 10000) {
+        retVal = (millis() & 512 ? 4 : 0);
       } else {
         _systemHWcActionCacheFlag[HWc][actIdx] = 0;
       }
-    }
-    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 2) {
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 2) {
       retVal = 3;
-    }
-    else if(_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
       retVal = 5;
     } else {
-      if(globalConfigMem[actionPtr + 2] == 2) {
+      if (globalConfigMem[actionPtr + 2] == 2) {
         retVal = 5;
       } else {
-        retVal = presetExists(globalConfigMem[actionPtr + 3], PRESET_CCU)?5:0;
+        retVal = presetExists(globalConfigMem[actionPtr + 3], PRESET_CCU) ? 5 : 0;
       }
     }
 

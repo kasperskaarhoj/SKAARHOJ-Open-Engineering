@@ -13,6 +13,7 @@
 #define SK_E21TVS_OPTION_GPIO 0
 #define SK_E21GPIO_OPTION_GPIO2 0
 
+#define SK_RCP_OPTION_ENCODER 0
 
 
 // ****************************
@@ -205,7 +206,6 @@ SkaarhojTools sTools(0);
 #include "SkaarhojDome.h"
 #include "Adafruit_STMPE610.h"
 #include "SK_CFGDEF_WINGMANTOUCH.h"
-#include "SK_CFGDEF_WINGMAN.h"
 #elif(SK_MODEL == SK_CCUX)
 #include "SkaarhojDisplayArray.h"
 #include "SkaarhojAnalog.h"
