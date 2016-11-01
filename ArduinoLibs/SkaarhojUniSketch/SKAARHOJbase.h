@@ -1718,7 +1718,8 @@ uint8_t HWsetup() {
 #else
   infoDisplay.begin(4, 1);
 #endif
-#if SK_MODEL == SK_RCP || SK_MODEL == SK_MICROMONITOR
+
+#if SK_MODEL == SK_RCP || SK_MODEL == SK_MICROMONITOR || SK_MODEL == SK_REFERENCE
   infoDisplay.setRotation(2);
 #endif
   for (uint8_t i = 0; i < 8; i++) {
@@ -1757,11 +1758,17 @@ uint8_t HWsetup() {
 #endif
 #if (SK_HWEN_MENU)
   Serial << F("Init Encoder Menu\n");
+  #if SK_MODEL == SK_REFERENCE
+  menuDisplay.begin(1, 0, 3); // DOGM163
+  menuEncoders.begin(1);  
+  #else
   menuDisplay.begin(4, 0, 3); // DOGM163
+  menuEncoders.begin(5);
+  #endif
   menuDisplay.cursor(false);
   menuDisplay.contrast(5);
   menuDisplay.print("SKAARHOJ");
-  menuEncoders.begin(5);
+  
   //  menuEncoders.serialOutput(debugMode);
   menuEncoders.setStateCheckDelay(250);
   statusLED(QUICKBLANK);
@@ -1776,6 +1783,10 @@ uint8_t HWsetup() {
   SSWmenu.begin(6);
   SSWmenuEnc.begin(6);
   SSWmenuChip.begin(6);
+#elif(SK_MODEL == SK_REFERENCE)
+  SSWmenu.begin(3);
+  SSWmenuEnc.begin(3);
+  SSWmenuChip.begin(3);
 #else
   SSWmenu.begin(0);
   SSWmenuEnc.begin(0);
@@ -1808,6 +1819,8 @@ uint8_t HWsetup() {
   Serial << F("Init SmartSwitch Buttons\n");
 #if (SK_MODEL == SK_MICROSMARTH || SK_MODEL == SK_MICROSMARTV)
   SSWbuttons.begin(0);
+#elif (SK_MODEL == SK_REFERENCE)
+  SSWbuttons.begin(4);
 #else
   SSWbuttons.begin(1); // SETUP: Board address
 #endif
@@ -1816,9 +1829,9 @@ uint8_t HWsetup() {
 #else
   SSWbuttons.setRotation(0);
 #endif
-  SSWbuttons.setButtonBrightness(7, B11);
-  SSWbuttons.setButtonBrightness(7, B11);
-  SSWbuttons.setButtonColor(0, 2, 3, B11);
+  SSWbuttons.setButtonBrightness(7, B1111);
+  SSWbuttons.setButtonBrightness(7, B1111);
+  SSWbuttons.setButtonColor(0, 2, 3, B1111);
   for (uint8_t i = 0; i < 64; i++) {
 #if (SK_MODEL == SK_MICROSMARTV || SK_MODEL == SK_C15)
     SSWbuttons.clearDisplay();
@@ -1827,6 +1840,19 @@ uint8_t HWsetup() {
     SSWbuttons.clearDisplay();
     SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
     SSWbuttons.display(B01); // Write
+#elif SK_MODEL == SK_REFERENCE
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
+    SSWbuttons.display(B01); // Write
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
+    SSWbuttons.display(B10); // Write    
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[2], 64, 32, 1, true);
+    SSWbuttons.display(B100); // Write
+    SSWbuttons.clearDisplay();
+    SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[3], 64, 32, 1, true);
+    SSWbuttons.display(B1000); // Write
 #else
     SSWbuttons.clearDisplay();
     SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
@@ -1843,7 +1869,7 @@ uint8_t HWsetup() {
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
 #elif(SK_MODEL == SK_MICROLEVELS)
-                             //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
+  //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
 #endif
@@ -1883,25 +1909,12 @@ uint8_t HWsetup() {
 #endif
 #if (SK_HWEN_GPIO)
   Serial << F("Init GPIO board\n");
-#if (SK_MODEL == SK_C90SM)
+#if (SK_MODEL == SK_C90SM || SK_MODEL == SK_REFERENCE)
   GPIOboard.begin(7);
 #else
   GPIOboard.begin(0);
 #endif
 
-  /*  if (getConfigMode()) {	// Cannot allow this in normal mode!
-      Serial << F("Test: GPIO relays\n");
-      // Set:
-      for (int i = 1; i <= 8; i++) {
-        GPIOboard.setOutput(i, HIGH);
-        delay(100);
-      }
-      // Clear:
-      for (int i = 1; i <= 8; i++) {
-        GPIOboard.setOutput(i, LOW);
-        delay(100);
-      }
-    }*/
   statusLED(QUICKBLANK);
 #endif
 
@@ -2329,7 +2342,7 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
     if (average > 50)
       ledBits = 1;
 
-    control.setChannelIndicatorLight(1 + a, ledBits);
+    control.setChannelIndicatorLight(1, ledBits);
   }
 
   if (HWcMap[2]) { // VU
