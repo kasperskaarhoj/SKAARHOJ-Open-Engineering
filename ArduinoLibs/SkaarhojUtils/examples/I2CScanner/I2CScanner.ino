@@ -11,6 +11,7 @@ extern "C" {
 }
 
 #define TCAADDR 0x70
+#include "Streaming.h"
  
 void tcaselect(uint8_t i) {
   if (i > 7) return;
@@ -41,7 +42,8 @@ void setup()
       
         uint8_t data;
         if (! twi_writeTo(addr, &data, 0, 1, 1)) {
-           Serial.print("Found I2C 0x");  Serial.print(addr,HEX); Serial.print("="); Serial.println(addr,BIN);
+           Serial.print("Found I2C 0x");  
+           Serial << _HEXPADL(addr,2,"0") << " (" << _DECPADL(addr,3," ") << ")" << " = " << _BINPADL(addr,8,"0") << " = " << (addr&0xF8) << "+" << (addr&0x7) << "\n";
         }
       }
     }
