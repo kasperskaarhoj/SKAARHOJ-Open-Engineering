@@ -6,17 +6,14 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_WINGMANTOUCH
+#define SK_MODEL SK_REFERENCE
 
 
 #define SK_E21CMB6M_OPTION_VSLIDER 0
-
 #define SK_E21TVS_OPTION_GPIO 0
-
 #define SK_E21GPIO_OPTION_GPIO2 0
 
 #define SK_RCP_OPTION_ENCODER 0
-
 
 
 // ****************************
@@ -62,6 +59,7 @@
 #define SK_TALLY 70
 #define SK_CUSTOMHW 1000 // Custom HARDWARE option - where the SK_CTRL_ file is also custom (located in sketch folder then). That file is normally a generic file.
 #define SK_DUMMY 1001
+#define SK_REFERENCE 1002
 
 // Definition of the hardware devices we support:
 #define SK_DEV_ATEM 1
@@ -76,6 +74,8 @@
 #define SK_DEV_MATROXMONARCH 10
 #define SK_DEV_H264REC 11
 #define SK_DEV_SONYVISCAIP 12
+#define SK_DEV_TERANEX 13
+#define SK_DEV_SONYDECK 14
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -221,9 +221,16 @@ SkaarhojTools sTools(0);
 #include "SK_CFGDEF_CUSTOMHW.h"
 #elif(SK_MODEL == SK_DUMMY)
 #include "SK_CFGDEF_DUMMY.h"
+#elif(SK_MODEL == SK_REFERENCE)
+#include "SkaarhojAnalog.h"
+//#include "ADS7828.h"
+#include "SkaarhojDisplayArray.h"
+#include "Adafruit_GFX.h"
+#include "SkaarhojOLED64x256.h"
+#include "SK_CFGDEF_REFERENCE.h"
 #endif
 
-#if SK_HWEN_STDOLEDDISPLAY || SK_HWEN_SSWMENU || SK_HWEN_SSWBUTTONS || SK_MODEL == SK_RCP || SK_MODEL == SK_CCUX || SK_MODEL == SK_WINGMAN || SK_MODEL == SK_WINGMANTOUCH
+#if SK_HWEN_STDOLEDDISPLAY || SK_HWEN_SSWMENU || SK_HWEN_SSWBUTTONS || SK_MODEL == SK_RCP || SK_MODEL == SK_CCUX || SK_MODEL == SK_WINGMAN || SK_MODEL == SK_WINGMANTOUCH || SK_MODEL == REFERENCE
 #define SK_HWEN_GRAPHICS 1
 #else
 #define SK_HWEN_GRAPHICS 0
@@ -762,6 +769,8 @@ uint8_t SONYVISCAIP_initIdx = 0;
 #include "SK_CTRL_CUSTOMHW.h"
 #elif(SK_MODEL == SK_DUMMY)
 #include "SK_CTRL_DUMMY.h"
+#elif(SK_MODEL == SK_REFERENCE)
+#include "SK_CTRL_REFERENCE.h"
 #endif
 
 // Custom handlers

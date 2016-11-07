@@ -212,7 +212,9 @@ void storeCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
   p16[17] = AtemSwitcher[devIndex].getCameraControlWhiteBalance(camera);
   p16[18] = AtemSwitcher[devIndex].getCameraControlIris(camera);
 
-  preset[38] = AtemSwitcher[devIndex].getCameraControlGain(camera);
+  p16[19] = AtemSwitcher[devIndex].getCameraControlGain(camera);
+
+  Serial << "Saving saturation: " << p16[13] << "\n";
 
   storePreset(num, PRESET_CCU, preset);
 }
@@ -245,15 +247,13 @@ bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
       AtemSwitcher[devIndex].setCameraControlGain(camera, p16[9], p16[10], p16[11], p16[8]);
 
       AtemSwitcher[devIndex].setCameraControlContrast(camera, p16[12]);
-      AtemSwitcher[devIndex].setCameraControlSaturation(camera, p16[13]);
-      AtemSwitcher[devIndex].setCameraControlHue(camera, p16[14]);
+      AtemSwitcher[devIndex].setCameraControlHueSaturation(camera, p16[14], p16[13]);
       AtemSwitcher[devIndex].setCameraControlLumMix(camera, p16[15]);
 
       AtemSwitcher[devIndex].setCameraControlShutter(camera, p16[16]);
       AtemSwitcher[devIndex].setCameraControlWhiteBalance(camera, p16[17]);
       AtemSwitcher[devIndex].setCameraControlIris(camera, p16[18]);
-
-      AtemSwitcher[devIndex].setCameraControlGain(camera, preset[30]);
+      AtemSwitcher[devIndex].setCameraControlGain(camera, p16[19]);
 
       // AtemSwitcher[devIndex].commandBundleEnd();
 
