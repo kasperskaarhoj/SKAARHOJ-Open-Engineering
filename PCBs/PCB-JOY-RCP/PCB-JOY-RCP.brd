@@ -756,6 +756,7 @@ design rules under a new name.</description>
 <attribute name="SKAARHOJ_ID" value="SK_10uFTant" x="10.415" y="32.23" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="U$1" library="SKAARHOJ" package="3.2MMPAD6MM" value="GNDPAD6MM" x="3.5" y="3.5" rot="R180"/>
+<element name="C8" library="freetronics" package="EIA3216" value="10uF 6.3V A TANT" x="-22.86" y="-29.21"/>
 </elements>
 <signals>
 <signal name="5V" class="1">
@@ -970,6 +971,8 @@ design rules under a new name.</description>
 <via x="13.716" y="24.4856" extent="1-16" drill="0.6096"/>
 <via x="9.2456" y="12.9032" extent="1-16" drill="0.6096"/>
 <via x="9.2456" y="15.748" extent="1-16" drill="0.6096"/>
+<contactref element="C8" pad="C"/>
+<wire x1="3.5" y1="3.5" x2="-24.26" y2="-29.21" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="A1">
 <contactref element="IC1" pad="13"/>
@@ -1155,6 +1158,8 @@ design rules under a new name.</description>
 <wire x1="16.4592" y1="16.1544" x2="16.538" y2="16.13" width="0.3048" layer="16"/>
 <wire x1="13.4112" y1="22.7584" x2="13.3096" y2="22.86" width="0.3048" layer="16"/>
 <via x="15.3416" y="6.1976" extent="1-16" drill="0.6096"/>
+<contactref element="C8" pad="A"/>
+<wire x1="15.3416" y1="6.1976" x2="-21.46" y2="-29.21" width="0" layer="19" extent="1-16"/>
 </signal>
 <signal name="N$3">
 <contactref element="L1" pad="1"/>
