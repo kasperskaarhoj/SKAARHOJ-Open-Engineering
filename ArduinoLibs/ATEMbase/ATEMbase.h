@@ -85,6 +85,9 @@ class ATEMbase
 	uint8_t _cBBO;		// Bundle Buffer Offset; This is an offset if you want to add more commands.
 
 	uint8_t _ATEMmodel;
+
+	bool neverConnected;
+	bool waitingForIncoming;
 	
   public:
     ATEMbase();

@@ -44,6 +44,9 @@ void ATEMbase::begin(const IPAddress ip){
 }
 void ATEMbase::begin(const IPAddress ip, const uint16_t localPort){
 
+	neverConnected = true;
+	waitingForIncoming = false;
+
 		// Set up Udp communication object:
 	#ifdef ESP8266
 	WiFiUDP Udp;
@@ -112,8 +115,6 @@ void ATEMbase::runLoop() {
 	runLoop(0);
 }
 void ATEMbase::runLoop(uint16_t delayTime) {
-	
-	static bool neverConnected = true;
 	if (neverConnected)	{
 		neverConnected = false;
 		connect();
@@ -121,15 +122,11 @@ void ATEMbase::runLoop(uint16_t delayTime) {
 	}
 
 	unsigned long enterTime = millis();
-	
-	static boolean waitingForIncoming = false;
 
 	do {
 		while(true) {	// Iterate until UDP buffer is empty
 			uint16_t packetSize = _Udp.parsePacket();
-		
 			if (_Udp.available())   {  	
-
 				_Udp.read(_packetBuffer,12);	// Read header
 				 _sessionID = word(_packetBuffer[2], _packetBuffer[3]);
 				 uint8_t headerBitmask = _packetBuffer[0]>>3;
