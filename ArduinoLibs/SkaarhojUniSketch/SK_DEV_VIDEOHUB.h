@@ -79,7 +79,7 @@ uint16_t evaluateAction_VIDEOHUB(const uint8_t devIndex, const uint16_t actionPt
   }
   switch (globalConfigMem[actionPtr]) {
   case 0:
-    if (actDown) {
+    if (actDown && value == BINARY_EVENT) {
       if (globalConfigMem[actionPtr + 3] == 5) { // Source cycle by button push
         pulses = 2;
         _systemHWcActionCacheFlag[HWc][actIdx] = true;
