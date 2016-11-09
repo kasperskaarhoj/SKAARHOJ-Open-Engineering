@@ -42,6 +42,7 @@ class SkaarhojDueEEPROM
   private:
 	uint8_t _deviceaddress;
 	uint8_t _pageBuffer[PAGE_SIZE];
+  //uint8_t _checkBuffer[PAGE_SIZE];
 	uint16_t _pageAddress;
 		
   public:
@@ -84,7 +85,6 @@ inline void SkaarhojDueEEPROM::writeBuffered(uint16_t address, uint8_t value) {
 
 inline void SkaarhojDueEEPROM::commitPage() {
   if(_pageAddress != 0xFFFF) {
-    Serial.println(_pageAddress);
     writePage(_pageAddress, _pageBuffer);
     _pageAddress = 0xFFFF;
   }
@@ -97,6 +97,8 @@ inline void SkaarhojDueEEPROM::write(uint16_t address, uint8_t value) {
   Wire.write(address & 0xFF); // LSB
   Wire.write(value);
   Wire.endTransmission();
+
+  Serial.println(address);
   
   // Wait for EEPROM to be ready..
   while(Wire.endTransmission() != 0);
@@ -130,6 +132,14 @@ inline void SkaarhojDueEEPROM::writePage(uint16_t address, uint8_t * valueArray)
   
   // Wait for EEPROM to be ready..
   while(Wire.endTransmission() != 0);
+
+  // readPage(address, _checkBuffer);
+  // for(uint8_t i = 0; i < PAGE_SIZE; i++) {
+  //   if(_checkBuffer[i] != _pageBuffer[i]) {
+  //     Serial << "EEPROM Verification error!";
+  //     break;
+  //   }
+  // }
 }
 
 inline void SkaarhojDueEEPROM::readPage(uint16_t address, uint8_t * valueArray) {	// 30 bytes array

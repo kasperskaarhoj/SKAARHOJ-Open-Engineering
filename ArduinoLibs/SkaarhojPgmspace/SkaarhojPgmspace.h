@@ -6,6 +6,7 @@
 #define strncpy_P(dest, src, n) strncpy((dest), (src), (n))
 #define strcmp_P(a, b) strcmp((a), (b))
 #define strncmp_P(a, b, n) strncmp((a), (b), (n))
+#define pgm_read_byte_near(a) *(a)
 // #define strlen_P(a) strlen((a))
 
 #else
