@@ -2034,78 +2034,78 @@ void commandDispatch() {
           // The following 6 if-clauses detects if a button is pressed for input selection:
           switch (i) {
             case 1:
-              AtemSwitcher.setPreviewInputVideoSource(0, 1);
+              AtemSwitcher.setPreviewInputVideoSource(buttonsATEM[i - 1], 1);
               break;
             case 2:
-              AtemSwitcher.setPreviewInputVideoSource(0, 2);
+              AtemSwitcher.setPreviewInputVideoSource(buttonsATEM[i - 1], 2);
               break;
             case 3:
-              AtemSwitcher.setPreviewInputVideoSource(0, 3);
+              AtemSwitcher.setPreviewInputVideoSource(buttonsATEM[i - 1], 3);
               break;
             case 4:
-              AtemSwitcher.setPreviewInputVideoSource(0, 4);
+              AtemSwitcher.setPreviewInputVideoSource(buttonsATEM[i - 1], 4);
               break;
             case 5:
-              AtemSwitcher.setPreviewInputVideoSource(0, 5);
+              AtemSwitcher.setPreviewInputVideoSource(buttonsATEM[i - 1], 5);
               break;
             case 6:
-              AtemSwitcher.setPreviewInputVideoSource(0, 6);
+              AtemSwitcher.setPreviewInputVideoSource(buttonsATEM[i - 1], 6);
               break;
 
 
             // The following 6 if-clauses detects if a button is pressed for input selection:
             case 7:
-              AtemSwitcher.setProgramInputVideoSource(0, 1);
+              AtemSwitcher.setProgramInputVideoSource(buttonsATEM[i - 1], 1);
               break;
             case 8:
-              AtemSwitcher.setProgramInputVideoSource(0, 2);
+              AtemSwitcher.setProgramInputVideoSource(buttonsATEM[i - 1], 2);
               break;
             case 9:
-              AtemSwitcher.setProgramInputVideoSource(0, 3);
+              AtemSwitcher.setProgramInputVideoSource(buttonsATEM[i - 1], 3);
               break;
             case 10:
-              AtemSwitcher.setProgramInputVideoSource(0, 4);
+              AtemSwitcher.setProgramInputVideoSource(buttonsATEM[i - 1], 4);
               break;
             case 11:
-              AtemSwitcher.setProgramInputVideoSource(0, 5);
+              AtemSwitcher.setProgramInputVideoSource(buttonsATEM[i - 1], 5);
               break;
             case 12:
-              AtemSwitcher.setProgramInputVideoSource(0, 6);
+              AtemSwitcher.setProgramInputVideoSource(buttonsATEM[i - 1], 6);
               break;
 
             // The following detects if a button is pressed for either AUTO or CUT:
             case 13:
               buttons.setButtonColor(13, 1);   // Highlight CUT button
-              AtemSwitcher.performCutME(0);
+              AtemSwitcher.performCutME(buttonsATEM[i - 1]);
               break;
             case 14:
-              AtemSwitcher.performAutoME(0);
+              AtemSwitcher.performAutoME(buttonsATEM[i - 1]);
               break;
 
             // Key1
             case 15:
-              AtemSwitcher.setKeyerOnAirEnabled(0, 0, !AtemSwitcher.getKeyerOnAirEnabled(0, 0));
+              AtemSwitcher.setKeyerOnAirEnabled(buttonsATEM[i - 1], 0, !AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 0));
               break;
 
             // Media1:
             case 16:
-              AtemSwitcher.setPreviewInputVideoSource(0, 3010);
+              AtemSwitcher.setPreviewInputVideoSource(buttonsATEM[i - 1], 3010);
               break;
           }
           break;
       }
       switch (buttons2function[i - 1]) {
         case 1:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 0, !AtemSwitcher.getKeyerOnAirEnabled(0, 0)); // Toggle USK 1
+          AtemSwitcher.setKeyerOnAirEnabled(buttonsATEM[i - 1], 0, !AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 0)); // Toggle USK 1
           break;
         case 2:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 1, !AtemSwitcher.getKeyerOnAirEnabled(0, 1)); // Toggle USK 2
+          AtemSwitcher.setKeyerOnAirEnabled(buttonsATEM[i - 1], 1, !AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 1)); // Toggle USK 2
           break;
         case 3:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 2, !AtemSwitcher.getKeyerOnAirEnabled(0, 2)); // Toggle USK 3
+          AtemSwitcher.setKeyerOnAirEnabled(buttonsATEM[i - 1], 2, !AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 2)); // Toggle USK 3
           break;
         case 4:
-          AtemSwitcher.setKeyerOnAirEnabled(0, 3, !AtemSwitcher.getKeyerOnAirEnabled(0, 3)); // Toggle USK 4
+          AtemSwitcher.setKeyerOnAirEnabled(buttonsATEM[i - 1], 3, !AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 3)); // Toggle USK 4
           break;
         case 5:
           AtemSwitcher.setDownstreamKeyerOnAir(0, !AtemSwitcher.getDownstreamKeyerOnAir(0)); // Toggle DSK 1
@@ -2519,10 +2519,10 @@ void setButtonColors() {
         break;
       case 255:
         if (i <= 6) {
-          buttons.setButtonColor(i, AtemSwitcher.getPreviewInputVideoSource(0) == i ? 1 : 3);
+          buttons.setButtonColor(i, AtemSwitcher.getPreviewInputVideoSource(buttonsATEM[i - 1]) == i ? 1 : 3);
         }
         else if (i <= 12) {
-          buttons.setButtonColor(i, AtemSwitcher.getProgramInputVideoSource(0) == (i - 6) ? 1 : 3);
+          buttons.setButtonColor(i, AtemSwitcher.getProgramInputVideoSource(buttonsATEM[i - 1]) == (i - 6) ? 1 : 3);
         }
         else if (i == 13) {
           if (!buttons.buttonIsPressed(13))  {
@@ -2530,16 +2530,16 @@ void setButtonColors() {
           }
         }
         else if (i == 14) {
-          buttons.setButtonColor(14, AtemSwitcher.getTransitionInTransition(0) ? 1 : 3);     // Auto button
+          buttons.setButtonColor(14, AtemSwitcher.getTransitionInTransition(buttonsATEM[i - 1]) ? 1 : 3);     // Auto button
         }
         else if (i == 15) {
-          buttons.setButtonColor(15, AtemSwitcher.getKeyerOnAirEnabled(0, 0) ? 1 : 3);     // Key button
+          buttons.setButtonColor(15, AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 0) ? 1 : 3);     // Key button
         }
         else if (i == 16) {
-          if (AtemSwitcher.getProgramInputVideoSource(0) == 3010)  { // Media 1 button
+          if (AtemSwitcher.getProgramInputVideoSource(buttonsATEM[i - 1]) == 3010)  { // Media 1 button
             buttons.setButtonColor(16, 1);
           }
-          else if (AtemSwitcher.getPreviewInputVideoSource(0) == 3010) {
+          else if (AtemSwitcher.getPreviewInputVideoSource(buttonsATEM[i - 1]) == 3010) {
             buttons.setButtonColor(16, 2);
           }
           else {

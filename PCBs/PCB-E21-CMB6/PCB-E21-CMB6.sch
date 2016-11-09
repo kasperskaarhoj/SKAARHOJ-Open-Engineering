@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.5.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -9430,6 +9430,9 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="PC1" library="rcl" deviceset="CPOL-EU" device="D" value="47u"/>
 <part name="GND24" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$94" library="SKAARHOJ" deviceset="M04X2" device="ZIF-0.5"/>
+<part name="POT2" library="SKAARHOJ" deviceset="SLIDER" device="C45" value="SLIDERC45"/>
+<part name="GND25" library="SparkFun" deviceset="GND" device=""/>
+<part name="U$95" library="SparkFun" deviceset="5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -9940,6 +9943,9 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 </instance>
 <instance part="GND24" gate="1" x="-579.12" y="-17.78"/>
 <instance part="U$94" gate="G$1" x="-88.9" y="-101.6"/>
+<instance part="POT2" gate="G$1" x="-419.1" y="-134.62"/>
+<instance part="GND25" gate="1" x="-419.1" y="-147.32"/>
+<instance part="U$95" gate="G$1" x="-419.1" y="-124.46"/>
 </instances>
 <busses>
 </busses>
@@ -10517,6 +10523,11 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="PC1" gate="G$1" pin="+"/>
 <wire x1="-576.58" y1="-5.08" x2="-576.58" y2="0" width="0.1524" layer="91"/>
 <label x="-576.58" y="0" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="POT2" gate="G$1" pin="E"/>
+<wire x1="-419.1" y1="-124.46" x2="-419.1" y2="-127" width="0.1524" layer="91"/>
+<pinref part="U$95" gate="G$1" pin="5V"/>
 </segment>
 </net>
 <net name="GND" class="1">
@@ -11210,6 +11221,11 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="GND24" gate="1" pin="GND"/>
 <wire x1="-579.12" y1="-15.24" x2="-576.58" y2="-15.24" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="GND25" gate="1" pin="GND"/>
+<pinref part="POT2" gate="G$1" pin="A"/>
+<wire x1="-419.1" y1="-144.78" x2="-419.1" y2="-142.24" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="I2C_SDA" class="0">
 <segment>
@@ -11320,6 +11336,11 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="POT1ALT" gate="G$1" pin="S"/>
 <wire x1="-497.84" y1="-134.62" x2="-480.06" y2="-134.62" width="0.1524" layer="91"/>
 <label x="-480.06" y="-134.62" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="POT2" gate="G$1" pin="S"/>
+<wire x1="-414.02" y1="-134.62" x2="-396.24" y2="-134.62" width="0.1524" layer="91"/>
+<label x="-396.24" y="-134.62" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="SCLK" class="0">
