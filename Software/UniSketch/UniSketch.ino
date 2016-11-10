@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_REFERENCE
+#define SK_MODEL SK_E201M16
 
 
 #define SK_E21CMB6M_OPTION_VSLIDER 0
@@ -66,16 +66,18 @@
 #define SK_DEV_HYPERDECK 2
 #define SK_DEV_VIDEOHUB 3
 #define SK_DEV_SMARTSCOPE 4
-#define SK_DEV_BMDCAMCTRL 5
-#define SK_DEV_SONYRCP 6
+#define SK_DEV_TERANEX 5
+#define SK_DEV_BMDCAMCTRL 6
 #define SK_DEV_VMIX 7
 #define SK_DEV_ROLANDVR50 8
-#define SK_DEV_PANAAWHEX 9
-#define SK_DEV_MATROXMONARCH 10
-#define SK_DEV_H264REC 11
-#define SK_DEV_SONYVISCAIP 12
-#define SK_DEV_TERANEX 13
-#define SK_DEV_SONYDECK 14
+#define SK_DEV_MATROXMONARCH 9
+#define SK_DEV_H264REC 10
+#define SK_DEV_SONYDECK 11
+#define SK_DEV_PANAAWHEX 12
+#define SK_DEV_SONYVISCAIP 13
+
+// DISABLED! Left here to avoid removing code from Skaarhojbase.h
+#define SK_DEV_SONYRCP 255
 
 // Defines to enable code for generic items:
 #define SK_HWEN_STDOLEDDISPLAY 0
@@ -795,7 +797,7 @@ void setup() {
     deviceSetup(); // Sets up hardware devices (those enabled) we communicate to. No initialization though, this must happen automatically in the runloop of each device
   }
 
-  Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
+  //Wire.setClock(400000L);  // Set this after device init because wire.begin() may be called and reset this...
 
   Serial << F("setup() Done\n-----------------------------\n");
 }
