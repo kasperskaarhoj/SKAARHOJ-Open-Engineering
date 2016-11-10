@@ -13,10 +13,11 @@ SkaarhojUtils utils2;
 
 void setup() {
   Serial.begin(115200);
+  Wire.begin();
   
   cameraControl.begin(shieldAddress);
   //cameraControl.begin();
-  
+  Wire.setClock(400000L);
   // Init button pins, active -> low
   pinMode(A2, INPUT);
   pinMode(A3, INPUT);
