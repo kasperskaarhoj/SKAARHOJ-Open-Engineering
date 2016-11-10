@@ -56,7 +56,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
 
     bool repeat;
     bool endConfigParsing = false;
-    char fieldName[16], fieldValue[22];
+    char fieldName[20], fieldValue[22]; // fieldName is only 15 chars below HWcID 101, but reserving a few extra bytes to be sure
     uint8_t stNamLen = 0;
 
     memset(globalConfigMem, 0, SK_CONFIG_MEMORY_SIZE);
@@ -66,7 +66,7 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
     uint8_t presetValue = 0;
     uint8_t presetTitleLen = 0;
     do {
-      repeat = server.readPOSTparam(fieldName, 16, fieldValue, 22);
+      repeat = server.readPOSTparam(fieldName, 20, fieldValue, 22);
       // Serial << F("Field:") << fieldName << F(" Value:") << fieldValue << "\n";
 
       if (!endConfigParsing) {
