@@ -16,7 +16,6 @@
 
 #define SK_E21CMB6M_OPTION_VSLIDER false     // AUTOGEN: true,false
 #define SK_E21TVS_OPTION_GPIO false     // AUTOGEN: true,false
-#define SK_E21TVS_OPTION_SLIDER false   // AUTOGEN: true,false
 #define SK_E21GPIO_OPTION_GPIO2 false     // AUTOGEN: true,false
 #define SK_RCP_OPTION_ENCODER false     // AUTOGEN: true,false
 
