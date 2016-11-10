@@ -345,6 +345,21 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
     break;
   }
+
+  case 15: { // Servo
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
+    uint8_t servo = globalConfigMem[actionPtr + 2];
+    uint8_t direction = globalConfigMem[actionPtr + 3];
+
+    if(actDown) {
+      if(value != BINARY_EVENT) { // Analog input
+        Serial << "Servo " << servo << " set to value " << value << "\n";
+        BMDCamCtrl[devIndex].setServoSpeed(cam, servo, value);
+      }
+    }
+    break;
+  }
+
   }
 
 
