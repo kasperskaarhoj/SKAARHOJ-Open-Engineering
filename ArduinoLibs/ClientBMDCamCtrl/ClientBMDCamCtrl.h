@@ -171,6 +171,10 @@ public:
   void setCameraColourAdjust(uint8_t camera, float (&value)[2], bool offset = false); // 0: hue (-1.0-1.0), 1: saturation (0.0-2.0)
   float (&getCameraColourAdjust(uint8_t camera))[2];
   void setCameraCorrectionReset(uint8_t camera);
+
+  // Pan-tilt controls
+  void setServoSpeed(uint8_t camera, uint8_t num, int16_t speed);
+  void setServoPosition(uint8_t camera, uint8_t num, uint16_t position);
 };
 
 #endif

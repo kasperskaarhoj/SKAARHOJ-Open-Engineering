@@ -401,6 +401,18 @@ void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) {
   initColourCorrection(camera);
 }
 
+void ClientBMDCamCtrl::setServoSpeed(uint8_t camera, uint8_t num, int16_t speed) {
+  if(num >= 3) return;
+  _cameraControl.writeCommandInt16(camera, 9, num, 1, speed);
+}
+
+void ClientBMDCamCtrl::setServoPosition(uint8_t camera, uint8_t num, uint16_t position) {
+  if(num >= 3) return;
+  _cameraControl.writeCommandInt16(camera, 9, num, 1, position);
+}
+
+
+
 // ------------------------
 // Getter commands
 // ------------------------
