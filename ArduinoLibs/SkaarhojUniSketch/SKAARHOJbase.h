@@ -1138,11 +1138,23 @@ void setPresetStoreLength(uint16_t len) {
 }
 uint8_t getNumberOfPresets() {
   uint8_t csc = EEPROM_PRESET_TOKEN;
-  for (uint8_t a = 0; a < 5; a++) {
-    csc ^= EEPROM.read(EEPROM_PRESET_START + a);
+  bool presetsLoaded = false;
+
+  for(uint8_t i = 0; i < 5; i++) {
+    for (uint8_t a = 0; a < 5; a++) {
+      csc ^= EEPROM.read(EEPROM_PRESET_START + a);
+    }
+    if (csc != 0) {
+      Serial << F("Presets checksum mismatch. Attempt #") << i << F("\n");
+      delay(20);
+    } else {
+      presetsLoaded = true;
+      break;
+    }
   }
-  if (csc != 0) {
-    Serial << F("CSC mismatch:") << csc << F("\n");
+
+  if(!presetsLoaded) {
+    Serial << F("Could not read presets in 5 tries. Clearing...\n");
     clearPresets();
   }
 
