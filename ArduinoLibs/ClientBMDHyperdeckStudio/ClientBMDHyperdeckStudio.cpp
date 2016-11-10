@@ -45,6 +45,10 @@ void ClientBMDHyperdeckStudio::begin(IPAddress ip) {
   _wasRejected = false;
   _askForClips = false;
   _askForClipNames = false;
+
+  clipCounter = 0;
+  clipIndex = 0;
+  statusRequestCycleStep = 0;
 }
 
 /**
@@ -107,8 +111,6 @@ void ClientBMDHyperdeckStudio::_parseline() {
   // ISSUE:
   // If you get a return code "120 connection rejected", it seems to mean that another connection (or a previous, old "hanging" connection!) is still active. After a certain timeout time, this state is usually resolved automatically (within a minute or so.)
   // If you experience the problem above with an old hanging connection from yourself, try to call "disconnect()" immediately after a connection. This has proven to work at some point and was attempted implemented using "_wasRejected" below. However, it didn't turn out to work as well as hoped and it's still frustrating and unclear how to get a more predictable connection established to the HyperDeck.
-  static uint8_t clipCounter;
-  static uint8_t clipIndex;
 
   if (!strcmp(_buffer, "")) {
     _section = 0;
@@ -518,7 +520,6 @@ void ClientBMDHyperdeckStudio::_sendStatus() {
   _enableNotifications(); // Check notifications status.
   setRemoteEnable(true);  // Force remote to be set!
 
-  static uint8_t statusRequestCycleStep = 0;
   statusRequestCycleStep++;
   _pullStatus(statusRequestCycleStep);
 }

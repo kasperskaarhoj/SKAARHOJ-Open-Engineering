@@ -105,7 +105,8 @@ protected:
   void _prepareCommandPacket(const char *cmdString, uint8_t cmdBytes, bool indexMatch = true);
   void _finishCommandPacket();
 
-
+private:
+	bool neverConnected;
 
 
 

@@ -105,6 +105,10 @@ private:
   char _Hyperdeck_currentFile[ClientBMDHyperdeckStudio_CLIPNAMELEN];
   uint8_t _Hyperdeck_currentClipId;
 
+  uint8_t clipCounter;
+  uint8_t clipIndex;
+  uint8_t statusRequestCycleStep;
+
 public:
   ClientBMDHyperdeckStudio();
   void begin(IPAddress ip);

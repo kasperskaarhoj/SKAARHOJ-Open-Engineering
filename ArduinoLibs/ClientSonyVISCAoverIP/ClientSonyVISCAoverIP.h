@@ -97,6 +97,7 @@ private:
 	
 			// Private Variables in ClientSonyVISCAoverIP.h:
 			uint8_t cameraIris;
+      bool neverConnected;
 	
 public:
 	

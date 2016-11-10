@@ -86,6 +86,7 @@ class ClientKramerVP728 : public SkaarhojSerialClient
 	uint8_t _queueWriteIndex;	// Index in queue, last written
 	uint8_t _queueReadIndex;	// Index in queue, last sent
 	uint8_t _queueEntryWritePointer; 	// Index to chars in the current queue entry.
+  uint8_t i;
 
 
 	// States:

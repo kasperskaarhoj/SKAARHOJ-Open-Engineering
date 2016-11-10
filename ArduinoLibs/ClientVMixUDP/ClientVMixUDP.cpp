@@ -50,6 +50,7 @@ void ClientVMixUDP::begin(const IPAddress ip) {
   _lastContact = 0;
   _serialOutput = 0;
 
+  neverConnected = true;
   resetCommandBundle();
 }
 
@@ -86,8 +87,6 @@ void ClientVMixUDP::connect() {
  * Other recommendations might come up in the future.
  */
 void ClientVMixUDP::runLoop(uint16_t delayTime) {
-
-  static bool neverConnected = true;
   if (neverConnected) {
     neverConnected = false;
     connect();

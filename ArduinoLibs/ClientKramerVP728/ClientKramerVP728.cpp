@@ -47,6 +47,8 @@ void ClientKramerVP728::begin(){
 		// A command queue has been implemented in this subclass.
 	_queueWriteIndex = 0;
 	_queueReadIndex = 0;
+
+	i = 0;
 }
 
 /**
@@ -235,11 +237,10 @@ void ClientKramerVP728::_parseline()	{
 void ClientKramerVP728::_sendStatus()	{
 	// This array has a list of all "functions" from the scaler for which to retrieve a status value:
 	const static uint8_t functionListToStatusUpdate[] = {0,12,13,14,15,16,17,25,27,32,47,48,49,50,51,54,89,90,91,101,102,103,135,153,154};
-	static uint8_t i;
 	
 		// Initialize:
 	if (_statusRequestInterval!=500)	{
-		_statusRequestInterval = 500;	// This is because we want sendStatus to be continously called until we have gotten all commands sent - then we will set it back to 60000 ms.
+		_statusRequestInterval = 500;	// This is because we want sendStatus to be continuously called until we have gotten all commands sent - then we will set it back to 60000 ms.
 		i = 0;
 	}
 	
