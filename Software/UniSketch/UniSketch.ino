@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_REFERENCE
+#define SK_MODEL SK_C90D
 
 
 
@@ -19,9 +19,11 @@
 #define SK_E21GPIO_OPTION_GPIO2 false     // AUTOGEN: true,false
 #define SK_RCP_OPTION_ENCODER false     // AUTOGEN: true,false
 
-#define SK_C90D_OPTION_DISABLEMASK B00000000000000000000000000000000    // Must have 32 digits. Disables buttons #1-#32 from left. AUTOGEN: 0
+#define SK_C90D_OPTION_DISABLEMASK 0b00000000000000000000000000000000    // Must have 32 digits. Disables buttons #1-#32 from left. AUTOGEN: 0
 #define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 1,2,3,4,5,6,7,8
 #define SK_C90D_OPTION_GPIO true    // AUTOGEN: true,false
+
+#define SK_C90MII_OPTION_GPIO true    // AUTOGEN: true,false
 
 
 
@@ -71,6 +73,9 @@
 #define SK_WINGMANTOUCH 62
 #define SK_CCUX 63
 #define SK_TALLY 70
+#define SK_C90MII 71
+#define SK_C90D 72
+
 #define SK_CUSTOMHW 1000 // Custom HARDWARE option - where the SK_CTRL_ file is also custom (located in sketch folder then). That file is normally a generic file.
 #define SK_DUMMY 1001
 #define SK_REFERENCE 1002
@@ -244,6 +249,10 @@ SkaarhojTools sTools(0);
 #include "Adafruit_GFX.h"
 #include "SkaarhojOLED64x256.h"
 #include "SK_CFGDEF_REFERENCE.h"
+#elif (SK_MODEL == SK_C90MII) 
+#include "SK_CFGDEF_C90MII.h"
+#elif (SK_MODEL == SK_C90D)
+#include "SK_CFGDEF_C90D.h"
 #endif
 
 #if SK_HWEN_STDOLEDDISPLAY || SK_HWEN_SSWMENU || SK_HWEN_SSWBUTTONS || SK_MODEL == SK_RCP || SK_MODEL == SK_CCUX || SK_MODEL == SK_WINGMAN || SK_MODEL == SK_WINGMANTOUCH || SK_MODEL == REFERENCE
@@ -787,6 +796,10 @@ uint8_t SONYVISCAIP_initIdx = 0;
 #include "SK_CTRL_DUMMY.h"
 #elif(SK_MODEL == SK_REFERENCE)
 #include "SK_CTRL_REFERENCE.h"
+#elif(SK_MODEL == SK_C90MII)
+#include "SK_CTRL_C90MII.h"
+#elif(SK_MODEL == SK_C90D)
+#include "SK_CTRL_C90D.h"
 #endif
 
 // Custom handlers

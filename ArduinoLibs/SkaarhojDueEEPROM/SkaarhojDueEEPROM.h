@@ -97,8 +97,6 @@ inline void SkaarhojDueEEPROM::write(uint16_t address, uint8_t value) {
   Wire.write(address & 0xFF); // LSB
   Wire.write(value);
   Wire.endTransmission();
-
-  Serial.println(address);
   
   // Wait for EEPROM to be ready..
   while(Wire.endTransmission() != 0);
