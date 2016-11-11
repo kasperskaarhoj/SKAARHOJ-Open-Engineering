@@ -125,6 +125,11 @@ void HWrunLoop() {
   #if SK_HWEN_SLIDER
     HWrunLoop_slider(33);
   #endif
+
+  #if SK_HWEN_GPIO
+  static bool gpioStates[] = {false, false, false, false, false, false, false, false};
+  HWrunLoop_GPIO(GPIOboard, 34, gpioStates);
+  #endif
 }
 
 uint8_t HWnumOfAnalogComponents() { return 1; }

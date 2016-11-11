@@ -9,7 +9,7 @@ void HWcfgDisplay() { Serial << F("SK_MODEL: SK_C90MII\n"); }
 uint8_t HWsetupL() {
 
   Serial << F("Init BI8 boards\n");
-  buttons.begin(0, false);
+  buttons.begin(0, false, true);
   buttons.setDefaultColor(0); // Off by default
   buttons2.begin(1, false);
   buttons2.setDefaultColor(0); // Off by default
@@ -73,24 +73,37 @@ uint8_t HWsetupL() {
  * Hardware test
  */
 void HWtestL() {
-  buttons.testProgramme(0xFF);
-  buttons2.testProgramme(B11001101);
+  buttons.testProgramme(0b0011001111111111);
+  buttons2.testProgramme(0b11001101);
+
+  #if SK_HWEN_MENU
+  menuEncoders.runLoop();
+  #endif
 }
 
 /**
  * Hardware runloop
  */
 void HWrunLoop() {
-
-  uint8_t b16Map[] = {5, 6, 7, 8, 1, 2, 3, 4}; // These numbers refer to the drawing in the web interface
+  uint8_t b16Map[] = {1,6,7,8,5,1,2,3,9,10,0,0,4,5,0,0}; // These numbers refer to the drawing in the web interface
   HWrunLoop_BI8(buttons, b16Map, sizeof(b16Map));
 
-  uint8_t b16Map2[] = {9, 0, 12, 13, 0, 0, 10, 11}; // These numbers refer to the drawing in the web interface
+  uint8_t b16Map2[] = {11,0,14,15,0,0,12,13}; // These numbers refer to the drawing in the web interface
   HWrunLoop_BI8(buttons2, b16Map2, sizeof(b16Map2));
 
-#if SK_HWEN_SLIDER
-  HWrunLoop_slider(14);
-#endif
+  #if SK_HWEN_SLIDER
+  HWrunLoop_slider(16);
+  #endif
+
+  #if SK_HWEN_MENU
+  menuEncoders.runLoop();
+  HWrunLoop_Menu(17);
+  #endif
+
+  #if SK_HWEN_GPIO
+  static bool gpioStates[] = {false, false, false, false, false, false, false, false};
+  HWrunLoop_GPIO(GPIOboard, 18, gpioStates);
+  #endif
 }
 
 uint8_t HWnumOfAnalogComponents() { return 1; }
