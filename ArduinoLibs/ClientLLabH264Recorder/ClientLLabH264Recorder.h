@@ -1,7 +1,7 @@
 #ifndef ClientLLabH264Recorder_h
 #define ClientLLabH264Recorder_h
 
-#include <GenericHttpClient.h>
+#include <GenericHTTPClient.h>
 #include <HTTPSharedClientWrapper.h>
 #include <Ethernet.h>
 #include <Arduino.h>
