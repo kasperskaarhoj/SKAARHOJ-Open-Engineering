@@ -88,12 +88,23 @@ uint8_t HWsetupL() {
   return retVal;
 }
 
+uint8_t buttonMap[] = {4,5,6,7,12,13,14,15,0,1,2,3,8,9,10,11};
+
+uint16_t buttonSequence(uint16_t mask) {
+  uint16_t output = 0;
+  for(uint8_t i = 0; i<16; i++) {
+    output |= (mask >> i) & 1 ? 1 << buttonMap[15-i] : 0;
+  }
+
+  return output;
+}
+
 /**
  * Hardware test
  */
 void HWtestL() {
-  buttons.testProgramme((disableMask >> 16) ^ 0xFFFF);
-  buttons2.testProgramme((disableMask & 0xFFFF) ^ 0xFFFF);
+  buttons.testProgramme(buttonSequence(disableMask >> 16) ^ 0xFFFF);
+  buttons2.testProgramme(buttonSequence(disableMask & 0xFFFF) ^ 0xFFFF);
 }
 
 /**
@@ -104,8 +115,8 @@ void HWrunLoop() {
   // It is implied that the button numbers in the webinterface goes from 1 to 32
   uint8_t b16Map[16], b16Map2[16];
   for(uint8_t i=0; i<16; i++) {
-    b16Map[i] = (disableMask >> (31-i)) & 1 ? 0 : i+1;
-    b16Map[i] = (disableMask >> (15-i)) & 1 ? 0 : i+17;
+    b16Map[buttonMap[i]] = (disableMask >> (31-i)) & 1 ? 0 : i+1;
+    b16Map2[buttonMap[i]] = (disableMask >> (15-i)) & 1 ? 0 : i+17;
   }
 
   HWrunLoop_BI8(buttons, b16Map, 16);

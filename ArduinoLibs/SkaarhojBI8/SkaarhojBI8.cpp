@@ -440,6 +440,7 @@ bool SkaarhojBI8::_validPercentage(uint8_t percentage)	{	// Checks if a value is
 
 
 void SkaarhojBI8::testProgramme(uint16_t buttonMask)	{
+	if(buttonMask == 0) return;
 
 	uint16_t allButtons = buttonDownAll();
 	for(uint16_t i=0; i<16;i++)	{
