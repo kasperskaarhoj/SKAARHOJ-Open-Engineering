@@ -88,6 +88,16 @@ int16_t HWAnalogComponentValue(uint8_t num) {
   return analogRead(A0);
 }
 
+void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len) {
+  char *name;
+  switch(num) {
+    case 1:
+      name = "Slider";
+      break;
+  }
+  strncpy(buffer, name, len);
+}
+
 uint16_t *HWMinCalibrationValues(uint8_t num) {
   static uint16_t values[3] = {35, 35, 15};
   return values;

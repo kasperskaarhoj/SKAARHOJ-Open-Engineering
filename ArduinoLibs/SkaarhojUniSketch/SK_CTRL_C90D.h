@@ -112,7 +112,7 @@ void HWtestL() {
  */
 void HWrunLoop() {
 
-  // It is implied that the button numbers in the webinterface goes from 1 to 32
+  // It is implied that the button numbers in the web interface goes from 1 to 32
   uint8_t b16Map[16], b16Map2[16];
   for(uint8_t i=0; i<16; i++) {
     b16Map[buttonMap[i]] = (disableMask >> (31-i)) & 1 ? 0 : i+1;
@@ -136,6 +136,16 @@ uint8_t HWnumOfAnalogComponents() { return 1; }
 
 int16_t HWAnalogComponentValue(uint8_t num) {
   return analogRead(A0);
+}
+
+void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len) {
+  char *name;
+  switch(num) {
+    case 1:
+      name = "Slider";
+      break;
+  }
+  strncpy(buffer, name, len);
 }
 
 uint16_t *HWMinCalibrationValues(uint8_t num) {

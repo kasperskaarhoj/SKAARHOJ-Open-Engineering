@@ -65,6 +65,7 @@ uint8_t HWsetupL() {
 
   // OLED Displays:
   Serial << F("Init Master Black + Iris Display\n");
+
   irisDisplay.begin(5, 1);
   masterBlackDisplay.begin(4, 1);
   for (uint8_t i = 0; i < 8; i++) {
@@ -281,6 +282,10 @@ uint8_t HWnumOfAnalogComponents() { return 0; }
 
 int16_t HWAnalogComponentValue(uint8_t num) {
   return 0;
+}
+
+void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len) {
+  memset(buffer, 0, len);
 }
 
 uint16_t *HWMinCalibrationValues(uint8_t num) {

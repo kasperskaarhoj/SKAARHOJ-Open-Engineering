@@ -714,3 +714,6 @@ SkaarhojBI8 buttons;
 SkaarhojBI8 buttons2;
 #define SK_HWEN_SLIDER 1
 #define SK_HWEN_MENU 1
+#if SK_C90MII_OPTION_GPIO
+#define SK_HWEN_GPIO 1
+#endif

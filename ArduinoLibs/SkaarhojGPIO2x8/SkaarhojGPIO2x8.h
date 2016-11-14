@@ -36,28 +36,28 @@ class SkaarhojGPIO2x8
   private:
 	uint8_t _boardAddress;
 	MCP23017 _GPIOchip;
-	uint8_t _inputStatus;
-	uint8_t _inputStatusLastUp;
-	uint8_t _inputStatusLastDown;
-
+	uint16_t _inputStatus;
+	uint16_t _inputStatusLastUp;
+	uint16_t _inputStatusLastDown;
+	uint8_t _mode;
   public:
 	SkaarhojGPIO2x8();
-	void begin(uint8_t boardAddress);
+	void begin(uint8_t boardAddress, uint8_t mode = 0);
 	void begin();
 	
-	bool inputUp(int inputNumber);
-	bool inputDown(int inputNumber);
-	bool inputIsActive(int inputNumber);
-	uint8_t inputUpAll();
-	uint8_t inputDownAll();
-	uint8_t inputIsActiveAll();
-	bool isInputIn(int inputNumber, uint8_t allInputsState);
+	bool inputUp(uint8_t inputNumber);
+	bool inputDown(uint8_t inputNumber);
+	bool inputIsActive(uint8_t inputNumber);
+	uint16_t inputUpAll();
+	uint16_t inputDownAll();
+	uint16_t inputIsActiveAll();
+	bool isInputIn(uint8_t inputNumber, uint16_t allInputsState);
 	
-	void setOutput(int outputNumber, bool state);
-	void setOutputAll(uint8_t states);
+	void setOutput(uint8_t outputNumber, bool state);
+	void setOutputAll(uint16_t states);
 	
   private:
 	void _readInputStatus();
-	bool _validInputNumber(int inputNumber);
+	bool _validInputNumber(uint8_t inputNumber);
 };
 #endif 

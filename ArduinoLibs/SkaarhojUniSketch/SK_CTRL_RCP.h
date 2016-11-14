@@ -107,6 +107,7 @@ uint8_t HWsetupL() {
       if (sTools.hasTimedOut(timer, 2000)) {
         retVal = 2;
         statusLED(LED_WHITE);
+        break; // If the BI8 board is unconnected, this wont return otherwise
       }
     }
   }
@@ -424,6 +425,19 @@ int16_t HWAnalogComponentValue(uint8_t num) {
     return wheel.uniDirectionalSlider_rawValue();
     break;
   }
+}
+
+void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len) {
+  char *name;
+  switch(num) {
+    case 1:
+      name = "Fader";
+      break;
+    case 2:
+      name = "Wheel";
+      break;
+  }
+  strncpy(buffer, name, len);
 }
 
 uint16_t *HWMinCalibrationValues(uint8_t num) {
