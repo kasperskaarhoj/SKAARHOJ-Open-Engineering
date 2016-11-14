@@ -20,7 +20,7 @@
 #define SK_RCP_OPTION_ENCODER false     // AUTOGEN: true,false
 
 #define SK_C90D_OPTION_DISABLEMASK 0b00000000000000000000000000000000    // Must have 32 digits. Disables buttons #1-#32 from left. AUTOGEN: 0
-#define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 1,2,3,4,5,6,7,8
+#define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 0,1,2,3,4
 #define SK_C90D_OPTION_GPIO true    // AUTOGEN: true,false
 
 #define SK_C90MII_OPTION_GPIO true    // AUTOGEN: true,false
