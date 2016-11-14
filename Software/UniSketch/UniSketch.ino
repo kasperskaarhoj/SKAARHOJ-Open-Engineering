@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_C90D
+#define SK_MODEL SK_E21TVS
 
 
 
@@ -355,6 +355,7 @@ bool presetExists(uint8_t index, uint8_t type);
 uint8_t HWnumOfAnalogComponents();
 int16_t HWAnalogComponentValue(uint8_t num);
 uint16_t *HWMinCalibrationValues(uint8_t num);
+void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len);
 
 /****************************************
 

@@ -29,6 +29,10 @@ void HWrunLoop() {
 
 uint8_t HWnumOfAnalogComponents() { return 0; }
 
+void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len) {
+	memset(buffer, 0, len);
+}
+
 int16_t HWAnalogComponentValue(uint8_t num) {
 	return 0;
 }
