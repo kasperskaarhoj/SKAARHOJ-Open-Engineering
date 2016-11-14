@@ -710,11 +710,7 @@ static const uint8_t defaultControllerConfig[] PROGMEM = {
 
 #endif
 
-
-<<<<<<< HEAD
-=======
 SkaarhojBI8 buttons;
 SkaarhojBI8 buttons2;
 #define SK_HWEN_SLIDER 1
 #define SK_HWEN_MENU 1
->>>>>>> origin/master
