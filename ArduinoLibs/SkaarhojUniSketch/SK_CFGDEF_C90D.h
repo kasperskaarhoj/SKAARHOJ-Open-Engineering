@@ -731,3 +731,7 @@ static const uint8_t defaultControllerConfig[] PROGMEM = {
 SkaarhojBI8 buttons;
 SkaarhojBI8 buttons2;
 #define SK_HWEN_SLIDER 1
+
+#if SK_C90D_OPTION_GPIO
+#define SK_HWEN_GPIO 1
+#endif
