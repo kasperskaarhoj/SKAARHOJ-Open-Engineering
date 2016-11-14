@@ -1,7 +1,7 @@
 #ifndef SkaarhojMonarchHDClient_h
 #define SkaarhojMonarchHDClient_h
 
-#include <GenericHTTPClient.h>
+#include <GenericHttpClient.h>
 #include <HTTPSharedClientWrapper.h>
 #include <Ethernet.h>
 #include <Arduino.h>
