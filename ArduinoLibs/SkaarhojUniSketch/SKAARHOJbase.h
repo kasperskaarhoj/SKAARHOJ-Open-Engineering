@@ -2194,7 +2194,7 @@ uint8_t HWsetup() {
 #endif
 #if (SK_HWEN_GPIO)
   Serial << F("Init GPIO board\n");
-#if (SK_MODEL == SK_C90SM || SK_MODEL == SK_REFERENCE)
+#if (SK_MODEL == SK_C90SM || SK_MODEL == SK_REFERENCE || SK_MODEL == C90D || SK_MODEL == C90MII)
   GPIOboard.begin(7);
 #else
   GPIOboard.begin(0);
