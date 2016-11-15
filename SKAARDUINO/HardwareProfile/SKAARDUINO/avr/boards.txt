@@ -1,4 +1,4 @@
-skaarduino.name=SKAARDUINO
+skaarduino.name=SKAARDUINO AVR
 
 skaarduino.upload.tool=arduino:avrdude
 skaarduino.upload.protocol=arduino
