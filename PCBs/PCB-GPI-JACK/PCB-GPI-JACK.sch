@@ -2843,6 +2843,7 @@ Source: LITEON, LTV816.pdf</description>
 <part name="D15" library="SparkFun" deviceset="DIODE" device="SOD" value="1N4148"/>
 <part name="D16" library="SparkFun" deviceset="DIODE" device="SOD" value="1N4148"/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
+<part name="SERIAL2" library="SKAARHOJ" deviceset="M04X2" device="M2X4SMALLER"/>
 </parts>
 <sheets>
 <sheet>
@@ -2947,6 +2948,7 @@ Source: LITEON, LTV816.pdf</description>
 <instance part="D15" gate="G$1" x="-314.96" y="-40.64"/>
 <instance part="D16" gate="G$1" x="-287.02" y="-40.64" rot="R180"/>
 <instance part="GND6" gate="1" x="121.92" y="-73.66"/>
+<instance part="SERIAL2" gate="G$1" x="210.82" y="-129.54"/>
 </instances>
 <busses>
 </busses>
@@ -3129,6 +3131,10 @@ Source: LITEON, LTV816.pdf</description>
 <junction x="200.66" y="-76.2"/>
 <pinref part="SERIAL1" gate="G$1" pin="1"/>
 <wire x1="200.66" y1="-91.44" x2="203.2" y2="-91.44" width="0.1524" layer="91"/>
+<pinref part="SERIAL2" gate="G$1" pin="1"/>
+<wire x1="200.66" y1="-124.46" x2="203.2" y2="-124.46" width="0.1524" layer="91"/>
+<wire x1="200.66" y1="-91.44" x2="200.66" y2="-124.46" width="0.1524" layer="91"/>
+<junction x="200.66" y="-91.44"/>
 </segment>
 <segment>
 <pinref part="GND4" gate="1" pin="GND"/>
@@ -3423,6 +3429,11 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="203.2" y1="-99.06" x2="193.04" y2="-99.06" width="0.1524" layer="91"/>
 <label x="193.04" y="-99.06" size="1.778" layer="95" rot="R180"/>
 </segment>
+<segment>
+<pinref part="SERIAL2" gate="G$1" pin="7"/>
+<wire x1="203.2" y1="-132.08" x2="193.04" y2="-132.08" width="0.1524" layer="91"/>
+<label x="193.04" y="-132.08" size="1.778" layer="95" rot="R180"/>
+</segment>
 </net>
 <net name="SDI_MOSI" class="0">
 <segment>
@@ -3434,6 +3445,11 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="SERIAL1" gate="G$1" pin="8"/>
 <wire x1="218.44" y1="-99.06" x2="228.6" y2="-99.06" width="0.1524" layer="91"/>
 <label x="228.6" y="-99.06" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SERIAL2" gate="G$1" pin="8"/>
+<wire x1="218.44" y1="-132.08" x2="228.6" y2="-132.08" width="0.1524" layer="91"/>
+<label x="228.6" y="-132.08" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="I2C_SDA" class="0">
@@ -3454,6 +3470,11 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="203.2" y1="-93.98" x2="193.04" y2="-93.98" width="0.1524" layer="91"/>
 <label x="193.04" y="-93.98" size="1.778" layer="95" rot="R180"/>
 </segment>
+<segment>
+<pinref part="SERIAL2" gate="G$1" pin="3"/>
+<wire x1="203.2" y1="-127" x2="193.04" y2="-127" width="0.1524" layer="91"/>
+<label x="193.04" y="-127" size="1.778" layer="95" rot="R180"/>
+</segment>
 </net>
 <net name="I2C_SCL" class="0">
 <segment>
@@ -3472,6 +3493,11 @@ Source: LITEON, LTV816.pdf</description>
 <pinref part="SERIAL1" gate="G$1" pin="4"/>
 <wire x1="218.44" y1="-93.98" x2="228.6" y2="-93.98" width="0.1524" layer="91"/>
 <label x="228.6" y="-93.98" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="SERIAL2" gate="G$1" pin="4"/>
+<wire x1="218.44" y1="-127" x2="228.6" y2="-127" width="0.1524" layer="91"/>
+<label x="228.6" y="-127" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="A0" class="0">
@@ -3581,22 +3607,6 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="60.96" y1="-63.5" x2="60.96" y2="-66.04" width="0.1524" layer="91"/>
 <wire x1="60.96" y1="-66.04" x2="71.12" y2="-66.04" width="0.1524" layer="91"/>
 <junction x="71.12" y="-66.04"/>
-</segment>
-</net>
-<net name="N$2" class="1">
-<segment>
-<pinref part="L4" gate="G$1" pin="1"/>
-<pinref part="C6" gate="G$1" pin="1"/>
-<wire x1="259.08" y1="-60.96" x2="261.62" y2="-60.96" width="0.1524" layer="91"/>
-<wire x1="259.08" y1="-60.96" x2="259.08" y2="-63.5" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="-60.96" x2="254" y2="-60.96" width="0.1524" layer="91"/>
-<junction x="259.08" y="-60.96"/>
-<pinref part="SERIAL" gate="G$1" pin="2"/>
-<pinref part="SERIAL1" gate="G$1" pin="2"/>
-<wire x1="254" y1="-60.96" x2="259.08" y2="-60.96" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="-91.44" x2="254" y2="-91.44" width="0.1524" layer="91"/>
-<wire x1="254" y1="-91.44" x2="254" y2="-60.96" width="0.1524" layer="91"/>
-<junction x="254" y="-60.96"/>
 </segment>
 </net>
 <net name="N$1" class="3">
@@ -3878,6 +3888,26 @@ Source: LITEON, LTV816.pdf</description>
 <wire x1="-208.28" y1="81.28" x2="170.18" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="N$3" class="1">
+<segment>
+<pinref part="SERIAL2" gate="G$1" pin="2"/>
+<wire x1="218.44" y1="-124.46" x2="254" y2="-124.46" width="0.1524" layer="91"/>
+<pinref part="L4" gate="G$1" pin="1"/>
+<pinref part="C6" gate="G$1" pin="1"/>
+<wire x1="259.08" y1="-60.96" x2="261.62" y2="-60.96" width="0.1524" layer="91"/>
+<wire x1="259.08" y1="-60.96" x2="259.08" y2="-63.5" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="-60.96" x2="254" y2="-60.96" width="0.1524" layer="91"/>
+<junction x="259.08" y="-60.96"/>
+<pinref part="SERIAL" gate="G$1" pin="2"/>
+<pinref part="SERIAL1" gate="G$1" pin="2"/>
+<wire x1="254" y1="-60.96" x2="259.08" y2="-60.96" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="-91.44" x2="254" y2="-91.44" width="0.1524" layer="91"/>
+<wire x1="254" y1="-91.44" x2="254" y2="-60.96" width="0.1524" layer="91"/>
+<junction x="254" y="-60.96"/>
+<wire x1="254" y1="-124.46" x2="254" y2="-91.44" width="0.1524" layer="91"/>
+<junction x="254" y="-91.44"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -3894,16 +3924,10 @@ Source: LITEON, LTV816.pdf</description>
 <errors>
 <approved hash="104,1,195.58,58.42,IC2,VDD,5V,,,"/>
 <approved hash="104,1,195.58,99.06,IC2,VSS,GND,,,"/>
-<approved hash="106,1,68.58,45.72,O1,,,,,"/>
-<approved hash="106,1,35.56,45.72,O2,,,,,"/>
-<approved hash="106,1,2.54,45.72,O3,,,,,"/>
-<approved hash="106,1,-30.48,45.72,O4,,,,,"/>
-<approved hash="106,1,-66.04,45.72,O5,,,,,"/>
-<approved hash="106,1,-99.06,45.72,O6,,,,,"/>
-<approved hash="106,1,-132.08,45.72,O7,,,,,"/>
-<approved hash="106,1,-165.1,45.72,O8,,,,,"/>
 <approved hash="110,1,66.04,-66.04,N$23,N$49,,,,"/>
+<approved hash="110,1,-284.48,-43.18,N$27,N$1,,,,"/>
 <approved hash="111,1,66.04,-66.04,N$23,,,,,"/>
+<approved hash="111,1,-284.48,-43.18,N$27,,,,,"/>
 </errors>
 </schematic>
 </drawing>
