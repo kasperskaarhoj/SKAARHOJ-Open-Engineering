@@ -372,20 +372,30 @@ uint16_t evaluateAction_HYPERDECK(const uint8_t devIndex, const uint16_t actionP
       uint8_t audioInput = HyperDeck[devIndex].getAudioInput();
 
       if(actDown && value == BINARY_EVENT) {
-        switch(globalConfigMem[actionPtr + 1]) {
-          case 0: // Cycle
-            break;
-          case 1: // Cycle
-            break;
-          case 2: // Cycle
-            break;
-          case 3: // Cycle
-            break;
-          case 4: // Cycle
-            break;
-          case 5: // Cycle
-            break;
-        }
+        HyperDeck[devIndex].setVideoInput(globalConfigMem[actionPtr+1]+1);
+        HyperDeck[devIndex].setAudioInput(globalConfigMem[actionPtr+2]+1);
+      }
+
+      if(pulses & 0xFFFE) {
+        videoInput = (++videoInput % 3) + 1;
+      }
+
+      char input[5];
+      switch(videoInput) {
+        case 1:
+          input = "SDI";
+          break;
+        case 2:
+          input = "HDMI";
+          break;
+        case 3:
+          input = "COMP";
+          break;
+      }
+      if(extRetValIsWanted()) {
+        extRetVal(0, 7);
+        extRetValLabel(PSTR("Input"));
+        extRetValTxt(input);
       }
 
       break;

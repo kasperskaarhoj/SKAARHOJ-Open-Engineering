@@ -2289,12 +2289,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         extRetVal(AtemSwitcher[devIndex].getKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]), 1);
         extRetVal2(AtemSwitcher[devIndex].getKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]), 1);
 
-          extRetValShortLabel(PSTR("ME"), (globalConfigMem[actionPtr + 1]) + 1);
-          extRetValShortLabel(PSTR("Key"), (globalConfigMem[actionPtr + 2]) + 1);
-          extRetValShortLabel(PSTR("DVE"));
+        extRetValShortLabel(PSTR("ME"), (globalConfigMem[actionPtr + 1]) + 1);
+        extRetValShortLabel(PSTR("Key"), (globalConfigMem[actionPtr + 2]) + 1);
+        extRetValShortLabel(PSTR("DVE"));
 
-          extRetValTxt_P(PSTR("W:"), 0);
-          extRetValTxt_P(PSTR("H:"), 1);
+        extRetValTxt_P(PSTR("W:"), 0);
+        extRetValTxt_P(PSTR("H:"), 1);
       }
       break;
     case 52: // DVE Border
