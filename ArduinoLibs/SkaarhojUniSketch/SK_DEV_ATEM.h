@@ -2251,6 +2251,64 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       extRetValColor(B011010);
     }
     break;
+    case 50: // DVE Size
+      if(actDown && value == BINARY_EVENT) {
+        AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],globalConfigMem[actionPtr+3]*50);
+        AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],globalConfigMem[actionPtr+4]*50);
+      }
+
+      if (extRetValIsWanted()) {
+        extRetVal(AtemSwitcher[devIndex].getKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10, 1);
+        extRetVal2(AtemSwitcher[devIndex].getKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) / 10, 1);
+
+          extRetValShortLabel(PSTR("ME"), (globalConfigMem[actionPtr + 1]) + 1);
+          extRetValShortLabel(PSTR("Key"), (globalConfigMem[actionPtr + 2]) + 1);
+          extRetValShortLabel(PSTR("DVE"));
+
+          extRetValTxt_P(PSTR("X:"), 0);
+          extRetValTxt_P(PSTR("Y:"), 1);
+      }
+      break;
+    case 51: // DVE Position
+      if(actDown && value == BINARY_EVENT) {
+        AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+3]-35)*1000);
+        AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+4]-35)*1000);
+      }
+
+      if(extRetValIsWanted()) {
+        extRetVal(AtemSwitcher[devIndex].getKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]), 1);
+        extRetVal2(AtemSwitcher[devIndex].getKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]), 1);
+
+          extRetValShortLabel(PSTR("ME"), (globalConfigMem[actionPtr + 1]) + 1);
+          extRetValShortLabel(PSTR("Key"), (globalConfigMem[actionPtr + 2]) + 1);
+          extRetValShortLabel(PSTR("DVE"));
+
+          extRetValTxt_P(PSTR("W:"), 0);
+          extRetValTxt_P(PSTR("H:"), 1);
+      }
+      break;
+    case 52: // DVE Border
+      if(actDown && value == BINARY_EVENT) {
+        if(globalConfigMem[actionPtr+3] > 0) {
+          AtemSwitcher[devIndex].setKeyDVEBorderEnabled(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], globalConfigMem[actionPtr+3] == 1);
+        }
+
+        AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], globalConfigMem[actionPtr+3]*50);
+        AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], globalConfigMem[actionPtr+4]*50);
+      }
+
+      if(extRetValIsWanted()) {
+        extRetVal(AtemSwitcher[devIndex].getKeyDVEBorderInnerWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]), 1);
+        extRetVal2(AtemSwitcher[devIndex].getKeyDVEBorderOuterWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]), 1);
+
+          extRetValShortLabel(PSTR("ME"), (globalConfigMem[actionPtr + 1]) + 1);
+          extRetValShortLabel(PSTR("Key"), (globalConfigMem[actionPtr + 2]) + 1);
+          extRetValShortLabel(PSTR("DVE"));
+
+          extRetValTxt_P(PSTR("I:"), 0);
+          extRetValTxt_P(PSTR("O:"), 1);
+      break;
+    }
 #endif
   }
 
