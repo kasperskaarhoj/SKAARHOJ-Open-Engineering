@@ -2253,8 +2253,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
     case 50: // DVE Size
       if(actDown && value == BINARY_EVENT) {
-        AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],globalConfigMem[actionPtr+3]*50);
-        AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],globalConfigMem[actionPtr+4]*50);
+        if(globalConfigMem[actionPtr+3] != 0) {
+          AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(globalConfigMem[actionPtr+3]-1)*50);
+        }
+        if(globalConfigMem[actionPtr+4] != 0) { 
+          AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(globalConfigMem[actionPtr+4]-1)*50);
+        }
       }
 
       if (extRetValIsWanted()) {
@@ -2271,8 +2275,14 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       break;
     case 51: // DVE Position
       if(actDown && value == BINARY_EVENT) {
-        AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+3]-35)*1000);
-        AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+4]-35)*1000);
+        if(globalConfigMem[actionPtr+4] != 0) {
+          AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+4]-35-1)*1000);
+        }
+        if(globalConfigMem[actionPtr+5] != 0) {
+          AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+5]-35-1)*1000);
+        }
+
+        AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
       }
 
       if(extRetValIsWanted()) {
@@ -2293,8 +2303,23 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           AtemSwitcher[devIndex].setKeyDVEBorderEnabled(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], globalConfigMem[actionPtr+3] == 1);
         }
 
-        AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], globalConfigMem[actionPtr+3]*50);
-        AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], globalConfigMem[actionPtr+4]*50);
+        if(globalConfigMem[actionPtr+5] != 0) {
+          AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], (globalConfigMem[actionPtr+5]-1)*50);
+        }
+
+        if(globalConfigMem[actionPtr+6] != 0) {
+          AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], (globalConfigMem[actionPtr+6]-1)*50);
+        }
+
+        if(globalConfigMem[actionPtr+4] == 1) { // black
+          AtemSwitcher[devIndex].setKeyDVEBorderLuma(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+          AtemSwitcher[devIndex].setKeyDVEBorderSaturation(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+          AtemSwitcher[devIndex].setKeyDVEBorderHue(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);   
+        } else if(globalConfigMem[actionPtr+4] == 2) {// White
+          AtemSwitcher[devIndex].setKeyDVEBorderLuma(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],1000);
+          AtemSwitcher[devIndex].setKeyDVEBorderSaturation(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+          AtemSwitcher[devIndex].setKeyDVEBorderHue(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);   
+        }
       }
 
       if(extRetValIsWanted()) {
