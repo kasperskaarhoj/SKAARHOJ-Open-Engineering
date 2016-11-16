@@ -380,7 +380,8 @@ uint16_t evaluateAction_HYPERDECK(const uint8_t devIndex, const uint16_t actionP
         videoInput = (++videoInput % 3) + 1;
       }
 
-      char input[5];
+      char *input = (char*)malloc(5);
+      memset(input, 0, 5);
       switch(videoInput) {
         case 1:
           input = "SDI";
@@ -392,12 +393,14 @@ uint16_t evaluateAction_HYPERDECK(const uint8_t devIndex, const uint16_t actionP
           input = "COMP";
           break;
       }
+
       if(extRetValIsWanted()) {
         extRetVal(0, 7);
-        extRetValLabel(PSTR("Input"));
-        extRetValTxt(input);
+        extRetValLongLabel(PSTR("Input"));
+        extRetValTxt(input,0);
       }
 
+      free(input);
       break;
     }
     case 14: // Shuttle
