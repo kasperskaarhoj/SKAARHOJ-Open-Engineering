@@ -2304,11 +2304,11 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         }
 
         if(globalConfigMem[actionPtr+5] != 0) {
-          AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], (globalConfigMem[actionPtr+5]-1)*50);
+          AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], (globalConfigMem[actionPtr+5]-1)*5);
         }
 
         if(globalConfigMem[actionPtr+6] != 0) {
-          AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], (globalConfigMem[actionPtr+6]-1)*50);
+          AtemSwitcher[devIndex].setKeyDVEBorderOuterWidth(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], (globalConfigMem[actionPtr+6]-1)*5);
         }
 
         if(globalConfigMem[actionPtr+4] == 1) { // black
