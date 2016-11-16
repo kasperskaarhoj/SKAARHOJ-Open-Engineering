@@ -926,12 +926,9 @@ SkaarhojAnalog Fader_y;
 SkaarhojAnalog Fader_theta;
 SkaarhojAnalog Fader_btn;
 
-SkaarhojAnalog Joystick_x;
-SkaarhojAnalog Joystick_y;
-SkaarhojAnalog Joystick_theta;
-SkaarhojAnalog Joystick_btn;
+SkaarhojAnalog Joystick;
 
 // SkaarhojBI8 buttons3;
 // SkaarhojEADOGMDisplay idDisplay;
-// SkaarhojEncoders encoders;
-// SkaarhojEncoders encoders2;
+SkaarhojEncoders encoders;
+SkaarhojEncoders encoders2;
