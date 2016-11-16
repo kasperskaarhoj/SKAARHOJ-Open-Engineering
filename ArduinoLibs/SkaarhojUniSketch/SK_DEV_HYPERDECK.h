@@ -380,7 +380,7 @@ uint16_t evaluateAction_HYPERDECK(const uint8_t devIndex, const uint16_t actionP
         videoInput = (++videoInput % 3) + 1;
       }
 
-      char *input = (char*)malloc(5);
+      char *input;
       memset(input, 0, 5);
       switch(videoInput) {
         case 1:
@@ -399,8 +399,6 @@ uint16_t evaluateAction_HYPERDECK(const uint8_t devIndex, const uint16_t actionP
         extRetValLongLabel(PSTR("Input"));
         extRetValTxt(input,0);
       }
-
-      free(input);
       break;
     }
     case 14: // Shuttle
