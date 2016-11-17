@@ -78,8 +78,8 @@ static const uint8_t PIN_BLUE = 14;
 #if SK_MODCOUNT > 0
 
 #define SK_MODULAR_CSCSEED B10101101
-#define SK_MODULAR_CLKPIN 19 //10
-#define SK_MODULAR_ENPIN 18 //11
+#define SK_MODULAR_CLKPIN 19 // 10
+#define SK_MODULAR_ENPIN 18  // 11
 
 #endif
 
@@ -641,7 +641,8 @@ void clearPresets() {
 uint8_t getNumberOfPresets() {
   bool presetsLoaded = false;
 
-  for (uint8_t i = 0; i < 5; i++) {
+
+  for (uint8_t i = 0; i < 2; i++) {
     uint8_t csc = EEPROM_PRESET_TOKEN;
     for (uint8_t a = 0; a < 5; a++) {
       csc ^= EEPROM.read(EEPROM_PRESET_START + a);
@@ -867,7 +868,14 @@ bool checkIncomingSerial() {
       Serial << F("Number of analog components: ") << HWnumOfAnalogComponents() << "\n";
       for (uint8_t i = 1; i <= HWnumOfAnalogComponents(); i++) {
         HWanalogComponentName(i, buffer, 10);
-        Serial << F("Analog #") << i << F(": ") << buffer << F("\n");
+        Serial << F("Analog #") << i << F(": ") << buffer;
+
+		uint16_t calibration[3];
+	    calibration[0] = EEPROM.read(20 + (i-1) * 4 + 1) << 1 | EEPROM.read(20 + (i-1) * 4 + 3) >> 7;     // Start
+	    calibration[1] = EEPROM.read(20 + (i-1) * 4 + 2) << 1 | EEPROM.read(20 + (i-1) * 4 + 3) >> 6 & 1; // End
+	    calibration[2] = EEPROM.read(20 + (i-1) * 4 + 3) & 0x3F;                                        // Hysteresis
+
+	    Serial << ": Start: " << calibration[0] << ", End: " << calibration[1] << ", Hysteresis: " << calibration[2] << "\n";
       }
     } else if (!strncmp(serialBuffer, "show analog ", 12)) {
       uint8_t num = serialBuffer[12] - '0';
@@ -878,7 +886,7 @@ bool checkIncomingSerial() {
         listAnalogHWComponent(num);
         serialState = 1;
       }
-    } else if (!strncmp(serialBuffer, "reset analog ", 13)) {
+    } else if (!strncmp(serialBuffer, "clear analog ", 13)) {
       uint8_t num = serialBuffer[13] - '0';
       if (num == 0) {
         Serial << F("Invalid analog component number\n");
@@ -1086,7 +1094,13 @@ bool checkIncomingSerial() {
   return false;
 }
 
-bool variantLED() { return EEPROM.read(9) & 1; }
+bool variantLED() {
+#if defined(ARDUINO_SKAARDUINO_DUE)
+  return false; // No change in LED type on SKAARDUINO DUE, just fixed.
+#else
+  return EEPROM.read(9) & 1;
+#endif;
+}
 
 static uint32_t lastAlarmLED = 0;
 void alarmLED() {
@@ -1115,8 +1129,8 @@ void statusLED(uint8_t incolor, uint8_t inblnk) {
   static uint8_t color = 0;
   static uint8_t blnk = 0;
 
-  static uint8_t grn = variantLED() ? PIN_BLUE : PIN_GREEN;
-  static uint8_t blu = variantLED() ? PIN_GREEN : PIN_BLUE;
+  uint8_t grn = variantLED() ? PIN_BLUE : PIN_GREEN;
+  uint8_t blu = variantLED() ? PIN_GREEN : PIN_BLUE;
 
   if (incolor < 254) {
     color = incolor;
@@ -2009,9 +2023,7 @@ uint8_t modular_readByte(uint8_t addr) {
   }
   return rdata;
 }
-uint8_t checkID(uint8_t id, uint8_t csc, uint8_t csc2) { 
-	return ((SK_MODULAR_CSCSEED ^ id) == csc && ((((SK_MODULAR_CSCSEED ^ id) << 1) ^ id) & 0xFF) == csc2) ? id : 255; 
-}
+uint8_t checkID(uint8_t id, uint8_t csc, uint8_t csc2) { return ((SK_MODULAR_CSCSEED ^ id) == csc && ((((SK_MODULAR_CSCSEED ^ id) << 1) ^ id) & 0xFF) == csc2) ? id : 255; }
 
 void modular_clock() {
   digitalWrite(SK_MODULAR_CLKPIN, HIGH);
@@ -3439,7 +3451,7 @@ void initController() {
 
 // Delay to allow initial output to be displayed in serial console
 #ifdef ARDUINO_SKAARDUINO_DUE
-  delay(700);
+  delay(1700); // Enough time to let serial port appear and open it to receive the first message:
 #endif
 
   delay(200); // This also prevents alarm-LED delay of 200 ms from messing with the blinking intro.
@@ -3451,7 +3463,6 @@ void initController() {
   digitalWrite(SK_MODULAR_CLKPIN, HIGH); // Disabled
   digitalWrite(SK_MODULAR_ENPIN, HIGH);  // Disabled
 #endif
-
 
 // Setup Config:
 #if SK_ETHMEGA
@@ -3481,16 +3492,9 @@ void initController() {
   Wire.begin();
   statusLED(QUICKBLANK);
 
-  // Initializes the actual hardware components / modules on the controller
-  configMode = isConfigButtonPushed(); // Temporary - to inspire an initialization cycle
-  uint8_t buttonPressUponBoot = HWsetup();
-  configMode = 0;
-  statusLED(QUICKBLANK);
-
-  // Check Config Button press (or hardware button press)
-  delay(500); // Let people have time to release the button in case they just want to reset
-  if (isConfigButtonPushed() || buttonPressUponBoot > 0) {
-    configMode = EEPROM.read(0) == 2 ? 2 : (buttonPressUponBoot > 1 ? 2 : 1); // Current IP address
+  // Check Config Button press or EEPROM setting to start it:
+  if (isConfigButtonPushed()) {
+    configMode = EEPROM.read(0) == 2 ? 2 : 1;
     if (EEPROM.read(0) != 0) {
       EEPROM.write(0, 0);
     }
@@ -3509,6 +3513,8 @@ void initController() {
             statusLED(LED_RED);
             Serial << F("Clearing presets, revert to normal boot\n");
             clearPresets();
+            delay(1000);
+            statusLED(LED_PURPLE); // Normal mode
             configMode = 0;
             break;
           }
@@ -3519,6 +3525,22 @@ void initController() {
   } else {
     statusLED(LED_PURPLE); // Normal mode
   }
+
+  // Initializes the actual hardware components / modules on the controller
+  uint8_t buttonPressUponBoot = HWsetup();
+  if (!configMode && buttonPressUponBoot) {
+    switch (buttonPressUponBoot) {
+    case 2:
+      configMode = 2;
+      Serial << F("Config Mode=2 (via HWc)\n");
+      break;
+    default:
+      configMode = 1;
+      Serial << F("Config Mode=1 (via HWc)\n");
+      break;
+    }
+  }
+  statusLED(QUICKBLANK);
 
   loadPreset(); // Current preset
                 //  Serial << "sizeof: " << sizeof(defaultControllerConfig) << "\n";
