@@ -653,8 +653,7 @@ uint8_t getNumberOfPresets() {
   }
 
   if(!presetsLoaded) {
-    Serial << F("Could not read presets in 5 tries. NOT continuing!\n");
-    while(1);
+    Serial << F("Could not read presets in 5 tries. Clearing..\n");
     clearPresets();
   }
 
