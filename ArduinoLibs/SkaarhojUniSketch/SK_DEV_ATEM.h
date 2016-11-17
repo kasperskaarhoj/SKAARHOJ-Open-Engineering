@@ -496,7 +496,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-#if SK_MODEL != SK_RCP
   case 4: // USK settings
     if (globalConfigMem[actionPtr + 3] != 4) {
       if (actDown) {
@@ -1461,8 +1460,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 29: // Downstream Keyer Parameters
     break;
-#endif
-#if SK_MODEL == SK_RCP || SK_MODEL == SK_E21SSW
   case 30: // Focus
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown) {
@@ -2044,7 +2041,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
     }
     break;
-#endif
   case 45: // Video Tally
     retVal = 5;
 
@@ -2140,7 +2136,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     return retVal;
     break;
-#if SK_MODEL != SK_RCP
   case 47: // Chroma Settings
     break;
   case 48: // PIP
@@ -2334,7 +2329,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           extRetValTxt_P(PSTR("O:"), 1);
       break;
     }
-#endif
   }
 
   // Default:
