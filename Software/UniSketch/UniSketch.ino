@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_C90MII
+#define SK_MODEL SK_RCP
 
 
 
@@ -14,10 +14,10 @@
 
 
 
-#define SK_E21CMB6M_OPTION_VSLIDER false     // AUTOGEN: true,false
+#define SK_E21CMB6M_OPTION_VSLIDER true     // AUTOGEN: true,false
 #define SK_E21TVS_OPTION_GPIO false     // AUTOGEN: true,false
 #define SK_E21GPIO_OPTION_GPIO2 false     // AUTOGEN: true,false
-#define SK_RCP_OPTION_ENCODER false     // AUTOGEN: true,false
+#define SK_RCP_OPTION_ENCODER true     // AUTOGEN: true,false
 
 #define SK_C90D_OPTION_DISABLEMASK 0b00000000000000000000000000000000    // Must have 32 digits. Disables buttons #1-#32 from left. AUTOGEN: 0
 #define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 0,1,2,3,4
@@ -108,7 +108,7 @@
 #define SK_HWEN_ACM 0
 #define SK_HWEN_GPIO 0
 
-#define SK_MODCOUNT 1   // Must define at least 1 module, although the first module in index zero refers for the first actual external module for a controller.
+#define SK_MODCOUNT 0   // Number of modules in chain
 
 // Customization file, located in sketch folder:
 #include "customization.h"
@@ -156,6 +156,9 @@ SkaarhojTools sTools(0);
 #elif(SK_MODEL == SK_E21CMB6)
 #include "SK_CFGDEF_E21CMB6.h"
 #elif(SK_MODEL == SK_E21CMB6M)
+#include "SkaarhojGPIO2x8.h"
+#include "Adafruit_GFX.h"
+#include "SkaarhojDisplayArray.h"
 #include "SK_CFGDEF_E21CMB6M.h"
 #elif(SK_MODEL == SK_E21GPIO)
 #include "SkaarhojGPIO2x8.h"
