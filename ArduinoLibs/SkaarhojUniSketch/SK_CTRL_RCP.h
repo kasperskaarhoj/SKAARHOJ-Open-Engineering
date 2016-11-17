@@ -57,8 +57,12 @@ uint8_t HWsetupL() {
   if (buttons.buttonIsPressedAll() > 0) {
     retVal = 1;
     statusLED(LED_BLUE);
+    buttons.setDefaultColor(2); // Off by default
+    buttons.setButtonColorsToDefault();
     while (buttons.buttonIsPressedAll() > 0) {
       if (sTools.hasTimedOut(timer, 2000)) {
+        buttons.setDefaultColor(1); // Off by default
+        buttons.setButtonColorsToDefault();
         retVal = 2;
         statusLED(LED_WHITE);
       }
@@ -134,10 +138,10 @@ uint8_t HWsetupL() {
 #if SK_RCP_OPTION_ENCODER
   Serial << F("Option: ENCODER\n");
 
-  HWdis[42-1] = 1;	// Removes Joystick from web interface
-  HWdis[43-1] = 1;	// Removes Wheel from web interface
-  HWdis[44-1] = 1;	// Removes Top button from web interface
-  
+  HWdis[42 - 1] = 1; // Removes Joystick from web interface
+  HWdis[43 - 1] = 1; // Removes Wheel from web interface
+  HWdis[44 - 1] = 1; // Removes Top button from web interface
+
   Serial << F("Init Iris Encoder\n");
   encoders3.begin(5);
   encoders3.setStateCheckDelay(250);
@@ -145,7 +149,7 @@ uint8_t HWsetupL() {
 #else
   Serial << F("Init Joystick\n");
 
-  HWdis[41-1] = 1;	// Removes Iris Encoder from web interface
+  HWdis[41 - 1] = 1; // Removes Iris Encoder from web interface
 
   uint16_t *cal1 = getAnalogComponentCalibration(1);
   //  joystick.uniDirectionalSlider_init(10, 35, 35, 0, 1);
@@ -302,10 +306,9 @@ void HWrunLoop() {
   encoders3.runLoop();
 #endif
 
-
 #if SK_RCP_OPTION_ENCODER
   // Encoders
-  uint8_t encMap3[] = {41,0,0,0,0}; // These numbers refer to the drawing in the web interface
+  uint8_t encMap3[] = {41, 0, 0, 0, 0}; // These numbers refer to the drawing in the web interface
   HWrunLoop_encoders(encoders3, encMap3, sizeof(encMap3), true);
 #else
   // Joystick:
@@ -325,7 +328,6 @@ void HWrunLoop() {
   actionDispatch(44, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
   lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
 #endif
-
 
   // Encoders
   uint8_t encMap[] = {30, 31, 32, 33, 39}; // These numbers refer to the drawing in the web interface
@@ -452,11 +454,11 @@ void HWrunLoop() {
   }
 }
 
-uint8_t HWnumOfAnalogComponents() { 
+uint8_t HWnumOfAnalogComponents() {
 #if SK_RCP_OPTION_ENCODER
-	return 0; 
+  return 0;
 #else
-	return 2; 
+  return 2;
 #endif
 }
 
