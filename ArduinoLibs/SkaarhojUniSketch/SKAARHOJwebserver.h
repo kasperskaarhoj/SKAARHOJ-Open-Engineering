@@ -291,11 +291,11 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type) {
   }
   server << F("];var MODdis=[");
   for (uint8_t a = 0; a < SK_MODCOUNT; a++) {
-    server << MODdis[a] << (a < SK_MODCOUNT - 1 ? "," : "");
+    server << MODdis[a] << ",";
   }
 
-  server << F("];var devCfg=[[");
-  for (uint8_t a = 0; a < SK_DEVICES; a++) {
+  server << F("0];var devCfg=[[");
+  for (uint8_t a = 0; a < (SK_DEVICES>0?SK_DEVICES:1); a++) {
     ptr = getConfigMemDevIndex(a);
     for (uint8_t b = 0; b < 5; b++) {
       server << globalConfigMem[ptr + b] << (b < 4 ? "," : (a < SK_DEVICES - 1 ? "],[" : ""));
