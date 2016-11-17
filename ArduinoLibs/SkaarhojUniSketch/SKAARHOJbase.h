@@ -42,7 +42,6 @@ void resetFunc() {
 void (*resetFunc)(void) = 0; // declare reset function @ address 0
 #endif
 
-
 #define EEPROM_PRESET_START 100
 #define EEPROM_PRESET_TOKEN 0x24 // Just some random value that is used for a checksum offset. Change this and existing configuration will be invalidated and has to be rewritten.
 
@@ -76,6 +75,14 @@ static const uint8_t PIN_GREEN = 15;
 static const uint8_t PIN_BLUE = 14;
 #endif
 
+#if SK_MODCOUNT > 0
+
+#define SK_MODULAR_CSCSEED B10101101
+#define SK_MODULAR_CLKPIN 19 //10
+#define SK_MODULAR_ENPIN 18 //11
+
+#endif
+
 // Pre declaration
 void deviceDebugLevel(uint8_t debugLevel);
 uint16_t getPresetOffsetAddress(uint8_t presetNum);
@@ -86,20 +93,17 @@ uint16_t getConfigMemDevIndex(uint8_t devNum);
 uint16_t getPresetLength(uint8_t preset);
 void savePreset(uint8_t presetNum, uint16_t len);
 
+uint16_t fletcher16(uint8_t *data, int16_t count) {
+  uint16_t sum1 = 0;
+  uint16_t sum2 = 0;
+  int16_t index;
 
-uint16_t fletcher16( uint8_t *data, int16_t count )
-{
-   uint16_t sum1 = 0;
-   uint16_t sum2 = 0;
-   int16_t index;
+  for (index = 0; index < count; ++index) {
+    sum1 = (sum1 + data[index]) % 255;
+    sum2 = (sum2 + sum1) % 255;
+  }
 
-   for( index = 0; index < count; ++index )
-   {
-      sum1 = (sum1 + data[index]) % 255;
-      sum2 = (sum2 + sum1) % 255;
-   }
-
-   return (sum2 << 8) | sum1;
+  return (sum2 << 8) | sum1;
 }
 
 uint16_t fletcher16stream(uint8_t byte, bool lastByte = false) {
@@ -108,7 +112,7 @@ uint16_t fletcher16stream(uint8_t byte, bool lastByte = false) {
   s1 = (s1 + byte) % 255;
   s2 = (s2 + s1) % 255;
 
-  if(lastByte) {
+  if (lastByte) {
     uint16_t returnValue = (s2 << 8) | s1;
     s1 = 0;
     s2 = 0;
@@ -116,22 +120,22 @@ uint16_t fletcher16stream(uint8_t byte, bool lastByte = false) {
 }
 
 void setDeviceState(uint8_t device, bool enabled) {
-  if(device > 0 && device < SK_DEVICES) {
+  if (device > 0 && device < SK_DEVICES) {
     globalConfigMem[getConfigMemDevIndex(device - 1)] = enabled;
     savePreset(getCurrentPreset(), getPresetLength(getCurrentPreset()));
   }
 }
 
 void setIP(uint8_t *ip) {
-  for(uint8_t i=0; i<4; i++){
+  for (uint8_t i = 0; i < 4; i++) {
     globalConfigMem[getConfigMemIPIndex() + i] = ip[i];
   }
   savePreset(getCurrentPreset(), getPresetLength(getCurrentPreset()));
 }
 
 void setDeviceIP(uint8_t device, uint8_t *ip) {
-  if(device > 0 && device < SK_DEVICES) {
-    for(uint8_t i=0; i<4; i++) {
+  if (device > 0 && device < SK_DEVICES) {
+    for (uint8_t i = 0; i < 4; i++) {
       globalConfigMem[getConfigMemDevIndex(device - 1) + 1 + i] = ip[i];
     }
     savePreset(getCurrentPreset(), getPresetLength(getCurrentPreset()));
@@ -578,7 +582,6 @@ void moveEEPROMMemoryBlock(uint16_t from, uint16_t to, int16_t offset) { // From
 
 uint16_t getPresetStoreLength() { return ((uint16_t)EEPROM.read(EEPROM_PRESET_START + 2) << 8) | EEPROM.read(EEPROM_PRESET_START + 3); }
 
-
 uint16_t getPresetLength(uint8_t preset) { // Excluding CSC byte
   uint16_t presetOffset = getPresetOffsetAddress(preset);
   uint16_t presetLen = ((uint16_t)EEPROM.read(EEPROM_PRESET_START + 5 + presetOffset) << 8) | EEPROM.read(EEPROM_PRESET_START + 6 + presetOffset);
@@ -612,9 +615,7 @@ void setCurrentPreset(uint8_t n) {
   updatePresetChecksum();
 }
 
-uint8_t getCurrentPreset() {
-  return EEPROM.read(EEPROM_PRESET_START + 1);
-}
+uint8_t getCurrentPreset() { return EEPROM.read(EEPROM_PRESET_START + 1); }
 
 void CurrentPreset(uint8_t n) {
   EEPROM.write(EEPROM_PRESET_START + 1, n); // Current
@@ -639,7 +640,7 @@ uint8_t getNumberOfPresets() {
   uint8_t csc = EEPROM_PRESET_TOKEN;
   bool presetsLoaded = false;
 
-  for(uint8_t i = 0; i < 5; i++) {
+  for (uint8_t i = 0; i < 5; i++) {
     for (uint8_t a = 0; a < 5; a++) {
       csc ^= EEPROM.read(EEPROM_PRESET_START + a);
     }
@@ -652,9 +653,15 @@ uint8_t getNumberOfPresets() {
     }
   }
 
-  if(!presetsLoaded) {
-    Serial << F("Could not read presets in 5 tries. Clearing..\n");
-    clearPresets();
+  if(presetsLoaded) {
+    Serial << F("Could not read presets in 5 tries. Halting...\n");
+    while(true) {
+		statusLED(LED_RED);
+		delay(100);
+		statusLED(LED_OFF);
+		delay(100);
+    }
+    //clearPresets();
   }
 
   return EEPROM.read(EEPROM_PRESET_START);
@@ -796,10 +803,10 @@ void savePreset(uint8_t presetNum, uint16_t len) { // Len is excluding CSC byte.
 }
 
 uint8_t hexcharToNibble(char c) {
-  if(c >= '0' && c <= '9') {
+  if (c >= '0' && c <= '9') {
     return c - '0';
   }
-  if(c >= 'A' && c <= 'F') {
+  if (c >= 'A' && c <= 'F') {
     return c - 'A' + 10;
   }
 }
@@ -854,9 +861,9 @@ bool checkIncomingSerial() {
     } else if (!strncmp(serialBuffer, "list analog", 11)) {
       char buffer[10];
       Serial << F("Number of analog components: ") << HWnumOfAnalogComponents() << "\n";
-      for(uint8_t i = 1; i <= HWnumOfAnalogComponents(); i++) {
+      for (uint8_t i = 1; i <= HWnumOfAnalogComponents(); i++) {
         HWanalogComponentName(i, buffer, 10);
-        Serial << F("Analog #") << i << F(": ") << buffer << F("\n"); 
+        Serial << F("Analog #") << i << F(": ") << buffer << F("\n");
       }
     } else if (!strncmp(serialBuffer, "show analog ", 12)) {
       uint8_t num = serialBuffer[12] - '0';
@@ -879,13 +886,13 @@ bool checkIncomingSerial() {
     } else if (!strncmp(serialBuffer, "set analog ", 11)) {
       uint16_t cal[3];
       uint8_t num = serialBuffer[11] - '0';
-      char *tok = strtok(serialBuffer+13, ",");
+      char *tok = strtok(serialBuffer + 13, ",");
       uint8_t index = 0;
-      while(tok != NULL && index < 3) {
+      while (tok != NULL && index < 3) {
         cal[index++] = atoi(tok);
         tok = strtok(NULL, ",");
       }
-      if(index == 3) {
+      if (index == 3) {
         setAnalogComponentCalibration(num, cal[0], cal[1], cal[2]);
       } else {
         Serial << F("ERROR: Invalid command format\n");
@@ -905,25 +912,25 @@ bool checkIncomingSerial() {
       if (serialState == 2) { // Calibration in progress
         calibrationState++;
       }
-    } else if(!strncmp(serialBuffer, "exportPresets", 13)) {
+    } else if (!strncmp(serialBuffer, "exportPresets", 13)) {
       Serial << "\n ---------  START OF PRESET DUMP ---------\n";
       uint16_t presetLength = getPresetStoreLength();
-      for(uint16_t i=0; i < presetLength; i++) {
-        if(i%8 == 0) {
+      for (uint16_t i = 0; i < presetLength; i++) {
+        if (i % 8 == 0) {
           Serial << "\n";
         }
         uint8_t byte = EEPROM.read(EEPROM_PRESET_START + i);
-        Serial << "0x" << _HEXPADL(byte, 2, "0") << ", ";      
-        if(i == presetLength - 1) {
+        Serial << "0x" << _HEXPADL(byte, 2, "0") << ", ";
+        if (i == presetLength - 1) {
           uint16_t checksum = fletcher16stream(byte, true);
-          Serial << "0x" << _HEXPADL(checksum>>8, 2, "0") << ", 0x" << _HEXPADL(checksum&0xFF, 2, "0") << "\n";
+          Serial << "0x" << _HEXPADL(checksum >> 8, 2, "0") << ", 0x" << _HEXPADL(checksum & 0xFF, 2, "0") << "\n";
         } else {
           fletcher16stream(byte);
         }
       }
 
       Serial << "\n ---------  END OF PRESET DUMP ---------\n";
-    } else if(!strncmp(serialBuffer, "importPresets", 13)) {
+    } else if (!strncmp(serialBuffer, "importPresets", 13)) {
       uint16_t pos = 0;
       uint16_t len = 0;
       uint8_t nextByte = 0;
@@ -935,70 +942,72 @@ bool checkIncomingSerial() {
 
       uint16_t checksum;
       uint16_t incomingChecksum;
-      while(true) {
-        if(!(Serial.available() > 0)) continue;
+      while (true) {
+        if (!(Serial.available() > 0))
+          continue;
 
         char c = Serial.read();
-        if(c == 'x') {
+        if (c == 'x') {
           state = 1;
           continue;
         }
-        if(c == '10' || c == '13') continue;
+        if (c == '10' || c == '13')
+          continue;
 
-        switch(state) {
-          case 1: // First char of ASCII encoded byte
-            nextByte = hexcharToNibble(c) << 4;
-            state = 2;
-            break;
-          case 2: // Second char
-            nextByte |= hexcharToNibble(c) & 0xF;
-            //Serial << "Received byte " << pos << ": " << nextByte << "\n";
-            if(pos == 2) {
-              len = nextByte << 8;
-            } else if(pos == 3) {
-              len |= nextByte;
-              Serial << "Expecting to receive " << len << " + 2 bytes \n"; 
-              gotLength = true;
-            }
+        switch (state) {
+        case 1: // First char of ASCII encoded byte
+          nextByte = hexcharToNibble(c) << 4;
+          state = 2;
+          break;
+        case 2: // Second char
+          nextByte |= hexcharToNibble(c) & 0xF;
+          // Serial << "Received byte " << pos << ": " << nextByte << "\n";
+          if (pos == 2) {
+            len = nextByte << 8;
+          } else if (pos == 3) {
+            len |= nextByte;
+            Serial << "Expecting to receive " << len << " + 2 bytes \n";
+            gotLength = true;
+          }
 
-            if(gotLength) {
-              if(pos == len - 1) {
-                Serial << "Received main payload. Validating presets..\n";
-                EEPROM.write(EEPROM_PRESET_START + pos, nextByte);
-                checksum = fletcher16stream(nextByte, true);
-                receivedData = true;
-              }
-              if(pos == len) {
-                incomingChecksum = nextByte << 8;
-              } else if(pos == len + 1) {
-                incomingChecksum |= nextByte;
-                if(checksum != incomingChecksum) {
-                  Serial << "Checksum mismatch! Clearing presets..\n";
-                  delay(200);
-                  clearPresets();
-                  resetFunc();
-                } else {
-                  Serial << "Checksum matched! Rebooting controller..";
-                  delay(200);
-                  resetFunc();
-                }
-              }
-            }
-            
-            if(!receivedData) {
-              fletcher16stream(nextByte, false);
+          if (gotLength) {
+            if (pos == len - 1) {
+              Serial << "Received main payload. Validating presets..\n";
               EEPROM.write(EEPROM_PRESET_START + pos, nextByte);
+              checksum = fletcher16stream(nextByte, true);
+              receivedData = true;
             }
+            if (pos == len) {
+              incomingChecksum = nextByte << 8;
+            } else if (pos == len + 1) {
+              incomingChecksum |= nextByte;
+              if (checksum != incomingChecksum) {
+                Serial << "Checksum mismatch! Clearing presets..\n";
+                delay(200);
+                clearPresets();
+                resetFunc();
+              } else {
+                Serial << "Checksum matched! Rebooting controller..";
+                delay(200);
+                resetFunc();
+              }
+            }
+          }
 
-            pos++;
-            state = 0;
-            break;
+          if (!receivedData) {
+            fletcher16stream(nextByte, false);
+            EEPROM.write(EEPROM_PRESET_START + pos, nextByte);
+          }
+
+          pos++;
+          state = 0;
+          break;
         }
       }
-    } else if(!strncmp(serialBuffer, "preset ", 7)) {
+    } else if (!strncmp(serialBuffer, "preset ", 7)) {
       uint8_t num = serialBuffer[7] - '0';
       char name[22];
-      if(num > 0 && num <= getNumberOfPresets()) {
+      if (num > 0 && num <= getNumberOfPresets()) {
         getPresetName(name, num);
         Serial << "Setting preset: " << name << "\n";
         setCurrentPreset(num);
@@ -1007,15 +1016,15 @@ bool checkIncomingSerial() {
       } else {
         Serial << "Invalid preset index\n";
       }
-    } else if(!strncmp(serialBuffer, "ip=", 3)) {
+    } else if (!strncmp(serialBuffer, "ip=", 3)) {
       uint8_t ip[4];
-      char *tok = strtok(serialBuffer+3, ".");
+      char *tok = strtok(serialBuffer + 3, ".");
       uint8_t index = 0;
-      while(tok != NULL && index < 4) {
+      while (tok != NULL && index < 4) {
         ip[index++] = atoi(tok);
         tok = strtok(NULL, ".");
       }
-      if(index == 4) {
+      if (index == 4) {
         Serial << "Setting IP...\n";
         setIP(ip);
         delay(200);
@@ -1023,19 +1032,19 @@ bool checkIncomingSerial() {
       } else {
         Serial << "Invalid IP specified\n";
       }
-    } else if(!strncmp(serialBuffer, "ipDevice", 8)) {
+    } else if (!strncmp(serialBuffer, "ipDevice", 8)) {
       uint8_t num = serialBuffer[8] - '0';
-      if(num > SK_DEVICES || num < 1) {
+      if (num > SK_DEVICES || num < 1) {
         Serial << "Invalid device selected\n";
       } else {
         uint8_t ip[4];
-        char *tok = strtok(serialBuffer+10, ".");
+        char *tok = strtok(serialBuffer + 10, ".");
         uint8_t index = 0;
-        while(tok != NULL && index < 4) {
+        while (tok != NULL && index < 4) {
           ip[index++] = atoi(tok);
           tok = strtok(NULL, ".");
         }
-        if(index == 4) {
+        if (index == 4) {
           Serial << "Setting IP for device " << num << " \n";
           setDeviceIP(num, ip);
           delay(200);
@@ -1044,15 +1053,15 @@ bool checkIncomingSerial() {
           Serial << "Invalid IP specified\n";
         }
       }
-    } else if(!strncmp(serialBuffer, "enableDevice", 12)) {
+    } else if (!strncmp(serialBuffer, "enableDevice", 12)) {
       uint8_t num = serialBuffer[12] - '0';
       uint8_t enable = serialBuffer[14] - '0';
 
-      if(num > SK_DEVICES || num < 1) {
+      if (num > SK_DEVICES || num < 1) {
         Serial << "Invalid device selected\n";
       } else {
         setDeviceState(num, enable);
-        Serial << (enable?"Enabling":"Disabling") << " device " << num << "\n";
+        Serial << (enable ? "Enabling" : "Disabling") << " device " << num << "\n";
         delay(200);
         resetFunc();
       }
@@ -1605,8 +1614,8 @@ void presetCheck()	{
  ************************************/
 
 bool presetExists(uint8_t index, uint8_t type) {
-  if(index < EEPROM_FILEBANK_NUM) {
-    if(EEPROM.read(EEPROM_FILEBANK_START + index*48) == type) {
+  if (index < EEPROM_FILEBANK_NUM) {
+    if (EEPROM.read(EEPROM_FILEBANK_START + index * 48) == type) {
       return true;
     }
   }
@@ -1615,13 +1624,13 @@ bool presetExists(uint8_t index, uint8_t type) {
 
 bool presetChecksumMatches(uint8_t index) {
   uint8_t bytes[48];
-  for(int16_t i = 0; i < 48; i++) {
-    bytes[i] = EEPROM.read(EEPROM_FILEBANK_START + index*48 + i);
+  for (int16_t i = 0; i < 48; i++) {
+    bytes[i] = EEPROM.read(EEPROM_FILEBANK_START + index * 48 + i);
   }
   uint16_t checksum = (bytes[46] << 8) | bytes[47];
   bool match = fletcher16(bytes, 46) == checksum;
-  
-  if(!match) {
+
+  if (!match) {
     Serial << "Checksum mismatch for preset #" << index << "\n";
   }
 
@@ -1629,16 +1638,16 @@ bool presetChecksumMatches(uint8_t index) {
 }
 
 // The supplied buffer must be 45 bytes long
-bool recallPreset(uint8_t index, uint8_t type, uint8_t* buffer) {
-  if(index < EEPROM_FILEBANK_NUM) {
-    if(presetExists(index, type) && presetChecksumMatches(index)) {
+bool recallPreset(uint8_t index, uint8_t type, uint8_t *buffer) {
+  if (index < EEPROM_FILEBANK_NUM) {
+    if (presetExists(index, type) && presetChecksumMatches(index)) {
       // Recall logic:
 
       // Don't include type byte or checksum, already checked
-      for(uint8_t i=1; i < 48-2; i++) {
-        buffer[i-1] = EEPROM.read(EEPROM_FILEBANK_START + index * 48  + i);
+      for (uint8_t i = 1; i < 48 - 2; i++) {
+        buffer[i - 1] = EEPROM.read(EEPROM_FILEBANK_START + index * 48 + i);
       }
-      
+
       Serial << "Recalled preset #" << index << "\n";
       return true;
     }
@@ -1653,23 +1662,22 @@ void storePreset(uint8_t index, uint8_t type, uint8_t *buffer) {
 
   preset[0] = type;
 
-  memcpy(preset+1, buffer, 45);
+  memcpy(preset + 1, buffer, 45);
 
   uint16_t checksum = fletcher16(preset, 46);
   preset[46] = checksum >> 8;
   preset[47] = checksum & 0xFF;
 
-
-  for(int16_t i = 0; i < 48; i++) {
-    #ifdef ARDUINO_SKAARDUINO_DUE
-    EEPROM.writeBuffered(EEPROM_FILEBANK_START + index*48 + i, preset[i]);
-    #else
-    EEPROM.write(EEPROM_FILEBANK_START + index*48 + i, preset[i]);
-    #endif
+  for (int16_t i = 0; i < 48; i++) {
+#ifdef ARDUINO_SKAARDUINO_DUE
+    EEPROM.writeBuffered(EEPROM_FILEBANK_START + index * 48 + i, preset[i]);
+#else
+    EEPROM.write(EEPROM_FILEBANK_START + index * 48 + i, preset[i]);
+#endif
   }
-  #ifdef ARDUINO_SKAARDUINO_DUE
+#ifdef ARDUINO_SKAARDUINO_DUE
   EEPROM.commitPage();
-  #endif
+#endif
 }
 /************************************
  *
@@ -1801,7 +1809,7 @@ void deviceSetup() {
         // This is known to cause problems with 70+ clips,
         // But is necessary for next/previous clip features
         HyperDeck[deviceMap[a]].askForClips(true);
-        //HyperDeck[deviceMap[a]].askForClipNames(true); 
+// HyperDeck[deviceMap[a]].askForClipNames(true);
 #endif
         break;
       case SK_DEV_VIDEOHUB:
@@ -1822,19 +1830,19 @@ void deviceSetup() {
 #if SK_DEVICES_BMDCAMCTRL
         Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
         deviceMap[a] = BMDCamCtrl_initIdx++;
-        #if SK_MODEL == SK_REFERENCE
-          Wire.beginTransmission(0x71);
-          Wire.write(1<<2); // Port 3
-          Wire.endTransmission();
-          delay(2);
-        #endif
+#if SK_MODEL == SK_REFERENCE
+        Wire.beginTransmission(0x71);
+        Wire.write(1 << 2); // Port 3
+        Wire.endTransmission();
+        delay(2);
+#endif
         BMDCamCtrl[deviceMap[a]].begin(0x6E); // TODO doesn't make sense
-        #if SK_MODEL == SK_REFERENCE
-          Wire.beginTransmission(0x71);
-          Wire.write(1); // Port 1
-          Wire.endTransmission();
-          delay(2);
-        #endif
+#if SK_MODEL == SK_REFERENCE
+        Wire.beginTransmission(0x71);
+        Wire.write(1); // Port 1
+        Wire.endTransmission();
+        delay(2);
+#endif
 #endif
         break;
       case SK_DEV_SONYRCP:
@@ -1979,6 +1987,60 @@ void deviceRunLoop() {
 
 /************************************
  *
+ * Modular
+ *
+ ************************************/
+
+#if SK_MODCOUNT > 0
+
+uint8_t modular_readByte(uint8_t addr) {
+  uint8_t rdata = 0xFF;
+  Wire.beginTransmission(0x56);
+  Wire.write(0);    // MSB
+  Wire.write(addr); // LSB
+  Wire.endTransmission();
+  Wire.requestFrom(0x56, 1);
+  if (Wire.available()) {
+    rdata = Wire.read();
+  }
+  return rdata;
+}
+uint8_t checkID(uint8_t id, uint8_t csc, uint8_t csc2) { 
+	return ((SK_MODULAR_CSCSEED ^ id) == csc && ((((SK_MODULAR_CSCSEED ^ id) << 1) ^ id) & 0xFF) == csc2) ? id : 255; 
+}
+
+void modular_clock() {
+  digitalWrite(SK_MODULAR_CLKPIN, HIGH);
+  digitalWrite(SK_MODULAR_CLKPIN, LOW);
+}
+void modular_ResetChain() {
+  digitalWrite(SK_MODULAR_ENPIN, HIGH); // Disabled
+
+  // Remove any active modules first
+  for (uint8_t a = 0; a < (SK_MODCOUNT + 1); a++) {
+    modular_clock();
+  }
+
+  // Push select state to chain (selects first module = main controller)
+  digitalWrite(SK_MODULAR_ENPIN, LOW);
+  modular_clock();
+  digitalWrite(SK_MODULAR_ENPIN, HIGH);
+}
+uint8_t modular_enableModule(uint8_t modId) {
+  for (uint8_t a = 0; a < SK_MODCOUNT; a++) {
+    if (moduleIdOrder[a] == modId && MODdis[a] != 0) {
+      MODdis[a] = 0; // Enable it.
+      return a;
+    }
+  }
+  return 255;
+}
+uint8_t modular_readID() { return checkID(modular_readByte(0), modular_readByte(1), modular_readByte(2)); }
+
+#endif
+
+/************************************
+ *
  * HARDWARE SETUP and TEST
  *
  ************************************/
@@ -2042,17 +2104,17 @@ uint8_t HWsetup() {
 #endif
 #if (SK_HWEN_MENU)
   Serial << F("Init Encoder Menu\n");
-  #if SK_MODEL == SK_REFERENCE
+#if SK_MODEL == SK_REFERENCE
   menuDisplay.begin(1, 0, 3); // DOGM163
-  menuEncoders.begin(1);  
-  #else
+  menuEncoders.begin(1);
+#else
   menuDisplay.begin(4, 0, 3); // DOGM163
   menuEncoders.begin(5);
-  #endif
+#endif
   menuDisplay.cursor(false);
   menuDisplay.contrast(5);
   menuDisplay.print("SKAARHOJ");
-  
+
   //  menuEncoders.serialOutput(debugMode);
   menuEncoders.setStateCheckDelay(250);
   statusLED(QUICKBLANK);
@@ -2103,7 +2165,7 @@ uint8_t HWsetup() {
   Serial << F("Init SmartSwitch Buttons\n");
 #if (SK_MODEL == SK_MICROSMARTH || SK_MODEL == SK_MICROSMARTV)
   SSWbuttons.begin(0);
-#elif (SK_MODEL == SK_REFERENCE)
+#elif(SK_MODEL == SK_REFERENCE)
   SSWbuttons.begin(4);
 #else
   SSWbuttons.begin(1); // SETUP: Board address
@@ -2130,7 +2192,7 @@ uint8_t HWsetup() {
     SSWbuttons.display(B01); // Write
     SSWbuttons.clearDisplay();
     SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
-    SSWbuttons.display(B10); // Write    
+    SSWbuttons.display(B10); // Write
     SSWbuttons.clearDisplay();
     SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[2], 64, 32, 1, true);
     SSWbuttons.display(B100); // Write
@@ -2153,7 +2215,7 @@ uint8_t HWsetup() {
 #if (SK_MODEL == SK_C90A)
   AudioMasterControl.begin(5, 0);
 #elif(SK_MODEL == SK_MICROLEVELS)
-  //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
+                               //  AudioMasterControl.begin(0, 0);	// MICROLEVELS NOT FINISHED - TODO
 #else
   AudioMasterControl.begin(3, 0);
 #endif
@@ -2200,6 +2262,11 @@ uint8_t HWsetup() {
 #endif
 
   statusLED(QUICKBLANK);
+#endif
+
+// Modular controllers:
+#if SK_MODCOUNT > 0
+  modular_ResetChain();
 #endif
 
   return retVal;
@@ -2496,7 +2563,7 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
       } else {
         if (!display_written || retVal != 0) { // Write if a) previous display was not written with non-blank content and b) if this display has non-blank content
           writeDisplayTile(display, ((a - 1) & 1) << 6, 0, B0, a == 1, 0);
-          disp_written[a-1] = true;
+          disp_written[a - 1] = true;
         }
       }
 
@@ -2505,10 +2572,10 @@ void HWrunLoop_128x32OLED(SkaarhojDisplayArray &display, const uint8_t HWc, uint
     }
 
     // Make sure that all segments are written
-    if(!second_run && (disp_written[0] || disp_written[1])) {
-      for(uint8_t i = 0; i < 2; i++) {
-        if(!disp_written[i]) {
-          display_prevHash[i+1]++;
+    if (!second_run && (disp_written[0] || disp_written[1])) {
+      for (uint8_t i = 0; i < 2; i++) {
+        if (!disp_written[i]) {
+          display_prevHash[i + 1]++;
           a = 0; // Recheck display segments
           second_run = true;
         }
@@ -2538,7 +2605,7 @@ void HWrunLoop_slider(const uint8_t HWc) {
 }
 #endif
 
-#if SK_HWEN_GPIO
+#if SK_HWEN_GPIO || SK_MODEL == SK_E21CMB6M
 void HWrunLoop_GPIO(SkaarhojGPIO2x8 &gpioBoard, const uint8_t HWc, bool *gpioStates) {
   uint16_t bUp, bDown;
 
@@ -3222,19 +3289,19 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                   break;
                 case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
-                  #if SK_MODEL == SK_REFERENCE
-                    Wire.beginTransmission(0x71);
-                    Wire.write(1<<2); // Port 3
-                    Wire.endTransmission();
-                    delay(2);
-                  #endif
+#if SK_MODEL == SK_REFERENCE
+                  Wire.beginTransmission(0x71);
+                  Wire.write(1 << 2); // Port 3
+                  Wire.endTransmission();
+                  delay(2);
+#endif
                   retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  #if SK_MODEL == SK_REFERENCE
-                    Wire.beginTransmission(0x71);
-                    Wire.write(1); // Port 1
-                    Wire.endTransmission();
-                    delay(2);
-                  #endif
+#if SK_MODEL == SK_REFERENCE
+                  Wire.beginTransmission(0x71);
+                  Wire.write(1); // Port 1
+                  Wire.endTransmission();
+                  delay(2);
+#endif
                   if (retValue == 0)
                     retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
@@ -3365,20 +3432,28 @@ void initController() {
 
   // Initialize serial communication at 115200 bits per second:
   Serial.begin(115200);
-  
-  // Delay to allow initial output to be displayed in serial console
-  #ifdef ARDUINO_SKAARDUINO_DUE
-  delay(700);
-  #endif
 
-  delay(200);	// This also prevents alarm-LED delay of 200 ms from messing with the blinking intro.
+// Delay to allow initial output to be displayed in serial console
+#ifdef ARDUINO_SKAARDUINO_DUE
+  delay(700);
+#endif
+
+  delay(200); // This also prevents alarm-LED delay of 200 ms from messing with the blinking intro.
   Serial << F("\n\n*****************************\nSKAARHOJ Controller Booting \n*****************************\n");
+
+#if SK_MODCOUNT > 0
+  pinMode(SK_MODULAR_CLKPIN, OUTPUT);    // select clk (pin 9 on flatcable)
+  pinMode(SK_MODULAR_ENPIN, OUTPUT);     // enable (pin 10 on flat cable)
+  digitalWrite(SK_MODULAR_CLKPIN, HIGH); // Disabled
+  digitalWrite(SK_MODULAR_ENPIN, HIGH);  // Disabled
+#endif
+
 
 // Setup Config:
 #if SK_ETHMEGA
   pinMode(A1, INPUT_PULLUP); // CFG input on ethermega MMBOS
 #elif defined(ARDUINO_SKAARDUINO_DUE)
-  pinMode(23, INPUT);  // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
+  pinMode(23, INPUT);         // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
 #else
   pinMode(18, INPUT); // CFG input (active low)  - if you set it to INPUT_PULLUP, the resistor on the Bottom part will not be strong enough to pull it down!!
 #endif
@@ -3388,17 +3463,15 @@ void initController() {
   pinMode(3, OUTPUT); // Red Status LED, active high
   pinMode(2, OUTPUT); // Green Status LED, active high
 #else
-  statusLED(LED_OFF);  // To prevent brief light in LEDs upon boot
-  pinMode(PIN_RED, OUTPUT); // Red Status LED, active low
+  statusLED(LED_OFF);         // To prevent brief light in LEDs upon boot
+  pinMode(PIN_RED, OUTPUT);   // Red Status LED, active low
   pinMode(PIN_GREEN, OUTPUT); // Green Status LED, active low
-  pinMode(PIN_BLUE, OUTPUT); // Blue Status LED, active low
+  pinMode(PIN_BLUE, OUTPUT);  // Blue Status LED, active low
 #endif
 
   HWcfgDisplay();
 
   statusLED(LED_PURPLE); // Normal mode, so far...
-
-
 
   // I2C setup:
   Wire.begin();
