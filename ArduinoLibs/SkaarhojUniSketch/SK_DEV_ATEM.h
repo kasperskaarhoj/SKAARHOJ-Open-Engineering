@@ -1311,14 +1311,14 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
     switch (globalConfigMem[actionPtr + 1]) {
     case 25:
-      retVal = ((((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterLeft()) + 60) & 0xFF) << 8) | (((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterRight()) + 60) & 0xFF);
+      retVal = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterLeft()) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterRight()) + 60) & 0xFF);
       break;
     default:
       uint8_t source = globalConfigMem[actionPtr + 1];
       if (source < 20) {
         source -= 1;
       }
-      retVal = ((((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF) << 8) | (((int)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF);
+      retVal = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF);
       break;
     }
     return retVal;
