@@ -66,11 +66,27 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       }
     }
     if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setIris(cam, pulsesHelper(BMDCamCtrl[devIndex].getIris(cam) * 100.0, 0, 100, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 1, 10) / 100.0);
+      BMDCamCtrl[devIndex].setIris(cam, pulsesHelper(BMDCamCtrl[devIndex].getIris(cam) * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0);
     }
+
+    uint16_t limLo, limHi;
+    if (globalConfigMem[actionPtr + 2] > 0 && globalConfigMem[actionPtr + 2] <= 4) {
+      limLo = _systemRangeLower[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
+      limHi = _systemRangeUpper[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
+      if (round(100.0 - BMDCamCtrl[devIndex].getIris(cam) * 100.0) > limHi) {
+        BMDCamCtrl[devIndex].setIris(cam, round(100.0 - (float)limHi) / 100.0);
+      }
+      if (round(100.0 - BMDCamCtrl[devIndex].getIris(cam) * 100.0) < limLo) {
+        BMDCamCtrl[devIndex].setIris(cam, round(100.0 - (float)limLo) / 100.0);
+      }
+    } else {
+      limLo = 0;
+      limHi = 100;
+    }
+
     if (extRetValIsWanted()) {
-      extRetVal((int)(100.0 - BMDCamCtrl[devIndex].getIris(cam) * 100.0), 2, _systemHWcActionFineFlag[HWc]);
-      extRetValScale(1, 0, 100, 0, 100);
+      extRetVal(round(100.0 - BMDCamCtrl[devIndex].getIris(cam) * 100.0), 2, _systemHWcActionFineFlag[HWc]);
+      extRetValScale(1, 0, 100, limLo, limHi);
       extRetValShortLabel(PSTR("Iris"));
       extRetValLongLabel(PSTR("Iris Cam "), cam);
       extRetValColor(B011011);
@@ -127,7 +143,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
         }
       }
 
-      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {      // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -160,7 +176,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
         }
       }
 
-      if (actDown && value == BINARY_EVENT) {            // Binary (never value)
+      if (actDown && value == BINARY_EVENT) {      // Binary (never value)
         if (globalConfigMem[actionPtr + 2] == 0) { // cycle
           pulses = 2;
         } else { // Set
@@ -351,17 +367,15 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     uint8_t servo = globalConfigMem[actionPtr + 2];
     uint8_t direction = globalConfigMem[actionPtr + 3];
 
-    if(actDown) {
-      if(value != BINARY_EVENT) { // Analog input
+    if (actDown) {
+      if (value != BINARY_EVENT) { // Analog input
         Serial << "Servo " << servo << " set to value " << value << "\n";
         BMDCamCtrl[devIndex].setServoSpeed(cam, servo, value);
       }
     }
     break;
   }
-
   }
-
 
   // Default:
   if (actDown) {
