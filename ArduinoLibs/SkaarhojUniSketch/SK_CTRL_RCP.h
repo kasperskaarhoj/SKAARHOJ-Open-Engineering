@@ -26,6 +26,26 @@ void addressSwitch_setGPO(bool mode) { // 0=relay off, 1=relay on
   Wire.endTransmission();
 }
 
+#define SK_CUSTOM_HANDLER_NATIVE
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {
+
+  // ID display:
+  if (HWc == 38 - 1) {
+    if (extRetValIsWanted()) {
+      extRetVal(0);
+
+      memset(_strCache, 0, 22);
+      strcpy_P(_strCache, PSTR("Cam "));
+      itoa(_systemMem[0], _strCache + 4, 10);
+
+      extRetValTxt(_strCache, 0);
+      extRetValSetLabel(true);
+    }
+
+    return getSystemBit(1) ? 2 : 4;
+  }
+}
+
 /**
  * Hardware setup, config mode and preset settings
  */
@@ -272,7 +292,7 @@ void HWrunLoop() {
   static uint8_t currentAddress = 255;
   bDown = addressSwitch_getAddress();
 
-  actionDispatch(54, currentAddress != bDown, false, 0, bDown);
+  actionDispatch(54, currentAddress != bDown, false, 0, map(bDown, 0, 16, 0, 1000) + 1); // +1 is to compensate for rounding errors - in fact, map doesn't round anything, it uses "floor()" in division.
   currentAddress = bDown;
 
   // BI16 buttons:
@@ -308,8 +328,8 @@ void HWrunLoop() {
 
 #if SK_RCP_OPTION_ENCODER
   // Encoders
-  uint8_t encMap3[] = {41, 0, 0, 0, 0}; // These numbers refer to the drawing in the web interface
-  HWrunLoop_encoders(encoders3, encMap3, sizeof(encMap3), true);
+  uint8_t encMap3[] = {41}; // These numbers refer to the drawing in the web interface
+  HWrunLoop_encoders(encoders3, encMap3, sizeof(encMap3));
 #else
   // Joystick:
   bool hasMoved = joystick.uniDirectionalSlider_hasMoved();
@@ -404,12 +424,12 @@ void HWrunLoop() {
   // ID Display:
   extRetValIsWanted(true);
   retVal = (actionDispatch(38) & 0xF);
-  bool idDisplay_clrs[6][3] = {{0, 0, 0}, {1, 1, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}, {1, 0, 1}};
+  bool idDisplay_clrs[6][3] = {{0, 0, 0}, {1, 1, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}, {0, 0, 1}};
   static uint8_t idDisplay_prevVal = 0;
   if (idDisplay_prevVal != retVal) {
     idDisplay_prevVal = retVal;
     idDisplay.setBacklight(idDisplay_clrs[retVal][0], idDisplay_clrs[retVal][1], idDisplay_clrs[retVal][2]);
-    Serial << "Set backlight!";
+    Serial << F("Set backlight: ") << retVal << F("\n");
   }
 
   static uint16_t idDisplay_prevHash = 0;
@@ -418,7 +438,7 @@ void HWrunLoop() {
     idDisplay.clearDisplay();
     idDisplay.gotoRowCol(0, 0);
     idDisplay << _extRetTxt[0];
-    Serial << "Write!\n";
+    Serial << "Write ID display!\n";
   }
 
   // GPI
