@@ -638,15 +638,20 @@ void clearPresets() {
 }
 
 uint8_t getNumberOfPresets() {
-  uint8_t csc = EEPROM_PRESET_TOKEN;
   bool presetsLoaded = false;
-
+  
   for (uint8_t i = 0; i < 5; i++) {
+    uint8_t csc = EEPROM_PRESET_TOKEN;
     for (uint8_t a = 0; a < 5; a++) {
       csc ^= EEPROM.read(EEPROM_PRESET_START + a);
     }
     if (csc != 0) {
-      Serial << F("Presets checksum mismatch. Attempt #") << i << F("\n");
+      Serial << F("Presets checksum mismatch. Attempt #") << i << " Data: ";
+      for(uint8_t j=0; j<5;j++) {
+        Serial << _HEXPADL(EEPROM.read(EEPROM_PRESET_START + j), 2, "0") << (j<4?":":"");
+      }
+      Serial << "\n";
+
       delay(20);
     } else {
       presetsLoaded = true;
@@ -654,7 +659,7 @@ uint8_t getNumberOfPresets() {
     }
   }
 
-  if(presetsLoaded) {
+  if(!presetsLoaded) {
     Serial << F("Could not read presets in 5 tries. Halting...\n");
     while(true) {
 		statusLED(LED_RED);
