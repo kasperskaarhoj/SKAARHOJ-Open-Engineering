@@ -92,6 +92,7 @@ uint8_t getCurrentPreset();
 uint16_t getConfigMemDevIndex(uint8_t devNum);
 uint16_t getPresetLength(uint8_t preset);
 void savePreset(uint8_t presetNum, uint16_t len);
+void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255);
 
 uint16_t fletcher16(uint8_t *data, int16_t count) {
   uint16_t sum1 = 0;
@@ -1103,7 +1104,7 @@ void alarmLED() {
 /**
  * StatusLED function. Call it without parameters to just update the LED flashing. Call it with parameters to set a new value.
  */
-void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
+void statusLED(uint8_t incolor, uint8_t inblnk) {
   if (!sTools.hasTimedOut(lastAlarmLED, 200)) {
     return;
   }
