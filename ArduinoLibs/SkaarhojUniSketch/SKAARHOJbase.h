@@ -662,7 +662,7 @@ uint8_t getNumberOfPresets() {
   }
 
   if(!presetsLoaded) {
-    Serial << F("Could not read presets in 5 tries. Serial recovery mode.\n");
+    Serial << F("Could not read presets in 2 tries. Serial recovery mode.\n");
     while(true) {
 		  statusLED(millis()&128?LED_RED:LED_OFF);
 		  checkIncomingSerial();
