@@ -93,6 +93,7 @@ uint16_t getConfigMemDevIndex(uint8_t devNum);
 uint16_t getPresetLength(uint8_t preset);
 void savePreset(uint8_t presetNum, uint16_t len);
 void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255);
+bool checkIncomingSerial();
 
 uint16_t fletcher16(uint8_t *data, int16_t count) {
   uint16_t sum1 = 0;
@@ -639,7 +640,7 @@ void clearPresets() {
 
 uint8_t getNumberOfPresets() {
   bool presetsLoaded = false;
-  
+
   for (uint8_t i = 0; i < 5; i++) {
     uint8_t csc = EEPROM_PRESET_TOKEN;
     for (uint8_t a = 0; a < 5; a++) {
@@ -660,14 +661,11 @@ uint8_t getNumberOfPresets() {
   }
 
   if(!presetsLoaded) {
-    Serial << F("Could not read presets in 5 tries. Halting...\n");
+    Serial << F("Could not read presets in 5 tries. Serial recovery mode.\n");
     while(true) {
-		statusLED(LED_RED);
-		delay(100);
-		statusLED(LED_OFF);
-		delay(100);
+		  statusLED(millis()&128?LED_RED:LED_OFF);
+		  checkIncomingSerial();
     }
-    //clearPresets();
   }
 
   return EEPROM.read(EEPROM_PRESET_START);
