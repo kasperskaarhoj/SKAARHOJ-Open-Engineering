@@ -78,8 +78,8 @@ static const uint8_t PIN_BLUE = 14;
 #if SK_MODCOUNT > 0
 
 #define SK_MODULAR_CSCSEED B10101101
-#define SK_MODULAR_CLKPIN 19 //10
-#define SK_MODULAR_ENPIN 18 //11
+#define SK_MODULAR_CLKPIN 19 // 10
+#define SK_MODULAR_ENPIN 18  // 11
 
 #endif
 
@@ -92,6 +92,7 @@ uint8_t getCurrentPreset();
 uint16_t getConfigMemDevIndex(uint8_t devNum);
 uint16_t getPresetLength(uint8_t preset);
 void savePreset(uint8_t presetNum, uint16_t len);
+void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255);
 
 uint16_t fletcher16(uint8_t *data, int16_t count) {
   uint16_t sum1 = 0;
@@ -640,7 +641,7 @@ uint8_t getNumberOfPresets() {
   uint8_t csc = EEPROM_PRESET_TOKEN;
   bool presetsLoaded = false;
 
-  for (uint8_t i = 0; i < 5; i++) {
+  for (uint8_t i = 0; i < 2; i++) {
     for (uint8_t a = 0; a < 5; a++) {
       csc ^= EEPROM.read(EEPROM_PRESET_START + a);
     }
@@ -653,15 +654,15 @@ uint8_t getNumberOfPresets() {
     }
   }
 
-  if(presetsLoaded) {
-    Serial << F("Could not read presets in 5 tries. Halting...\n");
-    while(true) {
-		statusLED(LED_RED);
-		delay(100);
-		statusLED(LED_OFF);
-		delay(100);
+  if (!presetsLoaded) {
+    Serial << F("Could not read presets in 2 tries. Halting...\n");
+    while (true) {
+      statusLED(LED_RED);
+      delay(100);
+      statusLED(LED_OFF);
+      delay(100);
     }
-    //clearPresets();
+    // clearPresets();
   }
 
   return EEPROM.read(EEPROM_PRESET_START);
@@ -1082,7 +1083,13 @@ bool checkIncomingSerial() {
   return false;
 }
 
-bool variantLED() { return EEPROM.read(9) & 1; }
+bool variantLED() {
+#if defined(ARDUINO_SKAARDUINO_DUE)
+  return false; // No change in LED type on SKAARDUINO DUE, just fixed.
+#else
+  return EEPROM.read(9) & 1;
+#endif;
+}
 
 static uint32_t lastAlarmLED = 0;
 void alarmLED() {
@@ -1103,7 +1110,7 @@ void alarmLED() {
 /**
  * StatusLED function. Call it without parameters to just update the LED flashing. Call it with parameters to set a new value.
  */
-void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
+void statusLED(uint8_t incolor, uint8_t inblnk) {
   if (!sTools.hasTimedOut(lastAlarmLED, 200)) {
     return;
   }
@@ -1111,8 +1118,8 @@ void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255) {
   static uint8_t color = 0;
   static uint8_t blnk = 0;
 
-  static uint8_t grn = variantLED() ? PIN_BLUE : PIN_GREEN;
-  static uint8_t blu = variantLED() ? PIN_GREEN : PIN_BLUE;
+  uint8_t grn = variantLED() ? PIN_BLUE : PIN_GREEN;
+  uint8_t blu = variantLED() ? PIN_GREEN : PIN_BLUE;
 
   if (incolor < 254) {
     color = incolor;
@@ -2005,9 +2012,7 @@ uint8_t modular_readByte(uint8_t addr) {
   }
   return rdata;
 }
-uint8_t checkID(uint8_t id, uint8_t csc, uint8_t csc2) { 
-	return ((SK_MODULAR_CSCSEED ^ id) == csc && ((((SK_MODULAR_CSCSEED ^ id) << 1) ^ id) & 0xFF) == csc2) ? id : 255; 
-}
+uint8_t checkID(uint8_t id, uint8_t csc, uint8_t csc2) { return ((SK_MODULAR_CSCSEED ^ id) == csc && ((((SK_MODULAR_CSCSEED ^ id) << 1) ^ id) & 0xFF) == csc2) ? id : 255; }
 
 void modular_clock() {
   digitalWrite(SK_MODULAR_CLKPIN, HIGH);
@@ -3435,7 +3440,7 @@ void initController() {
 
 // Delay to allow initial output to be displayed in serial console
 #ifdef ARDUINO_SKAARDUINO_DUE
-  delay(700);
+  delay(1700); // Enough time to let serial port appear and open it to receive the first message:
 #endif
 
   delay(200); // This also prevents alarm-LED delay of 200 ms from messing with the blinking intro.
@@ -3447,7 +3452,6 @@ void initController() {
   digitalWrite(SK_MODULAR_CLKPIN, HIGH); // Disabled
   digitalWrite(SK_MODULAR_ENPIN, HIGH);  // Disabled
 #endif
-
 
 // Setup Config:
 #if SK_ETHMEGA
@@ -3477,16 +3481,9 @@ void initController() {
   Wire.begin();
   statusLED(QUICKBLANK);
 
-  // Initializes the actual hardware components / modules on the controller
-  configMode = isConfigButtonPushed(); // Temporary - to inspire an initialization cycle
-  uint8_t buttonPressUponBoot = HWsetup();
-  configMode = 0;
-  statusLED(QUICKBLANK);
-
-  // Check Config Button press (or hardware button press)
-  delay(500); // Let people have time to release the button in case they just want to reset
-  if (isConfigButtonPushed() || buttonPressUponBoot > 0) {
-    configMode = EEPROM.read(0) == 2 ? 2 : (buttonPressUponBoot > 1 ? 2 : 1); // Current IP address
+  // Check Config Button press or EEPROM setting to start it:
+  if (isConfigButtonPushed()) {
+    configMode = EEPROM.read(0) == 2 ? 2 : 1;
     if (EEPROM.read(0) != 0) {
       EEPROM.write(0, 0);
     }
@@ -3505,6 +3502,8 @@ void initController() {
             statusLED(LED_RED);
             Serial << F("Clearing presets, revert to normal boot\n");
             clearPresets();
+            delay(1000);
+            statusLED(LED_PURPLE); // Normal mode
             configMode = 0;
             break;
           }
@@ -3515,6 +3514,22 @@ void initController() {
   } else {
     statusLED(LED_PURPLE); // Normal mode
   }
+
+  // Initializes the actual hardware components / modules on the controller
+  uint8_t buttonPressUponBoot = HWsetup();
+  if (!configMode && buttonPressUponBoot) {
+    switch (buttonPressUponBoot) {
+    case 2:
+      configMode = 2;
+      Serial << F("Config Mode=2 (via HWc)\n");
+      break;
+    default:
+      configMode = 1;
+      Serial << F("Config Mode=1 (via HWc)\n");
+      break;
+    }
+  }
+  statusLED(QUICKBLANK);
 
   loadPreset(); // Current preset
                 //  Serial << "sizeof: " << sizeof(defaultControllerConfig) << "\n";
