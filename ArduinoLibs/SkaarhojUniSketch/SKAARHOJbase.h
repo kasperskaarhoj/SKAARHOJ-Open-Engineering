@@ -864,7 +864,14 @@ bool checkIncomingSerial() {
       Serial << F("Number of analog components: ") << HWnumOfAnalogComponents() << "\n";
       for (uint8_t i = 1; i <= HWnumOfAnalogComponents(); i++) {
         HWanalogComponentName(i, buffer, 10);
-        Serial << F("Analog #") << i << F(": ") << buffer << F("\n");
+        Serial << F("Analog #") << i << F(": ") << buffer;
+
+		uint16_t calibration[3];
+	    calibration[0] = EEPROM.read(20 + (i-1) * 4 + 1) << 1 | EEPROM.read(20 + (i-1) * 4 + 3) >> 7;     // Start
+	    calibration[1] = EEPROM.read(20 + (i-1) * 4 + 2) << 1 | EEPROM.read(20 + (i-1) * 4 + 3) >> 6 & 1; // End
+	    calibration[2] = EEPROM.read(20 + (i-1) * 4 + 3) & 0x3F;                                        // Hysteresis
+
+	    Serial << ": Start: " << calibration[0] << ", End: " << calibration[1] << ", Hysteresis: " << calibration[2] << "\n";
       }
     } else if (!strncmp(serialBuffer, "show analog ", 12)) {
       uint8_t num = serialBuffer[12] - '0';
@@ -875,7 +882,7 @@ bool checkIncomingSerial() {
         listAnalogHWComponent(num);
         serialState = 1;
       }
-    } else if (!strncmp(serialBuffer, "reset analog ", 13)) {
+    } else if (!strncmp(serialBuffer, "clear analog ", 13)) {
       uint8_t num = serialBuffer[13] - '0';
       if (num == 0) {
         Serial << F("Invalid analog component number\n");
