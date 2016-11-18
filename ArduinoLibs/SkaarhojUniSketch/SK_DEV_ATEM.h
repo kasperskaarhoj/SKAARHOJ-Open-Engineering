@@ -32,13 +32,15 @@ uint16_t ATEM_idxToVideoSrc(uint8_t devIndex, uint8_t idx) {
  * Index to ATEM audio source (aligned with selector box in web interface)
  */
 uint16_t ATEM_idxToAudioSrc(uint8_t devIndex, uint8_t idx) {
-  if (idx < 20) {
+  if (idx < 20) { // Regular inputs
     return idx + 1;
-  } else if (idx >= 20 && idx <= 25) {
+  } else if (idx >= 20 && idx <= 24) { // Special inputs
     return AtemSwitcher_aSrcMap[idx - 20];
-  } else if (idx >= 28 && idx <= 31) {
-    if (_systemMem[idx - 28] < 28)
-      return ATEM_idxToAudioSrc(devIndex, _systemMem[idx - 28]); // Recursive call, but making sure we are not asking for another memory value which would make the loop infinite
+  } else if (idx == 25 || idx == 26) { // Master and Monitor
+    return idx;
+  } else if (idx >= 27 && idx <= 30) { // Memory banks
+    if (_systemMem[idx - 27] < 27)
+      return ATEM_idxToAudioSrc(devIndex, _systemMem[idx - 27]); // Recursive call, but making sure we are not asking for another memory value which would make the loop infinite
   }
   return 0;
 }
@@ -1294,7 +1296,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     }
     return retVal;
     break;
-  case 25: // Audio Levels
+  case 25: { // Audio Levels
     if (_systemHWcActionCacheFlag[HWc][actIdx] == 0) {
       AtemSwitcher[devIndex].setAudioLevelsEnable(true);
       _systemHWcActionCacheFlag[HWc][actIdx] = 1;
@@ -1308,20 +1310,30 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
     }
 
-    switch (globalConfigMem[actionPtr + 1]) {
+    uint8_t aSrc = ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
+
+    // Input order can be different in the audio levels packets
+    for(uint8_t i = 0; i < 24; i++) {
+      if(aSrc == AtemSwitcher[devIndex].getAudioMixerLevelsSourceOrder(i)) {
+        aSrc = i;
+        break;
+      }
+    }
+    
+    switch (aSrc) {
     case 25:
       retVal = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterLeft()) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterRight()) + 60) & 0xFF);
       break;
+    case 26:
+      retVal = AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMonitor() & 0xFF);
+      break;
     default:
-      uint8_t source = globalConfigMem[actionPtr + 1];
-      if (source < 20) {
-        source -= 1;
-      }
-      retVal = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(ATEM_idxToAudioSrc(devIndex, source))) + 60) & 0xFF);
+      retVal = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(aSrc)) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(aSrc)) + 60) & 0xFF);
       break;
     }
     return retVal;
     break;
+  }
   case 26: // Transitions Rate
     tempByte = globalConfigMem[actionPtr + 2] == 0 ? constrain(_systemHWcActionCacheFlag[HWc][actIdx] & 0xF, 1, 5) : globalConfigMem[actionPtr + 2];
 
