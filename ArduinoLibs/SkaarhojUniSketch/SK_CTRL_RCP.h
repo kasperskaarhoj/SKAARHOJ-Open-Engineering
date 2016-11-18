@@ -26,10 +26,25 @@ void addressSwitch_setGPO(bool mode) { // 0=relay off, 1=relay on
   Wire.endTransmission();
 }
 
+#define SK_CUSTOM_HANDLER_NATIVE
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {
 
+  // ID display:
+  if (HWc == 38 - 1) {
+    if (extRetValIsWanted()) {
+      extRetVal(0);
 
+      memset(_strCache, 0, 22);
+      strcpy_P(_strCache, PSTR("Cam "));
+      itoa(_systemMem[0], _strCache + 4, 10);
 
+      extRetValTxt(_strCache, 0);
+      extRetValSetLabel(true);
+    }
 
+    return getSystemBit(1) ? 2 : 4;
+  }
+}
 
 /**
  * Hardware setup, config mode and preset settings
@@ -62,8 +77,12 @@ uint8_t HWsetupL() {
   if (buttons.buttonIsPressedAll() > 0) {
     retVal = 1;
     statusLED(LED_BLUE);
+    buttons.setDefaultColor(2); // Off by default
+    buttons.setButtonColorsToDefault();
     while (buttons.buttonIsPressedAll() > 0) {
       if (sTools.hasTimedOut(timer, 2000)) {
+        buttons.setDefaultColor(1); // Off by default
+        buttons.setButtonColorsToDefault();
         retVal = 2;
         statusLED(LED_WHITE);
       }
@@ -136,7 +155,21 @@ uint8_t HWsetupL() {
   idDisplay.setBacklight(1, 1, 1);
   statusLED(QUICKBLANK);
 
+#if SK_RCP_OPTION_ENCODER
+  Serial << F("Option: ENCODER\n");
+
+  HWdis[42 - 1] = 1; // Removes Joystick from web interface
+  HWdis[43 - 1] = 1; // Removes Wheel from web interface
+  HWdis[44 - 1] = 1; // Removes Top button from web interface
+
+  Serial << F("Init Iris Encoder\n");
+  encoders3.begin(5);
+  encoders3.setStateCheckDelay(250);
+  statusLED(QUICKBLANK);
+#else
   Serial << F("Init Joystick\n");
+
+  HWdis[41 - 1] = 1; // Removes Iris Encoder from web interface
 
   uint16_t *cal1 = getAnalogComponentCalibration(1);
   //  joystick.uniDirectionalSlider_init(10, 35, 35, 0, 1);
@@ -149,6 +182,8 @@ uint8_t HWsetupL() {
 
   joystickbutton.uniDirectionalSlider_init(15, 80, 80, 0, 0);
   joystickbutton.uniDirectionalSlider_disableUnidirectionality(true);
+  statusLED(QUICKBLANK);
+#endif
 
   Serial << F("Init Details Display\n");
   detailsDisplay.begin(4);
@@ -199,9 +234,13 @@ void HWtestL() {
 
   addressSwitch_setGPO(millis() & 0x8000);
 
+#if SK_RCP_OPTION_ENCODER
+  encoders3.runLoop();
+#else
   if (joystick.uniDirectionalSlider_hasMoved()) {
     testVal = joystick.uniDirectionalSlider_position();
   }
+#endif
 
   static uint8_t ptr = 0;
 
@@ -234,6 +273,9 @@ void HWtestL() {
 
   encoders.testProgramme(B11111);
   encoders2.testProgramme(B11111);
+#if SK_RCP_OPTION_ENCODER
+  encoders3.testProgramme(B1);
+#endif
 
   ptr++;
 }
@@ -250,7 +292,7 @@ void HWrunLoop() {
   static uint8_t currentAddress = 255;
   bDown = addressSwitch_getAddress();
 
-  actionDispatch(53, currentAddress != bDown, false, 0, bDown);
+  actionDispatch(54, currentAddress != bDown, false, 0, map(bDown, 0, 16, 0, 1000) + 1); // +1 is to compensate for rounding errors - in fact, map doesn't round anything, it uses "floor()" in division.
   currentAddress = bDown;
 
   // BI16 buttons:
@@ -264,12 +306,15 @@ void HWrunLoop() {
   }
   encoders.runLoop();
   encoders2.runLoop();
+#if SK_RCP_OPTION_ENCODER
+  encoders3.runLoop();
+#endif
 
   // UHB buttons:
   bUp = buttons2.buttonUpAll();
   bDown = buttons2.buttonDownAll();
 
-  uint8_t b16Map2[] = {47, 50, 49, 48}; // These numbers refer to the drawing in the web interface
+  uint8_t b16Map2[] = {48, 51, 50, 49}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 4; a++) {
     extRetValPrefersLabel(b16Map2[a]);
     uint8_t color = actionDispatch(b16Map2[a], bDown & (B1 << a), bUp & (B1 << a));
@@ -277,23 +322,32 @@ void HWrunLoop() {
   }
   encoders.runLoop();
   encoders2.runLoop();
+#if SK_RCP_OPTION_ENCODER
+  encoders3.runLoop();
+#endif
 
+#if SK_RCP_OPTION_ENCODER
+  // Encoders
+  uint8_t encMap3[] = {41}; // These numbers refer to the drawing in the web interface
+  HWrunLoop_encoders(encoders3, encMap3, sizeof(encMap3));
+#else
   // Joystick:
   bool hasMoved = joystick.uniDirectionalSlider_hasMoved();
 
   // actionDispatch(41, hasMoved, false, 0, 1000 - joystick.uniDirectionalSlider_position());
-  actionDispatch(41, hasMoved, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
+  actionDispatch(42, hasMoved, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
 
   // Wheel
   hasMoved = wheel.uniDirectionalSlider_hasMoved();
-  actionDispatch(42, hasMoved, false, 0, wheel.uniDirectionalSlider_position());
+  actionDispatch(43, hasMoved, false, 0, wheel.uniDirectionalSlider_position());
 
   // Button
   //  Serial << (joystickbutton.uniDirectionalSlider_position() < 500) << "\n";
   joystickbutton.uniDirectionalSlider_hasMoved();
   static bool lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
-  actionDispatch(43, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
+  actionDispatch(44, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
   lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
+#endif
 
   // Encoders
   uint8_t encMap[] = {30, 31, 32, 33, 39}; // These numbers refer to the drawing in the web interface
@@ -305,6 +359,9 @@ void HWrunLoop() {
 
   encoders.runLoop();
   encoders2.runLoop();
+#if SK_RCP_OPTION_ENCODER
+  encoders3.runLoop();
+#endif
 
   // Details display, 256x64 OLED:
   static uint16_t detailsDisplay_prevHash[13];
@@ -354,22 +411,25 @@ void HWrunLoop() {
 
   encoders.runLoop();
   encoders2.runLoop();
+#if SK_RCP_OPTION_ENCODER
+  encoders3.runLoop();
+#endif
 
 #if (SK_HWEN_STDOLEDDISPLAY)
   static uint16_t infoDisplay_prevHash[3];
   static bool infoDisplay_written;
-  HWrunLoop_128x32OLED(infoDisplay, 44, infoDisplay_prevHash, infoDisplay_written);
+  HWrunLoop_128x32OLED(infoDisplay, 45, infoDisplay_prevHash, infoDisplay_written);
 #endif
 
   // ID Display:
   extRetValIsWanted(true);
   retVal = (actionDispatch(38) & 0xF);
-  bool idDisplay_clrs[6][3] = {{0, 0, 0}, {1, 1, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}, {1, 0, 1}};
+  bool idDisplay_clrs[6][3] = {{0, 0, 0}, {1, 1, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}, {0, 0, 1}};
   static uint8_t idDisplay_prevVal = 0;
   if (idDisplay_prevVal != retVal) {
     idDisplay_prevVal = retVal;
     idDisplay.setBacklight(idDisplay_clrs[retVal][0], idDisplay_clrs[retVal][1], idDisplay_clrs[retVal][2]);
-    Serial << "Set backlight!";
+    Serial << F("Set backlight: ") << retVal << F("\n");
   }
 
   static uint16_t idDisplay_prevHash = 0;
@@ -378,7 +438,7 @@ void HWrunLoop() {
     idDisplay.clearDisplay();
     idDisplay.gotoRowCol(0, 0);
     idDisplay << _extRetTxt[0];
-    Serial << "Write!\n";
+    Serial << "Write ID display!\n";
   }
 
   // GPI
@@ -396,11 +456,11 @@ void HWrunLoop() {
     }
   }
 
-  actionDispatch(52, bDown, bUp);
+  actionDispatch(53, bDown, bUp);
 
   // GPO:
   static bool gpoCache = false;
-  uint8_t state = actionDispatch(51) & 0xF;
+  uint8_t state = actionDispatch(52) & 0xF;
   if (state != 5 && state != 0) {
     if (!gpoCache) {
       gpoCache = true;
@@ -414,9 +474,16 @@ void HWrunLoop() {
   }
 }
 
-uint8_t HWnumOfAnalogComponents() { return 2; }
+uint8_t HWnumOfAnalogComponents() {
+#if SK_RCP_OPTION_ENCODER
+  return 0;
+#else
+  return 2;
+#endif
+}
 
 int16_t HWAnalogComponentValue(uint8_t num) {
+#if !SK_RCP_OPTION_ENCODER
   switch (num) {
   case 1:
     return joystick.uniDirectionalSlider_rawValue();
@@ -425,34 +492,35 @@ int16_t HWAnalogComponentValue(uint8_t num) {
     return wheel.uniDirectionalSlider_rawValue();
     break;
   }
+#endif
 }
 
-void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len) {
+void HWanalogComponentName(uint8_t num, char *buffer, uint8_t len) {
   char *name;
-  switch(num) {
-    case 1:
-      name = "Fader";
-      break;
-    case 2:
-      name = "Wheel";
-      break;
+  switch (num) {
+  case 1:
+    name = "Fader";
+    break;
+  case 2:
+    name = "Wheel";
+    break;
   }
   strncpy(buffer, name, len);
 }
 
 uint16_t *HWMinCalibrationValues(uint8_t num) {
-  static uint16_t values[3] = {0,0,0};
-  switch(num) {
-    case 1:
-      values[0] = 35; // Start
-      values[1] = 35; // End
-      values[2] = 15; // Hysteresis
-      break;
-    case 2:
-      values[0] = 35; // Start
-      values[1] = 35; // End
-      values[2] = 15; // Hysteresis
-      break;
+  static uint16_t values[3] = {0, 0, 0};
+  switch (num) {
+  case 1:
+    values[0] = 35; // Start
+    values[1] = 35; // End
+    values[2] = 2;  // Hysteresis
+    break;
+  case 2:
+    values[0] = 35; // Start
+    values[1] = 35; // End
+    values[2] = 2;  // Hysteresis
+    break;
   }
   return values;
 }

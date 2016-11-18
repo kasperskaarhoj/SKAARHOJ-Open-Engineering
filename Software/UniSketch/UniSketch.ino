@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_C90MII
+#define SK_MODEL SK_RCP
 
 
 
@@ -14,10 +14,10 @@
 
 
 
-#define SK_E21CMB6M_OPTION_VSLIDER false     // AUTOGEN: true,false
+#define SK_E21CMB6M_OPTION_VSLIDER true     // AUTOGEN: true,false
 #define SK_E21TVS_OPTION_GPIO false     // AUTOGEN: true,false
 #define SK_E21GPIO_OPTION_GPIO2 false     // AUTOGEN: true,false
-#define SK_RCP_OPTION_ENCODER false     // AUTOGEN: true,false
+#define SK_RCP_OPTION_ENCODER true     // AUTOGEN: true,false
 
 #define SK_C90D_OPTION_DISABLEMASK 0b00000000000000000000000000000000    // Must have 32 digits. Disables buttons #1-#32 from left. AUTOGEN: 0
 #define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 0,1,2,3,4
@@ -108,7 +108,7 @@
 #define SK_HWEN_ACM 0
 #define SK_HWEN_GPIO 0
 
-#define SK_MODCOUNT 1   // Must define at least 1 module, although the first module in index zero refers for the first actual external module for a controller.
+#define SK_MODCOUNT 0   // Number of modules in chain
 
 // Customization file, located in sketch folder:
 #include "customization.h"
@@ -156,6 +156,9 @@ SkaarhojTools sTools(0);
 #elif(SK_MODEL == SK_E21CMB6)
 #include "SK_CFGDEF_E21CMB6.h"
 #elif(SK_MODEL == SK_E21CMB6M)
+#include "SkaarhojGPIO2x8.h"
+#include "Adafruit_GFX.h"
+#include "SkaarhojDisplayArray.h"
 #include "SK_CFGDEF_E21CMB6M.h"
 #elif(SK_MODEL == SK_E21GPIO)
 #include "SkaarhojGPIO2x8.h"
@@ -323,6 +326,9 @@ uint8_t globalConfigMem[SK_CONFIG_MEMORY_SIZE];
 uint8_t _systemState = 0;
 uint8_t _systemShift = 0;
 uint8_t _systemMem[4] = {0, 0, 0, 0};              // Mem A-D
+uint8_t _systemRangeUpper[4] = {255, 255, 255, 255};              // Upper range A-D
+uint8_t _systemRangeLower[4] = {0, 0, 0, 0};              // Lower range A-D
+uint8_t _systemScaler[4] = {0, 0, 0, 0};              // Scaler function for A-D
 uint8_t _systemBits[8] = {0, 0, 0, 0, 0, 0, 0, 0}; // 64 system bits
 uint16_t _systemHWcActionCache[SK_HWCCOUNT][SK_MAXACTIONS];
 uint8_t _systemHWcActionCacheFlag[SK_HWCCOUNT][SK_MAXACTIONS];
@@ -339,7 +345,7 @@ uint8_t debugMode = SK_SERIAL_OUTPUT;
 
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
 int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);
-uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const uint16_t value = 0);
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const uint16_t value = 0);
 uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const bool actUp = false, const int16_t pulses = 0, const int16_t value = 0x8000, const uint8_t specificAction = 0);
 uint16_t getNumOfActions(const uint8_t HWcNum);
 void lDelay(uint16_t delayVal);
@@ -803,10 +809,23 @@ uint8_t SONYVISCAIP_initIdx = 0;
 #include "SK_CTRL_C90D.h"
 #endif
 
+#ifndef SK_CUSTOM_HANDLER_NATIVE
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+#endif
+
 // Custom handlers
 #include "customhandler.h"
-#ifndef SK_CUSTOM_HANDLER
-uint16_t customActionHandler(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+#ifndef SK_CUSTOM_HANDLER_A
+uint16_t customActionHandlerA(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+#endif
+#ifndef SK_CUSTOM_HANDLER_B
+uint16_t customActionHandlerB(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+#endif
+#ifndef SK_CUSTOM_HANDLER_C
+uint16_t customActionHandlerC(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+#endif
+#ifndef SK_CUSTOM_HANDLER_D
+uint16_t customActionHandlerD(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
 #endif
 
 /**
