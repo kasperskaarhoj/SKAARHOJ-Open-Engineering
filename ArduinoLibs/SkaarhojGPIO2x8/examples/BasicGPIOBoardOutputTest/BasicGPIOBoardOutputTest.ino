@@ -11,9 +11,9 @@
 
 #include <Wire.h>
 #include <MCP23017.h>
-#include <SkaarhojGPIO1x16.h>
+#include <SkaarhojGPIO2x8.h>
 
-SkaarhojGPIO1x16 GPIOboard;
+SkaarhojGPIO2x8 GPIOboard;
 
 void setup() { 
 
@@ -23,7 +23,7 @@ void setup() {
 
   Wire.begin(); // Start the wire library for communication with the GPIO chip.
 
-  GPIOboard.begin(0);
+  GPIOboard.begin(0,1);
   
   // Set:
   for (int i=1; i<=16; i++)  {
