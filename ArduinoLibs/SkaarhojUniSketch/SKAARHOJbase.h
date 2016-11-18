@@ -641,7 +641,6 @@ void clearPresets() {
 uint8_t getNumberOfPresets() {
   bool presetsLoaded = false;
 
-
   for (uint8_t i = 0; i < 2; i++) {
     uint8_t csc = EEPROM_PRESET_TOKEN;
     for (uint8_t a = 0; a < 5; a++) {
@@ -649,8 +648,8 @@ uint8_t getNumberOfPresets() {
     }
     if (csc != 0) {
       Serial << F("Presets checksum mismatch. Attempt #") << i << " Data: ";
-      for(uint8_t j=0; j<5;j++) {
-        Serial << _HEXPADL(EEPROM.read(EEPROM_PRESET_START + j), 2, "0") << (j<4?":":"");
+      for (uint8_t j = 0; j < 5; j++) {
+        Serial << _HEXPADL(EEPROM.read(EEPROM_PRESET_START + j), 2, "0") << (j < 4 ? ":" : "");
       }
       Serial << "\n";
 
@@ -870,12 +869,12 @@ bool checkIncomingSerial() {
         HWanalogComponentName(i, buffer, 10);
         Serial << F("Analog #") << i << F(": ") << buffer;
 
-		uint16_t calibration[3];
-	    calibration[0] = EEPROM.read(20 + (i-1) * 4 + 1) << 1 | EEPROM.read(20 + (i-1) * 4 + 3) >> 7;     // Start
-	    calibration[1] = EEPROM.read(20 + (i-1) * 4 + 2) << 1 | EEPROM.read(20 + (i-1) * 4 + 3) >> 6 & 1; // End
-	    calibration[2] = EEPROM.read(20 + (i-1) * 4 + 3) & 0x3F;                                        // Hysteresis
+        uint16_t calibration[3];
+        calibration[0] = EEPROM.read(20 + (i - 1) * 4 + 1) << 1 | EEPROM.read(20 + (i - 1) * 4 + 3) >> 7;     // Start
+        calibration[1] = EEPROM.read(20 + (i - 1) * 4 + 2) << 1 | EEPROM.read(20 + (i - 1) * 4 + 3) >> 6 & 1; // End
+        calibration[2] = EEPROM.read(20 + (i - 1) * 4 + 3) & 0x3F;                                            // Hysteresis
 
-	    Serial << ": Start: " << calibration[0] << ", End: " << calibration[1] << ", Hysteresis: " << calibration[2] << "\n";
+        Serial << ": Start: " << calibration[0] << ", End: " << calibration[1] << ", Hysteresis: " << calibration[2] << "\n";
       }
     } else if (!strncmp(serialBuffer, "show analog ", 12)) {
       uint8_t num = serialBuffer[12] - '0';
@@ -1846,7 +1845,7 @@ void deviceSetup() {
         break;
       case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
-        Serial << F(": BMDCAMCONTRL") << BMDCamCtrl_initIdx;
+        Serial << F(": BMDCAMCTRL") << BMDCamCtrl_initIdx;
         deviceMap[a] = BMDCamCtrl_initIdx++;
 #if SK_MODEL == SK_REFERENCE
         Wire.beginTransmission(0x71);
@@ -1954,6 +1953,7 @@ void deviceRunLoop() {
         break;
       case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
+	  // Todo: Check we have coms with shield...
         deviceReady[a] = BMDCamCtrl[deviceMap[a]].hasInitialized();
 #endif
         break;
@@ -2828,7 +2828,7 @@ void initActionCache() {
 }
 
 int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine, const int16_t scaleNormal) {
-  int16_t scale = pulses & B1 ? scaleFine : scaleNormal;
+  int16_t scale = !(pulses & B1) ? scaleFine : scaleNormal; // Inverted when we use fine and coarse...
   inValue += (pulses >> 1) * scale;
   if (cycle) {
     if (inValue < lower) {
@@ -2998,6 +2998,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
       if (actDown) {
         if (value != BINARY_EVENT) { // Value input
           _systemMem[globalConfigMem[actionPtr + 1]] = constrain(map(value, 0, 1000, 0, globalConfigMem[actionPtr + 2] + 1), 0, globalConfigMem[actionPtr + 2]);
+          // Serial << "SYSTEM MEM: " << value << "," << map(value, 0, 1000, 0, globalConfigMem[actionPtr + 2] + 1) << "," << constrain(map(value, 0, 1000, 0, globalConfigMem[actionPtr + 2] + 1), 0, globalConfigMem[actionPtr + 2]) << "\n";
         } else {
           if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) { // Cycle up/down
             _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
@@ -3162,7 +3163,23 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
       lDelay(constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)250) * 100);
     break;
   case 9: // Custom function
-    return customActionHandler(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
+    switch (globalConfigMem[actionPtr + 1]) {
+    case 1:
+      return customActionHandlerA(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
+      break;
+    case 2:
+      return customActionHandlerB(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
+      break;
+    case 3:
+      return customActionHandlerC(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
+      break;
+    case 4:
+      return customActionHandlerD(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
+      break;
+    default:
+      return customActionHandlerNative(actionPtr, HWc, actIdx, actDown, actUp, pulses, value);
+      break;
+    }
     break;
   case 10: // Inactivate
     if (_inactivePanel_actDown)
@@ -3209,6 +3226,72 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
     }
 
     return retVal;
+    break;
+  case 12: // Panel brightness
+    break;
+  case 13: // Range Limiter
+    if (globalConfigMem[actionPtr + 1] < 4) {
+      if (actDown) {
+        _systemRangeLower[globalConfigMem[actionPtr + 1]] = 0;
+        _systemRangeUpper[globalConfigMem[actionPtr + 1]] = 255;
+      }
+      if (pulses & 0xFFFE) { // Encoder:
+        if (!(pulses & B1)) {
+          _systemRangeUpper[globalConfigMem[actionPtr + 1]] = pulsesHelper(_systemRangeUpper[globalConfigMem[actionPtr + 1]], 0, 255, false, pulses, 2, 2);
+          if (_systemRangeUpper[globalConfigMem[actionPtr + 1]] < _systemRangeLower[globalConfigMem[actionPtr + 1]]) {
+            _systemRangeUpper[globalConfigMem[actionPtr + 1]] = _systemRangeLower[globalConfigMem[actionPtr + 1]];
+          }
+        } else {
+          _systemRangeLower[globalConfigMem[actionPtr + 1]] = pulsesHelper(_systemRangeLower[globalConfigMem[actionPtr + 1]], 0, 255, false, pulses, 2, 2);
+          if (_systemRangeLower[globalConfigMem[actionPtr + 1]] > _systemRangeUpper[globalConfigMem[actionPtr + 1]]) {
+            _systemRangeLower[globalConfigMem[actionPtr + 1]] = _systemRangeUpper[globalConfigMem[actionPtr + 1]];
+          }
+        }
+      }
+    }
+    break;
+  case 14: // Value Scaler
+    if (globalConfigMem[actionPtr + 1] < 4) {
+      if (actDown) {
+
+		  if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+            _systemHWcActionCache[HWc][actIdx] = _systemScaler[globalConfigMem[actionPtr + 1]];
+            _systemScaler[globalConfigMem[actionPtr + 1]] = globalConfigMem[actionPtr + 2];
+          } else {
+            _systemScaler[globalConfigMem[actionPtr + 1]] = _systemHWcActionCache[HWc][actIdx];
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+          }
+      }
+      if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
+        _systemScaler[globalConfigMem[actionPtr + 1]] = _systemHWcActionCache[HWc][actIdx];
+      }
+      if (pulses & 0xFFFE) {
+        _systemScaler[globalConfigMem[actionPtr + 1]] = pulsesHelper(_systemScaler[globalConfigMem[actionPtr + 1]], 0, 3, true, pulses, 1, 1);
+      }
+
+      retVal = _systemScaler[globalConfigMem[actionPtr + 1]] == globalConfigMem[actionPtr + 2] ? (4 | 0x20) : 5;
+
+      if (extRetValIsWanted()) {
+        temp = _systemHWcActionPrefersLabel[HWc] ? globalConfigMem[actionPtr + 2] : _systemMem[globalConfigMem[actionPtr + 1]];
+
+        extRetVal(temp, 0, pulses & B1);
+        extRetValShortLabel(PSTR("Scaler "), globalConfigMem[actionPtr + 1]);
+        extRetValLongLabel(PSTR("Scaler "), globalConfigMem[actionPtr + 1]);
+        _extRetShort[7] = _extRetLong[7] = char(globalConfigMem[actionPtr + 1] + 65);
+
+        if (_systemHWcActionPrefersLabel[HWc]) {
+          extRetValColor(retVal & 0x20 ? B010111 : B101010);
+          extRetValSetLabel(true);
+        } else {
+          extRetValColor(B010111);
+        }
+      }
+    }
+    return retVal;
+    break;
+  case 15: // Local Shift Level Register
+
     break;
   }
 
