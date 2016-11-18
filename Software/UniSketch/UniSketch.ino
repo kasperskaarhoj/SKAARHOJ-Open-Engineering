@@ -325,6 +325,7 @@ SkaarhojGPIO2x8 GPIOboard;
 uint8_t globalConfigMem[SK_CONFIG_MEMORY_SIZE];
 uint8_t _systemState = 0;
 uint8_t _systemShift = 0;
+uint8_t _systemShiftRegister[4] = {0, 0, 0, 0};              // Shift registers (in addition to the default)
 uint8_t _systemMem[4] = {0, 0, 0, 0};              // Mem A-D
 uint8_t _systemRangeUpper[4] = {255, 255, 255, 255};              // Upper range A-D
 uint8_t _systemRangeLower[4] = {0, 0, 0, 0};              // Lower range A-D
@@ -342,6 +343,7 @@ bool _inactivePanel = false;
 bool _inactivePanel_actDown = false;
 bool _calibrateMode = false;
 uint8_t debugMode = SK_SERIAL_OUTPUT;
+uint16_t _retValue = 0;                                                    // Return value in actionDispatch. In global memory so it can be accessed.
 
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
 int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);

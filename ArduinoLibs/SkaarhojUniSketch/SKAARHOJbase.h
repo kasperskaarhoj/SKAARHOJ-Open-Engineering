@@ -660,11 +660,11 @@ uint8_t getNumberOfPresets() {
     }
   }
 
-  if(!presetsLoaded) {
+  if (!presetsLoaded) {
     Serial << F("Could not read presets in 2 tries. Serial recovery mode.\n");
-    while(true) {
-		  statusLED(millis()&128?LED_RED:LED_OFF);
-		  checkIncomingSerial();
+    while (true) {
+      statusLED(millis() & 128 ? LED_RED : LED_OFF);
+      checkIncomingSerial();
     }
   }
 
@@ -1953,7 +1953,7 @@ void deviceRunLoop() {
         break;
       case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
-	  // Todo: Check we have coms with shield...
+        // Todo: Check we have coms with shield...
         deviceReady[a] = BMDCamCtrl[deviceMap[a]].hasInitialized();
 #endif
         break;
@@ -2874,60 +2874,78 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
   }
   uint8_t temp;
   uint16_t retVal = 0;
+  uint8_t tempShift;
 
   switch (globalConfigMem[actionPtr]) {
-  case 0: // Set Shift
-    if (actDown) {
-      if (value != BINARY_EVENT) { // Value input
-        _systemShift = constrain(constrain(map(value, 0, 1000, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)) + 1), 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1))), (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
-      } else {
-        if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
-          pulses = (globalConfigMem[actionPtr + 2] == 3 ? 1 : -1) << 1;
-        } else if (globalConfigMem[actionPtr + 2] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
-          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
-          _systemHWcActionCache[HWc][actIdx] = _systemShift;
-          _systemShift = constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1));
+  case 0:                                                                                                                                                               // Set Shift
+    tempShift = (globalConfigMem[actionPtr + 3] > 0 && globalConfigMem[actionPtr + 3] <= 4) ? _systemShiftRegister[globalConfigMem[actionPtr + 3] - 1] : _systemShift; // Get shift register value
+
+    if (globalConfigMem[actionPtr + 2] == 5) { // previous return value
+      if ((_retValue & 0x20 ? 1 : 0) != _systemHWcActionCacheFlag[HWc][actIdx]) {
+        _systemHWcActionCacheFlag[HWc][actIdx] = (_retValue & 0x20 ? 1 : 0);
+		tempShift = constrain(_systemHWcActionCacheFlag[HWc][actIdx] ? globalConfigMem[actionPtr + 1] : 0, (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1));
+       // Serial << "SERIAL RETURN VALUE: " << _systemHWcActionCacheFlag[HWc][actIdx] << "=>" << tempShift << "\n";
+      }
+    } else {
+      if (actDown) {
+        if (value != BINARY_EVENT) { // Value input
+          tempShift = constrain(constrain(map(value, 0, 1000, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)) + 1), 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1))), (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
         } else {
-          _systemShift = constrain(_systemHWcActionCache[HWc][actIdx], (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
-          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+          if (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) { // Cycle up/down
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;                                  // Used to show button is highlighted here
+            pulses = (globalConfigMem[actionPtr + 2] == 3 ? 1 : -1) << 1;
+          } else if (globalConfigMem[actionPtr + 2] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+            _systemHWcActionCache[HWc][actIdx] = tempShift;
+            tempShift = constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1));
+          } else {
+            tempShift = constrain(_systemHWcActionCache[HWc][actIdx], (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+          }
+        }
+      }
+      if (actUp && globalConfigMem[actionPtr + 2] == 1) { // "Hold Down"
+        tempShift = constrain(_systemHWcActionCache[HWc][actIdx], (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
+      }
+      if (actUp && (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) { // "Cycle"
+        _systemHWcActionCacheFlag[HWc][actIdx] = false;
+      }
+      if (pulses & 0xFFFE) {
+        tempShift = pulsesHelper(tempShift, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)), true, pulses, 1, 1);
+      }
+      if (debugMode && (actDown || (pulses & 0xFFFE))) {
+        Serial << F("SHIFT: ") << tempShift << F("\n");
+      }
+      retVal = (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (tempShift == globalConfigMem[actionPtr + 1] ? (4 | 0x20) : 5);
+
+      if (extRetValIsWanted()) {
+        temp = (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) ? globalConfigMem[actionPtr + 1] : tempShift;
+
+        extRetVal(temp, temp == 0 || (temp == 1 && globalConfigMem[actionPtr + 1] < 2) ? 7 : 0); // , pulses&B1 - not using this because it has no significance for this type of action.
+        extRetValShortLabel(PSTR("Shift"));                                                      // TODO: Put in reg A-D in label if applicable
+        extRetValLongLabel(PSTR("Shift Level"));
+
+        if (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) {
+          extRetValColor(retVal & 0x20 ? B100110 : B101010);
+          extRetValSetLabel(true);
+        } else {
+          extRetValColor(B100110);
+        }
+
+        if (temp == 0) {
+          extRetValTxt_P(PSTR("Off"), 0);
+        } else if (temp == 1 && globalConfigMem[actionPtr + 1] < 2) {
+          extRetValTxt_P(PSTR("On"), 0);
         }
       }
     }
-    if (actUp && globalConfigMem[actionPtr + 2] == 1) { // "Hold Down"
-      _systemShift = constrain(_systemHWcActionCache[HWc][actIdx], (uint16_t)0, (uint16_t)(SK_MAXACTIONS - 1));
-    }
-    if (actUp && (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) { // "Cycle"
-      _systemHWcActionCacheFlag[HWc][actIdx] = false;
-    }
-    if (pulses & 0xFFFE) {
-      _systemShift = pulsesHelper(_systemShift, 0, constrain(globalConfigMem[actionPtr + 1], (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1)), true, pulses, 1, 1);
-    }
-    if (debugMode && (actDown || (pulses & 0xFFFE))) {
-      Serial << F("SHIFT: ") << _systemShift << F("\n");
-    }
-    retVal = (globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4) ? (_systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5) : (_systemShift == globalConfigMem[actionPtr + 1] ? (4 | 0x20) : 5);
 
-    if (extRetValIsWanted()) {
-      temp = (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) ? globalConfigMem[actionPtr + 1] : _systemShift;
-
-      extRetVal(temp, temp == 0 || (temp == 1 && globalConfigMem[actionPtr + 1] < 2) ? 7 : 0); // , pulses&B1 - not using this because it has no significance for this type of action.
-      extRetValShortLabel(PSTR("Shift"));
-      extRetValLongLabel(PSTR("Shift Level"));
-
-      if (_systemHWcActionPrefersLabel[HWc] && !(globalConfigMem[actionPtr + 2] == 3 || globalConfigMem[actionPtr + 2] == 4)) {
-        extRetValColor(retVal & 0x20 ? B100110 : B101010);
-        extRetValSetLabel(true);
-      } else {
-        extRetValColor(B100110);
-      }
-
-      if (temp == 0) {
-        extRetValTxt_P(PSTR("Off"), 0);
-      } else if (temp == 1 && globalConfigMem[actionPtr + 1] < 2) {
-        extRetValTxt_P(PSTR("On"), 0);
-      }
+    if (globalConfigMem[actionPtr + 3] > 0 && globalConfigMem[actionPtr + 3] <= 4) {
+      _systemShiftRegister[globalConfigMem[actionPtr + 3] - 1] = tempShift;
+    } else {
+      _systemShift = tempShift;
     }
+
     return retVal;
     break;
   case 1: // Set State
@@ -3254,14 +3272,14 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
     if (globalConfigMem[actionPtr + 1] < 4) {
       if (actDown) {
 
-		  if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
-            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
-            _systemHWcActionCache[HWc][actIdx] = _systemScaler[globalConfigMem[actionPtr + 1]];
-            _systemScaler[globalConfigMem[actionPtr + 1]] = globalConfigMem[actionPtr + 2];
-          } else {
-            _systemScaler[globalConfigMem[actionPtr + 1]] = _systemHWcActionCache[HWc][actIdx];
-            _systemHWcActionCacheFlag[HWc][actIdx] = false;
-          }
+        if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+          _systemHWcActionCache[HWc][actIdx] = _systemScaler[globalConfigMem[actionPtr + 1]];
+          _systemScaler[globalConfigMem[actionPtr + 1]] = globalConfigMem[actionPtr + 2];
+        } else {
+          _systemScaler[globalConfigMem[actionPtr + 1]] = _systemHWcActionCache[HWc][actIdx];
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
       }
       if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
         _systemScaler[globalConfigMem[actionPtr + 1]] = _systemHWcActionCache[HWc][actIdx];
@@ -3291,7 +3309,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
     return retVal;
     break;
   case 15: // Local Shift Level Register
-
+           // No implementation here, see inside actionDispatch where it is hardcoded.
     break;
   }
 
@@ -3335,12 +3353,13 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
       Serial << F("\n");
     }
     uint16_t stateBehaviourPtr = getConfigMemIndex(HWcNum - 1, _systemState); // Fetching pointer to state behaviour
-    uint16_t retValue = 0;                                                    // Returns zero by default (inactive element)
+    _retValue = 0;                                                            // Returns zero by default (inactive element)
     uint16_t retValueT = 0;                                                   // Preliminary return value
     if (stateBehaviourPtr > 0) {                                              // If there is some configuration to relate to....
       uint8_t stateLen = globalConfigMem[stateBehaviourPtr - 1];
       bool shiftLevelMatch = false;
       uint8_t matchShiftValue = _systemShift;
+      bool firstPass = true;
       // Traverse actions in state behaviour
       while (!shiftLevelMatch) {
         uint8_t actIdx = 0;
@@ -3351,39 +3370,40 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
             break; // actIdx at or over SK_MAXACTIONS would result in memory leaks in various evaluation functions which would trust HWc and actIdx to not exceed the bounds of the _systemHWcActionCache array
           if (lptr > 0 && (globalConfigMem[stateBehaviourPtr + lptr] & 16) > 0)
             sShift++; // If a shift divider is found (cannot be the first element)
+
+          uint8_t devIdx = globalConfigMem[stateBehaviourPtr + lptr] & 15;
           if ((specificAction == 0 && matchShiftValue == sShift) || (specificAction == actIdx + 1)) {
             shiftLevelMatch = true;
             // Traverse actions in shift level:
-            uint8_t devIdx = globalConfigMem[stateBehaviourPtr + lptr] & 15;
             if (devIdx > 0 && devIdx < sizeof(deviceArray) && deviceEn[devIdx]) {
               if (deviceEn[devIdx] && deviceReady[devIdx]) {
                 switch (pgm_read_byte_near(deviceArray + devIdx)) {
                 case SK_DEV_ATEM:
 #if SK_DEVICES_ATEM
                   retValueT = evaluateAction_ATEM(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_HYPERDECK:
 #if SK_DEVICES_HYPERDECK
                   retValueT = evaluateAction_HYPERDECK(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_VIDEOHUB:
 #if SK_DEVICES_VIDEOHUB
                   retValueT = evaluateAction_VIDEOHUB(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SMARTSCOPE:
 #if SK_DEVICES_SMARTSCOPE
                   retValueT = evaluateAction_SMARTSCOPE(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_BMDCAMCTRL:
@@ -3401,57 +3421,57 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                   Wire.endTransmission();
                   delay(2);
 #endif
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SONYRCP:
 #if SK_DEVICES_SONYRCP
                   retValueT = evaluateAction_SONYRCP(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_VMIX:
 #if SK_DEVICES_VMIX
                   retValueT = evaluateAction_VMIX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_ROLANDVR50:
 #if SK_DEVICES_ROLANDVR50
                   retValueT = evaluateAction_ROLANDVR50(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
                   retValueT = evaluateAction_PANAAWHEX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_MATROXMONARCH:
 #if SK_DEVICES_MATROXMONARCH
                   retValueT = evaluateAction_MATROXMONARCH(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_H264REC:
 #if SK_DEVICES_H264REC
                   retValueT = evaluateAction_H264REC(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SONYVISCAIP:
 #if SK_DEVICES_SONYVISCAIP
                   retValueT = evaluateAction_SONYVISCAIP(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-                  if (retValue == 0)
-                    retValue = retValueT; // Use first ever return value in case of multiple actions.
+                  if (_retValue == 0)
+                    _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 }
@@ -3460,17 +3480,24 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
               }
             } else if (devIdx == 15) {
               retValueT = evaluateAction_system(stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-              if (retValue == 0)
-                retValue = retValueT; // Use first ever return value in case of multiple actions.
+              if (_retValue == 0)
+                _retValue = retValueT; // Use first ever return value in case of multiple actions.
             }
           } else if ((specificAction == 0 && matchShiftValue < sShift) || (specificAction > 0 && specificAction < actIdx + 1)) {
 
             break;
           }
+		  if (firstPass && sShift == 0 && devIdx == 15 && globalConfigMem[stateBehaviourPtr + lptr + 1] == 15) { // Local Shift Level Register setting (must be in shift=0 part of code, should also be first item, otherwise preceding items will be called.)
+            if (globalConfigMem[stateBehaviourPtr + lptr + 2] < 4) {
+          //    Serial << "Local SLR: " << globalConfigMem[stateBehaviourPtr + lptr + 2] << "=" << _systemShiftRegister[globalConfigMem[stateBehaviourPtr + lptr + 2]] << "\n";
+              matchShiftValue = _systemShiftRegister[globalConfigMem[stateBehaviourPtr + lptr + 2]];
+            }
+          }
 
           lptr += (globalConfigMem[stateBehaviourPtr + lptr] >> 5) + 2; // Add length
           actIdx++;
         }
+        firstPass = false;
         if (!shiftLevelMatch) {
           matchShiftValue = 0;
         }
@@ -3480,7 +3507,7 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
     deviceRunLoop();
 
     if (actionMirror == 0) { // If no mirror was specified, just return value
-      return retValue;
+      return _retValue;
     } else { // If a mirror was specified, change HWcNum
       HWcNum = actionMirror;
       actionMirror = 0;
