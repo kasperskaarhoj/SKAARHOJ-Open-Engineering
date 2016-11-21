@@ -3574,6 +3574,8 @@ void initController() {
   digitalWrite(SK_MODULAR_ENPIN, HIGH);  // Disabled
 #endif
 
+  Serial << F("SK_VERSION: ") << SK_VERSION << "\n";
+
 // Setup Config:
 #if SK_ETHMEGA
   pinMode(A1, INPUT_PULLUP); // CFG input on ethermega MMBOS

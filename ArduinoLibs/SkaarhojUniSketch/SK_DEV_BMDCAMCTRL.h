@@ -55,33 +55,83 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
 
     break;
 
-  case 1: // Iris
+  case 1: {// Iris
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
-    if (actDown) {
-      if (value != BINARY_EVENT) { // Value input
-        BMDCamCtrl[devIndex].setIris(cam, 1.0 - (float)value / 1000.0);
-      } else { // Binary - auto iris
-        Serial << F("Perform Auto Iris... \n");
-        BMDCamCtrl[devIndex].setAutoIris(cam);
-      }
-    }
-    if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setIris(cam, pulsesHelper(BMDCamCtrl[devIndex].getIris(cam) * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0);
-    }
 
     uint16_t limLo, limHi;
     if (globalConfigMem[actionPtr + 2] > 0 && globalConfigMem[actionPtr + 2] <= 4) {
       limLo = _systemRangeLower[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
       limHi = _systemRangeUpper[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
-      if (round(100.0 - BMDCamCtrl[devIndex].getIris(cam) * 100.0) > limHi) {
-        BMDCamCtrl[devIndex].setIris(cam, round(100.0 - (float)limHi) / 100.0);
-      }
-      if (round(100.0 - BMDCamCtrl[devIndex].getIris(cam) * 100.0) < limLo) {
-        BMDCamCtrl[devIndex].setIris(cam, round(100.0 - (float)limLo) / 100.0);
-      }
     } else {
       limLo = 0;
       limHi = 100;
+    }
+
+    float startVal = BMDCamCtrl[devIndex].getIris(cam);
+    float outVal = startVal;
+
+    float scaler = 1.0;
+    
+    // Scalers
+    if(globalConfigMem[actionPtr + 3] > 0 && globalConfigMem[actionPtr + 3] <= 4) {
+      switch(_systemScaler[globalConfigMem[actionPtr + 3] - 1]) {
+        case 1:
+          scaler = 0.5;
+          break;
+        case 2:
+          scaler = 0.25;
+          break;
+        case 3:
+          scaler = 2;
+          break;
+      }
+    }
+
+    if(scaler == 1.0) {
+      _systemHWcActionCacheFlag[HWc][actIdx] = false;
+      _systemHWcActionCache[HWc][actIdx] = 500;
+    } else {
+      if(!_systemHWcActionCacheFlag[HWc][actIdx]) {
+        _systemHWcActionCache[HWc][actIdx] = value-((value-500)*scaler);
+        _systemHWcActionCacheFlag[HWc][actIdx] = true;
+      }
+    }
+
+    if (actDown) {
+      if (value != BINARY_EVENT) { // Value input
+        if(scaler != 1.0) {
+          outVal = 1.0 - (float)(_systemHWcActionCache[HWc][actIdx]+(value-500)*scaler)/1000.0;
+        } else {
+          outVal = 1.0 - (float)value / 1000.0;
+        }
+      } else { // Binary - auto iris
+        Serial << F("Perform Auto Iris... \n");
+        BMDCamCtrl[devIndex].setAutoIris(cam);
+      }
+    }
+
+    if (pulses & 0xFFFE) {
+      outVal = pulsesHelper(BMDCamCtrl[devIndex].getIris(cam) * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0;
+    }
+
+
+    if (round(100.0 - outVal * 100.0) > limHi) {
+      if(scaler != 1.0) {
+        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limHi*10);
+        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
+      }
+      outVal = (100.0 - (float)limHi)/100.0;
+    }
+    if (round(100.0 - outVal * 100.0) < limLo) {
+      if(scaler != 1.0) {
+        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limLo*10);
+        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
+      }
+      outVal = (100.0 - (float)limLo)/100.0;
+    }
+
+    if(startVal != outVal) {
+      BMDCamCtrl[devIndex].setIris(cam, outVal);
     }
 
     if (extRetValIsWanted()) {
@@ -92,7 +142,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       extRetValColor(B011011);
     }
     break;
-
+  }
   case 2: // Sensor gain
   {
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);

@@ -1491,28 +1491,95 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       extRetValColor(B101000);
     }
     break;
-  case 31: // Iris
+  case 31:{// Iris
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
+
+    float startVal = (float)AtemSwitcher[devIndex].getCameraControlIris(cam) / (1<<11);
+    float outVal = startVal;
+
+    uint16_t limLo, limHi;
+    bool setVal = false;
+
+    // Limiters
+    if (globalConfigMem[actionPtr + 2] > 0 && globalConfigMem[actionPtr + 2] <= 4) {
+      limLo = _systemRangeLower[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
+      limHi = _systemRangeUpper[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
+    } else {
+      limLo = 0;
+      limHi = 100;
+    }
+
+    float scaler = 1.0;
+    // Scalers
+    if(globalConfigMem[actionPtr + 3] > 0 && globalConfigMem[actionPtr + 3] <= 4) {
+      switch(_systemScaler[globalConfigMem[actionPtr + 3] - 1]) {
+        case 1:
+          scaler = 0.5;
+          break;
+        case 2:
+          scaler = 0.25;
+          break;
+        case 3:
+          scaler = 2;
+          break;
+      }
+    }
+
+    if(scaler == 1.0) {
+      _systemHWcActionCacheFlag[HWc][actIdx] = false;
+      _systemHWcActionCache[HWc][actIdx] = 500;
+    } else {
+      if(!_systemHWcActionCacheFlag[HWc][actIdx]) {
+        _systemHWcActionCache[HWc][actIdx] = value-((value-500)*scaler);
+        _systemHWcActionCacheFlag[HWc][actIdx] = true;
+      }
+    }
+
     if (actDown) {
       if (value != BINARY_EVENT) { // Value input
-        int16_t outValue = constrain(map(value, 1000, 0, 0, 2048), 0, 2048);
-        AtemSwitcher[devIndex].setCameraControlIris(cam, outValue);
+        if(scaler != 1.0) {
+          outVal = 1.0 - (float)(_systemHWcActionCache[HWc][actIdx]+(value-500)*scaler)/1000.0;
+        } else {
+          outVal = 1.0 - (float)value / 1000.0;
+        }
       } else { // Binary - auto iris
-        Serial << F("Perform Auto Iris...\n");
+        Serial << F("Perform Auto Iris... \n");
         AtemSwitcher[devIndex].setCameraControlAutoIris(cam, 0);
       }
     }
+
     if (pulses & 0xFFFE) {
-      AtemSwitcher[devIndex].setCameraControlIris(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlIris(cam), 0, 2048, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 20, 200));
+      outVal = pulsesHelper(outVal * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0;
     }
+
+    if (round(100.0 - outVal * 100.0) > limHi) {
+      if(scaler != 1.0) {
+        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limHi*10);
+        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
+      }
+      outVal = (100.0 - (float)limHi)/100.0;
+    }
+    if (round(100.0 - outVal * 100.0) < limLo) {
+      if(scaler != 1.0) {
+        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limLo*10);
+        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
+      }
+      outVal = (100.0 - (float)limLo)/100.0;
+    }
+
+    if(startVal != outVal) {
+      AtemSwitcher[devIndex].setCameraControlIris(cam, outVal * (1<<11));
+    }
+
     if (extRetValIsWanted()) {
       extRetVal(100 - constrain(((long)AtemSwitcher[devIndex].getCameraControlIris(cam) * 100) >> 11, 0, 100), 2, _systemHWcActionFineFlag[HWc]);
-      extRetValScale(1, 0, 100, 0, 100);
+      extRetValScale(1, 0, 100, limLo, limHi);
       extRetValShortLabel(PSTR("Iris"));
       extRetValLongLabel(PSTR("Iris Cam "), cam);
       extRetValColor(B011011);
     }
     break;
+  }
   case 32:                                                                 // Sensor Gain
     static const uint16_t sensorGains[] PROGMEM = {512, 1024, 2048, 4096}; // 4
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
@@ -2341,6 +2408,19 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           extRetValTxt_P(PSTR("O:"), 1);
       break;
     }
+
+    case 53: // Audio peaks
+      break;
+    case 54: // Zoom (Nomalised)
+      if(actDown && value != BINARY_EVENT) {
+
+      }
+
+      if(pulses & 0xFFFE) {
+
+      }
+
+      break;
   }
 
   // Default:
