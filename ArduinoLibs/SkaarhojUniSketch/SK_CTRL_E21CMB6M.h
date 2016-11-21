@@ -30,6 +30,8 @@ void HWsetupModules(bool noTest = false) { // Will sweep the chain for modules a
       break;
     }
 
+    uint16_t *cal;
+
     // Initialize
     switch (modId) {
     case 1: // AUX
@@ -40,14 +42,45 @@ void HWsetupModules(bool noTest = false) { // Will sweep the chain for modules a
       buttons4[0].setDefaultColor(0); // Off by default
       if (getConfigMode()) {
         Serial << F("Test: BI8 Boards\n");
-        buttons3[0].testSequence(10);
-        buttons4[0].testSequence(10);
+        buttons3[0].testSequence();
+        buttons4[0].testSequence();
       }
       buttons3[0].setButtonColorsToDefault();
       buttons4[0].setButtonColorsToDefault();
       break;
     case 6: // Display module
       Serial << F("'Display'\n");
+
+      // Encoders
+      Serial << F("Init Upper Encoders\n");
+      encoders.begin(2);
+      encoders.setStateCheckDelay(250);
+      statusLED(QUICKBLANK);
+
+      Serial << F("Init Lower Encoders\n");
+      encoders2.begin(1);
+      encoders2.setStateCheckDelay(250);
+      statusLED(QUICKBLANK);
+
+      Serial << F("Init Details Display\n");
+      detailsDisplay.begin(0);
+      detailsDisplay.clearDisplay(); // clears the screen and buffer
+      for (uint8_t a = 0; a < 8; a++) {
+        if (a == 4)
+          detailsDisplay.setRotation(2);
+        detailsDisplay.drawBitmap((a & 3) << 6, 0, welcomeGraphics[a & 3], 64, 32, 1, true);
+      }
+      detailsDisplay.display(B1);
+
+      // Set Contrast and Current:
+      detailsDisplay.sendCommand(0xC1, B1);
+      detailsDisplay.sendData(15 << 4, B1);
+
+      // Master Contrast Current Control:
+      detailsDisplay.sendCommand(0xC7, B1);
+      detailsDisplay.sendData(15, B1);
+
+      detailsDisplay.setRotation(0);
       break;
     case 3: // CCU module
       Serial << F("'CCU'\n");
@@ -86,12 +119,90 @@ void HWsetupModules(bool noTest = false) { // Will sweep the chain for modules a
       break;
     case 5: // SSW module
       Serial << F("'SSW'\n");
+
+      buttons8.begin(0);
+      buttons8.setDefaultColor(0); // Off by default
+      if (getConfigMode()) {
+        Serial << F("Test: BI8 Boards\n");
+        buttons8.testSequence(0x3F);
+      }
+      buttons8.setButtonColorsToDefault();
+
+      SSWbuttons.begin(4);
+      SSWbuttons.setRotation(0);
+      SSWbuttons.setButtonBrightness(7, B1111);
+      SSWbuttons.setButtonBrightness(7, B1111);
+      SSWbuttons.setButtonColor(0, 2, 3, B1111);
+      for (uint8_t i = 0; i < 64; i++) {
+
+        SSWbuttons.clearDisplay();
+        SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[0], 64, 32, 1, true);
+        SSWbuttons.display(B01); // Write
+        SSWbuttons.clearDisplay();
+        SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[1], 64, 32, 1, true);
+        SSWbuttons.display(B10); // Write
+        SSWbuttons.clearDisplay();
+        SSWbuttons.drawBitmap(64 - i - 1, 0, welcomeGraphics[2], 64, 32, 1, true);
+        SSWbuttons.display(B100); // Write
+        SSWbuttons.clearDisplay();
+        SSWbuttons.drawBitmap(-(64 - i - 1), 0, welcomeGraphics[3], 64, 32, 1, true);
+        SSWbuttons.display(B1000); // Write
+      }
       break;
     case 4: // Cut Module
       Serial << F("'Cut'\n");
+
+      buttons7.begin(1);
+      buttons6.begin(2);
+      buttons7.setDefaultColor(0); // Off by default
+      buttons6.setDefaultColor(0); // Off by default
+      if (getConfigMode()) {
+        Serial << F("Test: BI8 Boards\n");
+        buttons7.testSequence();
+        buttons6.testSequence();
+      }
+      buttons7.setButtonColorsToDefault();
+      buttons6.setButtonColorsToDefault();
+
       break;
     case 2: // Audio Module
       Serial << F("'Audio'\n");
+
+      AudioMasterControl.begin(6, 0);
+      AudioMasterControl.setIsMasterBoard();
+	  
+	  cal = getAnalogComponentCalibration(2);
+
+      AudioMasterPot.uniDirectionalSlider_init(cal[2], cal[0], cal[1], 0, 0);
+      AudioMasterPot.uniDirectionalSlider_disableUnidirectionality(true);
+
+      if (getConfigMode()) {
+        Serial << F("Test: AudioMasterControl\n");
+        for (int16_t j = 0; j < 5; j++) {
+          AudioMasterControl.setButtonLight(j + 1, true);
+          delay(100);
+        }
+        for (int16_t j = 0; j < 5; j++) {
+          AudioMasterControl.setButtonLight(j + 1, false);
+          delay(100);
+        }
+        for (int16_t i = 1; i <= 2; i++) {
+          for (int16_t j = 0; j < 4; j++) {
+            AudioMasterControl.setChannelIndicatorLight(i, j);
+            delay(100);
+          }
+        }
+        AudioMasterControl.setChannelIndicatorLight(1, 0);
+        AudioMasterControl.setChannelIndicatorLight(2, 0);
+        for (uint16_t i = 0; i <= 16445; i += 100) {
+          AudioMasterControl.VUmeter(16445 - i, i);
+        }
+        AudioMasterControl.VUmeter(16445, 16445);
+        delay(500);
+        AudioMasterControl.VUmeter(0, 0);
+      } else
+        delay(500);
+      statusLED(QUICKBLANK);
       break;
     case 7: // GPIO module
       Serial << F("'GPIO'\n");
@@ -224,6 +335,42 @@ void HWtestL() {
         buttons4[0].testProgramme(0x3F);
         break;
       case 6: // Display module
+        encoders.runLoop();
+        encoders2.runLoop();
+
+        static uint8_t ptr = 0;
+
+        switch (ptr % 6) {
+        case 1:
+          testGenerateExtRetVal(ptr + 4);
+          writeDisplayTile(detailsDisplay, 0, 0, B1, 3, 1);
+          break;
+        case 2:
+          testGenerateExtRetVal(ptr + 6);
+          writeDisplayTile(detailsDisplay, 128, 0, B1, 3);
+          break;
+        case 3:
+          testGenerateExtRetVal(ptr + 7);
+          writeDisplayTile(detailsDisplay, 192, 0, B1, 2);
+          break;
+        case 4:
+          testGenerateExtRetVal(ptr + 99);
+          writeDisplayTile(detailsDisplay, 0, 32, B1, 1);
+          break;
+        case 5:
+          testGenerateExtRetVal(ptr + 99);
+          writeDisplayTile(detailsDisplay, 64, 32, B1, 1);
+          break;
+        default:
+          testGenerateExtRetVal(ptr + 77);
+          writeDisplayTile(detailsDisplay, 128, 32, B1, 0, 1);
+          break;
+        }
+
+        ptr++;
+
+        encoders.testProgramme(B1111);
+        encoders2.testProgramme(B1111);
         break;
       case 3: // CCU module
 
@@ -262,10 +409,32 @@ void HWtestL() {
         buttons5.testProgramme(0xF);
         break;
       case 5: // SSW module
+        if ((millis() & 0x4000) == 0x4000) {
+          testGenerateExtRetVal(millis() >> 11);
+          writeDisplayTile(SSWbuttons, 0, 0, B1111);
+        } else {
+          SSWbuttons.testProgramme(B1111);
+        }
+
+        buttons8.testProgramme(0x3F);
         break;
       case 4: // Cut Module
+        buttons7.testProgramme(B1);
+        buttons6.testProgramme(B10001);
         break;
       case 2: // Audio Module
+        if (AudioMasterPot.uniDirectionalSlider_hasMoved()) {
+          Serial << AudioMasterPot.uniDirectionalSlider_position() << F("\n");
+
+          AudioMasterControl.VUmeter(AudioMasterPot.uniDirectionalSlider_position() * 17, (1000 - AudioMasterPot.uniDirectionalSlider_position()) * 17);
+        }
+
+        AudioMasterControl.setChannelIndicatorLight(1, (millis() >> 10) & B11);
+
+        // Buttons:
+        for (int16_t a = 0; a < 5; a++) {
+          AudioMasterControl.setButtonLight(a + 1, (millis() >> (10 + a)) & B1);
+        }
         break;
       case 7: // GPIO module
         GPIOboard.setOutputAll(GPIOboard.inputIsActiveAll() ^ ((millis() + 500) >> 12));
@@ -315,9 +484,9 @@ void HWrunLoop() {
 
       uint8_t bMap_30[] = {45, 44, 43, 42, 41, 40}; // These numbers refer to the drawing in the web interface
       uint8_t bMap_40[] = {39, 38, 37, 36, 35, 34}; // These numbers refer to the drawing in the web interface
-      uint8_t encMap2[] = {0, 73, 0, 74, 0};  // These numbers refer to the drawing in the web interface
+      uint8_t encMap2[] = {0, 73, 0, 74, 0};        // These numbers refer to the drawing in the web interface
       uint8_t b16Map5[] = {77, 75, 78, 76};
-	  static bool gpioStates[] = {false, false, false, false, false, false, false, false};
+      static bool gpioStates[] = {false, false, false, false, false, false, false, false};
 
       // Initialize
       switch (modId) {

@@ -796,3 +796,22 @@ SkaarhojBI16 buttons5;
 
 // GPIO module (MID: 7)
 SkaarhojGPIO2x8 GPIOboard;
+
+// MID 6 - display module
+SkaarhojEncoders encoders;
+SkaarhojEncoders encoders2;
+SkaarhojOLED64x256 detailsDisplay;
+
+// Cut module:
+SkaarhojBI8 buttons6;
+SkaarhojBI8 buttons7;
+
+// SSW module
+SkaarhojBI8 buttons8;
+SkaarhojSmartSwitch2 SSWbuttons;
+
+// Audio
+SkaarhojAudioControl2 AudioMasterControl;
+SkaarhojAnalog AudioMasterPot;
+
+
