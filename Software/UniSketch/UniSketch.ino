@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_E21CMB6M
+#define SK_MODEL SK_RCP
 
 
 
@@ -17,7 +17,7 @@
 #define SK_E21CMB6M_OPTION_VSLIDER true     // AUTOGEN: true,false
 #define SK_E21TVS_OPTION_GPIO false     // AUTOGEN: true,false
 #define SK_E21GPIO_OPTION_GPIO2 false     // AUTOGEN: true,false
-#define SK_RCP_OPTION_ENCODER true     // AUTOGEN: true,false
+#define SK_RCP_OPTION_ENCODER false     // AUTOGEN: true,false
 
 #define SK_C90D_OPTION_DISABLEMASK 0b00000000000000000000000000000000    // Must have 32 digits. Disables buttons #1-#32 from left. AUTOGEN: 0
 #define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 0,1,2,3,4
@@ -35,6 +35,7 @@
 // ****************************
 // NO USER CHANGE BELOW!
 // ****************************
+#define SK_VERSION "custom-build"
 #define SK_SERIAL_OUTPUT 1
 #ifndef SK_ETHMEGA
 #define SK_ETHMEGA 0
