@@ -6,9 +6,6 @@
  */
  
 #include "Wire.h"
-extern "C" { 
-#include "utility/twi.h"  // from Wire library, so we can do bus scanning
-}
 
 #define TCAADDR 0x70
 #include "Streaming.h"
@@ -40,10 +37,10 @@ void setup()
       for (uint8_t addr = 0; addr<=127; addr++) {
         if (addr == TCAADDR) continue;
       
-        uint8_t data;
-        if (! twi_writeTo(addr, &data, 0, 1, 1)) {
-           Serial.print("Found I2C 0x");  
-           Serial << _HEXPADL(addr,2,"0") << " (" << _DECPADL(addr,3," ") << ")" << " = " << _BINPADL(addr,7,"0") << "_ = " << (addr&0xF8) << "+" << (addr&0x7) << "\n";
+        Wire.beginTransmission(addr);
+        if(!Wire.endTransmission()) {
+          Serial.print("Found I2C 0x");  
+          Serial << _HEXPADL(addr,2,"0") << " (" << _DECPADL(addr,3," ") << ")" << " = " << _BINPADL(addr,7,"0") << "_ = " << (addr&0xF8) << "+" << (addr&0x7) << "\n";
         }
       }
     }
