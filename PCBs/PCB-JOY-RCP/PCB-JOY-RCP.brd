@@ -161,7 +161,7 @@
 <board>
 <plain>
 <wire x1="18" y1="55.5" x2="0" y2="55.5" width="0" layer="20"/>
-<text x="7.823" y="0.335" size="0.8128" layer="121" ratio="12" rot="MR90">PCB-JOY-RCP, v10-16b</text>
+<text x="7.823" y="0.335" size="0.8128" layer="121" ratio="12" rot="MR90">PCB-JOY-RCP, v11-16</text>
 <wire x1="0" y1="0" x2="18" y2="0" width="0" layer="20"/>
 <wire x1="18" y1="55.5" x2="18" y2="0" width="0" layer="20"/>
 <wire x1="0" y1="47.88" x2="0" y2="55.5" width="0" layer="20"/>
@@ -756,7 +756,7 @@ design rules under a new name.</description>
 <attribute name="SKAARHOJ_ID" value="SK_10uFTant" x="10.415" y="32.23" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="U$1" library="SKAARHOJ" package="3.2MMPAD6MM" value="GNDPAD6MM" x="3.5" y="3.5" rot="R180"/>
-<element name="C8" library="freetronics" package="EIA3216" value="10uF 6.3V A TANT" x="-22.86" y="-29.21"/>
+<element name="C8" library="freetronics" package="EIA3216" value="10uF 6.3V A TANT" x="12.7" y="20.955" rot="MR0"/>
 </elements>
 <signals>
 <signal name="5V" class="1">
@@ -972,7 +972,22 @@ design rules under a new name.</description>
 <via x="9.2456" y="12.9032" extent="1-16" drill="0.6096"/>
 <via x="9.2456" y="15.748" extent="1-16" drill="0.6096"/>
 <contactref element="C8" pad="C"/>
-<wire x1="3.5" y1="3.5" x2="-24.26" y2="-29.21" width="0" layer="19" extent="1-1"/>
+<wire x1="16.375" y1="21" x2="14.125" y2="21" width="0.3048" layer="16"/>
+<wire x1="16.5" y1="21.125" x2="16.375" y2="21" width="0.3048" layer="16"/>
+<wire x1="14.125" y1="21" x2="14.1" y2="20.955" width="0.3048" layer="16"/>
+<wire x1="16.5" y1="21.125" x2="16.538" y2="21.21" width="0.3048" layer="16"/>
+<polygon width="0.254" layer="1">
+<vertex x="0" y="0"/>
+<vertex x="17.78" y="0"/>
+<vertex x="17.78" y="55.88"/>
+<vertex x="0" y="55.88"/>
+</polygon>
+<polygon width="0.254" layer="16">
+<vertex x="0" y="0"/>
+<vertex x="17.78" y="0"/>
+<vertex x="17.78" y="55.88"/>
+<vertex x="0" y="55.88"/>
+</polygon>
 </signal>
 <signal name="A1">
 <contactref element="IC1" pad="13"/>
@@ -1148,18 +1163,21 @@ design rules under a new name.</description>
 <wire x1="15.3416" y1="24.892" x2="15.24" y2="24.9936" width="0.3048" layer="16"/>
 <wire x1="15.3416" y1="31.1912" x2="15.42" y2="31.205" width="0.3048" layer="16"/>
 <wire x1="16.4592" y1="23.7744" x2="16.538" y2="23.75" width="0.3048" layer="16"/>
-<wire x1="11.7856" y1="22.86" x2="10.9728" y2="23.6728" width="0.3048" layer="16"/>
+<wire x1="11.7856" y1="22.86" x2="11.4478" y2="23.1978" width="0.3048" layer="16"/>
+<wire x1="11.4478" y1="23.1978" x2="10.9728" y2="23.6728" width="0.3048" layer="16"/>
 <wire x1="13.3096" y1="22.86" x2="11.7856" y2="22.86" width="0.3048" layer="16"/>
 <wire x1="15.3416" y1="24.892" x2="13.3096" y2="22.86" width="0.3048" layer="16"/>
 <wire x1="10.9728" y1="23.6728" x2="10.835" y2="23.72" width="0.3048" layer="16"/>
 <wire x1="16.4592" y1="16.8656" x2="16.4592" y2="16.1544" width="0.3048" layer="16"/>
-<wire x1="13.4112" y1="19.9136" x2="16.4592" y2="16.8656" width="0.3048" layer="16"/>
-<wire x1="13.4112" y1="22.7584" x2="13.4112" y2="19.9136" width="0.3048" layer="16"/>
 <wire x1="16.4592" y1="16.1544" x2="16.538" y2="16.13" width="0.3048" layer="16"/>
-<wire x1="13.4112" y1="22.7584" x2="13.3096" y2="22.86" width="0.3048" layer="16"/>
 <via x="15.3416" y="6.1976" extent="1-16" drill="0.6096"/>
 <contactref element="C8" pad="A"/>
-<wire x1="15.3416" y1="6.1976" x2="-21.46" y2="-29.21" width="0" layer="19" extent="1-16"/>
+<wire x1="11.375" y1="23.125" x2="11.375" y2="21" width="0.3048" layer="16"/>
+<wire x1="11.375" y1="21" x2="11.3" y2="20.955" width="0.3048" layer="16"/>
+<wire x1="11.375" y1="23.125" x2="11.4478" y2="23.1978" width="0.3048" layer="16"/>
+<wire x1="16.375" y1="16.125" x2="11.5" y2="21" width="0.3048" layer="16"/>
+<wire x1="11.5" y1="21" x2="11.3" y2="20.955" width="0.3048" layer="16"/>
+<wire x1="16.375" y1="16.125" x2="16.538" y2="16.13" width="0.3048" layer="16"/>
 </signal>
 <signal name="N$3">
 <contactref element="L1" pad="1"/>
