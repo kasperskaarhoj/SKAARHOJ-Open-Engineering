@@ -62,12 +62,13 @@ class ATEMuni : public ATEMbase
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMuni.h:
 // **
 // *********************************
+
+
 
 private:
 	void _parseGetCommands(const char *cmdStr);
@@ -175,6 +176,7 @@ private:
 			int atemCameraControlGain[9];
 			int atemCameraControlWhiteBalance[9];
 			int atemCameraControlSharpeningLevel[9];
+			int atemCameraControlZoomNormalized[9];
 			int atemCameraControlZoomSpeed[9];
 			int atemCameraControlColorbars[9];
 			int atemCameraControlLiftR[9];
@@ -406,6 +408,7 @@ public:
 			int getCameraControlGain(uint8_t input);
 			int getCameraControlWhiteBalance(uint8_t input);
 			int getCameraControlSharpeningLevel(uint8_t input);
+			int getCameraControlZoomNormalized(uint8_t input);
 			int getCameraControlZoomSpeed(uint8_t input);
 			int getCameraControlColorbars(uint8_t input);
 			int getCameraControlLiftR(uint8_t input);
@@ -432,6 +435,7 @@ public:
 			void setCameraControlGain(uint8_t input, int gain);
 			void setCameraControlWhiteBalance(uint8_t input, int whiteBalance);
 			void setCameraControlSharpeningLevel(uint8_t input, int sharpeningLevel);
+			void setCameraControlZoomNormalized(uint8_t input, int zoomNormalized);
 			void setCameraControlZoomSpeed(uint8_t input, int zoomSpeed);
 			void setCameraControlColorbars(uint8_t input, int colorbars);
 			void setCameraControlLiftR(uint8_t input, int liftR);
