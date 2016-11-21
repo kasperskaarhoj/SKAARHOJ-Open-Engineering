@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_E21CMB6M
 
 
 
@@ -158,7 +158,12 @@ SkaarhojTools sTools(0);
 #elif(SK_MODEL == SK_E21CMB6M)
 #include "SkaarhojGPIO2x8.h"
 #include "Adafruit_GFX.h"
+#include "SkaarhojOLED64x256.h"
 #include "SkaarhojDisplayArray.h"
+#include "SkaarhojSmartSwitch2.h"
+#include "SkaarhojAudioControl2.h"
+#include "SkaarhojAnalog.h"
+#include "ADS7828.h"
 #include "SK_CFGDEF_E21CMB6M.h"
 #elif(SK_MODEL == SK_E21GPIO)
 #include "SkaarhojGPIO2x8.h"
