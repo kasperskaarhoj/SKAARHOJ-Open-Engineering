@@ -57,11 +57,6 @@ void HWcfgDisplay() { Serial << F("SK_MODEL: SK_RCP\n"); }
 uint8_t HWsetupL() {
   uint8_t retVal = 0;
 
-  // Set up I2C port for BMD Shield:
-  Wire.beginTransmission(0x70);
-  Wire.write(1); // Port 1
-  Wire.endTransmission();
-
   Serial << F("Init BI16 board\n");
   buttons.begin(4);
   buttons.setDefaultColor(0); // Off by default
@@ -204,6 +199,13 @@ uint8_t HWsetupL() {
   detailsDisplay.sendData(15, B1);
 
   addressSwitch_initIO();
+
+
+  // Set up I2C port for BMD Shield:
+  // Should be done AFTER any PCA9685 chips has been initialized
+  Wire.beginTransmission(0x70);
+  Wire.write(1); // Port 1
+  Wire.endTransmission();
 
   return retVal;
 }

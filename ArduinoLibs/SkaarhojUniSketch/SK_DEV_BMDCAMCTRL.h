@@ -425,6 +425,100 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
     break;
   }
+
+  case 16:{ // Tally
+    retVal = 5;
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
+    bool prv, pgm;
+    BMDCamCtrl[devIndex].getTally(cam, pgm, prv);
+
+    if(actDown && value == BINARY_EVENT) {
+      bool toggle = globalConfigMem[actionPtr + 3] > 0;
+
+      switch(globalConfigMem[actionPtr + 2]) {
+        case 0: // Tally off
+          BMDCamCtrl[devIndex].setTally(cam, false, false);
+          break;
+        case 1: // Red tally
+          BMDCamCtrl[devIndex].setTally(cam, (toggle?!pgm:pgm), false);
+          break;
+        case 2: // Green tally
+          BMDCamCtrl[devIndex].setTally(cam, false, (toggle?!prv:prv));
+          break;
+        case 3: // Both
+          BMDCamCtrl[devIndex].setTally(cam, (toggle?!pgm:pgm), (toggle?!prv:prv));
+          break;
+      }
+
+      _systemHWcActionCacheFlag[HWc][actIdx] = (pgm << 2) | (prv << 1) | 1;
+    }
+
+    if(pulses & 0xFFFE) {
+      uint8_t currentTally = pgm << 1 | prv;
+      switch(globalConfigMem[actionPtr + 2]) {
+          case 0: // Tally off
+            BMDCamCtrl[devIndex].setTally(cam, false, false);
+            break;
+          case 1: // Red tally
+            BMDCamCtrl[devIndex].setTally(cam, !pgm, prv);
+            break;
+          case 2: // Green tally
+            BMDCamCtrl[devIndex].setTally(cam, pgm, !prv);
+            break;
+          case 3: // Both
+            uint8_t tally = pulsesHelper(currentTally, 0, 3, true, pulses, 1, 1);
+            BMDCamCtrl[devIndex].setTally(cam, (tally >> 1) & 1, tally & 1);
+            break;
+      }
+    }
+
+    if(actUp && _systemHWcActionCacheFlag[HWc][actIdx] && globalConfigMem[actionPtr+3]==1) {
+        if(globalConfigMem[actionPtr + 3] == 1) {
+          BMDCamCtrl[devIndex].setTally(cam, (_systemHWcActionCacheFlag[HWc][actIdx] >> 2) & 1, (_systemHWcActionCacheFlag[HWc][actIdx] >> 1) & 1);
+        }
+        _systemHWcActionCacheFlag[HWc][actIdx] = false;
+    }
+
+    // Set return values 
+    switch(globalConfigMem[actionPtr + 2]) {
+        case 1: // Red tally
+          retVal = pgm ? (2 | 0x20) : 5;
+          break;
+        case 2: // Green tally
+          retVal = prv ? (3 | 0x20) : 5;
+          break;
+        case 3: // Both
+          retVal = pgm ? (2 | 0x20) : (prv ? (3 | 0x20) : 5);
+          break;
+    }
+
+    if (extRetValIsWanted()) {
+      extRetVal(0, 7);
+      switch (globalConfigMem[actionPtr + 2]) {
+      case 1:
+        extRetValColor(retVal & 0x20 ? B110101 : B101010);
+        extRetValLongLabel(PSTR("Red Tally"));
+        break;
+      case 2:
+        extRetValColor(retVal & 0x20 ? B011101 : B101010);
+        extRetValShortLabel(PSTR("Grn Tally"));
+        extRetValLongLabel(PSTR("Green Tally"));
+        break;
+      case 3:
+        extRetValColor((retVal & 0xF) == 3 ? B011101 : ((retVal & 0xF) == 2 ? B110101 : B101010));
+        extRetValShortLabel(PSTR("RedGrn Tly"));
+        extRetValLongLabel(PSTR("Red/Green Tally"));
+        break;
+      }
+
+      extRetValSetLabel(true);
+      extRetValTxt("Cam ", 0);
+      sprintf(_extRetTxt[0]+4, "%d", cam);
+    }
+
+    return retVal;
+    break;
+  }
   }
 
   // Default:
