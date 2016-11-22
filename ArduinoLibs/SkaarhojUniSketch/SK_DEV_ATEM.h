@@ -180,92 +180,93 @@ uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int16_t pulseCount
   return macroIdx;
 }
 
-static uint16_t lastSettingsRecall;
-static uint8_t lastLoadedPreset = 0;
-static uint8_t lastLoadedCamera = 0;
+namespace ATEM {
+  static uint16_t lastSettingsRecall;
+  static uint8_t lastLoadedPreset = 0;
+  static uint8_t lastLoadedCamera = 0;
 
-void storeCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
-  uint8_t preset[45];
-  int16_t *p16 = (int16_t *)preset;
+  void storeCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
+    uint8_t preset[45];
+    int16_t *p16 = (int16_t *)preset;
 
-  memset(preset, 0, 45);
+    memset(preset, 0, 45);
 
-  p16[0] = AtemSwitcher[devIndex].getCameraControlLiftY(camera);
-  p16[1] = AtemSwitcher[devIndex].getCameraControlLiftR(camera);
-  p16[2] = AtemSwitcher[devIndex].getCameraControlLiftG(camera);
-  p16[3] = AtemSwitcher[devIndex].getCameraControlLiftB(camera);
+    p16[0] = AtemSwitcher[devIndex].getCameraControlLiftY(camera);
+    p16[1] = AtemSwitcher[devIndex].getCameraControlLiftR(camera);
+    p16[2] = AtemSwitcher[devIndex].getCameraControlLiftG(camera);
+    p16[3] = AtemSwitcher[devIndex].getCameraControlLiftB(camera);
 
-  p16[4] = AtemSwitcher[devIndex].getCameraControlGammaY(camera);
-  p16[5] = AtemSwitcher[devIndex].getCameraControlGammaR(camera);
-  p16[6] = AtemSwitcher[devIndex].getCameraControlGammaG(camera);
-  p16[7] = AtemSwitcher[devIndex].getCameraControlGammaB(camera);
+    p16[4] = AtemSwitcher[devIndex].getCameraControlGammaY(camera);
+    p16[5] = AtemSwitcher[devIndex].getCameraControlGammaR(camera);
+    p16[6] = AtemSwitcher[devIndex].getCameraControlGammaG(camera);
+    p16[7] = AtemSwitcher[devIndex].getCameraControlGammaB(camera);
 
-  p16[8] = AtemSwitcher[devIndex].getCameraControlGainY(camera);
-  p16[9] = AtemSwitcher[devIndex].getCameraControlGainR(camera);
-  p16[10] = AtemSwitcher[devIndex].getCameraControlGainG(camera);
-  p16[11] = AtemSwitcher[devIndex].getCameraControlGainB(camera);
+    p16[8] = AtemSwitcher[devIndex].getCameraControlGainY(camera);
+    p16[9] = AtemSwitcher[devIndex].getCameraControlGainR(camera);
+    p16[10] = AtemSwitcher[devIndex].getCameraControlGainG(camera);
+    p16[11] = AtemSwitcher[devIndex].getCameraControlGainB(camera);
 
-  p16[12] = AtemSwitcher[devIndex].getCameraControlContrast(camera);
-  p16[13] = AtemSwitcher[devIndex].getCameraControlSaturation(camera);
-  p16[14] = AtemSwitcher[devIndex].getCameraControlHue(camera);
-  p16[15] = AtemSwitcher[devIndex].getCameraControlLumMix(camera);
+    p16[12] = AtemSwitcher[devIndex].getCameraControlContrast(camera);
+    p16[13] = AtemSwitcher[devIndex].getCameraControlSaturation(camera);
+    p16[14] = AtemSwitcher[devIndex].getCameraControlHue(camera);
+    p16[15] = AtemSwitcher[devIndex].getCameraControlLumMix(camera);
 
-  p16[16] = AtemSwitcher[devIndex].getCameraControlShutter(camera);
-  p16[17] = AtemSwitcher[devIndex].getCameraControlWhiteBalance(camera);
-  p16[18] = AtemSwitcher[devIndex].getCameraControlIris(camera);
+    p16[16] = AtemSwitcher[devIndex].getCameraControlShutter(camera);
+    p16[17] = AtemSwitcher[devIndex].getCameraControlWhiteBalance(camera);
+    p16[18] = AtemSwitcher[devIndex].getCameraControlIris(camera);
 
-  p16[19] = AtemSwitcher[devIndex].getCameraControlGain(camera);
+    p16[19] = AtemSwitcher[devIndex].getCameraControlGain(camera);
 
-  Serial << "Saving saturation: " << p16[13] << "\n";
+    Serial << "Saving saturation: " << p16[13] << "\n";
 
-  storePreset(num, PRESET_CCU, preset);
-}
-
-bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
-  if (num < EEPROM_FILEBANK_NUM) {
-    if (presetExists(num, PRESET_CCU) && presetChecksumMatches(num)) {
-      if (num != 0) {
-        if ((uint16_t)millis() - lastSettingsRecall > 10000) {
-          storeCameraPreset(devIndex, camera, 0);
-        }
-        lastSettingsRecall = millis();
-        lastLoadedPreset = num;
-        lastLoadedCamera = camera;
-      } else {
-        lastSettingsRecall = 0;
-      }
-
-      // Recall logic:
-      uint8_t preset[45];
-
-      recallPreset(num, PRESET_CCU, preset);
-
-      int16_t *p16 = (int16_t *)preset;
-
-      // AtemSwitcher[devIndex].commandBundleStart();
-
-      AtemSwitcher[devIndex].setCameraControlLift(camera, p16[1], p16[2], p16[3], p16[0]);
-      AtemSwitcher[devIndex].setCameraControlGamma(camera, p16[5], p16[6], p16[7], p16[4]);
-      AtemSwitcher[devIndex].setCameraControlGain(camera, p16[9], p16[10], p16[11], p16[8]);
-
-      AtemSwitcher[devIndex].setCameraControlContrast(camera, p16[12]);
-      AtemSwitcher[devIndex].setCameraControlHueSaturation(camera, p16[14], p16[13]);
-      AtemSwitcher[devIndex].setCameraControlLumMix(camera, p16[15]);
-
-      AtemSwitcher[devIndex].setCameraControlShutter(camera, p16[16]);
-      AtemSwitcher[devIndex].setCameraControlWhiteBalance(camera, p16[17]);
-      AtemSwitcher[devIndex].setCameraControlIris(camera, p16[18]);
-      AtemSwitcher[devIndex].setCameraControlGain(camera, p16[19]);
-
-      // AtemSwitcher[devIndex].commandBundleEnd();
-
-      return true;
-    }
+    storePreset(num, PRESET_CCU, preset);
   }
 
-  return false;
-}
+  bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
+    if (num < EEPROM_FILEBANK_NUM) {
+      if (presetExists(num, PRESET_CCU) && presetChecksumMatches(num)) {
+        if (num != 0) {
+          if ((uint16_t)millis() - lastSettingsRecall > 10000) {
+            storeCameraPreset(devIndex, camera, 0);
+          }
+          lastSettingsRecall = millis();
+          lastLoadedPreset = num;
+          lastLoadedCamera = camera;
+        } else {
+          lastSettingsRecall = 0;
+        }
 
+        // Recall logic:
+        uint8_t preset[45];
+
+        recallPreset(num, PRESET_CCU, preset);
+
+        int16_t *p16 = (int16_t *)preset;
+
+        // AtemSwitcher[devIndex].commandBundleStart();
+
+        AtemSwitcher[devIndex].setCameraControlLift(camera, p16[1], p16[2], p16[3], p16[0]);
+        AtemSwitcher[devIndex].setCameraControlGamma(camera, p16[5], p16[6], p16[7], p16[4]);
+        AtemSwitcher[devIndex].setCameraControlGain(camera, p16[9], p16[10], p16[11], p16[8]);
+
+        AtemSwitcher[devIndex].setCameraControlContrast(camera, p16[12]);
+        AtemSwitcher[devIndex].setCameraControlHueSaturation(camera, p16[14], p16[13]);
+        AtemSwitcher[devIndex].setCameraControlLumMix(camera, p16[15]);
+
+        AtemSwitcher[devIndex].setCameraControlShutter(camera, p16[16]);
+        AtemSwitcher[devIndex].setCameraControlWhiteBalance(camera, p16[17]);
+        AtemSwitcher[devIndex].setCameraControlIris(camera, p16[18]);
+        AtemSwitcher[devIndex].setCameraControlGain(camera, p16[19]);
+
+        // AtemSwitcher[devIndex].commandBundleEnd();
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
 // Button return colors:
 // 0 = off
 // 5 = dimmed
@@ -2014,11 +2015,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 43: // CCU Settings
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
 
-    // Reload grace period in progress
-    if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (lastLoadedCamera != cam || lastLoadedPreset != globalConfigMem[actionPtr + 3])) {
-      _systemHWcActionCacheFlag[HWc][actIdx] == 0; // Another reload occurred, cancel the grace period
-    }
-
     if (actDown && value == BINARY_EVENT) {
       _systemHWcActionCache[HWc][actIdx] = millis();
       switch (globalConfigMem[actionPtr + 2]) {
@@ -2027,19 +2023,19 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
         break;
       case 1: // Recall
-        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - lastSettingsRecall < 10000) {
-          recallCameraPreset(devIndex, cam, 0);
+        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - ATEM::lastSettingsRecall < 10000) {
+          ATEM::recallCameraPreset(devIndex, cam, 0);
           _systemHWcActionCacheFlag[HWc][actIdx] = 0;
         } else {
-          if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+          if (ATEM::recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
             _systemHWcActionCacheFlag[HWc][actIdx] = 4;
           } else {
-            _systemHWcActionCacheFlag[HWc][actIdx] = 8;
+            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
           }
         }
         break;
       case 2: // Store
-        storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+        ATEM::storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
         _systemHWcActionCacheFlag[HWc][actIdx] = 2;
         break;
       }
@@ -2048,8 +2044,9 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if (_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
       switch (globalConfigMem[actionPtr + 2]) {
       case 0:
-        storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+        ATEM::storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
         _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+        _systemHWcActionCache[HWc][actIdx] = millis();
         break;
       }
     }
@@ -2057,14 +2054,15 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if (actUp) {
       if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
         if (globalConfigMem[actionPtr + 2] == 0) {
-          if ((uint16_t)millis() - lastSettingsRecall < 10000) {
-            recallCameraPreset(devIndex, cam, 0);
+          if ((uint16_t)millis() - ATEM::lastSettingsRecall < 10000 && ATEM::lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+            ATEM::recallCameraPreset(devIndex, cam, 0);
             _systemHWcActionCacheFlag[HWc][actIdx] = 0;
           } else {
-            if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+            if (ATEM::recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
               _systemHWcActionCacheFlag[HWc][actIdx] = 4;
             } else {
-              _systemHWcActionCacheFlag[HWc][actIdx] = 8;
+              _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+              _systemHWcActionCache[HWc][actIdx] = millis();
             }
           }
         }
@@ -2076,15 +2074,25 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     if (_systemHWcActionCacheFlag[HWc][actIdx] & 16) {
       retVal = 1;
     } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 8) {
-      retVal = 2 | 0x20;
+      if(millis() - _systemHWcActionCache[HWc][actIdx] < 2000) {
+        retVal = 2 | 0x10;
+      } else {
+        retVal = 5;
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
     } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 4) {
-      if ((uint16_t)millis() - lastSettingsRecall < 10000) {
+      if ((uint16_t)millis() - ATEM::lastSettingsRecall < 10000 && ATEM::lastLoadedPreset == globalConfigMem[actionPtr + 3] && ATEM::lastLoadedCamera == cam) {
         retVal = (millis() & 512 ? 4 : 0);
       } else {
         _systemHWcActionCacheFlag[HWc][actIdx] = 0;
       }
     } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 2) {
-      retVal = 3;
+      if(millis() - _systemHWcActionCache[HWc][actIdx] < 2000) {
+        retVal = 3 | 0x20;
+      } else {
+        retVal = 5;
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
     } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
       retVal = 5;
     } else {

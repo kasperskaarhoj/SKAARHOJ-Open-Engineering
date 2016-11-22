@@ -44,7 +44,6 @@ void ClientBMDCamCtrl::tallyOverride(bool override) {
 #include "Streaming.h"
 void ClientBMDCamCtrl::setTally(uint8_t cam, bool programTally, bool previewTally) {
   if(cam > 15) return;
-  Serial << "Setting cam " << cam << " tally Prv: " << previewTally << " Pgm: " << programTally << "\n";
   if(programTally) {
     _programTally |= 1 << cam;
   } else {

@@ -94,6 +94,7 @@ uint16_t getPresetLength(uint8_t preset);
 void savePreset(uint8_t presetNum, uint16_t len);
 void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255);
 bool checkIncomingSerial();
+void deletePresets();
 
 uint16_t fletcher16(uint8_t *data, int16_t count) {
   uint16_t sum1 = 0;
@@ -858,6 +859,9 @@ bool checkIncomingSerial() {
       Serial << F("Presets clear\n");
       delay(1000);
       resetFunc();
+    } else if (!strncmp(serialBuffer, "clearsettings", 13)) {
+      Serial << "Clearing settings banks...\n";
+      deletePresets();
     } else if (!strncmp(serialBuffer, "reset", 5)) {
       Serial << F("Resetting...\n");
       delay(1000);
@@ -1637,6 +1641,12 @@ bool presetExists(uint8_t index, uint8_t type) {
     }
   }
   return false;
+}
+
+void deletePresets() {
+  for(uint8_t i=0; i < EEPROM_FILEBANK_NUM; i++) {
+    EEPROM.write(EEPROM_FILEBANK_START + i * 48, 0);
+  }
 }
 
 bool presetChecksumMatches(uint8_t index) {

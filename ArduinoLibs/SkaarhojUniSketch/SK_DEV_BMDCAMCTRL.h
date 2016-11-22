@@ -10,6 +10,110 @@ uint16_t BMDCAMCTRL_idxToCamera(uint8_t idx) {
     return 0;
 }
 
+namespace BMDCAMCTRL {
+  static uint16_t lastSettingsRecall;
+  static uint8_t lastLoadedPreset = 0;
+  static uint8_t lastLoadedCamera = 0;
+
+  void storeCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
+    Serial << "Storing camera preset " << num << "\n";
+    uint8_t preset[45];
+    int16_t *p16 = (int16_t *)preset;
+
+    memset(preset, 0, 45);
+
+    float (&lift)[4] = BMDCamCtrl[devIndex].getCameraLift(camera);
+    float (&gamma)[4] = BMDCamCtrl[devIndex].getCameraGamma(camera);
+    float (&gain)[4] = BMDCamCtrl[devIndex].getCameraGain(camera);
+    float (&contrast)[2] = BMDCamCtrl[devIndex].getCameraContrast(camera);
+    float (&adjust)[2] = BMDCamCtrl[devIndex].getCameraColourAdjust(camera);
+
+    p16[0] = lift[3] * (1<<11); // Y
+    p16[1] = lift[0] * (1<<11); // R
+    p16[2] = lift[1] * (1<<11); // G
+    p16[3] = lift[2] * (1<<11); // B
+
+    p16[4] = gamma[3] * (1<<11);
+    p16[5] = gamma[0] * (1<<11);
+    p16[6] = gamma[1] * (1<<11);
+    p16[7] = gamma[2] * (1<<11);
+
+    p16[8] = gain[3] * (1<<11);
+    p16[9] = gain[0] * (1<<11);
+    p16[10] = gain[1] * (1<<11);
+    p16[11] = gain[2] * (1<<11);
+
+    p16[12] = contrast[1] * (1<<11);
+    p16[13] = adjust[1] * (1<<11);
+    p16[14] = adjust[0] * (1<<11);
+    p16[15] = BMDCamCtrl[devIndex].getCameraLumaMix(camera) * (1<<11);
+
+    p16[16] = (uint16_t)BMDCamCtrl[devIndex].getExposure(camera);
+    p16[17] = BMDCamCtrl[devIndex].getWhiteBalance(camera);
+    p16[18] = BMDCamCtrl[devIndex].getIris(camera) * (1<<11);
+
+    p16[19] = BMDCamCtrl[devIndex].getSensorGain(camera);
+
+
+    storePreset(num, PRESET_CCU, preset);
+  }
+
+  bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
+    if (num < EEPROM_FILEBANK_NUM) {
+      if (presetExists(num, PRESET_CCU) && presetChecksumMatches(num)) {
+        if (num != 0) {
+          if ((uint16_t)millis() - lastSettingsRecall > 10000) {
+            storeCameraPreset(devIndex, camera, 0);
+          }
+          lastSettingsRecall = millis();
+          lastLoadedPreset = num;
+          lastLoadedCamera = camera;
+        } else {
+          lastSettingsRecall = 0;
+        }
+
+        // Recall logic:
+        uint8_t preset[45];
+
+        recallPreset(num, PRESET_CCU, preset);
+
+        int16_t *p16 = (int16_t *)preset;
+
+        float lift[4], gamma[4], gain[4];
+        float contrast[2], adjust[2];
+
+        for(uint8_t i=0; i < 4; i++) {
+          lift[(i+3)%4] = (float)p16[i]/(1<<11);
+          gamma[(i+3)%4] = (float)p16[i+4]/(1<<11);
+          gain[(i+3)%4] = (float)p16[i+8]/(1<<11); 
+        }
+
+        contrast[0] = 0.5;
+        contrast[1] = p16[12];
+
+        adjust[0] = p16[14];
+        adjust[1] = p16[13];
+
+        BMDCamCtrl[devIndex].setCameraLift(camera, lift);
+        BMDCamCtrl[devIndex].setCameraGamma(camera, gamma);
+        BMDCamCtrl[devIndex].setCameraGain(camera, gain);
+        BMDCamCtrl[devIndex].setCameraContrast(camera, contrast);
+        BMDCamCtrl[devIndex].setCameraColourAdjust(camera, adjust);
+        BMDCamCtrl[devIndex].setCameraLumaMix(camera, (float)p16[15]/(1<<11));
+        BMDCamCtrl[devIndex].setExposure(camera, p16[16]);
+        BMDCamCtrl[devIndex].setWhiteBalance(camera, p16[17]);
+        BMDCamCtrl[devIndex].setIris(camera, (float)p16[18]/(1<<11));
+        BMDCamCtrl[devIndex].setSensorGain(camera, p16[19]);
+
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+}
+
 // Button return colors:
 // 0 = off
 // 5 = dimmed
@@ -411,7 +515,105 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
     break;
   }
+  case 11: // Bars
+    break;
+  case 12: // Detail
+    break;
+  case 13: // CCU Settings
+    cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
 
+    if (actDown && value == BINARY_EVENT) {
+      _systemHWcActionCache[HWc][actIdx] = millis();
+      switch (globalConfigMem[actionPtr + 2]) {
+      case 0:
+        // For holddown events, bit 0 must be set
+        _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
+        break;
+      case 1: // Recall
+        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - BMDCAMCTRL::lastSettingsRecall < 10000) {
+          BMDCAMCTRL::recallCameraPreset(devIndex, cam, 0);
+          _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+        } else {
+          if (BMDCAMCTRL::recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+          } else {
+            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+          }
+        }
+        break;
+      case 2: // Store
+        BMDCAMCTRL::storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+        _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+        break;
+      }
+    }
+
+    if (_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
+      switch (globalConfigMem[actionPtr + 2]) {
+      case 0:
+        BMDCAMCTRL::storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+        _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+        _systemHWcActionCache[HWc][actIdx] = millis();
+        break;
+      }
+    }
+
+    if (actUp) {
+      if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+        if (globalConfigMem[actionPtr + 2] == 0) {
+          if ((uint16_t)millis() - BMDCAMCTRL::lastSettingsRecall < 10000 && BMDCAMCTRL::lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+            BMDCAMCTRL::recallCameraPreset(devIndex, cam, 0);
+            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+          } else {
+            if (BMDCAMCTRL::recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+              _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+            } else {
+              _systemHWcActionCacheFlag[HWc][actIdx] = 0; 
+            }
+          }
+        }
+      } else if (globalConfigMem[actionPtr + 2] == 2) {
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
+    }
+
+    if (_systemHWcActionCacheFlag[HWc][actIdx] & 16) {
+      retVal = 1;
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 8) {
+      if(millis() - _systemHWcActionCache[HWc][actIdx] < 2000) {
+        retVal = 2 | 0x10;
+      } else {
+        retVal = 5;
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 4) {
+      if ((uint16_t)millis() - BMDCAMCTRL::lastSettingsRecall < 10000 && BMDCAMCTRL::lastLoadedCamera == cam && BMDCAMCTRL::lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+        retVal = (millis() & 512 ? 4 : 5);
+      } else {
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 2) {
+      if(millis() - _systemHWcActionCache[HWc][actIdx] < 2000) {
+        retVal = 3 | 0x20;
+      } else {
+        retVal = 5;
+        _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+      }
+    } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+      retVal = 5;
+    } else {
+      if (globalConfigMem[actionPtr + 2] == 2) {
+        retVal = 5;
+      } else {
+        retVal = presetExists(globalConfigMem[actionPtr + 3], PRESET_CCU) ? 5 : 0;
+      }
+    }
+
+    return retVal;
+
+    break;
+  case 14: // Reset
+    break;
   case 15: { // Servo
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     uint8_t servo = globalConfigMem[actionPtr + 2];
