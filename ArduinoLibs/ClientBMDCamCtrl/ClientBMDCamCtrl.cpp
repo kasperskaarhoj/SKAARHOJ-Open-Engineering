@@ -23,8 +23,57 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
   _tallyControl.begin(address);
 
   _cameraControl.setOverride(true);
+  _tallyControl.setOverride(false);
 
-  _hasInitialized = true;
+  _previewTally = 0;
+  _programTally = 0;
+
+  _hasInitialized = _cameraControl.shieldInitialized;
+}
+
+void ClientBMDCamCtrl::cameraOverride(bool override) {
+  _cameraControl.setOverride(override);
+}
+
+void ClientBMDCamCtrl::tallyOverride(bool override) {
+  _tallyControl.setOverride(override);
+}
+
+
+
+#include "Streaming.h"
+void ClientBMDCamCtrl::setTally(uint8_t cam, bool programTally, bool previewTally) {
+  if(cam > 15) return;
+  Serial << "Setting cam " << cam << " tally Prv: " << previewTally << " Pgm: " << programTally << "\n";
+  if(programTally) {
+    _programTally |= 1 << cam;
+  } else {
+    _programTally &= ~(1 << cam);
+  }
+
+  if(previewTally) {
+    _previewTally |= 1 << cam;
+  } else {
+    _previewTally &= ~(1 << cam);
+  }
+
+  tallyOverride(true);
+  _tallyControl.setCameraTally(cam, programTally, previewTally);
+}
+
+void ClientBMDCamCtrl::getInternalTally(uint8_t cam, bool &programTally, bool &previewTally) {
+  if(cam > 15) return;
+  programTally = (_programTally >> cam) & 1;
+  previewTally = (_previewTally >> cam) & 1; 
+}
+
+// If tallyoverride is enabled, reflect internal states
+void ClientBMDCamCtrl::getTally(uint8_t cam, bool &programTally, bool &previewTally) {
+  if(_tallyControl.getOverride()) {
+    getInternalTally(cam, programTally, previewTally);
+  } else {
+    _tallyControl.getCameraTally(cam, programTally, previewTally);
+  }
 }
 
 void ClientBMDCamCtrl::initColourCorrection(int cam) {

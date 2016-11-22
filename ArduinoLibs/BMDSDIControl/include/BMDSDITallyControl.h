@@ -38,6 +38,7 @@ namespace BMD
 	public:
 		/** Tally setup */
 		void		setOverride(bool enabled) const;
+		bool        getOverride() const;
 
 		/** Low level tally read operations */
 		bool		available() const;

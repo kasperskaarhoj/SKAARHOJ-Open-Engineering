@@ -42,6 +42,12 @@ namespace BMD
 		regWrite8(kRegCONTROL, regValue);
 	}
 
+	bool SDITallyControl::getOverride() const
+	{
+		byte regValue = regRead8(kRegCONTROL);
+		return regValue & kRegCONTROL_TOVERIDE_Mask;
+	}
+
 	bool SDITallyControl::available() const
 	{
 		return (regRead8(kRegITARM) & kRegITARM_ARM_Mask) == 0;
