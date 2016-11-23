@@ -186,7 +186,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
           scaler = 0.25;
           break;
         case 3:
-          scaler = 2;
+          scaler = 2.0;
           break;
       }
     }
@@ -201,13 +201,14 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       }
     }
 
+    float tempVal = (float)(_systemHWcActionCache[HWc][actIdx]+(value-500)*scaler)/1000.0;
+    if(tempVal > 1.0) tempVal = 1.0;
+    if(tempVal < 0.0) tempVal = 0.0;
+
+
     if (actDown) {
       if (value != BINARY_EVENT) { // Value input
-        if(scaler != 1.0) {
-          outVal = 1.0 - (float)(_systemHWcActionCache[HWc][actIdx]+(value-500)*scaler)/1000.0;
-        } else {
-          outVal = 1.0 - (float)value / 1000.0;
-        }
+        outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
       } else { // Binary - auto iris
         Serial << F("Perform Auto Iris... \n");
         BMDCamCtrl[devIndex].setAutoIris(cam);
@@ -218,20 +219,10 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       outVal = pulsesHelper(BMDCamCtrl[devIndex].getIris(cam) * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0;
     }
 
-
-    if (round(100.0 - outVal * 100.0) > limHi) {
-      if(scaler != 1.0) {
-        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limHi*10);
-        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
+    if(!actDown && value != BINARY_EVENT) {
+      if(round(outVal*1000) != round((1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0)) * 1000)) {
+        outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
       }
-      outVal = (100.0 - (float)limHi)/100.0;
-    }
-    if (round(100.0 - outVal * 100.0) < limLo) {
-      if(scaler != 1.0) {
-        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limLo*10);
-        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
-      }
-      outVal = (100.0 - (float)limLo)/100.0;
     }
 
     if(startVal != outVal) {
