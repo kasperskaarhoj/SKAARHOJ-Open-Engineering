@@ -363,7 +363,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100.0 * 2.0), -200, 200, false, pulses, 1, 10)) / (100.0 * 2.0);
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100.0 * 2.0), -200, 200, false, pulses, 4, 10)) / (100.0 * 2.0);
       BMDCamCtrl[devIndex].setCameraLift(cam, val);
     }
 
@@ -391,7 +391,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100.0 * 2.0), -200, 200, false, pulses, 1, 10)) / (100.0 * 2.0);
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100.0 * 2.0), -200, 200, false, pulses, 4, 10)) / (100.0 * 2.0);
       BMDCamCtrl[devIndex].setCameraGamma(cam, val);
     }
 
@@ -419,7 +419,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100), 0, 1600, false, pulses, 1, 10)) / 100.0;
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100), 0, 1600, false, pulses, 2, 10)) / 100.0;
       BMDCamCtrl[devIndex].setCameraGain(cam, val);
     }
 
@@ -448,7 +448,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       }
     }
     if (pulses & 0xFFFE) {
-      newValue[0] = (float)pulsesHelper((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[0] * 360.0), -360, 360, true, pulses, 1, 10) / 360.0;
+      newValue[0] = (float)pulsesHelper((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[0] * 360.0), -360, 360, true, pulses, 2, 10) / 360.0;
       BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
     }
     if (extRetValIsWanted()) {
@@ -476,7 +476,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
   
     if (pulses & 0xFFFE) {
-      newValue[1] = (float)pulsesHelper(oldValue[1] * 100, 0, 200, false, pulses, 1, 10) / 100.0;
+      newValue[1] = (float)pulsesHelper(oldValue[1] * 100, 0, 200, false, pulses, 2, 10) / 100.0;
       BMDCamCtrl[devIndex].setCameraContrast(cam, newValue);
     }
   
@@ -503,7 +503,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       }
     }
     if (pulses & 0xFFFE) {
-      newValue[1] = (float)pulsesHelper((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[1] * 2048.0), 0, 4096, true, pulses, 2, 20) / 2048.0;
+      newValue[1] = (float)pulsesHelper((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[1] * 2048.0), 0, 4096, true, pulses, 4, 20) / 2048.0;
       BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
     }
     if (extRetValIsWanted()) {
