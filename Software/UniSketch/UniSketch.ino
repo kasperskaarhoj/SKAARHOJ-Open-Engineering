@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_TALLY
 
 
 
@@ -245,7 +245,7 @@ SkaarhojTools sTools(0);
 #include "SkaarhojSmartSwitch2.h"
 #include "SK_CFGDEF_CCU.h" // TODO: Change to CCU-X when ready....
 #elif(SK_MODEL == SK_TALLY)
-#include "SkaarhojGPIO1x16.h"
+#include "SkaarhojGPIO2x8.h"
 #include "SK_CFGDEF_TALLY.h"
 #elif(SK_MODEL == SK_CUSTOMHW)
 #include "SK_CFGDEF_CUSTOMHW.h"
