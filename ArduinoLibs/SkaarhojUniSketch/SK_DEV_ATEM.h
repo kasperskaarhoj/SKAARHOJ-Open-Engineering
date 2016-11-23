@@ -229,7 +229,7 @@ namespace ATEM {
           if ((uint16_t)millis() - lastSettingsRecall > 10000) {
             storeCameraPreset(devIndex, camera, 0);
           }
-          lastSettingsRecall = millis();
+          lastSettingsRecall = (uint16_t)millis();
           lastLoadedPreset = num;
           lastLoadedCamera = camera;
         } else {

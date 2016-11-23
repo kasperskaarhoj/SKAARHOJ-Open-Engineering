@@ -41,6 +41,7 @@ private:
   float cameraDisplayZebraValue[ClientBMDCamCtrl_Cams];
   float cameraDisplayPeakingValue[ClientBMDCamCtrl_Cams];
   int8_t cameraDisplayColorbarsValue[ClientBMDCamCtrl_Cams];
+  uint8_t cameraSharpeningLevel[ClientBMDCamCtrl_Cams];
 
   float cameraTallyBrightnessValue[ClientBMDCamCtrl_Cams];
   float cameraTallyRearBrightnessValue[ClientBMDCamCtrl_Cams];
@@ -116,6 +117,7 @@ public:
   int32_t getExposure(uint8_t camera);
   void setDynamicRangeMode(uint8_t camera, int8_t mode); // 0: film, 1: Video
   void setVideoSharpening(uint8_t camera, int8_t mode);  // 0: off, 1: low, 2: medium, 3: high
+  uint8_t getVideoSharpening(uint8_t camera);
 
   // Audio controls
   void setMicLevel(uint8_t camera, float level, bool offset = false); // 0.0 - 1.0

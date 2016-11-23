@@ -39,9 +39,6 @@ void ClientBMDCamCtrl::tallyOverride(bool override) {
   _tallyControl.setOverride(override);
 }
 
-
-
-#include "Streaming.h"
 void ClientBMDCamCtrl::setTally(uint8_t cam, bool programTally, bool previewTally) {
   if(cam > 15) return;
   if(programTally) {
@@ -248,6 +245,7 @@ void ClientBMDCamCtrl::setDynamicRangeMode(uint8_t camera, int8_t mode) { // 0: 
 }
 void ClientBMDCamCtrl::setVideoSharpening(uint8_t camera, int8_t mode) { // 0: off, 1: low, 2: medium, 3: high
   clampValue(&mode, (int8_t)0, (int8_t)3);
+  cameraSharpeningLevel[camera-1] = mode;
   _cameraControl.writeCommandInt8(camera, 1, 8, 0, mode);
 }
 
@@ -444,7 +442,9 @@ void ClientBMDCamCtrl::setCameraColourAdjust(uint8_t camera, float (&value)[2], 
 
   _cameraControl.writeCommandFixed16(camera, 8, 6, (offset ? 1 : 0), existing);
 }
+
 void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) { 
+  // Doesn't reset: Iris, shutter, sensor gain
   _cameraControl.writeCommandVoid(camera, 8, 7); 
   initColourCorrection(camera);
 }
@@ -476,6 +476,9 @@ float ClientBMDCamCtrl::getContinuousZoom(uint8_t camera) {return cameraContinuo
 int8_t ClientBMDCamCtrl::getSensorGain(uint8_t camera) { return cameraSensorGainValue[camera - 1]; }
 int16_t ClientBMDCamCtrl::getWhiteBalance(uint8_t camera) { return cameraWBValue[camera - 1]; }
 int32_t ClientBMDCamCtrl::getExposure(uint8_t camera) { return cameraExposureValue[camera - 1]; }
+uint8_t ClientBMDCamCtrl::getVideoSharpening(uint8_t camera) {
+  return cameraSharpeningLevel[camera - 1];
+}
 
 // Audio controls
 float ClientBMDCamCtrl::getMicLevel(uint8_t camera) { return cameraMicLevel[camera - 1]; }
