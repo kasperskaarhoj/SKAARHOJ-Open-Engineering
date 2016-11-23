@@ -147,7 +147,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setFocus(cam, pulsesHelper(BMDCamCtrl[devIndex].getFocus(cam) * 100.0, 0, 100, false, pulses, 2, 10) / 100.0);
+      BMDCamCtrl[devIndex].setFocus(cam, pulsesHelper(BMDCamCtrl[devIndex].getFocus(cam) * 1000.0, 0, 100, false, pulses, 1, 10) / 1000.0);
     }
 
     if (extRetValIsWanted()) {
@@ -171,7 +171,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       limHi = 100;
     }
 
-    float startVal = BMDCamCtrl[devIndex].getIris(cam);
+    float startVal = (float)BMDCamCtrl[devIndex].getIris(cam) / (1<<11);
     float outVal = startVal;
 
     float scaler = 1.0;
@@ -354,7 +354,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100.0 * 2.0), -200, 200, false, pulses, 4, 10)) / (100.0 * 2.0);
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 1000.0 * 2.0), -2000, 2000, false, pulses, 20, 100)) / (1000.0 * 2.0);
       BMDCamCtrl[devIndex].setCameraLift(cam, val);
     }
 
@@ -382,7 +382,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100.0 * 2.0), -200, 200, false, pulses, 4, 10)) / (100.0 * 2.0);
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 1000.0 * 2.0), -2000, 2000, false, pulses, 20, 100)) / (1000.0 * 2.0);
       BMDCamCtrl[devIndex].setCameraGamma(cam, val);
     }
 
@@ -410,7 +410,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 100), 0, 1600, false, pulses, 2, 10)) / 100.0;
+      val[(option + 3) % 4] = ((float)pulsesHelper((int)(val[(option + 3) % 4] * 1000), 0, 16000, false, pulses, 10, 100)) / 1000.0;
       BMDCamCtrl[devIndex].setCameraGain(cam, val);
     }
 

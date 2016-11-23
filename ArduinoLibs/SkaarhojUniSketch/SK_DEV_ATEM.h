@@ -1495,13 +1495,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 31:{// Iris
     cam = ATEM_idxToCamera(globalConfigMem[actionPtr + 1]);
 
-    float startVal = (float)AtemSwitcher[devIndex].getCameraControlIris(cam) / (1<<11);
-    float outVal = startVal;
-
-    uint16_t limLo, limHi;
-    bool setVal = false;
-
-    // Limiters
+   uint16_t limLo, limHi;
     if (globalConfigMem[actionPtr + 2] > 0 && globalConfigMem[actionPtr + 2] <= 4) {
       limLo = _systemRangeLower[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
       limHi = _systemRangeUpper[globalConfigMem[actionPtr + 2] - 1] * 100 / 255;
@@ -1510,7 +1504,11 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       limHi = 100;
     }
 
+    float startVal = AtemSwitcher[devIndex].getCameraControlIris(cam);
+    float outVal = startVal;
+
     float scaler = 1.0;
+    
     // Scalers
     if(globalConfigMem[actionPtr + 3] > 0 && globalConfigMem[actionPtr + 3] <= 4) {
       switch(_systemScaler[globalConfigMem[actionPtr + 3] - 1]) {
@@ -1521,7 +1519,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           scaler = 0.25;
           break;
         case 3:
-          scaler = 2;
+          scaler = 2.0;
           break;
       }
     }
@@ -1536,13 +1534,13 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
     }
 
+    float tempVal = (float)(_systemHWcActionCache[HWc][actIdx]+(value-500)*scaler)/1000.0;
+    if(tempVal > 1.0) tempVal = 1.0;
+    if(tempVal < 0.0) tempVal = 0.0;
+
     if (actDown) {
       if (value != BINARY_EVENT) { // Value input
-        if(scaler != 1.0) {
-          outVal = 1.0 - (float)(_systemHWcActionCache[HWc][actIdx]+(value-500)*scaler)/1000.0;
-        } else {
-          outVal = 1.0 - (float)value / 1000.0;
-        }
+        outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
       } else { // Binary - auto iris
         Serial << F("Perform Auto Iris... \n");
         AtemSwitcher[devIndex].setCameraControlAutoIris(cam, 0);
@@ -1553,21 +1551,12 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       outVal = pulsesHelper(outVal * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0;
     }
 
-    if (round(100.0 - outVal * 100.0) > limHi) {
-      if(scaler != 1.0) {
-        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limHi*10);
-        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
+    if(!actDown && value != BINARY_EVENT) {
+      if(round(outVal*1000) != round((1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0)) * 1000)) {
+        outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
       }
-      outVal = (100.0 - (float)limHi)/100.0;
     }
-    if (round(100.0 - outVal * 100.0) < limLo) {
-      if(scaler != 1.0) {
-        _systemHWcActionCache[HWc][actIdx] -= ((1000.0 - outVal * 1000.0) - limLo*10);
-        _systemHWcActionCache[HWc][actIdx] = constrain(_systemHWcActionCache[HWc][actIdx], 10*limLo, 10*limHi);
-      }
-      outVal = (100.0 - (float)limLo)/100.0;
-    }
-
+    
     if(startVal != outVal) {
       AtemSwitcher[devIndex].setCameraControlIris(cam, outVal * (1<<11));
     }
