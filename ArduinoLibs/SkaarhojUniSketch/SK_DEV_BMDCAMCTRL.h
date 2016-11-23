@@ -147,7 +147,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setFocus(cam, pulsesHelper(BMDCamCtrl[devIndex].getFocus(cam) * 100.0, 0, 100, false, pulses, 1, 10) / 100.0);
+      BMDCamCtrl[devIndex].setFocus(cam, pulsesHelper(BMDCamCtrl[devIndex].getFocus(cam) * 100.0, 0, 100, false, pulses, 2, 10) / 100.0);
     }
 
     if (extRetValIsWanted()) {
@@ -558,7 +558,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setVideoSharpening(globalConfigMem[actionPtr + 1], pulsesHelper(BMDCamCtrl[devIndex].getVideoSharpening(globalConfigMem[actionPtr + 1]) >> 8, 0, 3, false, pulses, 1, 1));
+      BMDCamCtrl[devIndex].setVideoSharpening(globalConfigMem[actionPtr + 1], pulsesHelper(BMDCamCtrl[devIndex].getVideoSharpening(globalConfigMem[actionPtr + 1]), 0, 3, false, pulses, 1, 1));
     }
 
     if (extRetValIsWanted()) {
@@ -573,7 +573,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
         extRetValColor(B011111);
       }
 
-      switch (BMDCamCtrl[devIndex].getVideoSharpening(globalConfigMem[actionPtr + 1]) >> 8) {
+      switch (BMDCamCtrl[devIndex].getVideoSharpening(globalConfigMem[actionPtr + 1])) {
       case 0:
         extRetValTxt_P(PSTR("Off"), 0);
         break;
