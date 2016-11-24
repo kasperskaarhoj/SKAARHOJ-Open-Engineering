@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_RCP
+#define SK_MODEL SK_TALLY
 
 
 
@@ -17,7 +17,7 @@
 #define SK_E21CMB6M_OPTION_VSLIDER true     // AUTOGEN: true,false
 #define SK_E21TVS_OPTION_GPIO false     // AUTOGEN: true,false
 #define SK_E21GPIO_OPTION_GPIO2 false     // AUTOGEN: true,false
-#define SK_RCP_OPTION_ENCODER true     // AUTOGEN: true,false
+#define SK_RCP_OPTION_ENCODER false     // AUTOGEN: true,false
 
 #define SK_C90D_OPTION_DISABLEMASK 0b00000000000000000000000000000000    // Must have 32 digits. Disables buttons #1-#32 from left. AUTOGEN: 0
 #define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 0,1,2,3,4
@@ -35,6 +35,7 @@
 // ****************************
 // NO USER CHANGE BELOW!
 // ****************************
+#define SK_VERSION "custom-build"
 #define SK_SERIAL_OUTPUT 1
 #ifndef SK_ETHMEGA
 #define SK_ETHMEGA 0
@@ -158,7 +159,12 @@ SkaarhojTools sTools(0);
 #elif(SK_MODEL == SK_E21CMB6M)
 #include "SkaarhojGPIO2x8.h"
 #include "Adafruit_GFX.h"
+#include "SkaarhojOLED64x256.h"
 #include "SkaarhojDisplayArray.h"
+#include "SkaarhojSmartSwitch2.h"
+#include "SkaarhojAudioControl2.h"
+#include "SkaarhojAnalog.h"
+#include "ADS7828.h"
 #include "SK_CFGDEF_E21CMB6M.h"
 #elif(SK_MODEL == SK_E21GPIO)
 #include "SkaarhojGPIO2x8.h"
@@ -239,7 +245,7 @@ SkaarhojTools sTools(0);
 #include "SkaarhojSmartSwitch2.h"
 #include "SK_CFGDEF_CCU.h" // TODO: Change to CCU-X when ready....
 #elif(SK_MODEL == SK_TALLY)
-#include "SkaarhojGPIO1x16.h"
+#include "SkaarhojGPIO2x8.h"
 #include "SK_CFGDEF_TALLY.h"
 #elif(SK_MODEL == SK_CUSTOMHW)
 #include "SK_CFGDEF_CUSTOMHW.h"
@@ -325,6 +331,7 @@ SkaarhojGPIO2x8 GPIOboard;
 uint8_t globalConfigMem[SK_CONFIG_MEMORY_SIZE];
 uint8_t _systemState = 0;
 uint8_t _systemShift = 0;
+uint8_t _systemShiftRegister[4] = {0, 0, 0, 0};              // Shift registers (in addition to the default)
 uint8_t _systemMem[4] = {0, 0, 0, 0};              // Mem A-D
 uint8_t _systemRangeUpper[4] = {255, 255, 255, 255};              // Upper range A-D
 uint8_t _systemRangeLower[4] = {0, 0, 0, 0};              // Lower range A-D
@@ -342,6 +349,7 @@ bool _inactivePanel = false;
 bool _inactivePanel_actDown = false;
 bool _calibrateMode = false;
 uint8_t debugMode = SK_SERIAL_OUTPUT;
+uint16_t _retValue = 0;                                                    // Return value in actionDispatch. In global memory so it can be accessed.
 
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
 int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);

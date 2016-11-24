@@ -23,8 +23,53 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
   _tallyControl.begin(address);
 
   _cameraControl.setOverride(true);
+  _tallyControl.setOverride(false);
 
-  _hasInitialized = true;
+  _previewTally = 0;
+  _programTally = 0;
+
+  _hasInitialized = _cameraControl.shieldInitialized;
+}
+
+void ClientBMDCamCtrl::cameraOverride(bool override) {
+  _cameraControl.setOverride(override);
+}
+
+void ClientBMDCamCtrl::tallyOverride(bool override) {
+  _tallyControl.setOverride(override);
+}
+
+void ClientBMDCamCtrl::setTally(uint8_t cam, bool programTally, bool previewTally) {
+  if(cam > 15) return;
+  if(programTally) {
+    _programTally |= 1 << cam;
+  } else {
+    _programTally &= ~(1 << cam);
+  }
+
+  if(previewTally) {
+    _previewTally |= 1 << cam;
+  } else {
+    _previewTally &= ~(1 << cam);
+  }
+
+  tallyOverride(true);
+  _tallyControl.setCameraTally(cam, programTally, previewTally);
+}
+
+void ClientBMDCamCtrl::getInternalTally(uint8_t cam, bool &programTally, bool &previewTally) {
+  if(cam > 15) return;
+  programTally = (_programTally >> cam) & 1;
+  previewTally = (_previewTally >> cam) & 1; 
+}
+
+// If tallyoverride is enabled, reflect internal states
+void ClientBMDCamCtrl::getTally(uint8_t cam, bool &programTally, bool &previewTally) {
+  if(_tallyControl.getOverride()) {
+    getInternalTally(cam, programTally, previewTally);
+  } else {
+    _tallyControl.getCameraTally(cam, programTally, previewTally);
+  }
 }
 
 void ClientBMDCamCtrl::initColourCorrection(int cam) {
@@ -200,6 +245,7 @@ void ClientBMDCamCtrl::setDynamicRangeMode(uint8_t camera, int8_t mode) { // 0: 
 }
 void ClientBMDCamCtrl::setVideoSharpening(uint8_t camera, int8_t mode) { // 0: off, 1: low, 2: medium, 3: high
   clampValue(&mode, (int8_t)0, (int8_t)3);
+  cameraSharpeningLevel[camera-1] = mode;
   _cameraControl.writeCommandInt8(camera, 1, 8, 0, mode);
 }
 
@@ -396,7 +442,9 @@ void ClientBMDCamCtrl::setCameraColourAdjust(uint8_t camera, float (&value)[2], 
 
   _cameraControl.writeCommandFixed16(camera, 8, 6, (offset ? 1 : 0), existing);
 }
+
 void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) { 
+  // Doesn't reset: Iris, shutter, sensor gain
   _cameraControl.writeCommandVoid(camera, 8, 7); 
   initColourCorrection(camera);
 }
@@ -428,6 +476,9 @@ float ClientBMDCamCtrl::getContinuousZoom(uint8_t camera) {return cameraContinuo
 int8_t ClientBMDCamCtrl::getSensorGain(uint8_t camera) { return cameraSensorGainValue[camera - 1]; }
 int16_t ClientBMDCamCtrl::getWhiteBalance(uint8_t camera) { return cameraWBValue[camera - 1]; }
 int32_t ClientBMDCamCtrl::getExposure(uint8_t camera) { return cameraExposureValue[camera - 1]; }
+uint8_t ClientBMDCamCtrl::getVideoSharpening(uint8_t camera) {
+  return cameraSharpeningLevel[camera - 1];
+}
 
 // Audio controls
 float ClientBMDCamCtrl::getMicLevel(uint8_t camera) { return cameraMicLevel[camera - 1]; }

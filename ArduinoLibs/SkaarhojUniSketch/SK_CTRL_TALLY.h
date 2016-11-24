@@ -9,7 +9,7 @@ void HWcfgDisplay() { Serial << F("SK_MODEL=SK_TALLY\n"); }
 uint8_t HWsetupL() {
 
   Serial << F("Init Tally GPIO boards\n");
-  GPIOboard.begin();
+  GPIOboard.begin(0, 1); // 16 outputs, address 0
   if (getConfigMode()) {
     Serial << F("Test: GPIO boards\n");
     for (int16_t i = 1; i <= 16; i++) {

@@ -14,6 +14,9 @@ private:
   BMD_SDITallyControl_I2C _tallyControl;
   bool _hasInitialized;
 
+  uint16_t _previewTally;
+  uint16_t _programTally;
+
   float cameraIrisValue[ClientBMDCamCtrl_Cams];
   float cameraFocusValue[ClientBMDCamCtrl_Cams];
   float cameraZoomValue[ClientBMDCamCtrl_Cams];
@@ -38,6 +41,7 @@ private:
   float cameraDisplayZebraValue[ClientBMDCamCtrl_Cams];
   float cameraDisplayPeakingValue[ClientBMDCamCtrl_Cams];
   int8_t cameraDisplayColorbarsValue[ClientBMDCamCtrl_Cams];
+  uint8_t cameraSharpeningLevel[ClientBMDCamCtrl_Cams];
 
   float cameraTallyBrightnessValue[ClientBMDCamCtrl_Cams];
   float cameraTallyRearBrightnessValue[ClientBMDCamCtrl_Cams];
@@ -74,6 +78,14 @@ public:
 
   void begin(uint8_t address);
 
+  void cameraOverride(bool override);
+  void tallyOverride(bool override);
+
+  // Tally commands
+  void setTally(uint8_t cam, bool programTally, bool previewTally);
+  void getTally(uint8_t cam, bool &programTally, bool &previewTally);
+  void getInternalTally(uint8_t cam, bool &programTally, bool &previewTally);
+  
   // void begin(BMD_SDICameraControl_I2C* cameraControl, BMD_SDITallyControl_I2C *tallyControl);
   void sendCameraPacket(byte *data, int len);
   void appendCameraPacket(byte *data, int len);
@@ -105,6 +117,7 @@ public:
   int32_t getExposure(uint8_t camera);
   void setDynamicRangeMode(uint8_t camera, int8_t mode); // 0: film, 1: Video
   void setVideoSharpening(uint8_t camera, int8_t mode);  // 0: off, 1: low, 2: medium, 3: high
+  uint8_t getVideoSharpening(uint8_t camera);
 
   // Audio controls
   void setMicLevel(uint8_t camera, float level, bool offset = false); // 0.0 - 1.0

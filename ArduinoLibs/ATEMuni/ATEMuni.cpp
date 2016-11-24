@@ -179,7 +179,6 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
-
 		// *********************************
 		// **
 		// ** Implementations in ATEMuni.c:
@@ -1498,6 +1497,21 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					
 				}
 				
+				if (_packetBuffer[1]==0 && _packetBuffer[2]==8)	{
+					
+					#if ATEM_debug
+					temp = atemCameraControlZoomNormalized[input];
+					#endif
+					atemCameraControlZoomNormalized[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemCameraControlZoomNormalized[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemCameraControlZoomNormalized[input=")); Serial.print(input); Serial.print(F("] = "));
+						Serial.println(atemCameraControlZoomNormalized[input]);
+					}
+					#endif
+					
+				}
+				
 				if (_packetBuffer[1]==0 && _packetBuffer[2]==9)	{
 					
 					#if ATEM_debug
@@ -1923,14 +1937,6 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemAudioMixerInputMixOption[getAudioSrcIndex(audioSource)];
 					#endif
-					/*
-					Serial.print("Audio Source: ");
-					Serial.print(audioSource);
-					Serial.print(" Index: ");
-					Serial.print(getAudioSrcIndex(audioSource));
-					Serial.print(" Options: ");
-					Serial.println(_packetBuffer[8]);
-					*/
 					atemAudioMixerInputMixOption[getAudioSrcIndex(audioSource)] = _packetBuffer[8];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemAudioMixerInputMixOption[getAudioSrcIndex(audioSource)]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
@@ -4487,6 +4493,14 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			}
 			
 			/**
+			 * Get Camera Control; Zoom Normalized
+			 * input 	1-8: Camera
+			 */
+			int ATEMuni::getCameraControlZoomNormalized(uint8_t input) {
+				return atemCameraControlZoomNormalized[input];
+			}
+			
+			/**
 			 * Get Camera Control; Zoom Speed
 			 * input 	1-8: Camera
 			 */
@@ -4855,6 +4869,31 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 				_packetBuffer[12+_cBBO+4+4+16] = highByte(whiteBalance);
 				_packetBuffer[12+_cBBO+4+4+17] = lowByte(whiteBalance);
+
+		   		_finishCommandPacket();
+
+			}
+
+			/**
+			 * Set Camera Control; Zoom Normalized
+			 * input 	0-7: Camera
+			 *
+			 */
+			void ATEMuni::setCameraControlZoomNormalized(uint8_t input, int zoomNormalized) {
+
+		  		_prepareCommandPacket(PSTR("CCmd"),24);
+
+					// Preset values:
+				_packetBuffer[12+_cBBO+4+4+1] = 0;
+				_packetBuffer[12+_cBBO+4+4+2] = 8;
+
+				_packetBuffer[12+_cBBO+4+4+4] = 0x80;
+				_packetBuffer[12+_cBBO+4+4+9] = 0x01;
+
+				_packetBuffer[12+_cBBO+4+4+0] = input;
+
+				_packetBuffer[12+_cBBO+4+4+16] = highByte(zoomNormalized);
+				_packetBuffer[12+_cBBO+4+4+17] = lowByte(zoomNormalized);
 
 		   		_finishCommandPacket();
 

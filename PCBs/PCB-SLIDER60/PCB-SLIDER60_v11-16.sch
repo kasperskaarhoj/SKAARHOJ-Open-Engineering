@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -1691,8 +1691,8 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
 <part name="C8" library="freetronics" deviceset="CAP_POL" device="1206" value="10uF 6.3V A TANT"/>
 <part name="SJ2" library="SparkFun" deviceset="SOLDERJUMPER" device="NO"/>
-<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="10k"/>
-<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="22K"/>
+<part name="R2" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="4K7"/>
+<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="22K-DONT MOUNT"/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 </parts>
 <sheets>
