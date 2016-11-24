@@ -2708,18 +2708,23 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
   }
 
   if (HWcMap[1]) { // Channel Indicator light
-    uint16_t retVal = actionDispatch(HWcMap[1]);
-    uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
-    uint8_t ledBits = 0;
-
-    if (average > 20)
-      ledBits = 2;
-    if (average > 40)
-      ledBits = 3;
-    if (average > 50)
-      ledBits = 1;
-
-    control.setChannelIndicatorLight(1, ledBits);
+      uint16_t retVal = actionDispatch(HWcMap[1]);
+      switch(retVal) {
+        case 0:
+          break;
+        case 1:
+        case 4:
+        case 5:
+          retVal = 3;
+          break;
+        case 2:
+          retVal = 1;
+          break;
+        case 3:
+          retVal = 2;
+          break;
+      }
+    control.setChannelIndicatorLight(1, retVal);
   }
 
   if (HWcMap[2]) { // VU
@@ -2756,17 +2761,22 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
   for (int16_t a = 0; a < 2; a++) {
     if (HWcMap[2 + a]) { // Channel Indicator light
       uint16_t retVal = actionDispatch(HWcMap[2 + a]);
-      uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
-      uint8_t ledBits = 0;
-
-      if (average > 20)
-        ledBits = 2;
-      if (average > 40)
-        ledBits = 3;
-      if (average > 50)
-        ledBits = 1;
-
-      control.setChannelIndicatorLight(1 + a, ledBits);
+      switch(retVal) {
+        case 0:
+          break;
+        case 1:
+        case 4:
+        case 5:
+          retVal = 3;
+          break;
+        case 2:
+          retVal = 1;
+          break;
+        case 3:
+          retVal = 2;
+          break;
+      }
+      control.setChannelIndicatorLight(1 + a, retVal);
     }
   }
 

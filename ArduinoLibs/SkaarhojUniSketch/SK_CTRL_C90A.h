@@ -119,6 +119,108 @@ void HWrunLoop() {
   HWrunLoop_AudioControl(audio_c, audioPot_c1, audioPot_c2, b16MapAC2c, sizeof(b16MapAC2c));
 }
 
+static uint32_t SK_C90A_lastAudioLevels = 0; 
+
+#define SK_CUSTOM_HANDLER_NATIVE
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {
+  uint8_t retVal = 0;
+
+  uint8_t devIndex = globalConfigMem[actionPtr + 2];
+  uint8_t aSrc = ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 3]);
+  _systemHWcActionCache[HWc][actIdx] = globalConfigMem[actionPtr + 3];
+
+  // Make sure audio level updates is activated
+  if(millis() - SK_C90A_lastAudioLevels > 10000 || SK_C90A_lastAudioLevels == 0) {
+    AtemSwitcher[devIndex].setAudioLevelsEnable(true);
+    SK_C90A_lastAudioLevels = millis();
+  }
+
+  if(HWc == 25) { // VU Meter
+    if(_systemMem[0] == 0) {
+      aSrc = 25; // Master channel
+    } else {
+      aSrc = _systemHWcActionCache[_systemMem[0]][actIdx];
+    }
+    aSrc = ATEM_idxToAudioSrc(devIndex, aSrc);
+  }
+
+  // Input order can be different in the audio levels packets
+  for(uint8_t i = 0; i < 24; i++) {
+    if(aSrc == AtemSwitcher[devIndex].getAudioMixerLevelsSourceOrder(i)) {
+      aSrc = i;
+      break;
+    }
+  }
+  
+  uint16_t levels = 0;
+
+  switch (aSrc) {
+    case 25:
+      levels = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterLeft()) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterRight()) + 60) & 0xFF);
+      break;
+    case 26:
+      levels = AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMonitor() & 0xFF);
+      break;
+    default:
+      levels = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(aSrc)) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(aSrc)) + 60) & 0xFF);
+      break;
+  }
+
+  uint8_t average = (levels >> 9) + ((levels & 0xFF) >> 1);
+  uint8_t ledBits = 0;
+
+  if (average > 20)
+    ledBits = 3;
+  if (average > 40)
+    ledBits = 4;
+  if (average > 50)
+    ledBits = 2;
+
+  switch(HWc) {
+    case 1:
+    case 5:
+    case 9:
+    case 13:
+    case 17:
+    case 21: // Peak diodes
+      if(_systemMem[0] == HWc) { // This channel is currently selected
+        retVal = (millis()&256?2:0);
+      } else if(_systemMem[0] == 0 || 1) { // Operate regularly as peak diodes
+        retVal = ledBits;
+      } else { 
+        retVal = 0;
+      }
+
+      return retVal;
+      break;
+    case 25: // VU Meter
+      return levels;
+      break;
+    case 26: // Channel switch
+      if(actDown && value == BINARY_EVENT) {
+        if(_systemMem[0] == 0) {
+            _systemMem[0] = 1;
+        } else {
+            _systemMem[0] += 4;
+            if(_systemMem[0] > 21) {
+              _systemMem[0] = 0;
+            }
+        }
+      }
+
+      return _systemMem[0] == 0 ? (4 | 0x20) : 5;
+      break;
+  }
+
+    // Default:
+  if (actDown) {
+    _systemHWcActionCacheFlag[HWc][actIdx] = true;
+  }
+  if (actUp) {
+    _systemHWcActionCacheFlag[HWc][actIdx] = false;
+  }
+  return _systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5;
+}
 
 
 uint8_t HWnumOfAnalogComponents() { return 8; }

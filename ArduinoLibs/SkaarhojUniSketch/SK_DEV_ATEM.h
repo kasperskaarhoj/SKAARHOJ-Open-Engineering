@@ -2406,8 +2406,51 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       break;
     }
 
-    case 53: // Audio peaks
+    case 53: {// Audio peaks
+      uint8_t aSrc = ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
+
+      // Make sure audio level updates is activated
+      if((uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 10000 || _systemHWcActionCache[HWc][actIdx] == 0) {
+        AtemSwitcher[devIndex].setAudioLevelsEnable(true);
+        _systemHWcActionCache[HWc][actIdx] = (uint16_t)millis();
+      }
+
+      // Input order can be different in the audio levels packets
+      for(uint8_t i = 0; i < 24; i++) {
+        if(aSrc == AtemSwitcher[devIndex].getAudioMixerLevelsSourceOrder(i)) {
+          aSrc = i;
+          break;
+        }
+      }
+      
+      uint16_t levels = 0;
+
+      switch (aSrc) {
+        case 25:
+          levels = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterLeft()) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMasterRight()) + 60) & 0xFF);
+          break;
+        case 26:
+          levels = AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsMonitor() & 0xFF);
+          break;
+        default:
+          levels = ((((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceLeft(aSrc)) + 60) & 0xFF) << 8) | (((int16_t)AtemSwitcher[devIndex].audioWord2Db(AtemSwitcher[devIndex].getAudioMixerLevelsSourceRight(aSrc)) + 60) & 0xFF);
+          break;
+      }
+
+      uint8_t average = (levels >> 9) + ((levels & 0xFF) >> 1);
+      uint8_t ledBits = 0;
+
+      if (average > 20)
+        ledBits = 3;
+      if (average > 40)
+        ledBits = 4;
+      if (average > 50)
+        ledBits = 2;
+
+      return ledBits;
+
       break;
+    }
     case 54: // Zoom (Nomalised)
       if(actDown && value != BINARY_EVENT) {
 
