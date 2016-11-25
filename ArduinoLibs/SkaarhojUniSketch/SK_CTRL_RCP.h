@@ -27,7 +27,7 @@ void addressSwitch_setGPO(bool mode) { // 0=relay off, 1=relay on
 }
 
 #define SK_CUSTOM_HANDLER_NATIVE
-uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {
 
   // ID display:
   if (HWc == 38 - 1) {
