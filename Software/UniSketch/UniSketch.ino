@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_TALLY
+#define SK_MODEL SK_C90A
 
 
 
@@ -353,7 +353,7 @@ uint16_t _retValue = 0;                                                    // Re
 
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
 int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);
-uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const uint16_t value = 0);
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const int16_t value = 0);
 uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const bool actUp = false, const int16_t pulses = 0, const int16_t value = 0x8000, const uint8_t specificAction = 0);
 uint16_t getNumOfActions(const uint8_t HWcNum);
 void lDelay(uint16_t delayVal);
@@ -818,22 +818,22 @@ uint8_t SONYVISCAIP_initIdx = 0;
 #endif
 
 #ifndef SK_CUSTOM_HANDLER_NATIVE
-uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {}
 #endif
 
 // Custom handlers
 #include "customhandler.h"
 #ifndef SK_CUSTOM_HANDLER_A
-uint16_t customActionHandlerA(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+uint16_t customActionHandlerA(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {}
 #endif
 #ifndef SK_CUSTOM_HANDLER_B
-uint16_t customActionHandlerB(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+uint16_t customActionHandlerB(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {}
 #endif
 #ifndef SK_CUSTOM_HANDLER_C
-uint16_t customActionHandlerC(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+uint16_t customActionHandlerC(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {}
 #endif
 #ifndef SK_CUSTOM_HANDLER_D
-uint16_t customActionHandlerD(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {}
+uint16_t customActionHandlerD(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {}
 #endif
 
 /**
