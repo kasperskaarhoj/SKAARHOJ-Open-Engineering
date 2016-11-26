@@ -1847,19 +1847,7 @@ void deviceSetup() {
 #if SK_DEVICES_BMDCAMCTRL
         Serial << F(": BMDCAMCTRL") << BMDCamCtrl_initIdx;
         deviceMap[a] = BMDCamCtrl_initIdx++;
-#if SK_MODEL == SK_REFERENCE
-        Wire.beginTransmission(0x71);
-        Wire.write(1 << 2); // Port 3
-        Wire.endTransmission();
-        delay(2);
-#endif
         BMDCamCtrl[deviceMap[a]].begin(0x6E); // TODO doesn't make sense
-#if SK_MODEL == SK_REFERENCE
-        Wire.beginTransmission(0x71);
-        Wire.write(1); // Port 1
-        Wire.endTransmission();
-        delay(2);
-#endif
 #endif
         break;
       case SK_DEV_SONYRCP:
@@ -3408,19 +3396,7 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                   break;
                 case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
-#if SK_MODEL == SK_REFERENCE
-                  Wire.beginTransmission(0x71);
-                  Wire.write(1 << 2); // Port 3
-                  Wire.endTransmission();
-                  delay(2);
-#endif
                   retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
-#if SK_MODEL == SK_REFERENCE
-                  Wire.beginTransmission(0x71);
-                  Wire.write(1); // Port 1
-                  Wire.endTransmission();
-                  delay(2);
-#endif
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif

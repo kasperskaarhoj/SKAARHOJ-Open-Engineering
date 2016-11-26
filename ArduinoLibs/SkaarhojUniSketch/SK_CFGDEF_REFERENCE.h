@@ -917,8 +917,8 @@ static const uint8_t defaultControllerConfig[] PROGMEM = {
 #define SK_HWEN_ACM 1
 #define SK_HWEN_GPIO 1
 
-SkaarhojBI8 buttons2;
 SkaarhojBI16 buttons;
+SkaarhojBI8 buttons2;
 SkaarhojOLED64x256 detailsDisplay;
 SkaarhojDisplayArray infoDisplay2;
 
@@ -928,7 +928,9 @@ SkaarhojAnalog Fader_btn;
 
 SkaarhojAnalog Joystick;
 
+#include <SkaarhojEADOGMDisplay.h>
+SkaarhojEADOGMDisplay idDisplay;
+
 // SkaarhojBI8 buttons3;
-// SkaarhojEADOGMDisplay idDisplay;
 SkaarhojEncoders encoders;
 SkaarhojEncoders encoders2;
