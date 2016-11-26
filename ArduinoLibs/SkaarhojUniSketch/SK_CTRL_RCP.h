@@ -27,7 +27,7 @@ void addressSwitch_setGPO(bool mode) { // 0=relay off, 1=relay on
 }
 
 #define SK_CUSTOM_HANDLER_NATIVE
-uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const uint16_t value) {
+uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown, const bool actUp, const uint8_t pulses, const int16_t value) {
 
   // ID display:
   if (HWc == 38 - 1) {
@@ -56,11 +56,6 @@ void HWcfgDisplay() { Serial << F("SK_MODEL: SK_RCP\n"); }
  */
 uint8_t HWsetupL() {
   uint8_t retVal = 0;
-
-  // Set up I2C port for BMD Shield:
-  Wire.beginTransmission(0x70);
-  Wire.write(1); // Port 1
-  Wire.endTransmission();
 
   Serial << F("Init BI16 board\n");
   buttons.begin(4);
@@ -204,6 +199,13 @@ uint8_t HWsetupL() {
   detailsDisplay.sendData(15, B1);
 
   addressSwitch_initIO();
+
+
+  // Set up I2C port for BMD Shield:
+  // Should be done AFTER any PCA9685 chips has been initialized
+  Wire.beginTransmission(0x70);
+  Wire.write(1); // Port 1
+  Wire.endTransmission();
 
   return retVal;
 }

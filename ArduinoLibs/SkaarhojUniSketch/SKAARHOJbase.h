@@ -94,6 +94,7 @@ uint16_t getPresetLength(uint8_t preset);
 void savePreset(uint8_t presetNum, uint16_t len);
 void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255);
 bool checkIncomingSerial();
+void deletePresets();
 
 uint16_t fletcher16(uint8_t *data, int16_t count) {
   uint16_t sum1 = 0;
@@ -858,6 +859,9 @@ bool checkIncomingSerial() {
       Serial << F("Presets clear\n");
       delay(1000);
       resetFunc();
+    } else if (!strncmp(serialBuffer, "clearsettings", 13)) {
+      Serial << "Clearing settings banks...\n";
+      deletePresets();
     } else if (!strncmp(serialBuffer, "reset", 5)) {
       Serial << F("Resetting...\n");
       delay(1000);
@@ -1637,6 +1641,12 @@ bool presetExists(uint8_t index, uint8_t type) {
     }
   }
   return false;
+}
+
+void deletePresets() {
+  for(uint8_t i=0; i < EEPROM_FILEBANK_NUM; i++) {
+    EEPROM.write(EEPROM_FILEBANK_START + i * 48, 0);
+  }
 }
 
 bool presetChecksumMatches(uint8_t index) {
@@ -2686,18 +2696,23 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
   }
 
   if (HWcMap[1]) { // Channel Indicator light
-    uint16_t retVal = actionDispatch(HWcMap[1]);
-    uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
-    uint8_t ledBits = 0;
-
-    if (average > 20)
-      ledBits = 2;
-    if (average > 40)
-      ledBits = 3;
-    if (average > 50)
-      ledBits = 1;
-
-    control.setChannelIndicatorLight(1, ledBits);
+      uint16_t retVal = actionDispatch(HWcMap[1]);
+      switch(retVal) {
+        case 0:
+          break;
+        case 1:
+        case 4:
+        case 5:
+          retVal = 3;
+          break;
+        case 2:
+          retVal = 1;
+          break;
+        case 3:
+          retVal = 2;
+          break;
+      }
+    control.setChannelIndicatorLight(1, retVal);
   }
 
   if (HWcMap[2]) { // VU
@@ -2734,17 +2749,22 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
   for (int16_t a = 0; a < 2; a++) {
     if (HWcMap[2 + a]) { // Channel Indicator light
       uint16_t retVal = actionDispatch(HWcMap[2 + a]);
-      uint8_t average = (retVal >> 9) + ((retVal & 0xFF) >> 1);
-      uint8_t ledBits = 0;
-
-      if (average > 20)
-        ledBits = 2;
-      if (average > 40)
-        ledBits = 3;
-      if (average > 50)
-        ledBits = 1;
-
-      control.setChannelIndicatorLight(1 + a, ledBits);
+      switch(retVal) {
+        case 0:
+          break;
+        case 1:
+        case 4:
+        case 5:
+          retVal = 3;
+          break;
+        case 2:
+          retVal = 1;
+          break;
+        case 3:
+          retVal = 2;
+          break;
+      }
+      control.setChannelIndicatorLight(1 + a, retVal);
     }
   }
 
