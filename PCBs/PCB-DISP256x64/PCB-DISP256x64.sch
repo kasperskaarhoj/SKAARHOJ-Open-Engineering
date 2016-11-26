@@ -10280,7 +10280,7 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <clearance class="0" value="0.1524"/>
 </class>
 <class number="1" name="Power" width="0.3048" drill="0.6096">
-<clearance class="1" value="0.1524"/>
+<clearance class="1" value="0.2032"/>
 </class>
 <class number="2" name="BoostPower" width="0.6096" drill="0.6096">
 <clearance class="2" value="0.3048"/>
@@ -10352,6 +10352,8 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="U$10" library="SparkFun" deviceset="5V" device=""/>
 <part name="U$17" library="SKAARHOJ" deviceset="M04X2" device="ZIF-0.5"/>
 <part name="PC1" library="rcl" deviceset="CPOL-EU" device="D" value="330uF"/>
+<part name="U$21" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
+<part name="U$22" library="SKAARHOJ" deviceset="GNDPAD" device="6MM" value="GNDPAD6MM"/>
 </parts>
 <sheets>
 <sheet>
@@ -10443,6 +10445,8 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <attribute name="NAME" x="175.26" y="-74.1934" size="1.778" layer="95"/>
 <attribute name="VALUE" x="175.006" y="-76.7334" size="1.778" layer="96"/>
 </instance>
+<instance part="U$21" gate="G$1" x="175.26" y="35.56"/>
+<instance part="U$22" gate="G$1" x="175.26" y="22.86"/>
 </instances>
 <busses>
 </busses>
@@ -10673,6 +10677,16 @@ VCI: Power Supply for Operation &gt;=VDDIO, &gt;=VDD</text>
 <pinref part="U$20" gate="G$1" pin="1"/>
 <wire x1="180.34" y1="-7.62" x2="185.42" y2="-7.62" width="0.1524" layer="91"/>
 <label x="185.42" y="-7.62" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$21" gate="G$1" pin="1"/>
+<wire x1="180.34" y1="35.56" x2="185.42" y2="35.56" width="0.1524" layer="91"/>
+<label x="185.42" y="35.56" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$22" gate="G$1" pin="1"/>
+<wire x1="180.34" y1="22.86" x2="185.42" y2="22.86" width="0.1524" layer="91"/>
+<label x="185.42" y="22.86" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="I2C_SDA" class="0">
