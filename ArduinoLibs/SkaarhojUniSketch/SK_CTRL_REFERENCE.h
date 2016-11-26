@@ -1,16 +1,20 @@
 
 /**
- * Hardware setup, config mode and preset settings
+ * Displaying controller ID in serial monitor during boot:
  */
 void HWcfgDisplay() { Serial << F("SK_MODEL: SK_REFERENCE\n"); }
 
+/**
+ * Selecting I2C chain:
+ */
 void setI2Cchain(uint8_t group) {
-  if(group > 7) return;
+  if (group > 7)
+    return;
 
   Wire.beginTransmission(0x71);
   Wire.write(1 << group);
   Wire.endTransmission();
-  
+
   delay(2);
 }
 
@@ -20,18 +24,11 @@ void setI2Cchain(uint8_t group) {
 uint8_t HWsetupL() {
   uint8_t retVal = 0;
 
-
-  setI2Cchain(2);
-  // Set up I2C port for BMD Shield:
-  Wire.beginTransmission(0x70);
-  Wire.write(1); // Port 1
-  Wire.endTransmission();
-  delay(2);
-
-  // Init second BI8 board here!
-
+  // Chain 0:
   setI2Cchain(0);
-  Serial << F("Init BI16 board\n");
+  Serial << F("I2C Chain 0 setup:\n");
+
+  Serial << F("Init BI16-1x4 board @ ( 32) = 0100000_ = 32+0 // (120) = 1111000_ = 120+0\n");
   buttons.begin(0);
   buttons.setDefaultColor(0); // Off by default
   buttons.setButtonColorsToDefault();
@@ -41,42 +38,40 @@ uint8_t HWsetupL() {
   }
   statusLED(QUICKBLANK);
 
-  // // Look for a button press / sustained button press to bring the device into config/config default modes:
-  // unsigned long timer = millis();
-  // if (buttons.buttonIsPressedAll() > 0) {
-  //   retVal = 1;
-  //   statusLED(LED_BLUE);
-  //   while (buttons.buttonIsPressedAll() > 0) {
-  //     if (sTools.hasTimedOut(timer, 2000)) {
-  //       retVal = 2;
-  //       statusLED(LED_WHITE);
-  //       break;
-  //     }
-  //   }
-  // } else {
-  //   // Preset
-  //   if (getNumberOfPresets() > 1) {
-  //     uint8_t presetNum = EEPROM.read(EEPROM_PRESET_START + 1);
+  // Look for a button press / sustained button press to bring the device into config/config default modes:
+  unsigned long timer = millis();
+  if (buttons.buttonIsPressedAll() > 0) {
+    retVal = 1;
+    statusLED(LED_BLUE);
+    while (buttons.buttonIsPressedAll() > 0) {
+      if (sTools.hasTimedOut(timer, 2000)) {
+        retVal = 2;
+        statusLED(LED_WHITE);
+        break;
+      }
+    }
+  } else {
+    // Preset
+    if (getNumberOfPresets() > 1) {
+      uint8_t presetNum = EEPROM.read(EEPROM_PRESET_START + 1);
+      while (!sTools.hasTimedOut(timer, 2000) || buttons.buttonIsPressedAll() > 0) {
+        uint8_t b16Map[] = {1, 2, 3, 4};
+        for (uint8_t a = 0; a < 4; a++) {
+          uint8_t color = b16Map[a] <= getNumberOfPresets() ? (b16Map[a] == presetNum ? 1 : 2) : 0;
+          buttons.setButtonColor(a + 1, color);
+          if (color > 0 && buttons.buttonIsHeldFor(a + 1, 2000)) {
+            setCurrentPreset(b16Map[a]);
+            buttons.setButtonColor(a + 1, 1);
+            while (buttons.buttonIsPressedAll() > 0)
+              ;
+          }
+        }
+      }
+      buttons.setButtonColorsToDefault();
+    }
+  }
 
-  //     while (!sTools.hasTimedOut(timer, 2000) || buttons.buttonIsPressedAll() > 0) {
-  //       uint8_t b16Map[] = {1, 2, 3, 4};
-  //       for (uint8_t a = 0; a < 4; a++) {
-  //         uint8_t color = b16Map[a] <= getNumberOfPresets() ? (b16Map[a] == presetNum ? 1 : 2) : 0;
-  //         buttons.setButtonColor(a + 1, color);
-  //         if (color > 0 && buttons.buttonIsHeldFor(a + 1, 2000)) {
-  //           setCurrentPreset(b16Map[a]);
-  //           buttons.setButtonColor(a + 1, 1);
-  //           while (buttons.buttonIsPressedAll() > 0)
-  //             ;
-  //         }
-  //       }
-  //     }
-  //     buttons.setButtonColorsToDefault();
-  //   }
-  // };
-
-  // UHB buttons
-  Serial << F("Init BI8 board\n");
+  Serial << F("Init BI8-2x5RGB-SE-VC board @ ( 34) = 0100010_ = 32+2 // ( 98) = 1100010_ = 96+2 // (122) = 1111010_ = 120+2\n");
   buttons2.begin(2);
   buttons2.setDefaultColor(0); // Off by default
   buttons2.setButtonColorsToDefault();
@@ -84,20 +79,9 @@ uint8_t HWsetupL() {
     Serial << F("Test: BI8 board color sequence\n");
     buttons2.testSequence();
   }
-  // statusLED(QUICKBLANK);
-  // if (buttons2.buttonIsPressedAll() > 0) { // Config mode detection:
-  //   retVal = 1;
-  //   statusLED(LED_BLUE);
-  //   while (buttons.buttonIsPressedAll() > 0) {
-  //     if (sTools.hasTimedOut(timer, 2000)) {
-  //       retVal = 2;
-  //       statusLED(LED_WHITE);
-  //       break; // If the BI8 board is unconnected, this wont return otherwise
-  //     }
-  //   }
-  // }
+  statusLED(QUICKBLANK);
 
-  Serial << F("Init Details Display\n");
+  Serial << F("Init DISP256x64 Display @ ( 88) = 1011000_ = 88+0\n");
   detailsDisplay.begin(0);
   detailsDisplay.clearDisplay(); // clears the screen and buffer
   for (uint8_t a = 0; a < 8; a++) {
@@ -115,34 +99,33 @@ uint8_t HWsetupL() {
   detailsDisplay.sendCommand(0xC7, B1);
   detailsDisplay.sendData(15, B1);
 
+  // Chain 1:
   setI2Cchain(1);
+  Serial << F("I2C Chain 1 setup:\n");
 
   // Encoders
-  Serial << F("Init bottom Encoders\n");
+  Serial << F("Init ENCODER4N @ ( 33) = 0100001_ = 32+1\n");
   encoders.begin(1);
-  // encoders.serialOutput(SK_SERIAL_OUTPUT);
   encoders.setStateCheckDelay(250);
   statusLED(QUICKBLANK);
 
-  Serial << F("Init top Encoders\n");
+  Serial << F("Init ENCODER4N @ ( 34) = 0100010_ = 32+2\n");
   encoders2.begin(2);
-  // encoders2.serialOutput(SK_SERIAL_OUTPUT);
   encoders2.setStateCheckDelay(250);
   statusLED(QUICKBLANK);
 
-  // Serial << F("Init ID Display\n");
-  // idDisplay.begin(1, 0, 1); // DOGM163
-  // idDisplay.cursor(false);
-  // idDisplay.print("SKAARHOJ");
-  // idDisplay.setBacklight(1, 0, 0);
-  // delay(500);
-  // idDisplay.setBacklight(0, 1, 0);
-  // delay(500);
-  // idDisplay.setBacklight(1, 1, 1);
-  // statusLED(QUICKBLANK);
+  Serial << F("Init ID Display\n");
+  idDisplay.begin(7, 0, 1); // DOGM163
+  idDisplay.cursor(false);
+  idDisplay.print("SKAARHOJ");
+  idDisplay.setBacklight(1, 0, 0);
+  delay(500);
+  idDisplay.setBacklight(0, 1, 0);
+  delay(500);
+  idDisplay.setBacklight(1, 1, 1);
+  statusLED(QUICKBLANK);
 
-
-  Serial << F("Init Info Display 2\n");
+  Serial << F("Init DISP128x32 Display @ ( 93) = 1011101_ = 88+5\n");
   infoDisplay2.begin(5, 1);
 
   for (uint8_t i = 0; i < 8; i++) {
@@ -170,14 +153,11 @@ uint8_t HWsetupL() {
   // Fader_btn.uniDirectionalSlider_init(15, 80, 80, 0, 0);
   // Fader_btn.uniDirectionalSlider_disableUnidirectionality(true);
 
-
-  Serial << F("Init 4-axis joystick\n");
-
+  Serial << F("Init 4-axis joystick JOY-4AXIS @ ( 73) = 1001001_ = 72+1\n");
   Joystick.joystick_init(50, 1, 0);
 
-  setI2Cchain(2); // Only for microGPIO
-
-  setI2Cchain(0); // Make sure the chain is set to 0 when leaving the function!
+  // Force config mode for the time being:
+  retVal = 2;
 
   return retVal;
 }
@@ -188,32 +168,16 @@ uint8_t HWsetupL() {
 void HWtestL() {
   static uint16_t testVal = 0;
 
-  // encoders.runLoop();
-  // encoders2.runLoop();
-
-  buttons.testProgramme(0xF);
-
-  // encoders.runLoop();
-  // encoders2.runLoop();
-
-  buttons2.testProgramme(0x3FF);
-
   setI2Cchain(0);
 
-  // encoders.runLoop();
-  // encoders2.runLoop();
+  // Testing BI16-1x4 buttons:
+  buttons.testProgramme(0xF);
 
-  // idDisplay.gotoRowCol(0, 0);
-  // idDisplay << _DECPADL(addressSwitch_getAddress(), 2, "0") << (addressSwitch_getGPI() ? F("!") : F(" ")) << _DECPADL(testVal, 5, " ");
+  // Testing BI8-2x5RGB-SE-VC buttons:
+  buttons2.testProgramme(0x3FF);
 
-  // idDisplay.setBacklight(millis() & 0x8000 ? 1 : 0, millis() & 0x4000 ? 1 : 0, millis() & 0x2000 ? 1 : 0);
-
-  // if (joystick.uniDirectionalSlider_hasMoved()) {
-  //   testVal = joystick.uniDirectionalSlider_position();
-  // }
-
+  // Testing DISP256x64:
   static uint8_t ptr = 0;
-
   switch (ptr % 6) {
   case 1:
     testGenerateExtRetVal(ptr + 4);
@@ -240,14 +204,40 @@ void HWtestL() {
     writeDisplayTile(detailsDisplay, 128, 32, B1, 0, 1);
     break;
   }
-
-  setI2Cchain(1);
-
-  // encoders.testProgramme(B11111);
-  // encoders2.testProgramme(B11111);
-
   ptr++;
 
+  setI2Cchain(1);
+  
+  encoders.runLoop();
+  encoders2.runLoop();
+  encoders.testProgramme(B11111);
+  encoders2.testProgramme(B11111);
+
+  idDisplay.gotoRowCol(0, 0);
+  idDisplay << "M:" << _DECPADL(millis()>>9, 5, " ") << " ";
+  idDisplay.setBacklight(millis() & 0x2000 ? 1 : 0, millis() & 0x1000 ? 1 : 0, millis() & 0x500 ? 1 : 0);
+
+  /*
+  // Now, joystick seems pretty noisy, supposedly fixed with new PCB
+  
+  if (Joystick.joystick_hasMoved(0)) {
+    Serial << "Joystick 0: " << Joystick.joystick_position(0) << "\n";
+  }
+  if (Joystick.joystick_hasMoved((int)1)) {
+    Serial << "Joystick 1: " << Joystick.joystick_position(1) << "\n";
+  }
+  if (Joystick.joystick_hasMoved((int)2)) {
+    Serial << "Joystick 2: " << Joystick.joystick_position(2) << "\n";
+  }
+  if (Joystick.joystick_buttonUp()) {
+    Serial << "Joystick Up\n";
+  }
+  if (Joystick.joystick_buttonDown()) {
+    Serial << "Joystick Down\n";
+  }  
+  */
+  
+  // Return to chain 0 - otherwise the general test routines in SKAARHOJbase will not work right.
   setI2Cchain(0);
 }
 
@@ -361,7 +351,7 @@ void HWrunLoop() {
 
   // hasMoved = Fader_y.uniDirectionalSlider_hasMoved();
   // actionDispatch(41, hasMoved, false, 0, 1000 - Fader_y.uniDirectionalSlider_position());
-  
+
   // // Wheel
   // hasMoved = Fader_theta.uniDirectionalSlider_hasMoved();
   // actionDispatch(101, hasMoved, false, 0, Fader_theta.uniDirectionalSlider_position());
@@ -449,26 +439,26 @@ int16_t HWAnalogComponentValue(uint8_t num) {
   }
 }
 
-void HWanalogComponentName(uint8_t num, char* buffer, uint8_t len) {
+void HWanalogComponentName(uint8_t num, char *buffer, uint8_t len) {
   char *name;
-  switch(num) {
-    case 1:
-      name = "Slider";
-      break;
-    default:
-      name = "";
+  switch (num) {
+  case 1:
+    name = "Slider";
+    break;
+  default:
+    name = "";
   }
   strncpy(buffer, name, len);
 }
 
 uint16_t *HWMinCalibrationValues(uint8_t num) {
-  static uint16_t values[3] = {0,0,0};
-  switch(num) {
-    default:
-      values[0] = 35; // Start
-      values[1] = 35; // End
-      values[2] = 15; // Hysteresis
-      break;
+  static uint16_t values[3] = {0, 0, 0};
+  switch (num) {
+  default:
+    values[0] = 35; // Start
+    values[1] = 35; // End
+    values[2] = 15; // Hysteresis
+    break;
   }
   return values;
 }
