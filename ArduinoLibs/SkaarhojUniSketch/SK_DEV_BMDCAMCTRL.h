@@ -264,7 +264,9 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if ((pulses & 0xFFFE)) {
-      BMDCamCtrl[devIndex].setSensorGain(cam, 1 << (((c + (pulses >> 1)) % 4) + 1));
+      if(c == 3 && pulses < 0 || c < 3) {
+        BMDCamCtrl[devIndex].setSensorGain(cam, 1 << (((c + (pulses >> 1)) % 4) + 1));
+      }
     }
 
     if (extRetValIsWanted()) {
