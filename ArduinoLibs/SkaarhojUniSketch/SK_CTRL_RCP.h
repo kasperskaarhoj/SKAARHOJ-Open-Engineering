@@ -515,13 +515,13 @@ uint16_t *HWMinCalibrationValues(uint8_t num) {
   static uint16_t values[3] = {0, 0, 0};
   switch (num) {
   case 1:
-    values[0] = 35; // Start
-    values[1] = 35; // End
+    values[0] = 105; // Start
+    values[1] = 112; // End
     values[2] = 2;  // Hysteresis
     break;
   case 2:
-    values[0] = 0; // Start
-    values[1] = 0; // End
+    values[0] = 2; // Start
+    values[1] = 2; // End
     values[2] = 2;  // Hysteresis
     break;
   }
