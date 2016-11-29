@@ -31,6 +31,11 @@ void ClientBMDCamCtrl::begin(uint8_t address) {
   _hasInitialized = _cameraControl.shieldInitialized;
 }
 
+bool ClientBMDCamCtrl::validCamera(uint8_t cam) {
+  // Only camera numbers between 1 and ClientBMDCamCtrl_Cams are valid
+  return (uint8_t)(cam-1) < ClientBMDCamCtrl_Cams;
+}
+
 void ClientBMDCamCtrl::cameraOverride(bool override) {
   _cameraControl.setOverride(override);
 }
@@ -72,13 +77,14 @@ void ClientBMDCamCtrl::getTally(uint8_t cam, bool &programTally, bool &previewTa
   }
 }
 
-void ClientBMDCamCtrl::initColourCorrection(int cam) {
+void ClientBMDCamCtrl::initColourCorrection(uint8_t cam) {
+  if(!validCamera(cam)) return;
   //cameraIrisValue[cam] = 0.00;
   cameraContrastValue[cam-1][0] = 0.5;
   cameraContrastValue[cam-1][1] = 1.0;
   cameraWBValue[cam-1] = 3200;
   cameraExposureValue[cam-1] = 10000;
-  //cameraSensorGainValue[cam] = 2; // Apparently this is the lowest value
+  cameraSensorGainValue[cam-1] = 2; // Apparently this is the lowest value
 
   for (int j = 0; j < 4; j++) {
     cameraGainValue[cam-1][j] = 1.00;
@@ -190,60 +196,90 @@ template <typename T> inline void clampValue(T *value, T const &min, T const &ma
 
 // Lens commands
 void ClientBMDCamCtrl::setFocus(uint8_t camera, float focus, bool offset) { // Range: 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&focus, 0.0f, 1.0f);
   cameraFocusValue[camera - 1] = focus;
   _cameraControl.writeCommandFixed16(camera, 0, 0, (offset ? 1 : 0), focus);
 }
-void ClientBMDCamCtrl::setAutoFocus(uint8_t camera) { _cameraControl.writeCommandVoid(camera, 0, 1); }
+void ClientBMDCamCtrl::setAutoFocus(uint8_t camera) { 
+  if(!validCamera(camera)) return;
+  _cameraControl.writeCommandVoid(camera, 0, 1); 
+}
+
 void ClientBMDCamCtrl::setIrisf(uint8_t camera, float iris, bool offset) { // Range: -1.0 - 16.0
+  if(!validCamera(camera)) return;
   clampValue(&iris, -1.0f, 16.0f);
   _cameraControl.writeCommandFixed16(camera, 0, 2, (offset ? 1 : 0), iris);
 }
 void ClientBMDCamCtrl::setIris(uint8_t camera, float iris, bool offset) { // Range: 0.0- 1.0
+  if(!validCamera(camera)) return;
   clampValue(&iris, 0.0f, 1.0f);
   cameraIrisValue[camera - 1] = iris;
   _cameraControl.writeCommandFixed16(camera, 0, 3, (offset ? 1 : 0), iris);
 }
 
-void ClientBMDCamCtrl::setAutoIris(uint8_t camera) { _cameraControl.writeCommandVoid(camera, 0, 5); }
-void ClientBMDCamCtrl::setOIS(uint8_t camera, bool state, bool offset) { _cameraControl.writeCommandBool(camera, 0, 6, (offset ? 1 : 0), state); }
-void ClientBMDCamCtrl::setZoom(uint8_t camera, uint16_t zoom, bool offset) { _cameraControl.writeCommandInt16(camera, 0, 7, (offset ? 1 : 0), zoom); }
+void ClientBMDCamCtrl::setAutoIris(uint8_t camera) { 
+  if(!validCamera(camera)) return;
+  _cameraControl.writeCommandVoid(camera, 0, 5); 
+}
+
+void ClientBMDCamCtrl::setOIS(uint8_t camera, bool state, bool offset) { 
+  if(!validCamera(camera)) return;
+  _cameraControl.writeCommandBool(camera, 0, 6, (offset ? 1 : 0), state); 
+}
+
+void ClientBMDCamCtrl::setZoom(uint8_t camera, uint16_t zoom, bool offset) { 
+  if(!validCamera(camera)) return;
+  _cameraControl.writeCommandInt16(camera, 0, 7, (offset ? 1 : 0), zoom); 
+}
 
 void ClientBMDCamCtrl::setNormZoom(uint8_t camera, float zoom, bool offset) {
+  if(!validCamera(camera)) return;
   clampValue(&zoom, 0.0f, 1.0f);
   cameraZoomValue[camera - 1] = zoom;
   _cameraControl.writeCommandInt16(camera, 0, 8, (offset ? 1 : 0), zoom);
 }
 
 void ClientBMDCamCtrl::setContinuousZoom(uint8_t camera, float rate, bool offset) { // -1.0 wide, 0.0 stop, 1.0 tele
+  if(!validCamera(camera)) return;
   clampValue(&rate, -1.0f, 1.0f);
   cameraContinuousZoomValue[camera - 1] = rate;
   _cameraControl.writeCommandFixed16(camera, 0, 9, (offset ? 1 : 0), rate);
 }
 
 // Video controls
-void ClientBMDCamCtrl::setVideoMode(uint8_t camera, int8_t (&mode)[5]) { _cameraControl.writeCommandInt8(camera, 1, 0, 0, mode); }
+void ClientBMDCamCtrl::setVideoMode(uint8_t camera, int8_t (&mode)[5]) { 
+  if(!validCamera(camera)) return;
+  _cameraControl.writeCommandInt8(camera, 1, 0, 0, mode); 
+}
 void ClientBMDCamCtrl::setSensorGain(uint8_t camera, int8_t gain, bool offset) {
+  if(!validCamera(camera)) return;
   clampValue(&gain, (int8_t)1, (int8_t)16);
   cameraSensorGainValue[camera - 1] = gain;
   _cameraControl.writeCommandInt8(camera, 1, 1, (offset ? 1 : 0), gain);
 }
 void ClientBMDCamCtrl::setWhiteBalance(uint8_t camera, int16_t wb, bool offset) { // 3200 - 7500
+  if(!validCamera(camera)) return;
   clampValue(&wb, (int16_t)3200, (int16_t)7500);
   cameraWBValue[camera - 1] = wb;
   _cameraControl.writeCommandInt16(camera, 1, 2, (offset ? 1 : 0), wb);
 }
 void ClientBMDCamCtrl::setExposure(uint8_t camera, int32_t exposure, bool offset) { // 1 - 32000 µs
+  if(!validCamera(camera)) return;
   clampValue(&exposure, (int32_t)1, (int32_t)42000);
   cameraExposureValue[camera - 1] = exposure;
   _cameraControl.writeCommandInt32(camera, 1, 5, (offset ? 1 : 0), exposure);
 }
 void ClientBMDCamCtrl::setDynamicRangeMode(uint8_t camera, int8_t mode) { // 0: film, 1: Video
+  if(!validCamera(camera)) return;
   if (mode == 0 || mode == 1) {
     _cameraControl.writeCommandInt8(camera, 1, 7, 0, mode);
   }
 }
+
+#include <Streaming.h>
 void ClientBMDCamCtrl::setVideoSharpening(uint8_t camera, int8_t mode) { // 0: off, 1: low, 2: medium, 3: high
+  if(!validCamera(camera)) return;
   clampValue(&mode, (int8_t)0, (int8_t)3);
   cameraSharpeningLevel[camera-1] = mode;
   _cameraControl.writeCommandInt8(camera, 1, 8, 0, mode);
@@ -251,33 +287,39 @@ void ClientBMDCamCtrl::setVideoSharpening(uint8_t camera, int8_t mode) { // 0: o
 
 // Audio controls
 void ClientBMDCamCtrl::setMicLevel(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraMicLevel[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 2, 0, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setHeadphoneLevel(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraHeadphoneValue[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 2, 1, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setHeadphoneProgramMix(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraHeadphoneProgramLevelValue[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 2, 2, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setSpeakerLevel(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraSpeakerLevel[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 2, 3, (offset ? 1 : 0), level);
 }
 
 void ClientBMDCamCtrl::setInputType(uint8_t camera, int8_t type) { // 0: Internal mic, 1: Line level, 2: Low mic level, 3: High mic level
+  if(!validCamera(camera)) return;
   clampValue(&type, (int8_t)0, (int8_t)3);
   cameraInputType[camera - 1] = type;
   _cameraControl.writeCommandInt8(camera, 2, 4, 0, type);
 }
 
 void ClientBMDCamCtrl::setInputLevels(uint8_t camera, float (&level)[2], bool offset) { // Range 0.0 - 1.0, [0]: ch0, [1]: ch1
+  if(!validCamera(camera)) return;
   clampValue(&level[0], 0.0f, 1.0f);
   clampValue(&level[1], 0.0f, 1.0f);
 
@@ -285,37 +327,44 @@ void ClientBMDCamCtrl::setInputLevels(uint8_t camera, float (&level)[2], bool of
   _cameraControl.writeCommandFixed16(camera, 2, 5, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setPhantomPower(uint8_t camera, bool state, bool offset) { // True: powered
+  if(!validCamera(camera)) return;
   cameraPhantomPower[camera - 1] = state;
   _cameraControl.writeCommandBool(camera, 2, 6, (offset ? 1 : 0), state);
 }
 
 // Output controls
 void ClientBMDCamCtrl::setOverlays(uint8_t camera, uint16_t mask) {
+  if(!validCamera(camera)) return;
   cameraOverlaysValue[camera - 1] = mask;
   _cameraControl.writeCommandInt16(camera, 3, 0, 0, mask);
 }
 
 // Display controls
 void ClientBMDCamCtrl::setDisplayBrightness(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraDisplayBrightnessValue[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 4, 0, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setDisplayOverlays(uint8_t camera, uint8_t mask) { // 0x4: Zebra, 0x8 peaking
+  if(!validCamera(camera)) return;
   cameraDisplayOverlaysValue[camera - 1] = mask;
   _cameraControl.writeCommandInt16(camera, 4, 1, 0, mask);
 }
 void ClientBMDCamCtrl::setDisplayZebraLevels(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraDisplayZebraValue[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 4, 2, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setDisplayPeakingLevel(uint8_t camera, float level, bool offset) {
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraDisplayPeakingValue[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 4, 3, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setDisplayColorBarsTime(uint8_t camera, int8_t secs, bool offset) { // 0: disable, 1-30: time to display bars
+  if(!validCamera(camera)) return;
   clampValue(&secs, (int8_t)0, (int8_t)30);
   cameraDisplayColorbarsValue[camera - 1] = secs;
   _cameraControl.writeCommandInt8(camera, 4, 4, (offset ? 1 : 0), secs);
@@ -323,6 +372,7 @@ void ClientBMDCamCtrl::setDisplayColorBarsTime(uint8_t camera, int8_t secs, bool
 
 // Tally controls
 void ClientBMDCamCtrl::setTallyBrightness(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraTallyBrightnessValue[camera - 1] = level;
   cameraTallyRearBrightnessValue[camera - 1] = level;
@@ -331,11 +381,13 @@ void ClientBMDCamCtrl::setTallyBrightness(uint8_t camera, float level, bool offs
   _cameraControl.writeCommandFixed16(camera, 5, 0, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setTallyFrontBrightness(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraTallyFrontBrightnessValue[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 5, 1, (offset ? 1 : 0), level);
 }
 void ClientBMDCamCtrl::setTallyRearBrightness(uint8_t camera, float level, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&level, 0.0f, 1.0f);
   cameraTallyRearBrightnessValue[camera - 1] = level;
   _cameraControl.writeCommandFixed16(camera, 5, 2, (offset ? 1 : 0), level);
@@ -343,25 +395,29 @@ void ClientBMDCamCtrl::setTallyRearBrightness(uint8_t camera, float level, bool 
 
 // Reference controls
 void ClientBMDCamCtrl::setReferenceSource(uint8_t camera, int8_t value) { // 0: internal, 1: program, 2: external
+  if(!validCamera(camera)) return;
   if (value == 0 || value == 1 || value == 2) {
     cameraReferenceSourceValue[camera - 1] = value;
     _cameraControl.writeCommandInt8(camera, 6, 0, 0, value);
   }
 }
 void ClientBMDCamCtrl::setReferenceOffset(uint8_t camera, int32_t offset, bool offs) {
+  if(!validCamera(camera)) return;
   cameraReferenceOffsetValue[camera - 1] = offset;
   _cameraControl.writeCommandInt32(camera, 6, 1, (offs ? 1 : 0), offset);
 }
 
 // Configuration controls
 void ClientBMDCamCtrl::setClock(uint8_t camera, int32_t (&value)[2]) { // 0: time, 1: date
+  if(!validCamera(camera)) return;
   memcpy(cameraClockValue[camera - 1], value, sizeof(value));
   _cameraControl.writeCommandInt32(camera, 7, 0, 0, value);
 }
 
 // Colour correction controls
 void ClientBMDCamCtrl::setCameraLift(uint8_t camera, float (&value)[4], bool offset) { // 0: red, 1: green, 2: blue, 3: luma (-2.0 - 2.0)
-  float(&existing)[4] = getCameraLift(camera);
+  if(!validCamera(camera)) return;
+  float(&existing)[4] = cameraLiftValue[camera - 1];
   existing[0] = isnan(value[0]) ? existing[0] : value[0];
   existing[1] = isnan(value[1]) ? existing[1] : value[1];
   existing[2] = isnan(value[2]) ? existing[2] : value[2];
@@ -374,8 +430,11 @@ void ClientBMDCamCtrl::setCameraLift(uint8_t camera, float (&value)[4], bool off
 
   _cameraControl.writeCommandFixed16(camera, 8, 0, (offset ? 1 : 0), existing);
 }
+
 void ClientBMDCamCtrl::setCameraGamma(uint8_t camera, float (&value)[4], bool offset) { // 0: red, 1: green, 2: blue, 3: luma (-4.0 - 4.0)
-  float(&existing)[4] = getCameraGamma(camera);
+  if(!validCamera(camera)) return;
+  float (&existing)[4] = cameraGammaValue[camera - 1];
+
   existing[0] = isnan(value[0]) ? existing[0] : value[0];
   existing[1] = isnan(value[1]) ? existing[1] : value[1];
   existing[2] = isnan(value[2]) ? existing[2] : value[2];
@@ -389,7 +448,8 @@ void ClientBMDCamCtrl::setCameraGamma(uint8_t camera, float (&value)[4], bool of
   _cameraControl.writeCommandFixed16(camera, 8, 1, (offset ? 1 : 0), existing);
 }
 void ClientBMDCamCtrl::setCameraGain(uint8_t camera, float (&value)[4], bool offset) { // 0: red, 1: green, 2: blue, 3: luma (0.0 - 16.0)
-  float(&existing)[4] = getCameraGain(camera);
+  if(!validCamera(camera)) return;
+  float(&existing)[4] = cameraGainValue[camera - 1];
   existing[0] = isnan(value[0]) ? existing[0] : value[0];
   existing[1] = isnan(value[1]) ? existing[1] : value[1];
   existing[2] = isnan(value[2]) ? existing[2] : value[2];
@@ -403,7 +463,8 @@ void ClientBMDCamCtrl::setCameraGain(uint8_t camera, float (&value)[4], bool off
   _cameraControl.writeCommandFixed16(camera, 8, 2, (offset ? 1 : 0), existing);
 }
 void ClientBMDCamCtrl::setCameraOffset(uint8_t camera, float (&value)[4], bool offset) { // 0: red, 1: green, 2: blue, 3: luma (-8.0 - 8.0)
-  float(&existing)[4] = getCameraOffset(camera);
+  if(!validCamera(camera)) return;
+  float(&existing)[4] = cameraOffsetValue[camera - 1];
   existing[0] = isnan(value[0]) ? existing[0] : value[0];
   existing[1] = isnan(value[1]) ? existing[1] : value[1];
   existing[2] = isnan(value[2]) ? existing[2] : value[2];
@@ -417,7 +478,8 @@ void ClientBMDCamCtrl::setCameraOffset(uint8_t camera, float (&value)[4], bool o
   _cameraControl.writeCommandFixed16(camera, 8, 3, (offset ? 1 : 0), existing);
 }
 void ClientBMDCamCtrl::setCameraContrast(uint8_t camera, float (&value)[2], bool offset) { // 0: pivot (0.0-1.0), 1: adjust (0.0 - 2.0)
-  float(&existing)[2] = getCameraContrast(camera);
+  if(!validCamera(camera)) return;
+  float(&existing)[2] = cameraContrastValue[camera - 1];
   existing[0] = isnan(value[0]) ? existing[0] : value[0];
   existing[1] = isnan(value[1]) ? existing[1] : value[1];
 
@@ -427,13 +489,15 @@ void ClientBMDCamCtrl::setCameraContrast(uint8_t camera, float (&value)[2], bool
   _cameraControl.writeCommandFixed16(camera, 8, 4, (offset ? 1 : 0), existing);
 }
 void ClientBMDCamCtrl::setCameraLumaMix(uint8_t camera, float value, bool offset) { // 0.0 - 1.0
+  if(!validCamera(camera)) return;
   clampValue(&value, 0.0f, 1.0f);
 
   cameraLumaMixValue[camera - 1] = value;
   _cameraControl.writeCommandFixed16(camera, 8, 5, (offset ? 1 : 0), value);
 }
 void ClientBMDCamCtrl::setCameraColourAdjust(uint8_t camera, float (&value)[2], bool offset) { // 0: hue (-1.0-1.0), 1: saturation (0.0-2.0)
-  float(&existing)[2] = getCameraColourAdjust(camera);
+  if(!validCamera(camera)) return;
+  float(&existing)[2] = cameraColourAdjustValue[camera - 1];
   existing[0] = isnan(value[0]) ? existing[0] : value[0];
   existing[1] = isnan(value[1]) ? existing[1] : value[1];
 
@@ -444,17 +508,20 @@ void ClientBMDCamCtrl::setCameraColourAdjust(uint8_t camera, float (&value)[2], 
 }
 
 void ClientBMDCamCtrl::setCameraCorrectionReset(uint8_t camera) { 
+  if(!validCamera(camera)) return;
   // Doesn't reset: Iris, shutter, sensor gain
   _cameraControl.writeCommandVoid(camera, 8, 7); 
   initColourCorrection(camera);
 }
 
 void ClientBMDCamCtrl::setServoSpeed(uint8_t camera, uint8_t num, int16_t speed) {
+  if(!validCamera(camera)) return;
   if(num >= 3) return;
   _cameraControl.writeCommandInt16(camera, 9, num, 1, speed);
 }
 
 void ClientBMDCamCtrl::setServoPosition(uint8_t camera, uint8_t num, uint16_t position) {
+  if(!validCamera(camera)) return;
   if(num >= 3) return;
   _cameraControl.writeCommandInt16(camera, 9, num, 1, position);
 }
@@ -486,7 +553,11 @@ float ClientBMDCamCtrl::getHeadphoneLevel(uint8_t camera) { return cameraHeadpho
 float ClientBMDCamCtrl::getHeadphoneProgramMix(uint8_t camera) { return cameraHeadphoneProgramLevelValue[camera - 1]; }
 float ClientBMDCamCtrl::getSpeakerLevel(uint8_t camera) { return cameraSpeakerLevel[camera - 1]; }
 int8_t ClientBMDCamCtrl::getInputType(uint8_t camera) { return cameraInputType[camera - 1]; }
-float (&ClientBMDCamCtrl::getInputLevels(uint8_t camera))[2] { return cameraInputLevels[camera - 1]; }
+bool ClientBMDCamCtrl::getInputLevels(uint8_t camera, float (&levels)[2]) {
+  if(!validCamera(camera)) return false;
+  memcpy(levels, cameraInputLevels[camera - 1], 4*sizeof(float));
+  return true; 
+}
 bool ClientBMDCamCtrl::getPhantomPower(uint8_t camera) { return cameraPhantomPower[camera - 1]; }
 
 // Output controls
@@ -507,12 +578,40 @@ float ClientBMDCamCtrl::getTallyRearBrightness(uint8_t camera) { return cameraTa
 int8_t ClientBMDCamCtrl::getReferenceSource(uint8_t camera) { return cameraReferenceSourceValue[camera - 1]; }
 
 // Configuration controls
-int32_t (&ClientBMDCamCtrl::getClock(uint8_t camera))[2] { return cameraClockValue[camera - 1]; }
+bool ClientBMDCamCtrl::getClock(uint8_t camera, int32_t (&clock)[2]) {
+  if(!validCamera(camera)) return false;
+  memcpy(clock, cameraClockValue[camera - 1], 2*sizeof(int32_t));
+  return true; 
+}
 
 // Colour correction controls
-float (&ClientBMDCamCtrl::getCameraLift(uint8_t camera))[4] { return cameraLiftValue[camera - 1]; }
-float (&ClientBMDCamCtrl::getCameraGamma(uint8_t camera))[4] { return cameraGammaValue[camera - 1]; }
-float (&ClientBMDCamCtrl::getCameraGain(uint8_t camera))[4] { return cameraGainValue[camera - 1]; }
-float (&ClientBMDCamCtrl::getCameraContrast(uint8_t camera))[2] { return cameraContrastValue[camera - 1]; }
+bool ClientBMDCamCtrl::getCameraLift(uint8_t camera, float (&lift)[4]) {
+  if(!validCamera(camera)) return false;
+  memcpy(lift, cameraLiftValue[camera - 1], 4*sizeof(float));
+  return true; 
+}
+
+bool ClientBMDCamCtrl::getCameraGamma(uint8_t camera, float (&value)[4]) { 
+  if(!validCamera(camera)) return false;
+  memcpy(value, cameraGammaValue[camera - 1], 4*sizeof(float));
+  return true;
+}
+bool ClientBMDCamCtrl::getCameraGain(uint8_t camera, float (&gain)[4]) { 
+  if(!validCamera(camera)) return false;
+  memcpy(gain, cameraGainValue[camera - 1], 4*sizeof(float));
+  return true; 
+}
+
+bool ClientBMDCamCtrl::getCameraContrast(uint8_t camera, float (&contrast)[2]) { 
+  if(!validCamera(camera)) return false;
+  memcpy(contrast, cameraContrastValue[camera - 1], 2*sizeof(float));
+  return true; 
+}
+
 float ClientBMDCamCtrl::getCameraLumaMix(uint8_t camera) { return cameraLumaMixValue[camera - 1]; }
-float (&ClientBMDCamCtrl::getCameraColourAdjust(uint8_t camera))[2] { return cameraColourAdjustValue[camera - 1]; }
+
+bool ClientBMDCamCtrl::getCameraColourAdjust(uint8_t camera, float (&adjust)[2]) {
+  if(!validCamera(camera)) return false;
+  memcpy(adjust, cameraColourAdjustValue[camera - 1], 2*sizeof(float));
+  return true; 
+}
