@@ -192,7 +192,7 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
 }
 
 uint16_t *getAnalogComponentCalibration(uint8_t num) {
-  static uint16_t calibration[3] = {30, 30, 15};
+  static uint16_t *calibration = HWMinCalibrationValues(num);
 
   num -= 1;
   if (num > 9)
@@ -206,7 +206,7 @@ uint16_t *getAnalogComponentCalibration(uint8_t num) {
 
   if ((193 ^ c1 ^ c2 ^ c3) != c4) {
     Serial << F("Initialized calibration for analog component ") << num + 1 << "\n";
-    setAnalogComponentCalibration(num + 1, 30, 30, 15);
+    setAnalogComponentCalibration(num + 1, calibration[0], calibration[1], calibration[2]);
   }
 
   calibration[0] = EEPROM.read(20 + num * 4 + 1) << 1 | EEPROM.read(20 + num * 4 + 3) >> 7;     // Start
@@ -3356,7 +3356,6 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
     pulses = pulses & B1;
     value = BINARY_EVENT;
   }
-
   if (specificAction > getNumOfActions(HWcNum)) {
     Serial << "Unreachable specificAction=" << specificAction << " from HWc " << HWcNum << ". Breaking...\n";
     return 0;
