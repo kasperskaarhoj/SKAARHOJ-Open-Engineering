@@ -2215,6 +2215,34 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
   case 47: // Chroma Settings
     break;
   case 48: // PIP
+    if(actDown && value == BINARY_EVENT) {
+        bool state = AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+        if(!state) {
+          AtemSwitcher[devIndex].commandBundleStart();
+          AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 100);
+          AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 50);
+          AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 30);
+          AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 30);
+          AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0);
+          AtemSwitcher[devIndex].setKeyDVEBorderOuterWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 2);
+          AtemSwitcher[devIndex].setKeyDVEBorderLuma(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+          AtemSwitcher[devIndex].setKeyDVEBorderSaturation(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+          AtemSwitcher[devIndex].setKeyDVEBorderHue(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+          AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], true);
+          AtemSwitcher[devIndex].commandBundleEnd();
+        } else {
+          AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
+        }
+        _systemHWcActionCacheFlag[HWc][actIdx] = true;
+    }
+
+    if(actUp) {
+      _systemHWcActionCacheFlag[HWc][actIdx] = false;
+    }
+
+    retVal = AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) ? 4 : 5;
+
+    return _systemHWcActionCacheFlag ? (4 | 0x20) : retVal;
     break;
   case 49: // DVE
            // This makes pushes to the encoder change which parameter to adjust:
@@ -2352,8 +2380,6 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         if(globalConfigMem[actionPtr+5] != 0) {
           AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+5]-35-1)*1000);
         }
-
-        AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
       }
 
       if(extRetValIsWanted()) {
@@ -2405,8 +2431,11 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
           extRetValTxt_P(PSTR("O:"), 1);
       break;
     }
-
-    case 53: {// Audio peaks
+    case 53: // DVE Fill Source
+      if(actDown && value == BINARY_EVENT) {
+        AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
+      }
+    case 54: {// Audio peaks
       uint8_t aSrc = ATEM_idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
 
       // Make sure audio level updates is activated
@@ -2451,7 +2480,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
 
       break;
     }
-    case 54: // Zoom (Nomalised)
+    case 55: // Camera zoom (Normalised)
       if(actDown && value != BINARY_EVENT) {
 
       }
