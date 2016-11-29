@@ -563,7 +563,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setVideoSharpening(cam, pulsesHelper(BMDCamCtrl[devIndex].getVideoSharpening(globalConfigMem[actionPtr + 1]), 0, 3, false, pulses, 1, 1));
+      BMDCamCtrl[devIndex].setVideoSharpening(cam, pulsesHelper(BMDCamCtrl[devIndex].getVideoSharpening(cam), 0, 3, false, pulses, 1, 1));
     }
 
     if (extRetValIsWanted()) {

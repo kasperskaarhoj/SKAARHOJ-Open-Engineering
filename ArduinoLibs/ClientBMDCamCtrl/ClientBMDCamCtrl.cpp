@@ -277,7 +277,6 @@ void ClientBMDCamCtrl::setDynamicRangeMode(uint8_t camera, int8_t mode) { // 0: 
   }
 }
 
-#include <Streaming.h>
 void ClientBMDCamCtrl::setVideoSharpening(uint8_t camera, int8_t mode) { // 0: off, 1: low, 2: medium, 3: high
   if(!validCamera(camera)) return;
   clampValue(&mode, (int8_t)0, (int8_t)3);
