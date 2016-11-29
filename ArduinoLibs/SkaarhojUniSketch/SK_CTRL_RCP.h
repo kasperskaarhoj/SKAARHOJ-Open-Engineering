@@ -230,8 +230,12 @@ void HWtestL() {
   encoders2.runLoop();
 
   idDisplay.gotoRowCol(0, 0);
+  #if SK_RCP_OPTION_ENCODER
+  idDisplay << _DECPADL(addressSwitch_getAddress(), 2, "0") << (addressSwitch_getGPI() ? F("!") : F(" ")) << _DECPADL(testVal, 5, " ");
+  #else
   joystickbutton.uniDirectionalSlider_hasMoved();
   idDisplay << _DECPADL(addressSwitch_getAddress(), 2, "0") << (addressSwitch_getGPI() ? F("!") : F(" ")) <<(joystickbutton.uniDirectionalSlider_position() > 500?F("!"):F(" ")) << _DECPADL(testVal, 4, " ");
+  #endif
 
   idDisplay.setBacklight(millis() & 0x8000 ? 1 : 0, millis() & 0x4000 ? 1 : 0, millis() & 0x2000 ? 1 : 0);
 
