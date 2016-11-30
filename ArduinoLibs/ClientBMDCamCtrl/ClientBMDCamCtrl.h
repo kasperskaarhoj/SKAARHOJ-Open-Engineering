@@ -8,7 +8,8 @@
 
 class ClientBMDCamCtrl {
 private:
-  void initColourCorrection(int cam);
+  void initColourCorrection(uint8_t cam);
+  bool validCamera(uint8_t cam);
 
   BMD_SDICameraControl_I2C _cameraControl;
   BMD_SDITallyControl_I2C _tallyControl;
@@ -131,7 +132,7 @@ public:
   void setInputType(uint8_t camera, int8_t type); // 0: Internal mic, 1: Line level, 2: Low mic level, 3: High mic level
   int8_t getInputType(uint8_t camera);
   void setInputLevels(uint8_t camera, float (&level)[2], bool offset = false); // Range 0.0 - 1.0, [0]: ch0, [1]: ch1
-  float (&getInputLevels(uint8_t camera))[2];
+  bool getInputLevels(uint8_t camera, float (&level)[2]);
   void setPhantomPower(uint8_t camera, bool state, bool offset = false); // True: powered
   bool getPhantomPower(uint8_t camera);
 
@@ -166,23 +167,23 @@ public:
 
   // Configuration controls
   void setClock(uint8_t camera, int32_t (&value)[2]); // 0: time, 1: date
-  int32_t (&getClock(uint8_t camera))[2];
+  bool getClock(uint8_t camera, int32_t (&value)[2]);
 
   // Colour correction controls
-  void setCameraLift(uint8_t camera, float (&value)[4], bool offset = false); // 0: red, 1: green, 2: blue, 3: luma (-2.0 - 2.0)
-  float (&getCameraLift(uint8_t camera))[4];
-  void setCameraGamma(uint8_t camera, float (&value)[4], bool offset = false); // 0: red, 1: green, 2: blue, 3: luma (-4.0 - 4.0)
-  float (&getCameraGamma(uint8_t camera))[4];
-  void setCameraGain(uint8_t camera, float (&value)[4], bool offset = false); // 0: red, 1: green, 2: blue, 3: luma (0.0 - 16.0)
-  float (&getCameraGain(uint8_t camera))[4];
+  void setCameraLift(uint8_t camera, float (&lift)[4], bool offset = false); // 0: red, 1: green, 2: blue, 3: luma (-2.0 - 2.0)
+  bool getCameraLift(uint8_t camera, float (&lift)[4]);
+  void setCameraGamma(uint8_t camera, float (&gamma)[4], bool offset = false); // 0: red, 1: green, 2: blue, 3: luma (-4.0 - 4.0)
+  bool getCameraGamma(uint8_t camera, float (&gamma)[4]);
+  void setCameraGain(uint8_t camera, float (&gain)[4], bool offset = false); // 0: red, 1: green, 2: blue, 3: luma (0.0 - 16.0)
+  bool getCameraGain(uint8_t camera, float (&gain)[4]);
   void setCameraOffset(uint8_t camera, float (&value)[4], bool offset = false); // 0: red, 1: green, 2: blue, 3: luma (-8.0 - 8.0)
-  float (&getCameraOffset(uint8_t camera))[4];
-  void setCameraContrast(uint8_t camera, float (&value)[2], bool offset = false); // 0: pivot (0.0-1.0), 1: adjust (0.0 - 2.0)
-  float (&getCameraContrast(uint8_t camera))[2];
+  bool getCameraOffset(uint8_t camera, float (&offset)[4]);
+  void setCameraContrast(uint8_t camera, float (&contrast)[2], bool offset = false); // 0: pivot (0.0-1.0), 1: adjust (0.0 - 2.0)
+  bool getCameraContrast(uint8_t camera, float (&contrast)[2]);
   void setCameraLumaMix(uint8_t camera, float value, bool offset = false); // 0.0 - 1.0
   float getCameraLumaMix(uint8_t camera);
-  void setCameraColourAdjust(uint8_t camera, float (&value)[2], bool offset = false); // 0: hue (-1.0-1.0), 1: saturation (0.0-2.0)
-  float (&getCameraColourAdjust(uint8_t camera))[2];
+  void setCameraColourAdjust(uint8_t camera, float (&adjust)[2], bool offset = false); // 0: hue (-1.0-1.0), 1: saturation (0.0-2.0)
+  bool getCameraColourAdjust(uint8_t camera, float (&adjust)[2]);
   void setCameraCorrectionReset(uint8_t camera);
 
   // Pan-tilt controls

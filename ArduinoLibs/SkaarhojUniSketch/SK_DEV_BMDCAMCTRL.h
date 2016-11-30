@@ -21,12 +21,13 @@ namespace BMDCAMCTRL {
     int16_t *p16 = (int16_t *)preset;
 
     memset(preset, 0, 45);
+    float gamma[4], lift[4], gain[4], contrast[2], adjust[2];
 
-    float (&lift)[4] = BMDCamCtrl[devIndex].getCameraLift(camera);
-    float (&gamma)[4] = BMDCamCtrl[devIndex].getCameraGamma(camera);
-    float (&gain)[4] = BMDCamCtrl[devIndex].getCameraGain(camera);
-    float (&contrast)[2] = BMDCamCtrl[devIndex].getCameraContrast(camera);
-    float (&adjust)[2] = BMDCamCtrl[devIndex].getCameraColourAdjust(camera);
+    BMDCamCtrl[devIndex].getCameraLift(camera, lift);
+    BMDCamCtrl[devIndex].getCameraGamma(camera, gamma);
+    BMDCamCtrl[devIndex].getCameraGain(camera, gain);
+    BMDCamCtrl[devIndex].getCameraContrast(camera, contrast);
+    BMDCamCtrl[devIndex].getCameraColourAdjust(camera, adjust);
 
     p16[0] = lift[3] * (1<<11); // Y
     p16[1] = lift[0] * (1<<11); // R
@@ -147,7 +148,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setFocus(cam, pulsesHelper(BMDCamCtrl[devIndex].getFocus(cam) * 1000.0, 0, 100, false, pulses, 1, 10) / 1000.0);
+      BMDCamCtrl[devIndex].setFocus(cam, pulsesHelper(BMDCamCtrl[devIndex].getFocus(cam) * 1000.0, 0, 1000, false, pulses, 10, 100) / 1000.0);
     }
 
     if (extRetValIsWanted()) {
@@ -243,10 +244,11 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     option = globalConfigMem[actionPtr + 2];
     int8_t currentValue = BMDCamCtrl[devIndex].getSensorGain(cam);
-
     uint8_t c = 0;
-    for (; (currentValue >> c) ^ 1; c++)
-      ;
+  
+    if(currentValue > 0) {
+      for (;(currentValue >> c) ^ 1; c++);
+    }
 
     if (c > 0)
       c -= 1;
@@ -262,7 +264,9 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if ((pulses & 0xFFFE)) {
-      BMDCamCtrl[devIndex].setSensorGain(cam, 1 << (((c + (pulses >> 1)) % 4) + 1));
+      if(c == 3 && pulses < 0 || c < 3) {
+        BMDCamCtrl[devIndex].setSensorGain(cam, 1 << (((c + (pulses >> 1)) % 4) + 1));
+      }
     }
 
     if (extRetValIsWanted()) {
@@ -343,7 +347,9 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   case 5: { // Lift
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 2]);
     option = globalConfigMem[actionPtr + 1];
-    float(&val)[4] = BMDCamCtrl[devIndex].getCameraLift(cam);
+    float val[4];
+    BMDCamCtrl[devIndex].getCameraLift(cam, val);
+
     if (actDown) {
       if (value != BINARY_EVENT) {
         val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / (250.0 * 16);
@@ -371,7 +377,9 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   case 6: { // Gamma
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 2]);
     option = globalConfigMem[actionPtr + 1];
-    float(&val)[4] = BMDCamCtrl[devIndex].getCameraGamma(cam);
+    float val[4];
+    BMDCamCtrl[devIndex].getCameraGamma(cam, val);
+
     if (actDown) {
       if (value != BINARY_EVENT) {
         val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / (250.0 * 16);
@@ -399,7 +407,8 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   case 7: { // Gain
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 2]);
     option = globalConfigMem[actionPtr + 1];
-    float(&val)[4] = BMDCamCtrl[devIndex].getCameraGain(cam);
+    float val[4];
+    BMDCamCtrl[devIndex].getCameraGain(cam, val);
     if (actDown) {
       if (value != BINARY_EVENT) {
         val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / 250.0;
@@ -429,6 +438,9 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     float newValue[2] = {NAN, NAN};
 
+    float val[2];
+    BMDCamCtrl[devIndex].getCameraColourAdjust(cam, val);
+
     if (actDown) {
       if (value != BINARY_EVENT) { // Value input
         newValue[0] = (float)(value - 500) / 500.0;
@@ -439,11 +451,12 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       }
     }
     if (pulses & 0xFFFE) {
-      newValue[0] = (float)pulsesHelper((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[0] * 360.0), -360, 360, true, pulses, 2, 10) / 360.0;
+      newValue[0] = (float)pulsesHelper((int)(val[0] * 360.0), -360, 360, true, pulses, 2, 10) / 360.0;
       BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
     }
+
     if (extRetValIsWanted()) {
-      extRetVal(map((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[0] * 2048.0), -2048, 2048, 0, 360), 0, _systemHWcActionFineFlag[HWc]);
+      extRetVal(map((int)(val[0] * 2048.0), -2048, 2048, 0, 360), 0, _systemHWcActionFineFlag[HWc]);
       extRetValScale(2, 0, 360, 0, 360);
       extRetValShortLabel(PSTR("Hue"));
       extRetValLongLabel(PSTR("Hue Cam "), cam);
@@ -454,7 +467,8 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   case 9: { // Contrast
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     float newValue[2] = {0.50, NAN};
-    float(&oldValue)[2] = BMDCamCtrl[devIndex].getCameraContrast(cam);
+    float oldValue[2];
+    BMDCamCtrl[devIndex].getCameraContrast(cam, oldValue);
   
     if (actDown) {
       if (value != BINARY_EVENT) {
@@ -483,6 +497,8 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
   case 10: { // Saturation
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     float newValue[2] = {NAN, NAN};
+    float val[2];
+    BMDCamCtrl[devIndex].getCameraColourAdjust(cam, val);
 
     if (actDown) {
       if (value != BINARY_EVENT) { // Value input
@@ -494,11 +510,11 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       }
     }
     if (pulses & 0xFFFE) {
-      newValue[1] = (float)pulsesHelper((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[1] * 2048.0), 0, 4096, true, pulses, 4, 20) / 2048.0;
+      newValue[1] = (float)pulsesHelper((int)(val[1] * 2048.0), 0, 4096, false, pulses, 41, 410) / 2048.0;
       BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
     }
     if (extRetValIsWanted()) {
-      extRetVal(map((int)(BMDCamCtrl[devIndex].getCameraColourAdjust(cam)[1] * 2048.0), 0, 4096, 0, 100), 0, _systemHWcActionFineFlag[HWc]);
+      extRetVal(map((int)(val[1] * 2048.0), 0, 4096, 0, 100), 0, _systemHWcActionFineFlag[HWc]);
       extRetValScale(2, 0, 100, 0, 100);
       extRetValShortLabel(PSTR("Saturate"));
       extRetValLongLabel(PSTR("Saturate Cam "), cam);
@@ -540,22 +556,22 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown && value == BINARY_EVENT) { // Button push
       if(globalConfigMem[actionPtr + 2] == 0) { // cycle
-        BMDCamCtrl[devIndex].setVideoSharpening(globalConfigMem[actionPtr + 1], BMDCamCtrl[devIndex].getVideoSharpening((cam+1)%4));
+        BMDCamCtrl[devIndex].setVideoSharpening(cam, BMDCamCtrl[devIndex].getVideoSharpening((cam+1)%4));
       } else {
         if(globalConfigMem[actionPtr + 2] < 4) {
-          BMDCamCtrl[devIndex].setVideoSharpening(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]-1);
+          BMDCamCtrl[devIndex].setVideoSharpening(cam, globalConfigMem[actionPtr + 2]-1);
         }
       }
     }
 
     if (pulses & 0xFFFE) {
-      BMDCamCtrl[devIndex].setVideoSharpening(globalConfigMem[actionPtr + 1], pulsesHelper(BMDCamCtrl[devIndex].getVideoSharpening(globalConfigMem[actionPtr + 1]), 0, 3, false, pulses, 1, 1));
+      BMDCamCtrl[devIndex].setVideoSharpening(cam, pulsesHelper(BMDCamCtrl[devIndex].getVideoSharpening(cam), 0, 3, false, pulses, 1, 1));
     }
 
     if (extRetValIsWanted()) {
       extRetVal(0, 7);
       extRetValShortLabel(PSTR("Detail"));
-      extRetValLongLabel(PSTR("Detail cam "), (globalConfigMem[actionPtr + 1]) + 1);
+      extRetValLongLabel(PSTR("Detail cam "), cam);
 
       if (_systemHWcActionPrefersLabel[HWc] && globalConfigMem[actionPtr + 2] != 0) {
         extRetValColor(retVal & 0x20 ? B011111 : B101010);
@@ -564,7 +580,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
         extRetValColor(B011111);
       }
 
-      switch (BMDCamCtrl[devIndex].getVideoSharpening(globalConfigMem[actionPtr + 1])) {
+      switch (BMDCamCtrl[devIndex].getVideoSharpening(cam)) {
       case 0:
         extRetValTxt_P(PSTR("Off"), 0);
         break;

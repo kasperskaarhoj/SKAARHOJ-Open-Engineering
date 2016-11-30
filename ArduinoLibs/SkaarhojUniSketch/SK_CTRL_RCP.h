@@ -230,7 +230,12 @@ void HWtestL() {
   encoders2.runLoop();
 
   idDisplay.gotoRowCol(0, 0);
+  #if SK_RCP_OPTION_ENCODER
   idDisplay << _DECPADL(addressSwitch_getAddress(), 2, "0") << (addressSwitch_getGPI() ? F("!") : F(" ")) << _DECPADL(testVal, 5, " ");
+  #else
+  joystickbutton.uniDirectionalSlider_hasMoved();
+  idDisplay << _DECPADL(addressSwitch_getAddress(), 2, "0") << (addressSwitch_getGPI() ? F("!") : F(" ")) <<(joystickbutton.uniDirectionalSlider_position() > 500?F("!"):F(" ")) << _DECPADL(testVal, 4, " ");
+  #endif
 
   idDisplay.setBacklight(millis() & 0x8000 ? 1 : 0, millis() & 0x4000 ? 1 : 0, millis() & 0x2000 ? 1 : 0);
 
@@ -239,8 +244,8 @@ void HWtestL() {
 #if SK_RCP_OPTION_ENCODER
   encoders3.runLoop();
 #else
-  if (joystick.uniDirectionalSlider_hasMoved()) {
-    testVal = joystick.uniDirectionalSlider_position();
+  if (joystick.uniDirectionalSlider_hasMoved() || wheel.uniDirectionalSlider_hasMoved()) {
+    testVal = joystick.uniDirectionalSlider_position() + wheel.uniDirectionalSlider_position();
   }
 #endif
 
@@ -514,13 +519,13 @@ uint16_t *HWMinCalibrationValues(uint8_t num) {
   static uint16_t values[3] = {0, 0, 0};
   switch (num) {
   case 1:
-    values[0] = 35; // Start
-    values[1] = 35; // End
+    values[0] = 105; // Start
+    values[1] = 112; // End
     values[2] = 2;  // Hysteresis
     break;
   case 2:
-    values[0] = 35; // Start
-    values[1] = 35; // End
+    values[0] = 2; // Start
+    values[1] = 2; // End
     values[2] = 2;  // Hysteresis
     break;
   }
