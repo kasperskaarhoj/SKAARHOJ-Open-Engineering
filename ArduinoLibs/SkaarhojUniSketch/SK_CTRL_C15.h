@@ -76,7 +76,7 @@ void HWrunLoop() {
   uint16_t bDown;
 
   // BI8 buttons:
-  uint8_t b16Map[] = {8, 9, 6, 7, 0, 0, 1, 2}; // These numbers refer to the drawing in the web interface
+  uint8_t b16Map[] = {10, 11, 8, 9, 0, 0, 1, 2}; // These numbers refer to the drawing in the web interface
   HWrunLoop_BI8(buttons, b16Map, sizeof(b16Map));
 
   // SmartSwitch buttons:
