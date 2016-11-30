@@ -11,7 +11,7 @@ uint16_t BMDCAMCTRL_idxToCamera(uint8_t idx) {
 }
 
 namespace BMDCAMCTRL {
-  static uint16_t lastSettingsRecall;
+  static uint32_t lastSettingsRecall;
   static uint8_t lastLoadedPreset = 0;
   static uint8_t lastLoadedCamera = 0;
 
@@ -63,10 +63,10 @@ namespace BMDCAMCTRL {
     if (num < EEPROM_FILEBANK_NUM) {
       if (userMemoryExists(num, PRESET_CCU) && userMemoryChecksumMatches(num)) {
         if (num != 0) {
-          if ((uint16_t)millis() - lastSettingsRecall > 10000) {
+          if (millis() - lastSettingsRecall > 10000) {
             storeCameraPreset(devIndex, camera, 0);
           }
-          lastSettingsRecall = (uint16_t)millis();
+          lastSettingsRecall = millis();
           lastLoadedPreset = num;
           lastLoadedCamera = camera;
         } else {
@@ -90,10 +90,10 @@ namespace BMDCAMCTRL {
         }
 
         contrast[0] = 0.5;
-        contrast[1] = p16[12];
+        contrast[1] = (float)p16[12]/(1<<11);
 
-        adjust[0] = p16[14];
-        adjust[1] = p16[13];
+        adjust[0] = (float)p16[14]/(1<<11);
+        adjust[1] = (float)p16[13]/(1<<11);
 
         BMDCamCtrl[devIndex].setCameraLift(camera, lift);
         BMDCamCtrl[devIndex].setCameraGamma(camera, gamma);
@@ -312,13 +312,13 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
 
     break;
   }
-  case 4: {                                                                                                                               // White balance
-    static const uint16_t whiteBalances[] PROGMEM = {3200, 3400, 3600, 4000, 4500, 4800, 5000, 5200, 5400, 5600, 6000, 6500, 7000, 7500}; // 18
+  case 4: { // White balance
+    static const uint16_t whiteBalances[] PROGMEM = {3200, 3400, 3600, 4000, 4500, 4800, 5000, 5200, 5400, 5600, 6000, 6500, 7000, 7500}; // 14
     cam = BMDCAMCTRL_idxToCamera(globalConfigMem[actionPtr + 1]);
     if (actDown || (pulses & 0xFFFE)) {
       // Find current value index:
       uint8_t currentWhiteBalanceIndex = 0;
-      for (uint8_t b = 0; b < 18; b++) {
+      for (uint8_t b = 0; b < 14; b++) {
         if (BMDCamCtrl[devIndex].getWhiteBalance(cam) <= (pgm_read_word_near(whiteBalances + b) + 1)) {
           currentWhiteBalanceIndex = b;
           break;
@@ -333,7 +333,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
         }
       }
       if ((pulses & 0xFFFE)) {
-        BMDCamCtrl[devIndex].setWhiteBalance(cam, pgm_read_word_near(whiteBalances + pulsesHelper(currentWhiteBalanceIndex, 0, 18 - 1, false, pulses, 1, 1)));
+        BMDCamCtrl[devIndex].setWhiteBalance(cam, pgm_read_word_near(whiteBalances + pulsesHelper(currentWhiteBalanceIndex, 0, 14 - 1, false, pulses, 1, 1)));
       }
     }
     if (extRetValIsWanted()) {
@@ -609,7 +609,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
         _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
         break;
       case 1: // Recall
-        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - BMDCAMCTRL::lastSettingsRecall < 10000) {
+        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && millis() - BMDCAMCTRL::lastSettingsRecall < 10000) {
           BMDCAMCTRL::recallCameraPreset(devIndex, cam, 0);
           _systemHWcActionCacheFlag[HWc][actIdx] = 0;
         } else {
@@ -640,7 +640,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     if (actUp) {
       if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
         if (globalConfigMem[actionPtr + 2] == 0) {
-          if ((uint16_t)millis() - BMDCAMCTRL::lastSettingsRecall < 10000 && BMDCAMCTRL::lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+          if (millis() - BMDCAMCTRL::lastSettingsRecall < 10000 && BMDCAMCTRL::lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
             BMDCAMCTRL::recallCameraPreset(devIndex, cam, 0);
             _systemHWcActionCacheFlag[HWc][actIdx] = 0;
           } else {
@@ -666,7 +666,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
         _systemHWcActionCacheFlag[HWc][actIdx] = 0;
       }
     } else if (_systemHWcActionCacheFlag[HWc][actIdx] & 4) {
-      if ((uint16_t)millis() - BMDCAMCTRL::lastSettingsRecall < 10000 && BMDCAMCTRL::lastLoadedCamera == cam && BMDCAMCTRL::lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+      if (millis() - BMDCAMCTRL::lastSettingsRecall < 10000 && BMDCAMCTRL::lastLoadedCamera == cam && BMDCAMCTRL::lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
         retVal = (millis() & 512 ? 4 : 5);
       } else {
         _systemHWcActionCacheFlag[HWc][actIdx] = 0;

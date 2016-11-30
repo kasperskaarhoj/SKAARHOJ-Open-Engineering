@@ -191,6 +191,11 @@ void setAnalogComponentCalibration(uint16_t num, uint16_t start, uint16_t end, u
   EEPROM.write(20 + num * 4 + 4, 193 ^ EEPROM.read(20 + num * 4 + 1) ^ EEPROM.read(20 + num * 4 + 2) ^ EEPROM.read(20 + num * 4 + 3));
 }
 
+void clearAnalogComponentCalibration(uint16_t num) {
+  uint16_t *minimumValues = HWMinCalibrationValues(num);
+  setAnalogComponentCalibration(num, minimumValues[0], minimumValues[1], minimumValues[2]);
+}
+
 uint16_t *getAnalogComponentCalibration(uint8_t num) {
   static uint16_t *calibration = HWMinCalibrationValues(num);
 
@@ -889,14 +894,20 @@ bool checkIncomingSerial() {
         listAnalogHWComponent(num);
         serialState = 1;
       }
-    } else if (!strncmp(serialBuffer, "clear analog ", 13)) {
-      uint8_t num = serialBuffer[13] - '0';
-      if (num == 0) {
-        Serial << F("Invalid analog component number\n");
+    } else if (!strncmp(serialBuffer, "clear analog", 12)) {
+      if(serialBuffer[13] == 0) { // reset all
+        Serial << F("Clearing all analog component calibrations...\n");
+        for(uint8_t i=0; i<HWnumOfAnalogComponents(); i++) {
+          clearAnalogComponentCalibration(i+1);
+        }
       } else {
-        Serial << F("Resetting analog component ") << num << "\n";
-        uint16_t *minimumValues = HWMinCalibrationValues(num);
-        setAnalogComponentCalibration(num, minimumValues[0], minimumValues[1], minimumValues[2]);
+        uint8_t num = serialBuffer[13] - '0';
+        if (num == 0 || num >= HWnumOfAnalogComponents()) {
+          Serial << F("Invalid analog component number\n");
+        } else {
+          Serial << F("Resetting analog component ") << num << "\n";
+          clearAnalogComponentCalibration(num);
+        }
       }
     } else if (!strncmp(serialBuffer, "set analog ", 11)) {
       uint16_t cal[3];
@@ -1090,8 +1101,7 @@ bool checkIncomingSerial() {
 
       for(uint8_t i = 0; i < HWnumOfAnalogComponents(); i++) {
         Serial << "Clearing calibration for analog component #" << i+1 << "\n";
-        uint16_t *minimumValues = HWMinCalibrationValues(i+1);
-        setAnalogComponentCalibration(i+1, minimumValues[0], minimumValues[1], minimumValues[2]);
+        clearAnalogComponentCalibration(i+1);
       }
 
       Serial << "\nController now rebooting...\n";

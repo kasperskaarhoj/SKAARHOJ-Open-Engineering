@@ -82,10 +82,7 @@ void ClientBMDCamCtrl::initColourCorrection(uint8_t cam) {
   //cameraIrisValue[cam] = 0.00;
   cameraContrastValue[cam-1][0] = 0.5;
   cameraContrastValue[cam-1][1] = 1.0;
-  cameraWBValue[cam-1] = 3200;
-  cameraExposureValue[cam-1] = 10000;
-  cameraSensorGainValue[cam-1] = 2; // Apparently this is the lowest value
-
+  
   for (int j = 0; j < 4; j++) {
     cameraGainValue[cam-1][j] = 1.00;
     cameraGammaValue[cam-1][j] = 0.0;
