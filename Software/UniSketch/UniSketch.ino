@@ -36,7 +36,7 @@
 // NO USER CHANGE BELOW!
 // ****************************
 #define SK_VERSION "custom-build"
-#define SK_SERIAL_OUTPUT 0
+#define SK_SERIAL_OUTPUT 1
 #ifndef SK_ETHMEGA
 #define SK_ETHMEGA 0
 #endif
