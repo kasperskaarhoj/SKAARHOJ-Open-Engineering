@@ -6,7 +6,7 @@
 */
 
 // Define model (according to list further down):
-#define SK_MODEL SK_C90A
+#define SK_MODEL SK_RCP
 
 
 
@@ -360,10 +360,10 @@ void lDelay(uint16_t delayVal);
 uint8_t HWsetupL();
 void HWtestL();
 void HWcfgDisplay();
-void storePreset(uint8_t index, uint8_t type, uint8_t *buffer);
-bool recallPreset(uint8_t index, uint8_t type, uint8_t* buffer);
-bool presetChecksumMatches(uint8_t index);
-bool presetExists(uint8_t index, uint8_t type);
+void storeUserMemory(uint8_t index, uint8_t type, uint8_t *buffer);
+bool recallUserMemory(uint8_t index, uint8_t type, uint8_t* buffer);
+bool userMemoryChecksumMatches(uint8_t index);
+bool userMemoryExists(uint8_t index, uint8_t type);
 
 // Pre-declaring functions defined in the individual hardware files
 uint8_t HWnumOfAnalogComponents();

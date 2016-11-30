@@ -94,7 +94,7 @@ uint16_t getPresetLength(uint8_t preset);
 void savePreset(uint8_t presetNum, uint16_t len);
 void statusLED(uint8_t incolor = 255, uint8_t inblnk = 255);
 bool checkIncomingSerial();
-void deletePresets();
+void clearUserMemory();
 
 uint16_t fletcher16(uint8_t *data, int16_t count) {
   uint16_t sum1 = 0;
@@ -859,9 +859,9 @@ bool checkIncomingSerial() {
       Serial << F("Presets clear\n");
       delay(1000);
       resetFunc();
-    } else if (!strncmp(serialBuffer, "clearusermemory", 13)) {
+    } else if (!strncmp(serialBuffer, "clearusermemory", 15)) {
       Serial << "Clearing user memory...\n";
-      deletePresets();
+      clearUserMemory();
     } else if (!strncmp(serialBuffer, "reset", 5)) {
       Serial << F("Resetting...\n");
       delay(1000);
@@ -1080,6 +1080,23 @@ bool checkIncomingSerial() {
         delay(200);
         resetFunc();
       }
+    } else if (!strncmp(serialBuffer, "_resetAll", 9)) {
+      Serial << "Clearing user memory...\n";
+      clearUserMemory();
+      Serial << "Clearing presets...\n";
+      clearPresets();
+      Serial << "Clearing Mem A-D...\n";
+      EEPROM.write(20, EEPROM.read(20) + 1);
+
+      for(uint8_t i = 0; i < HWnumOfAnalogComponents(); i++) {
+        Serial << "Clearing calibration for analog component #" << i+1 << "\n";
+        uint16_t *minimumValues = HWMinCalibrationValues(i+1);
+        setAnalogComponentCalibration(i+1, minimumValues[0], minimumValues[1], minimumValues[2]);
+      }
+
+      Serial << "\nController now rebooting...\n";
+      delay(1000);
+      resetFunc();
     } else {
       Serial << F("NAK\n");
     }
@@ -1634,7 +1651,7 @@ void presetCheck()	{
  *
  ************************************/
 
-bool presetExists(uint8_t index, uint8_t type) {
+bool userMemoryExists(uint8_t index, uint8_t type) {
   if (index < EEPROM_FILEBANK_NUM) {
     if (EEPROM.read(EEPROM_FILEBANK_START + index * 48) == type) {
       return true;
@@ -1643,13 +1660,13 @@ bool presetExists(uint8_t index, uint8_t type) {
   return false;
 }
 
-void deletePresets() {
+void clearUserMemory() {
   for(uint8_t i=0; i < EEPROM_FILEBANK_NUM; i++) {
     EEPROM.write(EEPROM_FILEBANK_START + i * 48, 0);
   }
 }
 
-bool presetChecksumMatches(uint8_t index) {
+bool userMemoryChecksumMatches(uint8_t index) {
   uint8_t bytes[48];
   for (int16_t i = 0; i < 48; i++) {
     bytes[i] = EEPROM.read(EEPROM_FILEBANK_START + index * 48 + i);
@@ -1665,9 +1682,9 @@ bool presetChecksumMatches(uint8_t index) {
 }
 
 // The supplied buffer must be 45 bytes long
-bool recallPreset(uint8_t index, uint8_t type, uint8_t *buffer) {
+bool recallUserMemory(uint8_t index, uint8_t type, uint8_t *buffer) {
   if (index < EEPROM_FILEBANK_NUM) {
-    if (presetExists(index, type) && presetChecksumMatches(index)) {
+    if (userMemoryExists(index, type) && userMemoryChecksumMatches(index)) {
       // Recall logic:
 
       // Don't include type byte or checksum, already checked
@@ -1683,7 +1700,7 @@ bool recallPreset(uint8_t index, uint8_t type, uint8_t *buffer) {
   return false;
 }
 
-void storePreset(uint8_t index, uint8_t type, uint8_t *buffer) {
+void storeUserMemory(uint8_t index, uint8_t type, uint8_t *buffer) {
   uint8_t preset[48];
   memset(preset, 0, 48);
 

@@ -219,12 +219,12 @@ namespace ATEM {
 
     Serial << "Saving saturation: " << p16[13] << "\n";
 
-    storePreset(num, PRESET_CCU, preset);
+    storeUserMemory(num, PRESET_CCU, preset);
   }
 
   bool recallCameraPreset(const uint8_t devIndex, uint8_t camera, uint8_t num) {
     if (num < EEPROM_FILEBANK_NUM) {
-      if (presetExists(num, PRESET_CCU) && presetChecksumMatches(num)) {
+      if (userMemoryExists(num, PRESET_CCU) && userMemoryChecksumMatches(num)) {
         if (num != 0) {
           if ((uint16_t)millis() - lastSettingsRecall > 10000) {
             storeCameraPreset(devIndex, camera, 0);
@@ -239,7 +239,7 @@ namespace ATEM {
         // Recall logic:
         uint8_t preset[45];
 
-        recallPreset(num, PRESET_CCU, preset);
+        recallUserMemory(num, PRESET_CCU, preset);
 
         int16_t *p16 = (int16_t *)preset;
 
@@ -2088,7 +2088,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       if (globalConfigMem[actionPtr + 2] == 2) {
         retVal = 5;
       } else {
-        retVal = presetExists(globalConfigMem[actionPtr + 3], PRESET_CCU) ? 5 : 0;
+        retVal = userMemoryExists(globalConfigMem[actionPtr + 3], PRESET_CCU) ? 5 : 0;
       }
     }
 
