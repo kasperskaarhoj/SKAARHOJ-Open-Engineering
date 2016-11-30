@@ -859,8 +859,8 @@ bool checkIncomingSerial() {
       Serial << F("Presets clear\n");
       delay(1000);
       resetFunc();
-    } else if (!strncmp(serialBuffer, "clearsettings", 13)) {
-      Serial << "Clearing settings banks...\n";
+    } else if (!strncmp(serialBuffer, "clearusermemory", 13)) {
+      Serial << "Clearing user memory...\n";
       deletePresets();
     } else if (!strncmp(serialBuffer, "reset", 5)) {
       Serial << F("Resetting...\n");
@@ -1630,7 +1630,7 @@ void presetCheck()	{
 
 /************************************
  *
- * EEPROM PRESETS
+ * EEPROM USER MEMORY
  *
  ************************************/
 
