@@ -181,7 +181,7 @@ uint16_t ATEM_searchMacro(uint8_t devIndex, uint8_t macroIdx, int16_t pulseCount
 }
 
 namespace ATEM {
-  static uint16_t lastSettingsRecall;
+  static uint32_t lastSettingsRecall;
   static uint8_t lastLoadedPreset = 0;
   static uint8_t lastLoadedCamera = 0;
 
@@ -226,10 +226,10 @@ namespace ATEM {
     if (num < EEPROM_FILEBANK_NUM) {
       if (userMemoryExists(num, PRESET_CCU) && userMemoryChecksumMatches(num)) {
         if (num != 0) {
-          if ((uint16_t)millis() - lastSettingsRecall > 10000) {
+          if (millis() - lastSettingsRecall > 10000) {
             storeCameraPreset(devIndex, camera, 0);
           }
-          lastSettingsRecall = (uint16_t)millis();
+          lastSettingsRecall = millis();
           lastLoadedPreset = num;
           lastLoadedCamera = camera;
         } else {
@@ -2012,7 +2012,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
         break;
       case 1: // Recall
-        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && (uint16_t)millis() - ATEM::lastSettingsRecall < 10000) {
+        if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && millis() - ATEM::lastSettingsRecall < 10000) {
           ATEM::recallCameraPreset(devIndex, cam, 0);
           _systemHWcActionCacheFlag[HWc][actIdx] = 0;
         } else {
