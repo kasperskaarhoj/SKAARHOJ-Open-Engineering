@@ -521,7 +521,7 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       if (actDown && !AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1])) {
         unsigned long startTime = millis();
         uint8_t transitionStyle = AtemSwitcher[devIndex].getTransitionNextTransition(globalConfigMem[actionPtr + 1]);
-        AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 1] + 1));
+        AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 2] + 1));
         AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
 
         // Wait for the transition to actually begin
@@ -2214,50 +2214,78 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
     break;
   case 47: // Chroma Settings
     break;
-  case 48: // PIP
+  case 48: { // PIP
 
-    if (globalConfigMem[actionPtr + 5] != 4) {
-      if (actDown) {
-        bool state = false;
-        switch (globalConfigMem[actionPtr + 5]) {
+    int16_t positions[4][4] = {
+      {10000, -5000, 300, 300}, // Lower right
+      {10000, 5000, 300, 300}, // Upper right
+      {-10000, 5000, 300, 300}, // Upper left
+      {-10000, -5000, 300, 300}, // Lower left
+    };
+
+    bool setParameters = false;
+
+    int8_t currentPosition = -1;
+    bool knownPosition = false;
+    for(uint8_t i=0; i<4; i++) {
+      if(AtemSwitcher[devIndex].getKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) == positions[i][0] &&
+         AtemSwitcher[devIndex].getKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) == positions[i][1] &&
+         AtemSwitcher[devIndex].getKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) == positions[i][2] &&
+         AtemSwitcher[devIndex].getKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) == positions[i][3]) {
+        currentPosition = i;
+        knownPosition = true;
+        break;
+      }
+    }
+
+    int8_t newPosition;
+    if(knownPosition) {
+      newPosition = currentPosition;
+    } else {
+      newPosition = globalConfigMem[actionPtr + 4];
+    }
+
+    if(pulses & 0xFFFE) {
+      if(knownPosition) {
+        newPosition = pulsesHelper(currentPosition, 0, 3, true, pulses, -1, -1); // Direction set to match encoder
+      }
+
+      setParameters = true;
+    }
+
+    bool keyerEnabled = AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+    if(actDown && value == BINARY_EVENT) {
+      switch(globalConfigMem[actionPtr + 5]) {
         case 0: // Toggle
-          state = !AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+          if(!keyerEnabled) setParameters = true;
           break;
         case 1: // On
         case 3: // Hold down
-          state = true;
+        case 4: // Auto
+          setParameters = true;
           break;
-        }
-        if(state) {
-          int32_t posX, posY, sizeX, sizeY;
-          switch(globalConfigMem[actionPtr + 4]) {
-            case 0: // Lower right;
-              posX = 10000; posY = -5000; sizeX = 300; sizeY = 300;
-              break;
-            case 1: // Upper right
-              posX = 10000; posY = 5000; sizeX = 300; sizeY = 300;
-              break;
-            case 2: // Upper left
-              posX = -10000; posY = 5000; sizeX = 300; sizeY = 300;
-              break;
-            case 3: // Lower left
-              posX = -10000; posY = -5000; sizeX = 300; sizeY = 300;
-              break;
-          }
-          
-          AtemSwitcher[devIndex].commandBundleStart();
-          AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], posX);
-          AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], posY);
-          AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], sizeX);
-          AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], sizeY);
-          AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0);
-          AtemSwitcher[devIndex].setKeyDVEBorderOuterWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 2);
-          AtemSwitcher[devIndex].setKeyDVEBorderLuma(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
-          AtemSwitcher[devIndex].setKeyDVEBorderSaturation(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
-          AtemSwitcher[devIndex].setKeyDVEBorderHue(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+      }
+    }
+
+    if(setParameters) {
+        AtemSwitcher[devIndex].commandBundleStart();
+        AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], positions[newPosition][0]);
+        AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], positions[newPosition][1]);
+        AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], positions[newPosition][2]);
+        AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], positions[newPosition][3]);
+        AtemSwitcher[devIndex].setKeyDVEBorderInnerWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0);
+        AtemSwitcher[devIndex].setKeyDVEBorderOuterWidth(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 2);
+        AtemSwitcher[devIndex].setKeyDVEBorderLuma(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+        AtemSwitcher[devIndex].setKeyDVEBorderSaturation(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+        AtemSwitcher[devIndex].setKeyDVEBorderHue(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],0);
+        AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
+        AtemSwitcher[devIndex].commandBundleEnd();
+    }
+
+    if (globalConfigMem[actionPtr + 5] != 4) { // Not auto
+      if (actDown) {
+        if(setParameters) {
           AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], true);
-          AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], ATEM_idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
-          AtemSwitcher[devIndex].commandBundleEnd();
         } else {
           AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
         }
@@ -2265,16 +2293,16 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
         _systemHWcActionCacheFlag[HWc][actIdx] = true;
       }
       if (actUp) {
-        if(globalConfigMem[actionPtr + 3] == 3) {
+        if(globalConfigMem[actionPtr + 5] == 3) { // Hold down
           AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
         }
         _systemHWcActionCacheFlag[HWc][actIdx] = false;
       }
-    } else {
+    } else { // Auto
       if (actDown && !AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1])) {
         unsigned long startTime = millis();
         uint8_t transitionStyle = AtemSwitcher[devIndex].getTransitionNextTransition(globalConfigMem[actionPtr + 1]);
-        AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 1] + 1));
+        AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 2] + 1));
         AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
 
         // Wait for the transition to actually begin
@@ -2287,10 +2315,44 @@ uint16_t evaluateAction_ATEM(const uint8_t devIndex, const uint16_t actionPtr, c
       }
     }
 
-    retVal = AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) ? 4 : 5;
+    retVal = AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]) ? (4 | 0x20) : 5;
+    
+    if (extRetValIsWanted()) {
+      extRetVal(0, 7);
+      extRetValShortLabel(PSTR("PIP"));
+      extRetValColor(retVal&0x20?B110000:B101010);
+      char *desc[2];
+      memset(desc, 0, 10);
+      switch(currentPosition) {
+        case 0:
+          desc[0] = "Lower";
+          desc[1] = "right";
+          break;
+        case 1:
+          desc[0] = "Upper";
+          desc[1] = "right";
+          break;
+        case 2:
+          desc[0] = "Upper";
+          desc[1] = "left";
+          break;
+        case 3:
+          desc[0] = "Lower";
+          desc[1] = "left";
+          break;
+        default:
+          desc[0] = "Other";
+          desc[1] = "position";
+          break;
+      }
+      extRetVal2(0, 1);
+      extRetValTxt(desc[0], 0);
+      extRetValTxt(desc[1], 1);
+    }
 
-    return _systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : retVal;
+    return retVal;
     break;
+  }
   case 49: // DVE
            // This makes pushes to the encoder change which parameter to adjust:
     if ((pulses & B1) != _systemHWcActionCacheFlag[HWc][actIdx]) {
