@@ -34,7 +34,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 	#include <SPI.h>
 #endif
 
-#define SkaarhojEADOGMDisplay_SPI_SPEED 500000
+#define SkaarhojEADOGMDisplay_SPI_SPEED 400000
 
 class SkaarhojEADOGMDisplay : public Print  {
 

@@ -141,6 +141,7 @@ uint8_t HWsetupL() {
 
   Serial << F("Init ID Display\n");
   idDisplay.begin(1, 0, 1); // DOGM163
+  idDisplay.contrast(5);
   idDisplay.cursor(false);
   idDisplay.print("SKAARHOJ");
   idDisplay.setBacklight(1, 0, 0);
@@ -148,6 +149,7 @@ uint8_t HWsetupL() {
   idDisplay.setBacklight(0, 1, 0);
   delay(500);
   idDisplay.setBacklight(1, 1, 1);
+
   statusLED(QUICKBLANK);
 
 #if SK_RCP_OPTION_ENCODER
@@ -440,6 +442,19 @@ void HWrunLoop() {
   }
 
   static uint16_t idDisplay_prevHash = 0;
+
+  /* This code will reset the display every 10 seconds.
+     May be necesarry for EMC immunity compliance */
+
+  // static uint32_t lastContrastReset = millis();
+  // if(sTools.hasTimedOut(lastContrastReset, 10000, true)) {
+  //   idDisplay.begin(1, 0, 1);
+  //   idDisplay.setBacklight(idDisplay_clrs[retVal][0], idDisplay_clrs[retVal][1], idDisplay_clrs[retVal][2]);
+
+  //   idDisplay_prevHash++;
+  //   Serial << "Setting contrast for ID Display\n";
+  // }
+
   if (idDisplay_prevHash != extRetValHash()) {
     idDisplay_prevHash = extRetValHash();
     idDisplay.clearDisplay();
