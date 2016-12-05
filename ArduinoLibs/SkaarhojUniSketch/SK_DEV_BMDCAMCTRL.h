@@ -193,12 +193,12 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
     }
 
     if(scaler == 1.0) {
-      _systemHWcActionCacheFlag[HWc][actIdx] = false;
+      _systemHWcActionCacheFlag[HWc][actIdx] &= ~1;
       _systemHWcActionCache[HWc][actIdx] = 500;
     } else {
-      if(!_systemHWcActionCacheFlag[HWc][actIdx]) {
+      if((_systemHWcActionCacheFlag[HWc][actIdx] & 1) == 0) {
         _systemHWcActionCache[HWc][actIdx] = value-((value-500)*scaler);
-        _systemHWcActionCacheFlag[HWc][actIdx] = true;
+        _systemHWcActionCacheFlag[HWc][actIdx] |= 1;
       }
     }
 
@@ -213,7 +213,12 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       } else { // Binary - auto iris
         Serial << F("Perform Auto Iris... \n");
         BMDCamCtrl[devIndex].setAutoIris(cam);
+        _systemHWcActionCacheFlag[HWc][actIdx] |= 2;
       }
+    }
+
+    if(actUp) {
+      _systemHWcActionCacheFlag[HWc][actIdx] &= ~2;
     }
 
     if (pulses & 0xFFFE) {
@@ -237,6 +242,8 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
       extRetValLongLabel(PSTR("Iris Cam "), cam);
       extRetValColor(B011011);
     }
+
+    return _systemHWcActionCacheFlag[HWc][actIdx] & 2 ? (4 | 0x20) : 5;
     break;
   }
   case 2: // Sensor gain
