@@ -72,7 +72,7 @@ public:
   void uniDirectionalSlider_init(int16_t sliderTolerance, int16_t sliderLowEndOffset, int16_t sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex);
   void uniDirectionalSlider_disableUnidirectionality(bool disable);
   bool uniDirectionalSlider_hasMoved();
-  int uniDirectionalSlider_position();
+  int16_t uniDirectionalSlider_position();
   int16_t uniDirectionalSlider_rawValue();
   bool uniDirectionalSlider_isAtEnd();
 };

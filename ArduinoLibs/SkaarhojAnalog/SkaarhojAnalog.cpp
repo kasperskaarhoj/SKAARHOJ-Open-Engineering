@@ -150,6 +150,7 @@ void SkaarhojAnalog::uniDirectionalSlider_init(int16_t sliderTolerance, int16_t 
 
 void SkaarhojAnalog::uniDirectionalSlider_disableUnidirectionality(bool disable) {
   _uniDirectionalSlider_disableUnidirectionality = disable;
+  _uniDirectionalSlider_previousTransitionPosition = -1;
   _uniDirectionalSlider_sliderDirectionUp = false;
 }
 
@@ -157,7 +158,6 @@ int16_t SkaarhojAnalog::uniDirectionalSlider_rawValue() { return _analogConv.ana
 
 bool SkaarhojAnalog::uniDirectionalSlider_hasMoved() {
   int sliderValue = _analogConv.analogRead(_uniDirectionalSlider_pinIndex) >> 2;
-
   bool closeToEnd = false;
 
   if (sliderValue < _uniDirectionalSlider_sliderTolerance && sliderValue < _uniDirectionalSlider_previousSliderValue)
@@ -177,9 +177,9 @@ bool SkaarhojAnalog::uniDirectionalSlider_hasMoved() {
 
     _uniDirectionalSlider_previousSliderValue = sliderValue;
 
-    int transitionPosition = (long)1000 * (long)(sliderValue - _uniDirectionalSlider_sliderLowEndOffset) / (long)(1023 - _uniDirectionalSlider_sliderLowEndOffset - _uniDirectionalSlider_sliderHighEndOffset);
+    int16_t transitionPosition = 1000L * (int32_t)(sliderValue - _uniDirectionalSlider_sliderLowEndOffset) / (int32_t)(1023 - _uniDirectionalSlider_sliderLowEndOffset - _uniDirectionalSlider_sliderHighEndOffset);
     transitionPosition = constrain(transitionPosition, 0, 1000);
-
+    
     if (!_uniDirectionalSlider_sliderDirectionUp)
       transitionPosition = 1000 - transitionPosition;
     if (_uniDirectionalSlider_previousTransitionPosition != transitionPosition) {
@@ -194,6 +194,6 @@ bool SkaarhojAnalog::uniDirectionalSlider_hasMoved() {
   return false;
 }
 
-int SkaarhojAnalog::uniDirectionalSlider_position() { return _uniDirectionalSlider_previousTransitionPosition; }
+int16_t SkaarhojAnalog::uniDirectionalSlider_position() { return _uniDirectionalSlider_previousTransitionPosition; }
 
 bool SkaarhojAnalog::uniDirectionalSlider_isAtEnd() { return (_uniDirectionalSlider_previousTransitionPosition == 1000 || _uniDirectionalSlider_previousTransitionPosition == 0); }
