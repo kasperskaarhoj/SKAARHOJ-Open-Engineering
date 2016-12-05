@@ -350,7 +350,7 @@ uint16_t evaluateAction_BMDCAMCTRL(const uint8_t devIndex, const uint16_t action
 
     if (actDown) {
       if (value != BINARY_EVENT) {
-        val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / (250.0 * 16);
+        val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / (270.0 * 16);
       } else {
         val[(option + 3) % 4] = 0.0;
       }
