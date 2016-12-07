@@ -340,15 +340,18 @@ void HWrunLoop() {
   uint8_t encMap3[] = {41}; // These numbers refer to the drawing in the web interface
   HWrunLoop_encoders(encoders3, encMap3, sizeof(encMap3));
 #else
+
+  static bool firstIteration = true;
+
   // Joystick:
   bool hasMoved = joystick.uniDirectionalSlider_hasMoved();
 
   // actionDispatch(41, hasMoved, false, 0, 1000 - joystick.uniDirectionalSlider_position());
-  actionDispatch(42, hasMoved, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
+  actionDispatch(42, hasMoved || firstIteration, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
 
   // Wheel
   hasMoved = wheel.uniDirectionalSlider_hasMoved();
-  actionDispatch(43, hasMoved, false, 0, wheel.uniDirectionalSlider_position());
+  actionDispatch(43, hasMoved || firstIteration, false, 0, wheel.uniDirectionalSlider_position());
 
   // Button
   //  Serial << (joystickbutton.uniDirectionalSlider_position() < 500) << "\n";
@@ -356,6 +359,8 @@ void HWrunLoop() {
   static bool lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
   actionDispatch(44, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
   lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
+
+  firstIteration = false;
 #endif
 
   // Encoders

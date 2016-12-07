@@ -150,8 +150,11 @@ void SkaarhojAnalog::uniDirectionalSlider_init(int16_t sliderTolerance, int16_t 
 
 void SkaarhojAnalog::uniDirectionalSlider_disableUnidirectionality(bool disable) {
   _uniDirectionalSlider_disableUnidirectionality = disable;
+  _uniDirectionalSlider_previousSliderValue = -1;
   _uniDirectionalSlider_previousTransitionPosition = -1;
   _uniDirectionalSlider_sliderDirectionUp = false;
+
+  uniDirectionalSlider_hasMoved(); // Make sure the _uniDirectionalSlider_previousSliderValue is set correctly.
 }
 
 int16_t SkaarhojAnalog::uniDirectionalSlider_rawValue() { return _analogConv.analogRead(_uniDirectionalSlider_pinIndex) >> 2; }
