@@ -53,9 +53,9 @@ void SkaarhojOLED32x256::drawPixel(int16_t x, int16_t y, uint16_t color) {
 	    }
 
 	    if(color == WHITE) {
-			buffer32256[y*SKAARHOJOLED32x256_LCDHEIGHT + x/8] |= 1 << (x % 8);
+			buffer32256[y*SKAARHOJOLED32x256_LCDHEIGHT + x/8] |= 1 << (x & 0x7);
 		} else {
-			buffer32256[y*SKAARHOJOLED32x256_LCDHEIGHT + x/8] &= ~(1 << (x % 8));
+			buffer32256[y*SKAARHOJOLED32x256_LCDHEIGHT + x/8] &= ~(1 << (x & 0x7));
 		}
 	}
 }
