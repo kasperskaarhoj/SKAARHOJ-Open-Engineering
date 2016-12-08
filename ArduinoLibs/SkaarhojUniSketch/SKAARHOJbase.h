@@ -895,10 +895,10 @@ bool checkIncomingSerial() {
         serialState = 1;
       }
     } else if (!strncmp(serialBuffer, "clear analog", 12)) {
-      if(serialBuffer[13] == 0) { // reset all
+      if (serialBuffer[13] == 0) { // reset all
         Serial << F("Clearing all analog component calibrations...\n");
-        for(uint8_t i=0; i<HWnumOfAnalogComponents(); i++) {
-          clearAnalogComponentCalibration(i+1);
+        for (uint8_t i = 0; i < HWnumOfAnalogComponents(); i++) {
+          clearAnalogComponentCalibration(i + 1);
         }
       } else {
         uint8_t num = serialBuffer[13] - '0';
@@ -1099,9 +1099,9 @@ bool checkIncomingSerial() {
       Serial << "Clearing Mem A-D...\n";
       EEPROM.write(20, EEPROM.read(20) + 1);
 
-      for(uint8_t i = 0; i < HWnumOfAnalogComponents(); i++) {
-        Serial << "Clearing calibration for analog component #" << i+1 << "\n";
-        clearAnalogComponentCalibration(i+1);
+      for (uint8_t i = 0; i < HWnumOfAnalogComponents(); i++) {
+        Serial << "Clearing calibration for analog component #" << i + 1 << "\n";
+        clearAnalogComponentCalibration(i + 1);
       }
 
       Serial << "\nController now rebooting...\n";
@@ -1671,7 +1671,7 @@ bool userMemoryExists(uint8_t index, uint8_t type) {
 }
 
 void clearUserMemory() {
-  for(uint8_t i=0; i < EEPROM_FILEBANK_NUM; i++) {
+  for (uint8_t i = 0; i < EEPROM_FILEBANK_NUM; i++) {
     EEPROM.write(EEPROM_FILEBANK_START + i * 48, 0);
   }
 }
@@ -2723,22 +2723,22 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
   }
 
   if (HWcMap[1]) { // Channel Indicator light
-      uint16_t retVal = actionDispatch(HWcMap[1]);
-      switch(retVal) {
-        case 0:
-          break;
-        case 1:
-        case 4:
-        case 5:
-          retVal = 3;
-          break;
-        case 2:
-          retVal = 1;
-          break;
-        case 3:
-          retVal = 2;
-          break;
-      }
+    uint16_t retVal = actionDispatch(HWcMap[1]);
+    switch (retVal) {
+    case 0:
+      break;
+    case 1:
+    case 4:
+    case 5:
+      retVal = 3;
+      break;
+    case 2:
+      retVal = 1;
+      break;
+    case 3:
+      retVal = 2;
+      break;
+    }
     control.setChannelIndicatorLight(1, retVal);
   }
 
@@ -2776,20 +2776,20 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
   for (int16_t a = 0; a < 2; a++) {
     if (HWcMap[2 + a]) { // Channel Indicator light
       uint16_t retVal = actionDispatch(HWcMap[2 + a]);
-      switch(retVal) {
-        case 0:
-          break;
-        case 1:
-        case 4:
-        case 5:
-          retVal = 3;
-          break;
-        case 2:
-          retVal = 1;
-          break;
-        case 3:
-          retVal = 2;
-          break;
+      switch (retVal) {
+      case 0:
+        break;
+      case 1:
+      case 4:
+      case 5:
+        retVal = 3;
+        break;
+      case 2:
+        retVal = 1;
+        break;
+      case 3:
+        retVal = 2;
+        break;
       }
       control.setChannelIndicatorLight(1 + a, retVal);
     }
@@ -2912,14 +2912,14 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
   uint8_t tempShift;
 
   switch (globalConfigMem[actionPtr]) {
-  case 0:                                                                                                                                                               // Set Shift
+  case 0:                                                                                                                                                              // Set Shift
     tempShift = (globalConfigMem[actionPtr + 3] > 0 && globalConfigMem[actionPtr + 3] <= 4) ? _systemShiftRegister[globalConfigMem[actionPtr + 3] - 1] : _systemShift; // Get shift register value
 
     if (globalConfigMem[actionPtr + 2] == 5) { // previous return value
       if ((_retValue & 0x20 ? 1 : 0) != _systemHWcActionCacheFlag[HWc][actIdx]) {
         _systemHWcActionCacheFlag[HWc][actIdx] = (_retValue & 0x20 ? 1 : 0);
-		tempShift = constrain(_systemHWcActionCacheFlag[HWc][actIdx] ? globalConfigMem[actionPtr + 1] : 0, (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1));
-       // Serial << "SERIAL RETURN VALUE: " << _systemHWcActionCacheFlag[HWc][actIdx] << "=>" << tempShift << "\n";
+        tempShift = constrain(_systemHWcActionCacheFlag[HWc][actIdx] ? globalConfigMem[actionPtr + 1] : 0, (uint8_t)0, (uint8_t)(SK_MAXACTIONS - 1));
+        // Serial << "SERIAL RETURN VALUE: " << _systemHWcActionCacheFlag[HWc][actIdx] << "=>" << tempShift << "\n";
       }
     } else {
       if (actDown) {
@@ -3509,9 +3509,9 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
 
             break;
           }
-		  if (firstPass && sShift == 0 && devIdx == 15 && globalConfigMem[stateBehaviourPtr + lptr + 1] == 15) { // Local Shift Level Register setting (must be in shift=0 part of code, should also be first item, otherwise preceding items will be called.)
+          if (firstPass && sShift == 0 && devIdx == 15 && globalConfigMem[stateBehaviourPtr + lptr + 1] == 15) { // Local Shift Level Register setting (must be in shift=0 part of code, should also be first item, otherwise preceding items will be called.)
             if (globalConfigMem[stateBehaviourPtr + lptr + 2] < 4) {
-          //    Serial << "Local SLR: " << globalConfigMem[stateBehaviourPtr + lptr + 2] << "=" << _systemShiftRegister[globalConfigMem[stateBehaviourPtr + lptr + 2]] << "\n";
+              //    Serial << "Local SLR: " << globalConfigMem[stateBehaviourPtr + lptr + 2] << "=" << _systemShiftRegister[globalConfigMem[stateBehaviourPtr + lptr + 2]] << "\n";
               matchShiftValue = _systemShiftRegister[globalConfigMem[stateBehaviourPtr + lptr + 2]];
             }
           }
