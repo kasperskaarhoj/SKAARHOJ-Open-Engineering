@@ -15,8 +15,20 @@ uint16_t evaluateAction_PANAAWHEX(const uint8_t devIndex, const uint16_t actionP
   }
 
   switch (globalConfigMem[actionPtr]) {
-  case 0:
+  case 0: // Focus
+    break;
+  case 1: // Iris
+    if(actDown) {
+      if(value == BINARY_EVENT) {
 
+      } else {
+        Serial << "Iris value is " << value << "\n";
+      }
+    }
+    break;
+  case 2: // Preset
+    break;
+  case 3: // Move
     break;
   }
 

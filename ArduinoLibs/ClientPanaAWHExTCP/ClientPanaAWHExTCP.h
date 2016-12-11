@@ -45,6 +45,7 @@ class ClientPanaAWHExTCP
 	EthernetClient _client;
 	bool _activeHTTPRequest;
 	unsigned long _activeHTTPRequestTime;
+	uint32_t _lastSeen;
 	
 	char _charBuf[96];
 	
@@ -59,6 +60,7 @@ class ClientPanaAWHExTCP
     void connect();
 	void changeLastIPBytes(uint8_t lastByte);
 	bool isReady();
+	bool isConnected();
 	
     bool doPan(uint8_t panSpeed);
     bool doTilt(uint8_t tiltSpeed);
@@ -77,6 +79,8 @@ class ClientPanaAWHExTCP
 	void _sendPtzRequest(const String command);
 	void _sendCamRequest(const String command);
 	void _sendRequest(const String command, bool camRequest);
+	void _sendPing();
+	uint32_t _lastPingAttempt;
 
 };
 

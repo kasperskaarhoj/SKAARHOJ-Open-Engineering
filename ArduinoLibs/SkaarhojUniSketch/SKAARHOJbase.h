@@ -2002,7 +2002,7 @@ void deviceRunLoop() {
       case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
         PANAAWHEX[deviceMap[a]].runLoop();
-//    deviceReady[a] = PANAAWHEX[deviceMap[a]].???
+        deviceReady[a] = PANAAWHEX[deviceMap[a]].isConnected();
 #endif
         break;
       case SK_DEV_MATROXMONARCH:

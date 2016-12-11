@@ -48,6 +48,8 @@ void ClientPanaAWHExTCP::begin(const IPAddress ip){
 	
 	EthernetClient client;
 	_client = client;	
+	_lastSeen = 0;
+	_lastPingAttempt = 0;
 	
 	_serialOutput = false;
 	_activeHTTPRequest = false;
@@ -64,10 +66,18 @@ void ClientPanaAWHExTCP::runLoop() {
   // if there's incoming data from the net connection.
   // send it out the serial port.  This is for debugging
   // purposes only:
+  
+  bool seen = false;
   while(_client.available()) {
-    char c = _client.read();
-    //Serial.print(c);
+    char c = _client.read();	
+    seen = true;
   }	
+
+  if(seen) _lastSeen = millis();
+  if(millis() - _lastSeen > 500 && millis() - _lastPingAttempt > 500) {
+  	_sendPing();
+  	_lastPingAttempt = millis();
+  }
 
   // If the server's disconnected, stop the client:
   if (!_client.connected() && _activeHTTPRequest) {
@@ -186,6 +196,21 @@ void ClientPanaAWHExTCP::_sendPtzRequest(const String command) {
 
 void ClientPanaAWHExTCP::_sendCamRequest(const String command) {
 	_sendRequest(command, true);
+}
+
+void ClientPanaAWHExTCP::_sendPing() {
+	_activeHTTPRequestTime = millis();
+	if(_client.connect(_cameraIP, 80)) {
+		_client.print("GET / HTTP/1.1\r\nHost: 1.2.3.4\r\n\r\n");
+		_activeHTTPRequest = true;
+	} else {
+		_client.stop();
+		_activeHTTPRequest = false;
+	}
+}
+
+bool ClientPanaAWHExTCP::isConnected() {
+	return millis() - _lastSeen <= 5000;
 }
 
 void ClientPanaAWHExTCP::_sendRequest(const String command, bool camRequest) {
