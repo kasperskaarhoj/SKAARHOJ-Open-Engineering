@@ -2675,13 +2675,15 @@ void HWrunLoop_GPIO(SkaarhojGPIO2x8 &gpioBoard, const uint8_t HWc, bool *gpioSta
 #endif
 
 #if SK_HWEN_SSWBUTTONS
-void HWrunLoop_SSWbuttons(const uint8_t *HWcMap) {
+void HWrunLoop_SSWbuttons(const uint8_t *HWcMap, uint8_t theSize) {
+  if(theSize > 4) return;
+  
   uint16_t bUp, bDown;
   bUp = SSWbuttons.buttonUpAll();
   bDown = SSWbuttons.buttonDownAll();
-  static uint16_t prevHash[2];
-  static uint8_t prevColor[2];
-  for (uint8_t a = 0; a < 2; a++) {
+  static uint16_t prevHash[4];
+  static uint8_t prevColor[4];
+  for (uint8_t a = 0; a < theSize; a++) {
     extRetValIsWanted(true);          // Requesting generation of graphics
     extRetValPrefersLabel(HWcMap[a]); // Telling that this is buttons which prefer to have a label rather than status shown in graphics.
     actionDispatch(HWcMap[a], bDown & (B1 << a), bUp & (B1 << a));

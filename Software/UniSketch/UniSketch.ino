@@ -259,6 +259,7 @@ SkaarhojTools sTools(0);
 #include "SkaarhojOLED64x256.h"
 #include "SkaarhojOLEDRocker.h"
 #include "SkaarhojSmartSwitch2.h"
+#include "SkaarhojAudioControl2.h"
 #include "SK_CFGDEF_REFERENCE.h"
 #elif (SK_MODEL == SK_C90MII) 
 #include "SK_CFGDEF_C90MII.h"
