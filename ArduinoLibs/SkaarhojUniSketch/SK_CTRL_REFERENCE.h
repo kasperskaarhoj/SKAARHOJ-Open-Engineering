@@ -127,6 +127,7 @@ uint8_t HWsetupL() {
 
   Serial << F("Init DISP128x32 Display @ ( 93) = 1011101_ = 88+5\n");
   infoDisplay2.begin(5, 1);
+  infoDisplay2.setRotation(2);
 
   for (uint8_t i = 0; i < 8; i++) {
     infoDisplay2.clearDisplay();
@@ -136,8 +137,25 @@ uint8_t HWsetupL() {
   infoDisplay2.setTextSize(1);
   infoDisplay2.setTextColor(1, 0);
   infoDisplay2.setCursor(40, 24);
-  infoDisplay2 << "PLEASE WORK";
+  infoDisplay2 << "REFERENCE";
   infoDisplay2.display(B1); // Write to all
+
+  Serial << F("Init 4-axis joystick JOY-4AXIS @ ( 73) = 1001001_ = 72+1\n");
+  Joystick.joystick_init(50, 1, 0);
+
+
+  Serial << "I2C Chain 2 setup:\n";
+  setI2Cchain(2);
+
+  Serial << F("Init BI8-2x4 board\n");
+  buttons3.begin(4);
+  buttons3.setDefaultColor(0); // Off by default
+  buttons3.setButtonColorsToDefault();
+  if (getConfigMode()) {
+    Serial << F("Test: BI8 board color sequence\n");
+    buttons3.testSequence();
+  }
+  statusLED(QUICKBLANK);
 
   // Serial << F("Init Fader\n");
 
@@ -152,12 +170,12 @@ uint8_t HWsetupL() {
 
   // Fader_btn.uniDirectionalSlider_init(15, 80, 80, 0, 0);
   // Fader_btn.uniDirectionalSlider_disableUnidirectionality(true);
-
-  Serial << F("Init 4-axis joystick JOY-4AXIS @ ( 73) = 1001001_ = 72+1\n");
-  Joystick.joystick_init(50, 1, 0);
-
+  
   // Force config mode for the time being:
   retVal = 2;
+
+  // Make sure default chain is selected
+  setI2Cchain(0);
 
   return retVal;
 }
@@ -236,6 +254,9 @@ void HWtestL() {
     Serial << "Joystick Down\n";
   }  
   */
+
+  setI2Cchain(2);
+  buttons3.testProgramme(0xFF);
   
   // Return to chain 0 - otherwise the general test routines in SKAARHOJbase will not work right.
   setI2Cchain(0);

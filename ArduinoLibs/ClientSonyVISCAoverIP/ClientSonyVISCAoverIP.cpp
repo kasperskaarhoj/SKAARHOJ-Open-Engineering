@@ -202,8 +202,6 @@ void ClientSonyVISCAoverIP::runLoop(uint16_t delayTime) {
     for (uint8_t cam = 1; cam <= SONYVISCAIP_cams; cam++) {
       if (_camOnline[cam - 1]) {
         if (hasTimedOut(_lastContact[cam - 1], 400) && _applicationCommandBufferLastPositionAdded[cam - 1] == _applicationCommandBufferCurrentIndex[cam - 1]) { // Send a "get state update" when nothing else happens (output buffer is empty)
-                                                                                                                                                                //		&& !_pushedStateUpdate[cam - 1]
-                                                                                                                                                                //          _pushedStateUpdate[cam - 1] = true;
           // if (_serialOutput)
           //             Serial.println(F("pushNextStateUpdate()"));
           pushNextStateUpdate(cam);

@@ -927,6 +927,8 @@ static const uint8_t defaultControllerConfig[] PROGMEM = {
 
 SkaarhojBI16 buttons;
 SkaarhojBI8 buttons2;
+SkaarhojBI8 buttons3;
+
 SkaarhojOLED64x256 detailsDisplay;
 SkaarhojDisplayArray infoDisplay2;
 
@@ -942,3 +944,6 @@ SkaarhojEADOGMDisplay idDisplay;
 // SkaarhojBI8 buttons3;
 SkaarhojEncoders encoders;
 SkaarhojEncoders encoders2;
+
+SkaarhojOLEDRocker OLEDmenuDisplay;
+SkaarhojSmartSwitch2 boardDisplayArray;

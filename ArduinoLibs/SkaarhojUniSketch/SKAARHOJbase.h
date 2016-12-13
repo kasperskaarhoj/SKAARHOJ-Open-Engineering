@@ -2020,7 +2020,8 @@ void deviceRunLoop() {
       case SK_DEV_SONYVISCAIP:
 #if SK_DEVICES_SONYVISCAIP
         SONYVISCAIP[deviceMap[a]].runLoop();
-        deviceReady[a] = SONYVISCAIP[deviceMap[a]].hasInitialized();
+        // This is probably not the right way, to just select camera 1
+        deviceReady[a] = SONYVISCAIP[deviceMap[a]].hasInitialized(1);
 #endif
         break;
       }
