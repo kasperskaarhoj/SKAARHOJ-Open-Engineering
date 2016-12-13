@@ -1026,6 +1026,8 @@ SkaarhojEncoders encoders2;
 
 SkaarhojOLEDRocker OLEDmenuDisplay;
 SkaarhojSmartSwitch2 boardDisplayArray;
+SkaarhojGPIO2x8 microGPIO;
+SkaarhojGPIO2x8 tallyBoard;
 
 SkaarhojAudioControl2 audio;
 SkaarhojAnalog audioPot_1;

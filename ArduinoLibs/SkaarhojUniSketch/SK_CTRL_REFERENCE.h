@@ -103,6 +103,9 @@ uint8_t HWsetupL() {
   setI2Cchain(1);
   Serial << F("I2C Chain 1 setup:\n");
 
+  // Tally board
+  tallyBoard.begin(0);
+
   // Encoders
   Serial << F("Init ENCODER4N @ ( 33) = 0100001_ = 32+1\n");
   encoders.begin(1);
@@ -200,6 +203,9 @@ uint8_t HWsetupL() {
   }
   statusLED(QUICKBLANK);
 
+
+  microGPIO.begin(0);
+
   // Serial << F("Init Fader\n");
 
   // uint16_t *cal1 = getAnalogComponentCalibration(3);
@@ -265,6 +271,8 @@ void HWtestL() {
   ptr++;
 
   setI2Cchain(1);
+
+  tallyBoard.setOutputAll(tallyBoard.inputIsActiveAll() ^ (millis() >> 9));
   
   encoders.runLoop();
   encoders2.runLoop();
@@ -316,6 +324,7 @@ void HWtestL() {
 
   setI2Cchain(2);
   buttons3.testProgramme(0xFF);
+  microGPIO.setOutputAll(GPIOboard.inputIsActiveAll());
   
   // Return to chain 0 - otherwise the general test routines in SKAARHOJbase will not work right.
   setI2Cchain(0);
@@ -352,6 +361,11 @@ void HWrunLoop() {
   static uint16_t infoDisplay_prevHash[3];
   static bool infoDisplay_written;
   HWrunLoop_128x32OLED(infoDisplay, 44, infoDisplay_prevHash, infoDisplay_written);
+  #endif
+
+  #if SK_HWEN_GPIO
+  static bool gpioStates[] = {false, false, false, false, false, false, false, false};
+  HWrunLoop_GPIO(GPIOboard, 62, gpioStates);
   #endif
 
 
@@ -440,6 +454,21 @@ void HWrunLoop() {
   setI2Cchain(1);
   encoders.runLoop();
   encoders2.runLoop();
+
+  // Tally board
+  static bool tallyStates[] = {false, false, false, false, false, false};
+  for (uint8_t a = 0; a < 6; a++) {
+    extRetValPrefersLabel(94 + a);
+    uint8_t state = actionDispatch(94 + a);
+    bool stateB = state & 0x20; // Output bit
+
+    if (stateB != tallyStates[a]) {
+      tallyStates[a] = stateB;
+      tallyBoard.setOutput(a + 1, stateB);
+      if (debugMode)
+        Serial << F("Write Tally ") << a + 1 << F("\n");
+    }
+  }
 
   // ID Display:
   extRetValIsWanted(true);
@@ -566,6 +595,9 @@ void HWrunLoop() {
     uint8_t color = actionDispatch(b16Map3[a], bDown & (B1 << a), bUp & (B1 << a));
     buttons3.setButtonColor(a + 1, color & 0xF);
   }
+
+  static bool microGPIOstates[] = {false, false, false, false, false, false, false, false};
+  HWrunLoop_GPIO(microGPIO, 78, microGPIOstates);
 
   // // GPI
   // bUp = bDown = 0;
