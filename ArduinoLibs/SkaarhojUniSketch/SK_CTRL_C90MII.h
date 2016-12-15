@@ -23,7 +23,7 @@ uint8_t HWsetupL() {
   buttons2.setButtonColorsToDefault();
   statusLED(QUICKBLANK);
 
-  #if SK_C90D_OPTION_GPIO
+  #if SK_C90MII_OPTION_GPIO
   Serial << F("Option: GPIO\n");
   #else
   // These indices are subtracted 1 compared to the web interface
