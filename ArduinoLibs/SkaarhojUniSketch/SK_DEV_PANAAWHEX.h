@@ -23,6 +23,7 @@ uint16_t evaluateAction_PANAAWHEX(const uint8_t devIndex, const uint16_t actionP
 
       } else {
         Serial << "Iris value is " << value << "\n";
+        PANAAWHEX[devIndex].setIris(map(value, 0, 1000, 0, 1023));
       }
     }
     break;

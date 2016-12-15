@@ -53,6 +53,8 @@ void ClientPanaAWHExTCP::begin(const IPAddress ip){
 	
 	_serialOutput = false;
 	_activeHTTPRequest = false;
+	_stateRequestPointer = 0;
+	_lastStateRequest = 0;
 }
 
 /**
@@ -62,30 +64,104 @@ void ClientPanaAWHExTCP::serialOutput(bool flag){
 	_serialOutput = flag;
 }
 
+void ClientPanaAWHExTCP::_parseIncoming(char* buffer) {
+	if(!strncmp(buffer, "ORI:", 4)) {
+		uint16_t val = strtol(buffer+4, NULL, 16);
+		_gainR = map(val, 0, 300, -100, 100);
+	} else
+	if(!strncmp(buffer, "OBI:", 4)) {
+		uint16_t val = strtol(buffer+4, NULL, 16);
+		_gainB = map(val, 0, 300, -100, 100);
+	} else
+	if(!strncmp(buffer, "ORP:", 4)) {
+		uint16_t val = strtol(buffer+4, NULL, 16);
+		_pedestalR = map(val, 0, 300, -100, 100);
+	} else
+	if(!strncmp(buffer, "OBP:", 4)) {
+		uint16_t val = strtol(buffer+4, NULL, 16);
+		_pedestalB = map(val, 0, 300, -100, 100);
+	} else
+	if(!strncmp(buffer, "OGU:", 4)) {
+		uint16_t val = strtol(buffer+4, NULL, 16);
+		if(val == 0x80) {
+			_sensorGain = 0xFF;
+		} else {
+			_sensorGain = val - 0x08;
+		}
+	} else 
+	if(!strncmp(buffer, "OBR:", 4) || !strncmp(buffer, "DCB:", 4)) {
+		_colorBars = buffer[4] == '1';
+	} else
+	if(!strncmp(buffer, "ORV:", 4)) {
+		_iris = strtol(buffer+4, NULL, 16);
+	} else {
+		if(_serialOutput > 1) {
+			Serial << "Unhandled response: " << buffer << "\n";
+		}
+	}
+}
+
+void ClientPanaAWHExTCP::_requestState() {
+	char* stateGetters[] = {
+		"QRI", // Gain R
+		"QBI", // Gain B
+		"QRP", // Pedestal R
+		"QBP", // Pedestal B
+		"QGU", // Sensor Gain
+		"QBR", // Color bars
+		"QRV",  // Iris
+	};
+
+	if(millis() - _lastStateRequest > 500 && isReady()) {
+		if(stateGetters[_stateRequestPointer++][0] == '#') {
+			_sendPtzRequest(stateGetters[_stateRequestPointer]);
+		} else {
+			_sendCamRequest(stateGetters[_stateRequestPointer]);
+		}
+
+		_stateRequestPointer %= sizeof(stateGetters)/sizeof(char*);
+		_lastStateRequest = millis();
+	}
+}
+
 void ClientPanaAWHExTCP::runLoop() {
-  // if there's incoming data from the net connection.
-  // send it out the serial port.  This is for debugging
-  // purposes only:
-  
-  bool seen = false;
+  char buffer[21];
+  uint8_t pos = 0;
+  memset(buffer, 0, 20);
+  uint8_t NLc = 0;
   while(_client.available()) {
-    char c = _client.read();	
-    seen = true;
+    char c = _client.read();
+    if(c == '\n') { // Jump over the first 5 lines in the HTTP response
+    	if(++NLc <= 5) continue;
+    }
+
+    if(pos < 20 && NLc >= 5) {
+    	buffer[pos++] = c;
+    }
   }	
 
-  if(seen) _lastSeen = millis();
-  if(millis() - _lastSeen > 500 && millis() - _lastPingAttempt > 500) {
-  	_sendPing();
-  	_lastPingAttempt = millis();
+
+  if(pos > 0) {
+  	_lastSeen = millis();
+  	_parseIncoming(buffer);
   }
+  
+  // if(millis() - _lastSeen > 500 && millis() - _lastPingAttempt > 500) {
+  // 	if(_sendPing()) {
+  // 		_lastSeen = millis();
+  // 	}
+
+  // 	_lastPingAttempt = millis();
+  // }
+
+  // Request state from camera
+  _requestState();
 
   // If the server's disconnected, stop the client:
   if (!_client.connected() && _activeHTTPRequest) {
 	_activeHTTPRequest = false;
-	if (_serialOutput) {
+	if (_serialOutput > 1) {
 		Serial.println(millis()-_activeHTTPRequestTime);
-    	Serial.println();
-    	Serial.println("disconnecting.");
 	}
     _client.stop();
   }
@@ -97,6 +173,7 @@ void ClientPanaAWHExTCP::runLoop() {
  */
 void ClientPanaAWHExTCP::connect() {
 }
+
 void ClientPanaAWHExTCP::changeLastIPBytes(uint8_t lastByte) {
 	_cameraIP[3] = lastByte;
 }
@@ -104,42 +181,42 @@ void ClientPanaAWHExTCP::changeLastIPBytes(uint8_t lastByte) {
 
 bool ClientPanaAWHExTCP::doPan(uint8_t panSpeed) {	// 01-99, 50 is neutral
 	if (isReady())	{
-		_sendPtzRequest("P"+String(panSpeed < 10?"0":"")+String(panSpeed,DEC));
+		_sendPtzRequest("P%02d", constrain(panSpeed,1,99));
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::doTilt(uint8_t tiltSpeed) {	// 01-99, 50 is neutral
 	if (isReady())	{
-		_sendPtzRequest("T"+String(tiltSpeed < 10?"0":"")+String(tiltSpeed,DEC));
+		_sendPtzRequest("T%02d", constrain(tiltSpeed, 1, 99));
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::doZoom(uint8_t zoomSpeed) {	// 01-99, 50 is neutral
 	if (isReady())	{
-		_sendPtzRequest("Z"+String(zoomSpeed < 10?"0":"")+String(zoomSpeed,DEC));
+		_sendPtzRequest("Z%02d", constrain(zoomSpeed, 1, 99));
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::doPanTilt(uint8_t panSpeed,uint8_t tiltSpeed) {	// 01-99, 50 is neutral
 	if (isReady())	{
-		_sendPtzRequest("PTS"+String(panSpeed < 10?"0":"")+String(panSpeed,DEC)+String(tiltSpeed < 10?"0":"")+String(tiltSpeed,DEC));
+		_sendPtzRequest("PTS%02d%02d", constrain(panSpeed, 1, 99), constrain(tiltSpeed, 1, 99));
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::setAutoFocus(bool enable) {
 	if (isReady())	{
-		_sendPtzRequest("D1"+String(enable?"1":"0"));
+		_sendPtzRequest("D1%d", enable);
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::doFocus(uint8_t focusPos) {	// 01-99, >50 = Far
 	if (isReady())	{
-		_sendPtzRequest("F"+String(focusPos < 10?"0":"")+String(focusPos,DEC));
+		_sendPtzRequest("F%02d", constrain(focusPos, 1, 99));
 		return true;
 	}
 	return false;
@@ -153,79 +230,199 @@ bool ClientPanaAWHExTCP::onTouchAutofocus() {
 }
 bool ClientPanaAWHExTCP::setAutoIris(bool enable) {
 	if (isReady())	{
-		_sendPtzRequest("D3"+String(enable?"1":"0"));
+		_sendPtzRequest("D3%d", enable);
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::deletePreset(uint8_t presetNum) {	// 00-99
 	if (isReady())	{
-		_sendPtzRequest("C"+String(presetNum < 10?"0":"")+String(presetNum,DEC));
+		_sendPtzRequest("C%02d", constrain(presetNum, 0, 99));
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::storePreset(uint8_t presetNum) {	// 00-99
 	if (isReady())	{
-		_sendPtzRequest("M"+String(presetNum < 10?"0":"")+String(presetNum,DEC));
+		_sendPtzRequest("M%02d", constrain(presetNum, 0, 99));
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::recallPreset(uint8_t presetNum) {	// 00-99
 	if (isReady())	{
-		_sendPtzRequest("R"+String(presetNum < 10?"0":"")+String(presetNum,DEC));
+		_sendPtzRequest("R%02d", constrain(presetNum, 0, 99));
 		return true;
 	}
 	return false;
 }
 bool ClientPanaAWHExTCP::power(bool enable) {
 	if (isReady())	{
-		_sendPtzRequest("O"+String(enable?"1":"0"));
+		_sendPtzRequest("O%d", enable);
 		return true;
 	}
 	return false;
 }
 
+bool ClientPanaAWHExTCP::setContrast(uint8_t contrast) {
+	if(isReady()) {
+		_sendCamRequest("OSD:48:%02X", constrain(contrast, 0, 100));
+
+		return true;
+	}
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setColorBars(bool state) {
+	if(isReady()) {
+		_sendCamRequest("DCB:%d", state);
+		return true;
+	}
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setShutter(uint8_t shutter) {
+	if(isReady()) {
+		_sendCamRequest("OSH:%X", constrain(shutter, 0, 0xE));
+		return true;
+	}
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setSensorGain(uint8_t gain) {
+	if(isReady()) {
+		if(gain <= 18) {
+			gain = 0x08 + gain;
+		} else { // Enforce auto gain
+			gain = 0x80;
+		}
+		_sendCamRequest("OGU:%02X", gain);
+		return true;
+	}
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setGainR(int8_t gain) {
+	if(isReady()) {
+		uint16_t g = map((int16_t)constrain(gain, -100, 100), -100, 100, 0, 0x12C);
+		_sendCamRequest("ORI:%03X", g);
+		return true;
+	}	
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setGainB(int8_t gain) {
+	if(isReady()) {
+		uint16_t g = map((int16_t)constrain(gain, -100, 100), -100, 100, 0, 0x12C);
+		_sendCamRequest("OBI:%03X", g);
+		return true;
+	}	
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setPedestalR(int8_t pedestal) {
+	if(isReady()) {
+		uint16_t g = map((int16_t)constrain(pedestal, -100, 100), -100, 100, 0, 0x12C);
+		_sendCamRequest("ORP:%03X", g);
+		return true;
+	}	
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setPedestalB(int8_t pedestal) {
+	if(isReady()) {
+		uint16_t g = map((int16_t)constrain(pedestal, -100, 100), -100, 100, 0, 0x12C);
+		_sendCamRequest("OBP:%03X", g);
+		return true;
+	}	
+	return false;
+}
+
+bool ClientPanaAWHExTCP::setIris(uint16_t iris) {
+	if(isReady()) {
+		_sendCamRequest("ORV:%03X", iris);
+		return true;
+	}
+	return false;
+}
+
+int8_t ClientPanaAWHExTCP::getGainR() {
+	return _gainR;
+}
+int8_t ClientPanaAWHExTCP::getGainB() {
+	return _gainB;
+}
+int8_t ClientPanaAWHExTCP::getPedestalR() {
+	return _pedestalR;
+}
+int8_t ClientPanaAWHExTCP::getPedestalB() {
+	return _pedestalB;
+}
+uint16_t ClientPanaAWHExTCP::getIris() {
+	return _iris;
+}
+
 bool ClientPanaAWHExTCP::isReady()	{
 	return !_activeHTTPRequest;
 }
-void ClientPanaAWHExTCP::_sendPtzRequest(const String command) {
-	_sendRequest(command, false);
+void ClientPanaAWHExTCP::_sendPtzRequest(const char* format, ...) {
+	va_list args;
+	va_start(args, format);
+
+	vsnprintf(_cmdBuf, PanaAWHE_BUFSIZE, format, args);
+	_sendRequest(_cmdBuf, false);
+
+	va_end(args);
 }
 
-void ClientPanaAWHExTCP::_sendCamRequest(const String command) {
-	_sendRequest(command, true);
+void ClientPanaAWHExTCP::_sendCamRequest(const char* format, ...) {
+	va_list args;
+	va_start(args, format);
+
+	vsnprintf(_cmdBuf, PanaAWHE_BUFSIZE, format, args);
+	Serial << "Request: " << _cmdBuf << "\n";
+	_sendRequest(_cmdBuf, true);
+
+	va_end(args);
 }
 
-void ClientPanaAWHExTCP::_sendPing() {
+bool ClientPanaAWHExTCP::_sendPing() {
 	_activeHTTPRequestTime = millis();
-	if(_client.connect(_cameraIP, 80)) {
-		_client.print("GET / HTTP/1.1\r\nHost: 1.2.3.4\r\n\r\n");
-		_activeHTTPRequest = true;
-	} else {
-		_client.stop();
-		_activeHTTPRequest = false;
+	if(!_activeHTTPRequest) {
+		if(_client.connect(_cameraIP, 80)) {
+			_client.stop();
+			return true;
+			_client.stop();
+		}
 	}
+	return false;
+
+	// if(_client.connect(_cameraIP, 80)) {
+	// 	_client.print("GET / HTTP/1.1\r\nHost: 1.2.3.4\r\n\r\n");
+	// 	_activeHTTPRequest = true;
+	// } else {
+	// 	_client.stop();
+	// 	_activeHTTPRequest = false;
+	// }
 }
 
 bool ClientPanaAWHExTCP::isConnected() {
 	return millis() - _lastSeen <= 5000;
 }
 
-void ClientPanaAWHExTCP::_sendRequest(const String command, bool camRequest) {
+void ClientPanaAWHExTCP::_sendRequest(const char* command, bool camRequest) {
 
   _activeHTTPRequestTime = millis();
   if (_client.connect(_cameraIP, 80)) {
-    if (_serialOutput) Serial.println("connecting...");
+    if (_serialOutput > 1) Serial.println("connecting...");
     // send the HTTP PUT request:
-	if (_serialOutput) Serial.println(command);
+	//if (_serialOutput) Serial.println(command);
 
 	uint8_t charIdx = 0;
 
 	memset(_charBuf,0,96);
 
-	if (command.length()<=34)	{
+	if (strlen(command)<=34)	{
 		if (camRequest)	{
 			strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_cam?cmd="));	// 24 chars
 			charIdx+=strlen_P("GET /cgi-bin/aw_cam?cmd=");
@@ -234,8 +431,8 @@ void ClientPanaAWHExTCP::_sendRequest(const String command, bool camRequest) {
 			charIdx+=strlen_P("GET /cgi-bin/aw_ptz?cmd=%23");
 		}
 
-		command.toCharArray(_charBuf+charIdx, command.length()+1);	// total chars = 61 + NULL + length of command (max 34)
-		charIdx+=command.length();
+		strcpy(_charBuf+charIdx, command);
+		charIdx+=strlen(command);
 	
 		strcpy_P(_charBuf+charIdx, PSTR("&res=1 HTTP/1.1\r\n"));	// 17 chars
 		charIdx+=strlen_P("&res=1 HTTP/1.1\r\n");
