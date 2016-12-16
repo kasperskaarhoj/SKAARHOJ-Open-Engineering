@@ -1508,7 +1508,6 @@ void writeDisplayTile(Adafruit_GFX &disp, uint8_t x, uint8_t y, uint8_t dispMask
 }
 #endif
 #if (SK_HWEN_MENU)
-void write3x16Display(SkaarhojEADOGMDisplay &disp);
 void write3x16Display(SkaarhojEADOGMDisplay &disp) {
 
   disp.gotoRowCol(0, 0);
@@ -2154,7 +2153,6 @@ uint8_t HWsetup() {
   menuEncoders.begin(5);
 #endif
   menuDisplay.cursor(false);
-  menuDisplay.contrast(5);
   menuDisplay.print("SKAARHOJ");
 
   //  menuEncoders.serialOutput(debugMode);
