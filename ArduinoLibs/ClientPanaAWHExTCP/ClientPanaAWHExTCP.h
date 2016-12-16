@@ -36,6 +36,7 @@ with the Panasonic AW-HE library. If not, see http://www.gnu.org/licenses/.
 #include <Streaming.h>
 
 #define PanaAWHE_BUFSIZE 30
+#define PanaAWHE_QUEUESIZE 100
 
 //  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include <Ethernet.h>
@@ -98,11 +99,17 @@ class ClientPanaAWHExTCP
   private:
 	void _sendPtzRequest(const char* format, ...);
 	void _sendCamRequest(const char* format, ...);
-	void _sendRequest(const char* command, bool camRequest);
+	void _sendRequest(const char* command, uint8_t len, bool camRequest);
+	void _addToQueue(const char*, uint8_t cam, bool camRequest);
+	uint8_t _getNextQueue();
+	void _popQueue();
 	void _parseIncoming(char* buffer); 
 	bool _sendPing();
 	void _requestState();
 	uint32_t _lastPingAttempt;
+
+	char _queue[PanaAWHE_QUEUESIZE];
+	uint8_t _queuePtr;
 
 	int8_t _gainR;
 	int8_t _gainB;
@@ -115,6 +122,8 @@ class ClientPanaAWHExTCP
 
 	uint8_t _stateRequestPointer;
 	uint32_t _lastStateRequest;
+
+	uint32_t _lastSentCommand;
 
 };
 
