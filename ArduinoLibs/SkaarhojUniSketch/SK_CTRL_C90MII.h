@@ -27,7 +27,7 @@ uint8_t HWsetupL() {
   Serial << F("Option: GPIO\n");
   #else
   // These indices are subtracted 1 compared to the web interface
-  for (uint8_t a = 15; a < 15 + 16; a++) {  // a=33 is the index of the first GPIO pin in the HWc configuration
+  for (uint8_t a = 17; a < 17 + 16; a++) {  // a=18 is the index of the first GPIO pin in the HWc configuration
     if (a < SK_HWCCOUNT) // Just making sure...
       HWdis[a] = 1; // Removes from web interface
   }
