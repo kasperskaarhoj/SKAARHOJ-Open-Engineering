@@ -1794,32 +1794,32 @@ void deviceDebugLevel(uint8_t debugLevel) {
 #endif
 #if SK_DEVICES_VMIX
       case SK_DEV_VMIX:
-        VMIX[deviceMap[a]].serialOutput(debugLevel);
+        VMix[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_ROLANDVR50
       case SK_DEV_ROLANDVR50:
-        ROLANDVR50[deviceMap[a]].serialOutput(debugLevel);
+        RolandVR50[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_PANAAWHEX
       case SK_DEV_PANAAWHEX:
-        PANAAWHEX[deviceMap[a]].serialOutput(debugLevel);
+        PanaAWHEX[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_MATROXMONARCH
       case SK_DEV_MATROXMONARCH:
-        MATROXMONARCH[deviceMap[a]].serialOutput(debugLevel);
+        MatroxMonarch[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_H264REC
       case SK_DEV_H264REC:
-        H264REC[deviceMap[a]].serialOutput(debugLevel);
+        H264Rec[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
 #if SK_DEVICES_SONYVISCAIP
       case SK_DEV_SONYVISCAIP:
-        SONYVISCAIP[deviceMap[a]].serialOutput(debugLevel);
+        SonyVISCAIP[deviceMap[a]].serialOutput(debugLevel);
         break;
 #endif
       }
@@ -1897,42 +1897,42 @@ void deviceSetup() {
 #if SK_DEVICES_VMIX
         Serial << F(": VMIX") << VMIX_initIdx;
         deviceMap[a] = VMIX_initIdx++;
-        VMIX[deviceMap[a]].begin(deviceIP[a]);
+        VMix[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       case SK_DEV_ROLANDVR50:
 #if SK_DEVICES_ROLANDVR50
         Serial << F(": ROLANDVR50") << ROLANDVR50_initIdx;
         deviceMap[a] = ROLANDVR50_initIdx++;
-        ROLANDVR50[deviceMap[a]].begin(deviceIP[a]);
+        RolandVR50[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
         Serial << F(": PANAAWHEX") << PANAAWHEX_initIdx;
         deviceMap[a] = PANAAWHEX_initIdx++;
-        PANAAWHEX[deviceMap[a]].begin(deviceIP[a]);
+        PanaAWHEX[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       case SK_DEV_MATROXMONARCH:
 #if SK_DEVICES_MATROXMONARCH
         Serial << F(": MATROXMONARCH") << MATROXMONARCH_initIdx;
         deviceMap[a] = MATROXMONARCH_initIdx++;
-        MATROXMONARCH[deviceMap[a]].begin(deviceIP[a]);
+        MatroxMonarch[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       case SK_DEV_H264REC:
 #if SK_DEVICES_H264REC
         Serial << F(": H264REC") << H264REC_initIdx;
         deviceMap[a] = H264REC_initIdx++;
-// H264REC[deviceMap[a]].begin(deviceIP[a]);
+// H264Rec[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       case SK_DEV_SONYVISCAIP:
 #if SK_DEVICES_SONYVISCAIP
         Serial << F(": SONYVISCAIP") << SONYVISCAIP_initIdx;
         deviceMap[a] = SONYVISCAIP_initIdx++;
-        SONYVISCAIP[deviceMap[a]].begin(deviceIP[a]);
+        SonyVISCAIP[deviceMap[a]].begin(deviceIP[a]);
 #endif
         break;
       }
@@ -1988,39 +1988,39 @@ void deviceRunLoop() {
         break;
       case SK_DEV_VMIX:
 #if SK_DEVICES_VMIX
-        VMIX[deviceMap[a]].runLoop();
-        deviceReady[a] = VMIX[deviceMap[a]].hasInitialized();
+        VMix[deviceMap[a]].runLoop();
+        deviceReady[a] = VMix[deviceMap[a]].hasInitialized();
 #endif
         break;
       case SK_DEV_ROLANDVR50:
 #if SK_DEVICES_ROLANDVR50
-        ROLANDVR50[deviceMap[a]].runLoop();
-        deviceReady[a] = ROLANDVR50[deviceMap[a]].hasInitialized();
+        RolandVR50[deviceMap[a]].runLoop();
+        deviceReady[a] = RolandVR50[deviceMap[a]].hasInitialized();
 #endif
         break;
       case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
-        PANAAWHEX[deviceMap[a]].runLoop();
-//    deviceReady[a] = PANAAWHEX[deviceMap[a]].???
+        PanaAWHEX[deviceMap[a]].runLoop();
+//    deviceReady[a] = PanaAWHEX[deviceMap[a]].???
 #endif
         break;
       case SK_DEV_MATROXMONARCH:
 #if SK_DEVICES_MATROXMONARCH
-        MATROXMONARCH[deviceMap[a]].runLoop();
-        deviceReady[a] = MATROXMONARCH[deviceMap[a]].hasInitialized();
+        MatroxMonarch[deviceMap[a]].runLoop();
+        deviceReady[a] = MatroxMonarch[deviceMap[a]].hasInitialized();
 #endif
         break;
       case SK_DEV_H264REC:
 #if SK_DEVICES_H264REC
-        H264REC[deviceMap[a]].runLoop();
-        deviceReady[a] = H264REC[deviceMap[a]].hasInitialized();
+        H264Rec[deviceMap[a]].runLoop();
+        deviceReady[a] = H264Rec[deviceMap[a]].hasInitialized();
 #endif
         break;
       case SK_DEV_SONYVISCAIP:
 #if SK_DEVICES_SONYVISCAIP
-        SONYVISCAIP[deviceMap[a]].runLoop();
+        SonyVISCAIP[deviceMap[a]].runLoop();
         // This is probably not the right way, to just select camera 1
-        deviceReady[a] = SONYVISCAIP[deviceMap[a]].hasInitialized(1);
+        deviceReady[a] = SonyVISCAIP[deviceMap[a]].hasInitialized(1);
 #endif
         break;
       }
@@ -2503,7 +2503,7 @@ void HWrunLoop_SSWMenu(const uint8_t HWc) {
     }
     extRetValIsWanted(true);
 
-    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], BINARY_EVENT, SSWMenuItemPtr + 1);
+    actionDispatch(HWc, HWC_BINARY | HWC_PULSED, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], BINARY_EVENT, SSWMenuItemPtr + 1);
     SSWmenuEnc.runLoop();
     static uint16_t prevHash = 0;
     static uint8_t prevColor = 0;
@@ -2557,7 +2557,7 @@ void HWrunLoop_Menu(const uint8_t HWc) {
       break;
     }
     extRetValIsWanted(true);
-    actionDispatch(HWc, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], BINARY_EVENT, menuItemPtr + 1);
+    actionDispatch(HWc, HWC_BINARY | HWC_PULSED, actDown, actDown, (clicks << 1) | _systemHWcActionFineFlag[HWc - 1], BINARY_EVENT, menuItemPtr + 1);
 
     static uint16_t prevHashTD = 0;
     if (prevHashTD != extRetValHash()) {
@@ -2641,7 +2641,7 @@ void HWrunLoop_slider(const uint8_t HWc) {
       alarmLED();
     }
   }
-  actionDispatch(HWc, hasMoved, hasMoved && slider.uniDirectionalSlider_isAtEnd(), 0, slider.uniDirectionalSlider_position());
+  actionDispatch(HWc, HWC_ANALOG, hasMoved, hasMoved && slider.uniDirectionalSlider_isAtEnd(), 0, slider.uniDirectionalSlider_position());
 }
 #endif
 
@@ -2654,7 +2654,7 @@ void HWrunLoop_GPIO(SkaarhojGPIO2x8 &gpioBoard, const uint8_t HWc, bool *gpioSta
   bDown = gpioBoard.inputDownAll();
   for (uint8_t a = 0; a < 8; a++) {
     extRetValPrefersLabel(HWc + 8 + a);
-    actionDispatch(HWc + 8 + a, bDown & (B1 << a), bUp & (B1 << a));
+    actionDispatch(HWc + 8 + a, HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
   }
 
   // GPIO Outputs
@@ -2684,7 +2684,7 @@ void HWrunLoop_SSWbuttons(const uint8_t *HWcMap, uint8_t theSize) {
   for (uint8_t a = 0; a < theSize; a++) {
     extRetValIsWanted(true);          // Requesting generation of graphics
     extRetValPrefersLabel(HWcMap[a]); // Telling that this is buttons which prefer to have a label rather than status shown in graphics.
-    actionDispatch(HWcMap[a], bDown & (B1 << a), bUp & (B1 << a));
+    actionDispatch(HWcMap[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
 
     if (prevHash[a] != extRetValHash()) {
       prevHash[a] = extRetValHash();
@@ -2720,7 +2720,7 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
 
   if (HWcMap[0]) { // Pot
     bool hasMoved = pot.uniDirectionalSlider_hasMoved();
-    actionDispatch(HWcMap[0], hasMoved, false, 0, mapPotHelper(pot.uniDirectionalSlider_position()));
+    actionDispatch(HWcMap[0], HWC_ANALOG, hasMoved, false, 0, mapPotHelper(pot.uniDirectionalSlider_position()));
   }
 
   if (HWcMap[1]) { // Channel Indicator light
@@ -2753,7 +2753,7 @@ void HWrunLoop_AudioControlMaster(SkaarhojAudioControl2 &control, SkaarhojAnalog
   uint16_t bDown = control.buttonDownAll();
   for (int16_t a = 0; a < 5; a++) {
     if (HWcMap[3 + a]) {
-      uint16_t color = actionDispatch(HWcMap[3 + a], bDown & (B1 << a), bUp & (B1 << a));
+      uint16_t color = actionDispatch(HWcMap[3 + a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
       control.setButtonLight(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 0) : 0);
     }
   }
@@ -2766,12 +2766,12 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
 
   if (HWcMap[0]) { // Pot1
     bool hasMoved = pot1.uniDirectionalSlider_hasMoved();
-    actionDispatch(HWcMap[0], hasMoved, false, 0, mapPotHelper(pot1.uniDirectionalSlider_position()));
+    actionDispatch(HWcMap[0], HWC_ANALOG, hasMoved, false, 0, mapPotHelper(pot1.uniDirectionalSlider_position()));
   }
 
   if (HWcMap[1]) { // Pot2
     bool hasMoved = pot2.uniDirectionalSlider_hasMoved();
-    actionDispatch(HWcMap[1], hasMoved, false, 0, mapPotHelper(pot2.uniDirectionalSlider_position()));
+    actionDispatch(HWcMap[1], HWC_ANALOG, hasMoved, false, 0, mapPotHelper(pot2.uniDirectionalSlider_position()));
   }
 
   for (int16_t a = 0; a < 2; a++) {
@@ -2801,7 +2801,7 @@ void HWrunLoop_AudioControl(SkaarhojAudioControl2 &control, SkaarhojAnalog &pot1
   uint16_t bDown = control.buttonDownAll();
   for (int16_t a = 0; a < 4; a++) {
     if (HWcMap[4 + a]) {
-      uint16_t color = actionDispatch(HWcMap[4 + a], bDown & (B1 << a), bUp & (B1 << a));
+      uint16_t color = actionDispatch(HWcMap[4 + a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
       control.setButtonLight(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 0) : 0);
     }
   }
@@ -2818,7 +2818,7 @@ void HWrunLoop_BI8(SkaarhojBI8 &buttons, const uint8_t *HWcMap, uint8_t theSize)
 
   for (uint8_t a = 0; a < theSize; a++) {
     extRetValPrefersLabel(HWcMap[a]);
-    uint8_t color = actionDispatch(HWcMap[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(HWcMap[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons.setButtonColor(a + 1, color & 0xF);
   }
 }
@@ -2844,7 +2844,7 @@ void HWrunLoop_encoders(SkaarhojEncoders &encoders, const uint8_t *encMap, uint8
         }
         break;
       }
-      actionDispatch(encMap[a], actDown, actDown, (((a == 0 && reverseFirst ? -1 : 1) * clicks) << 1) | _systemHWcActionFineFlag[encMap[a] - 1]);
+      actionDispatch(encMap[a], HWC_PULSED, actDown, actDown, (((a == 0 && reverseFirst ? -1 : 1) * clicks) << 1) | _systemHWcActionFineFlag[encMap[a] - 1]);
     }
   }
 }
@@ -2904,7 +2904,7 @@ uint8_t cycleMemHelper(uint8_t actionPtr, uint8_t idx = 255) {
 /**
  * Evaluates System Actions
  */
-uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value) {
+uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value, uint8_t HWcType) {
   if (debugMode && (actDown || actUp)) {
     Serial << F("System action ") << globalConfigMem[actionPtr] << F("\n");
   }
@@ -3362,7 +3362,7 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
  * Dispatching actions in general
  * (Notice; is already declared in main sketch!)
  */
-uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses, int16_t value, const uint8_t specificAction) {
+uint16_t actionDispatch(uint8_t HWcNum, uint8_t HWcType, bool actDown, bool actUp, int16_t pulses, int16_t value, const uint8_t specificAction) {
   uint8_t actionMirrorC = 0;
   actionMirror = 0;
   _inactivePanel_actDown = actDown;
@@ -3415,84 +3415,84 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                 switch (pgm_read_byte_near(deviceArray + devIdx)) {
                 case SK_DEV_ATEM:
 #if SK_DEVICES_ATEM
-                  retValueT = ATEM::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = ATEM::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_HYPERDECK:
 #if SK_DEVICES_HYPERDECK
-                  retValueT = HYPERDECK::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = HYPERDECK::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_VIDEOHUB:
 #if SK_DEVICES_VIDEOHUB
-                  retValueT = VIDEOHUB::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = VIDEOHUB::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SMARTSCOPE:
 #if SK_DEVICES_SMARTSCOPE
-                  retValueT = SMARTSCOPE::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = SMARTSCOPE::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
-                  retValueT = BMDCAMCTRL::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = BMDCAMCTRL::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SONYRCP:
 #if SK_DEVICES_SONYRCP
-                  retValueT = SONYRCP::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = SONYRCP::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_VMIX:
 #if SK_DEVICES_VMIX
-                  retValueT = VMIX::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = VMIX::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_ROLANDVR50:
 #if SK_DEVICES_ROLANDVR50
-                  retValueT = ROLANDVR50::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = ROLANDVR50::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
-                  retValueT = PANAAWHEX::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = PANAAWHEX::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_MATROXMONARCH:
 #if SK_DEVICES_MATROXMONARCH
-                  retValueT = MATROXMONARCH::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = MATROXMONARCH::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_H264REC:
 #if SK_DEVICES_H264REC
-                  retValueT = H264REC::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = H264REC::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SONYVISCAIP:
 #if SK_DEVICES_SONYVISCAIP
-                  retValueT = SONYVISCAIP::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = SONYVISCAIP::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
@@ -3502,7 +3502,7 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                 // Serial << "Device disabled!\n";
               }
             } else if (devIdx == 15) {
-              retValueT = evaluateAction_system(stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+              retValueT = evaluateAction_system(stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value, HWcType);
               if (_retValue == 0)
                 _retValue = retValueT; // Use first ever return value in case of multiple actions.
             }

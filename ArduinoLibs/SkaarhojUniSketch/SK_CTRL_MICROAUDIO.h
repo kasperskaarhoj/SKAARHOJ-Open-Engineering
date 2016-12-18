@@ -27,7 +27,7 @@ void HWrunLoop() {
 
   // Pot
   bool hasMoved = audioPot_a1.uniDirectionalSlider_hasMoved();
-  actionDispatch(1, hasMoved, false, 0, mapPotHelper(audioPot_a1.uniDirectionalSlider_position()));
+  actionDispatch(1, HWC_ANALOG, hasMoved, false, 0, mapPotHelper(audioPot_a1.uniDirectionalSlider_position()));
 
   // Peak:
   uint16_t retVal = actionDispatch(4);
@@ -37,7 +37,7 @@ void HWrunLoop() {
   uint16_t bUp = audio_a.buttonUpAll();
   uint16_t bDown = audio_a.buttonDownAll();
   for (int16_t a = 0; a < 2; a++) {
-    uint16_t color = actionDispatch(a + 2, bDown & (B1 << a), bUp & (B1 << a));
+    uint16_t color = actionDispatch(a + 2, HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     audio_a.setButtonLight(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 0) : 0);
   }
 }

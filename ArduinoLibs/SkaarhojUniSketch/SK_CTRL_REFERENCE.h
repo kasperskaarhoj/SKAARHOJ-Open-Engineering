@@ -380,7 +380,7 @@ void HWrunLoop() {
   uint8_t b16Map[] = {124, 122, 125, 123}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 4; a++) {
     extRetValPrefersLabel(b16Map[a]);
-    uint8_t color = actionDispatch(b16Map[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons.setButtonColor(a + 1, (color & 15) > 0 ? ((!(color & 16) || (millis() & 512) > 0) && ((color & 15) != 5) ? 1 : 3) : 0); // This implements the mono color blink bit
   }
 
@@ -396,7 +396,7 @@ void HWrunLoop() {
   uint8_t b16Map2[] = {56, 57, 58, 59, 52, 53, 54, 55, 61, 60}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 10; a++) {
     extRetValPrefersLabel(b16Map2[a]);
-    uint8_t color = actionDispatch(b16Map2[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map2[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons2.setButtonColor(a + 1, color & 0xF);
   }
 
@@ -531,7 +531,7 @@ void HWrunLoop() {
   if (bDown & B100)
     pulses = 1;
   extRetValIsWanted(true);
-  actionDispatch(26, false, false, pulses << 1);
+  actionDispatch(26, HWC_PULSED, false, false, pulses << 1);
   if (oledDisplay_prevHash != extRetValHash()) {
     oledDisplay_prevHash = extRetValHash();
     writeDisplayTile(OLEDmenuDisplay, 16, 16, B1, 0, 0);
@@ -571,14 +571,14 @@ void HWrunLoop() {
   // 4-Axis joystick
 
   hasMoved = Joystick.joystick_hasMoved(0);
-  actionDispatch(103, hasMoved, false, 0, Joystick.joystick_position(0));
+  actionDispatch(103, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(0));
   hasMoved = Joystick.joystick_hasMoved(1);
-  actionDispatch(104, hasMoved, false, 0, Joystick.joystick_position(1));
+  actionDispatch(104, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(1));
   hasMoved = Joystick.joystick_hasMoved(2);
-  actionDispatch(105, hasMoved, false, 0, Joystick.joystick_position(2));
+  actionDispatch(105, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(2));
   static bool lastButtonPressed = false;
   if (Joystick.joystick_buttonIsPressed() != lastButtonPressed) {
-    actionDispatch(106, lastButtonPressed, !lastButtonPressed);
+    actionDispatch(106, HWC_BINARY, lastButtonPressed, !lastButtonPressed);
     lastButtonPressed = Joystick.joystick_buttonIsPressed();
   }
 
@@ -592,7 +592,7 @@ void HWrunLoop() {
   uint8_t b16Map3[] = {118,119,120,121,114,115,116,117}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 8; a++) {
     extRetValPrefersLabel(b16Map3[a]);
-    uint8_t color = actionDispatch(b16Map3[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map3[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons3.setButtonColor(a + 1, color & 0xF);
   }
 

@@ -527,7 +527,7 @@ void HWrunLoop() {
         bUp = buttons5.buttonUpAll();
         bDown = buttons5.buttonDownAll();
         for (uint8_t a = 0; a < 4; a++) {
-          uint8_t color = actionDispatch(b16Map5[a], bDown & (B1 << a), bUp & (B1 << a));
+          uint8_t color = actionDispatch(b16Map5[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
           buttons5.setButtonColor(a + 1, (color & 15) > 0 ? ((!(color & 16) || (millis() & 512) > 0) && ((color & 15) != 5) ? 1 : 3) : 0); // This implements the mono color blink bit
         }
 

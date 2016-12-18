@@ -251,7 +251,7 @@ void HWrunLoop() {
     for (uint8_t a = 0; a < 5; a++) {
       ai = (i == 0 ? a : 4 - a);
       extRetValPrefersLabel(b16Map[a]);
-      uint8_t color = actionDispatch(b16Map[a], bDown & (B1 << ai), bUp & (B1 << ai));
+      uint8_t color = actionDispatch(b16Map[a], HWC_BINARY, bDown & (B1 << ai), bUp & (B1 << ai));
       buttons[i][1].setButtonColor(ai + 1, color & 0xF);
     }
 
@@ -262,7 +262,7 @@ void HWrunLoop() {
     for (uint8_t a = 0; a < 5; a++) {
       ai = (i == 0 ? a : 4 - a);
       extRetValPrefersLabel(b16Map2[a]);
-      uint8_t color = actionDispatch(b16Map2[a], bDown & (B1 << ai), bUp & (B1 << ai));
+      uint8_t color = actionDispatch(b16Map2[a], HWC_BINARY, bDown & (B1 << ai), bUp & (B1 << ai));
       buttons[i][0].setButtonColor(ai + 1, color & 0xF);
     }
 
@@ -282,7 +282,7 @@ void HWrunLoop() {
         bDown = bUp = 0;
       }
       for (uint8_t a = 0; a < 16; a++) {
-        actionDispatch(a + 24 + i * (40 - 1), bDown & (B1 << a), bUp & (B1 << a));
+        actionDispatch(a + 24 + i * (40 - 1), HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
       }
 
       // Then, for 2x2
@@ -299,7 +299,7 @@ void HWrunLoop() {
         bDown = bUp = 0;
       }
       for (uint8_t a = 0; a < 4; a++) {
-        actionDispatch(a + 20 + i * (40 - 1), bDown & (B1 << a), bUp & (B1 << a));
+        actionDispatch(a + 20 + i * (40 - 1), HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
       }
     }
 

@@ -274,7 +274,7 @@ namespace ATEM {
   // 1,2,3,4 = full (yellow), red, green, yellow
   // Bit 4 (16) = blink flag, filter out for KP01 buttons.
   // Bit 5 (32) = output bit; If this is set, a binary output will be set if coupled with this hwc.
-  uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value) {
+  uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value, uint8_t HWcType) {
     uint16_t retVal = 0;
     int16_t tempInt = 0;
     uint8_t tempByte = 0;
@@ -290,25 +290,29 @@ namespace ATEM {
 
     switch (globalConfigMem[actionPtr]) {
     case 0: // Program Source
-      if (actDown) {
-        if (globalConfigMem[actionPtr + 3] == 3) {       // Source cycle by button push
-          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used to show button is highlighted here
-          pulses = 2;
-        } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
-          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
-          _systemHWcActionCache[HWc][actIdx] = AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]);
-          AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
-        } else {
+
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          if (globalConfigMem[actionPtr + 3] == 3) {       // Source cycle by button push
+            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used to show button is highlighted here
+            pulses = 2;
+          } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+            _systemHWcActionCache[HWc][actIdx] = AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]);
+            AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+          } else {
+            AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+          }
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
           AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 3) { // "Cycle"
           _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
       }
-      if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
-        AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
-      }
-      if (actUp && globalConfigMem[actionPtr + 3] == 3) { // "Cycle"
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-      }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], searchVideoSrc(devIndex, AtemSwitcher[devIndex].getProgramInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 3 ? AtemSwitcher[devIndex].getVideoSrcIndex(idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
       }
@@ -341,16 +345,19 @@ namespace ATEM {
       return retVal;
       break;
     case 1: // Preview Source
-      if (actDown) {
-        if (globalConfigMem[actionPtr + 3] == 1) { // Source cycle by button push
-          pulses = 2;
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        } else
-          AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          if (globalConfigMem[actionPtr + 3] == 1) { // Source cycle by button push
+            pulses = 2;
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          } else
+            AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 1) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
       }
-      if (actUp && globalConfigMem[actionPtr + 3] == 1) {
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-      }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], searchVideoSrc(devIndex, AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 1 ? AtemSwitcher[devIndex].getVideoSrcIndex(idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
       }
@@ -383,27 +390,30 @@ namespace ATEM {
       return retVal;
       break;
     case 2: // Program/Preview Source
-      if (actDown) {
-        _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        _systemHWcActionCache[HWc][actIdx] = millis();
-        if (globalConfigMem[actionPtr + 3] != 1) { // Source cycle by button push
-          AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          _systemHWcActionCache[HWc][actIdx] = millis();
+          if (globalConfigMem[actionPtr + 3] != 1) { // Source cycle by button push
+            AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+          }
         }
-      }
-      if (_systemHWcActionCacheFlag[HWc][actIdx]) {
-        uint16_t t = millis();
-        if (t - _systemHWcActionCache[HWc][actIdx] > 1000) {
-          AtemSwitcher[devIndex].performCutME(globalConfigMem[actionPtr + 1]);
-          //   AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+        if (_systemHWcActionCacheFlag[HWc][actIdx]) {
+          uint16_t t = millis();
+          if (t - _systemHWcActionCache[HWc][actIdx] > 1000) {
+            AtemSwitcher[devIndex].performCutME(globalConfigMem[actionPtr + 1]);
+            //   AtemSwitcher[devIndex].setProgramInputVideoSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+          }
+        }
+        if (actUp && _systemHWcActionCacheFlag[HWc][actIdx]) {
+          if (globalConfigMem[actionPtr + 3] == 1)
+            pulses = 2;
+
           _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
       }
-      if (actUp && _systemHWcActionCacheFlag[HWc][actIdx]) {
-        if (globalConfigMem[actionPtr + 3] == 1)
-          pulses = 2;
 
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-      }
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setPreviewInputVideoSource(globalConfigMem[actionPtr + 1], searchVideoSrc(devIndex, AtemSwitcher[devIndex].getPreviewInputVideoSource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1 << globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 3] == 1 ? AtemSwitcher[devIndex].getVideoSrcIndex(idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
       }
@@ -441,36 +451,37 @@ namespace ATEM {
       return retVal;
       break;
     case 3: // AUX
-      if (actDown) {
-        if (globalConfigMem[actionPtr + 3] == 5) { // Source cycle by button push
-          pulses = 2;
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
-          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
-          _systemHWcActionCache[HWc][actIdx] = AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]);
-          if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) {
-            pushToHoldGroup(globalConfigMem[actionPtr + 3] - 3, AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]), HWc);
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          if (globalConfigMem[actionPtr + 3] == 5) { // Source cycle by button push
+            pulses = 2;
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+            _systemHWcActionCache[HWc][actIdx] = AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]);
+            if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) {
+              pushToHoldGroup(globalConfigMem[actionPtr + 3] - 3, AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]), HWc);
+            }
+            AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+          } else {
+            AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
           }
-          AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
-        } else {
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
           AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
+        }
+        if (actUp && (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4)) { // "Hold Groups"
+          uint16_t fallBackSrc = pullFromHoldGroup(globalConfigMem[actionPtr + 3] - 3, HWc);
+          if (fallBackSrc != BINARY_EVENT)
+            AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], fallBackSrc);
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 5) { // "Cycle"
           _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
       }
-      if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
-        AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
-      }
-      if (actUp && (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4)) { // "Hold Groups"
-        uint16_t fallBackSrc = pullFromHoldGroup(globalConfigMem[actionPtr + 3] - 3, HWc);
-        if (fallBackSrc != BINARY_EVENT)
-          AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], fallBackSrc);
-      }
-      if (actUp && globalConfigMem[actionPtr + 3] == 5) { // "Cycle"
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-      }
 
       if (pulses & 0xFFFE) {
-  	//	Serial << "...." << AtemSwitcher[devIndex].getVideoSrcIndex(idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) << "," << idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]) << "," << globalConfigMem[actionPtr + 2] << "\n";
         AtemSwitcher[devIndex].setAuxSourceInput(globalConfigMem[actionPtr + 1], searchVideoSrc(devIndex, AtemSwitcher[devIndex].getAuxSourceInput(globalConfigMem[actionPtr + 1]), (pulses >> 1), B1, 0, globalConfigMem[actionPtr + 3] == 5 ? AtemSwitcher[devIndex].getVideoSrcIndex(idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2])) : AtemSwitcher[devIndex].maxAtemSeriesVideoInputs()));
       }
 
@@ -501,39 +512,42 @@ namespace ATEM {
       return retVal;
       break;
     case 4: // USK settings
-      if (globalConfigMem[actionPtr + 3] != 4) {
-        if (actDown) {
-          bool state = false;
-          switch (globalConfigMem[actionPtr + 3]) {
-          case 0: // Toggle
-            state = !AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
-            break;
-          case 1: // On
-          case 3: // Hold down
-            state = true;
-            break;
+      if(HWcType & HWC_BINARY) {
+        if (globalConfigMem[actionPtr + 3] != 4) {
+          if (actDown) {
+            bool state = false;
+            switch (globalConfigMem[actionPtr + 3]) {
+            case 0: // Toggle
+              state = !AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
+              break;
+            case 1: // On
+            case 3: // Hold down
+              state = true;
+              break;
+            }
+            AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], state);
           }
-          AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], state);
-        }
-        if (actUp && globalConfigMem[actionPtr + 3] == 3) {
-          AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
-        }
-      } else {
-        if (actDown && !AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1])) {
-          unsigned long startTime = millis();
-          uint8_t transitionStyle = AtemSwitcher[devIndex].getTransitionNextTransition(globalConfigMem[actionPtr + 1]);
-          AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 2] + 1));
-          AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
-
-          // Wait for the transition to actually begin
-          while (!AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1]) || sTools.hasTimedOut(startTime, 200)) {
-            lDelay(2);
+          if (actUp && globalConfigMem[actionPtr + 3] == 3) {
+            AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
           }
+        } else {
+          if (actDown && !AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1])) {
+            unsigned long startTime = millis();
+            uint8_t transitionStyle = AtemSwitcher[devIndex].getTransitionNextTransition(globalConfigMem[actionPtr + 1]);
+            AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 2] + 1));
+            AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
 
-          // Set the transition mask back to the initial value
-          AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], transitionStyle);
+            // Wait for the transition to actually begin
+            while (!AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1]) || sTools.hasTimedOut(startTime, 200)) {
+              lDelay(2);
+            }
+
+            // Set the transition mask back to the initial value
+            AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], transitionStyle);
+          }
         }
       }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], !AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]));
       }
@@ -605,9 +619,12 @@ namespace ATEM {
       return retVal;
       break;
     case 6: // Upstream Keyer Key
-      if (actDown) {
-        AtemSwitcher[devIndex].setKeyerKeySource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          AtemSwitcher[devIndex].setKeyerKeySource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
+        }
       }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setKeyerKeySource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], searchVideoSrc(devIndex, AtemSwitcher[devIndex].getKeyerKeySource(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]), (pulses >> 1), B10000, 0, globalConfigMem[actionPtr + 3]));
       }
@@ -635,23 +652,26 @@ namespace ATEM {
       return retVal;
       break;
     case 7: // DSK settings
-      if (globalConfigMem[actionPtr + 2] != 4) {
-        if (actDown) {
-          bool state = false;
-          switch (globalConfigMem[actionPtr + 2]) {
-          case 0: // Toggle
-            state = !AtemSwitcher[devIndex].getDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1]);
-            break;
-          case 1: // On
-          case 3: // Hold down
-            state = true;
-            break;
+      if(HWcType & HWC_BINARY) {
+        if (globalConfigMem[actionPtr + 2] != 4) {
+          if (actDown) {
+            bool state = false;
+            switch (globalConfigMem[actionPtr + 2]) {
+            case 0: // Toggle
+              state = !AtemSwitcher[devIndex].getDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1]);
+              break;
+            case 1: // On
+            case 3: // Hold down
+              state = true;
+              break;
+            }
+            AtemSwitcher[devIndex].setDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1], state);
           }
-          AtemSwitcher[devIndex].setDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1], state);
+          if (actUp && globalConfigMem[actionPtr + 2] == 3) {
+            AtemSwitcher[devIndex].setDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1], false);
+          }
         }
-        if (actUp && globalConfigMem[actionPtr + 2] == 3) {
-          AtemSwitcher[devIndex].setDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1], false);
-        }
+
         if (pulses & 0xFFFE) {
           AtemSwitcher[devIndex].setDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1], !AtemSwitcher[devIndex].getDownstreamKeyerOnAir(globalConfigMem[actionPtr + 1]));
         }
@@ -699,9 +719,12 @@ namespace ATEM {
       return retVal;
       break;
     case 8: // Downstream Keyer Fill
-      if (actDown) {
-        AtemSwitcher[devIndex].setDownstreamKeyerFillSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          AtemSwitcher[devIndex].setDownstreamKeyerFillSource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+        }
       }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setDownstreamKeyerFillSource(globalConfigMem[actionPtr + 1], searchVideoSrc(devIndex, AtemSwitcher[devIndex].getDownstreamKeyerKeySource(globalConfigMem[actionPtr + 1]), (pulses >> 1), 0, B1, globalConfigMem[actionPtr + 2]));
       }
@@ -727,8 +750,10 @@ namespace ATEM {
       return retVal;
       break;
     case 9: // Downstream Keyer Key
-      if (actDown) {
-        AtemSwitcher[devIndex].setDownstreamKeyerKeySource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          AtemSwitcher[devIndex].setDownstreamKeyerKeySource(globalConfigMem[actionPtr + 1], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 2]));
+        }
       }
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setDownstreamKeyerKeySource(globalConfigMem[actionPtr + 1], searchVideoSrc(devIndex, AtemSwitcher[devIndex].getDownstreamKeyerKeySource(globalConfigMem[actionPtr + 1]), (pulses >> 1), B10000, 0, globalConfigMem[actionPtr + 2]));
@@ -755,27 +780,29 @@ namespace ATEM {
       return retVal;
       break;
     case 10: // MP Still
-      if (actDown) {
-        if (globalConfigMem[actionPtr + 3] == 3) {
-          pulses = 2;
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
-          if (AtemSwitcher[devIndex].getMediaPlayerStillFilesIsUsed(globalConfigMem[actionPtr + 2] - 1)) {
-            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
-            _systemHWcActionCache[HWc][actIdx] = AtemSwitcher[devIndex].getMediaPlayerSourceStillIndex(globalConfigMem[actionPtr + 1]);
-            AtemSwitcher[devIndex].setMediaPlayerSourceType(globalConfigMem[actionPtr + 1], 1);
-            AtemSwitcher[devIndex].setMediaPlayerSourceStillIndex(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2] - 1);
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          if (globalConfigMem[actionPtr + 3] == 3) {
+            pulses = 2;
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+            if (AtemSwitcher[devIndex].getMediaPlayerStillFilesIsUsed(globalConfigMem[actionPtr + 2] - 1)) {
+              _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+              _systemHWcActionCache[HWc][actIdx] = AtemSwitcher[devIndex].getMediaPlayerSourceStillIndex(globalConfigMem[actionPtr + 1]);
+              AtemSwitcher[devIndex].setMediaPlayerSourceType(globalConfigMem[actionPtr + 1], 1);
+              AtemSwitcher[devIndex].setMediaPlayerSourceStillIndex(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2] - 1);
+            }
+          } else {
+            AtemSwitcher[devIndex].setMediaPlayerSourceStillIndex(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
           }
-        } else {
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 1 && _systemHWcActionCacheFlag[HWc][actIdx]) { // "Hold Down"
           AtemSwitcher[devIndex].setMediaPlayerSourceStillIndex(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 5) { // "Cycle"
           _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
-      }
-      if (actUp && globalConfigMem[actionPtr + 3] == 1 && _systemHWcActionCacheFlag[HWc][actIdx]) { // "Hold Down"
-        AtemSwitcher[devIndex].setMediaPlayerSourceStillIndex(globalConfigMem[actionPtr + 1], _systemHWcActionCache[HWc][actIdx]);
-      }
-      if (actUp && globalConfigMem[actionPtr + 3] == 5) { // "Cycle"
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
       }
 
       if (pulses & 0xFFFE) {
@@ -817,13 +844,16 @@ namespace ATEM {
     case 13: // MP Control
       break;
     case 14: // CUT
-      if (actDown || (pulses & 0xFFFE)) {
-        AtemSwitcher[devIndex].performCutME(globalConfigMem[actionPtr + 1]);
-        _systemHWcActionCacheFlag[HWc][actIdx] = true;
+      if(HWcType & HWC_BINARY || HWcType & HWC_PULSED) {
+        if (actDown || (pulses & 0xFFFE)) {
+          AtemSwitcher[devIndex].performCutME(globalConfigMem[actionPtr + 1]);
+          _systemHWcActionCacheFlag[HWc][actIdx] = true;
+        }
+        if (actUp) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
       }
-      if (actUp) {
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-      }
+
       retVal = _systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5;
 
       if (extRetValIsWanted()) {
@@ -838,8 +868,10 @@ namespace ATEM {
       return retVal;
       break;
     case 15: // AUTO
-      if (actDown || (pulses & 0xFFFE)) {
-        AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
+      if(HWcType & HWC_BINARY || HWcType & HWC_PULSED) {
+        if (actDown || (pulses & 0xFFFE)) {
+          AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
+        }
       }
 
       retVal = AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1]) ? (2 | 0x20) : 5;
@@ -855,8 +887,10 @@ namespace ATEM {
       return retVal;
       break;
     case 16: // FTB
-      if (actDown || (pulses & 0xFFFE)) {
-        AtemSwitcher[devIndex].performFadeToBlackME(globalConfigMem[actionPtr + 1]);
+      if(HWcType & HWC_BINARY || HWcType & HWC_PULSED) {
+        if (actDown || (pulses & 0xFFFE)) {
+          AtemSwitcher[devIndex].performFadeToBlackME(globalConfigMem[actionPtr + 1]);
+        }
       }
 
       retVal = AtemSwitcher[devIndex].getFadeToBlackStateFullyBlack(globalConfigMem[actionPtr + 1]) ? ((millis() & 512) > 0 ? 2 : 0) : (AtemSwitcher[devIndex].getFadeToBlackStateInTransition(globalConfigMem[actionPtr + 1]) ? 2 : 5);
@@ -874,17 +908,20 @@ namespace ATEM {
       return retVal;
       break;
     case 17: // Transition Style
-      if (actDown) {
-        if (globalConfigMem[actionPtr + 2] == 0) { // Cycle
-          pulses = 2;
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        } else {
-          AtemSwitcher[devIndex].setTransitionStyle(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2] - 1);
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          if (globalConfigMem[actionPtr + 2] == 0) { // Cycle
+            pulses = 2;
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          } else {
+            AtemSwitcher[devIndex].setTransitionStyle(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2] - 1);
+          }
+        }
+        if (actUp) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
       }
-      if (actUp) {
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-      }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setTransitionStyle(globalConfigMem[actionPtr + 1], pulsesHelper(AtemSwitcher[devIndex].getTransitionStyle(globalConfigMem[actionPtr + 1]), 0, 4, true, pulses, 1, 1));
       }
@@ -926,16 +963,19 @@ namespace ATEM {
       return retVal;
       break;
     case 18:                         // Transition Pos
-      if (actDown) {                 // Use actDown as "has moved"
-        if (value != BINARY_EVENT) { // Value input
+      if(HWcType & HWC_ANALOG) {
+        if (actDown) {                 // Use actDown as "has moved"
           AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], value * 10);
           if (actUp) { // Use actUp as "at end"
             AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], 0);
           }
-        } else { // Binary - reset
-          AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], 0);
         }
       }
+
+      if(HWcType & HWC_BINARY && actDown) {
+        AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], 0);
+      }
+
       return AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1]) ? 0x20 : 0;
       break;
     case 19:                                                  // Play Macro
@@ -944,52 +984,55 @@ namespace ATEM {
         Serial << "Set macro: " << (_systemHWcActionCacheFlag[HWc][actIdx] & 0x3F) << "\n";
       }
 
-      if (actDown) {
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 0:                                                                                    // Play
-          AtemSwitcher[devIndex].setMacroAction(_systemHWcActionCacheFlag[HWc][actIdx] & 0x3F, 0); // playing
-          AtemSwitcher[devIndex].setMacroRunChangePropertiesLooping(globalConfigMem[actionPtr + 3]);
-          break;
-        case 1: // Stop
-          AtemSwitcher[devIndex].setMacroAction(0xFFFF, 1);
-          break;
-        case 2: // Toggle Play
-        case 3: // Hold down Play
-          if (AtemSwitcher[devIndex].getMacroRunStatusState() > 0) {
-            AtemSwitcher[devIndex].setMacroAction(0xFFFF, 1);
-          } else {
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          switch (globalConfigMem[actionPtr + 2]) {
+          case 0:                                                                                    // Play
             AtemSwitcher[devIndex].setMacroAction(_systemHWcActionCacheFlag[HWc][actIdx] & 0x3F, 0); // playing
             AtemSwitcher[devIndex].setMacroRunChangePropertiesLooping(globalConfigMem[actionPtr + 3]);
-          }
-          break;
-        case 4:
-          if (AtemSwitcher[devIndex].getMacroRunStatusState() > 0) {
+            break;
+          case 1: // Stop
             AtemSwitcher[devIndex].setMacroAction(0xFFFF, 1);
-            _systemHWcActionCacheFlag[HWc][actIdx] &= ~0x40;
-          } else {
-            _systemHWcActionCache[HWc][actIdx] = millis();
-            _systemHWcActionCacheFlag[HWc][actIdx] |= 0x40;
+            break;
+          case 2: // Toggle Play
+          case 3: // Hold down Play
+            if (AtemSwitcher[devIndex].getMacroRunStatusState() > 0) {
+              AtemSwitcher[devIndex].setMacroAction(0xFFFF, 1);
+            } else {
+              AtemSwitcher[devIndex].setMacroAction(_systemHWcActionCacheFlag[HWc][actIdx] & 0x3F, 0); // playing
+              AtemSwitcher[devIndex].setMacroRunChangePropertiesLooping(globalConfigMem[actionPtr + 3]);
+            }
+            break;
+          case 4:
+            if (AtemSwitcher[devIndex].getMacroRunStatusState() > 0) {
+              AtemSwitcher[devIndex].setMacroAction(0xFFFF, 1);
+              _systemHWcActionCacheFlag[HWc][actIdx] &= ~0x40;
+            } else {
+              _systemHWcActionCache[HWc][actIdx] = millis();
+              _systemHWcActionCacheFlag[HWc][actIdx] |= 0x40;
+            }
+            break;
           }
-          break;
         }
-      }
-      if (globalConfigMem[actionPtr + 2] == 4 && _systemHWcActionCacheFlag[HWc][actIdx] & 0x40) { // Holding down...
-        uint16_t t = millis();
-        if (t - _systemHWcActionCache[HWc][actIdx] > 1000) {
-          AtemSwitcher[devIndex].setMacroAction(_systemHWcActionCacheFlag[HWc][actIdx] & 0x3F, 0); // playing
-          AtemSwitcher[devIndex].setMacroRunChangePropertiesLooping(globalConfigMem[actionPtr + 3]);
+        if (globalConfigMem[actionPtr + 2] == 4 && _systemHWcActionCacheFlag[HWc][actIdx] & 0x40) { // Holding down...
+          uint16_t t = millis();
+          if (t - _systemHWcActionCache[HWc][actIdx] > 1000) {
+            AtemSwitcher[devIndex].setMacroAction(_systemHWcActionCacheFlag[HWc][actIdx] & 0x3F, 0); // playing
+            AtemSwitcher[devIndex].setMacroRunChangePropertiesLooping(globalConfigMem[actionPtr + 3]);
 
+            _systemHWcActionCacheFlag[HWc][actIdx] &= ~0x40;
+          }
+        }
+        if (actUp && globalConfigMem[actionPtr + 2] == 3) {
+          AtemSwitcher[devIndex].setMacroAction(0xFFFF, 1);
+        }
+        if (actUp && globalConfigMem[actionPtr + 2] == 4) {
+          if (_systemHWcActionCacheFlag[HWc][actIdx] & 0x40)
+            pulses = 2;
           _systemHWcActionCacheFlag[HWc][actIdx] &= ~0x40;
         }
       }
-      if (actUp && globalConfigMem[actionPtr + 2] == 3) {
-        AtemSwitcher[devIndex].setMacroAction(0xFFFF, 1);
-      }
-      if (actUp && globalConfigMem[actionPtr + 2] == 4) {
-        if (_systemHWcActionCacheFlag[HWc][actIdx] & 0x40)
-          pulses = 2;
-        _systemHWcActionCacheFlag[HWc][actIdx] &= ~0x40;
-      }
+
       if (pulses & 0xFFFE) {
         _systemHWcActionCacheFlag[HWc][actIdx] = searchMacro(devIndex, _systemHWcActionCacheFlag[HWc][actIdx] & 0x3F, (pulses >> 1), globalConfigMem[actionPtr + 1] - 1) | (_systemHWcActionCacheFlag[HWc][actIdx] & 0xB0);
       }
@@ -1038,36 +1081,38 @@ namespace ATEM {
       break;
     case 22: // Audio
       aSrc = idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
-
-      if (actDown) {
-        if (globalConfigMem[actionPtr + 3] == 3) {
-          pulses = 2;
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        } else {
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          if (globalConfigMem[actionPtr + 3] == 3) {
+            pulses = 2;
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          } else {
+            switch (globalConfigMem[actionPtr + 2]) {
+            case 2: // solo
+              AtemSwitcher[devIndex].setAudioMixerMonitorSoloInput(aSrc);
+              AtemSwitcher[devIndex].setAudioMixerMonitorSolo(globalConfigMem[actionPtr + 3] == 2 && AtemSwitcher[devIndex].getAudioMixerMonitorSolo() ? false : true);
+              break;
+            default:
+              AtemSwitcher[devIndex].setAudioMixerInputMixOption(aSrc, globalConfigMem[actionPtr + 3] == 2 && AtemSwitcher[devIndex].getAudioMixerInputMixOption(aSrc) == (globalConfigMem[actionPtr + 2] + 1) ? 0 : (globalConfigMem[actionPtr + 2] + 1));
+              break;
+            }
+          }
+        }
+        if (actUp) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
+        if (actUp && globalConfigMem[actionPtr + 3] == 1) { // Hold down
           switch (globalConfigMem[actionPtr + 2]) {
           case 2: // solo
-            AtemSwitcher[devIndex].setAudioMixerMonitorSoloInput(aSrc);
-            AtemSwitcher[devIndex].setAudioMixerMonitorSolo(globalConfigMem[actionPtr + 3] == 2 && AtemSwitcher[devIndex].getAudioMixerMonitorSolo() ? false : true);
+            AtemSwitcher[devIndex].setAudioMixerMonitorSolo(false);
             break;
           default:
-            AtemSwitcher[devIndex].setAudioMixerInputMixOption(aSrc, globalConfigMem[actionPtr + 3] == 2 && AtemSwitcher[devIndex].getAudioMixerInputMixOption(aSrc) == (globalConfigMem[actionPtr + 2] + 1) ? 0 : (globalConfigMem[actionPtr + 2] + 1));
+            AtemSwitcher[devIndex].setAudioMixerInputMixOption(aSrc, 0);
             break;
           }
         }
       }
-      if (actUp) {
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
-      }
-      if (actUp && globalConfigMem[actionPtr + 3] == 1) { // Hold down
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 2: // solo
-          AtemSwitcher[devIndex].setAudioMixerMonitorSolo(false);
-          break;
-        default:
-          AtemSwitcher[devIndex].setAudioMixerInputMixOption(aSrc, 0);
-          break;
-        }
-      }
+
       if (pulses & 0xFFFE) {
         switch (globalConfigMem[actionPtr + 2]) {
         case 2: // solo
@@ -1157,7 +1202,7 @@ namespace ATEM {
 
       return retVal;
       break;
-    case 23: // Audio volume
+    case 23: {// Audio volume
       uint16_t audioVol;
       aSrc = idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
       switch (globalConfigMem[actionPtr + 1]) {
@@ -1172,19 +1217,23 @@ namespace ATEM {
         break;
       }
 
-      if (actDown || (pulses & 0xFFFE)) {
-        int16_t outValue;
-        if (actDown) {
-          if (value != BINARY_EVENT) { // Value input
-            outValue = constrain(map(value, 0, 1000, -600, 60), -600, 60);
-          } else { // Binary - reset / toggle
-            outValue = (uint16_t)AtemSwitcher[devIndex].audioWord2Db(audioVol) != 0 ? 0 : -600;
-          }
-        }
-        if (pulses & 0xFFFE) {
-          outValue = pulsesHelper(round((AtemSwitcher[devIndex].audioWord2Db(audioVol) * 10.0)), -600, 60, false, pulses, 2, 10);
-        }
+      int16_t outValue = 0x8000;
 
+      if(actDown) {
+        if(HWcType & HWC_BINARY) {
+          outValue = (uint16_t)AtemSwitcher[devIndex].audioWord2Db(audioVol) != 0 ? 0 : -600;
+        }
+        if(HWcType & HWC_ANALOG) {
+          outValue = constrain(map(value, 0, 1000, -600, 60), -600, 60);
+        }
+      }
+
+      if (pulses & 0xFFFE) {
+        outValue = pulsesHelper(round((AtemSwitcher[devIndex].audioWord2Db(audioVol) * 10.0)), -600, 60, false, pulses, 2, 10);
+      }
+
+
+      if (outValue != 0x8000) {
         switch (globalConfigMem[actionPtr + 1]) {
         case 25:
           AtemSwitcher[devIndex].setAudioMixerMasterVolume(AtemSwitcher[devIndex].audioDb2Word((float)outValue / 10.0));
@@ -1247,16 +1296,19 @@ namespace ATEM {
       }
       return retVal;
       break;
+    }
     case 24: // Audio Balance
       aSrc = idxToAudioSrc(devIndex, globalConfigMem[actionPtr + 1]);
       if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+        if (HWcType & HWC_ANALOG) {
           int16_t outValue = constrain(map(value, 0, 1000, -10000, 10000), -10000, 10000);
           AtemSwitcher[devIndex].setAudioMixerInputBalance(aSrc, outValue);
-        } else { // Binary - reset
+        } 
+        if(HWcType & HWC_BINARY) { // Binary - reset
           AtemSwitcher[devIndex].setAudioMixerInputBalance(aSrc, 0);
         }
       }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setAudioMixerInputBalance(aSrc, pulsesHelper(AtemSwitcher[devIndex].getAudioMixerInputBalance(aSrc), -10000, 10000, false, pulses, 100, 1000));
       }
@@ -1476,12 +1528,12 @@ namespace ATEM {
       break;
     case 30: // Focus
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
-      if (actDown) {
-        if (value == BINARY_EVENT) { // Binary input
-          Serial << F("Perform Auto Focus...\n");
-          AtemSwitcher[devIndex].setCameraControlAutoFocus(cam, 0);
-        }
+
+      if (HWcType & HWC_BINARY && actDown) {
+        Serial << F("Perform Auto Focus...\n");
+        AtemSwitcher[devIndex].setCameraControlAutoFocus(cam, 0);
       }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setCameraControlFocus(cam, pulsesHelper(0, -1000, 1000, false, pulses, 20, 200));
       }
@@ -1539,30 +1591,32 @@ namespace ATEM {
       if(tempVal > 1.0) tempVal = 1.0;
       if(tempVal < 0.0) tempVal = 0.0;
 
-      if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+
+      if (HWcType & HWC_ANALOG) {
+        if(actDown) {
           outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
-        } else { // Binary - auto iris
+        } else { // Only update based on position if analog HWc
+          if(round(outVal*1000) != round((1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0)) * 1000)) {
+            outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
+          }
+        }
+      } 
+
+      if(HWcType & HWC_BINARY) {
+        if(actDown) {
           Serial << F("Perform Auto Iris... \n");
           AtemSwitcher[devIndex].setCameraControlAutoIris(cam, 0);
           _systemHWcActionCacheFlag[HWc][actIdx] |= 2;
+        } 
+        if(actUp) {
+          _systemHWcActionCacheFlag[HWc][actIdx] &= ~2;
         }
-      }
-
-      if(actUp) {
-        _systemHWcActionCacheFlag[HWc][actIdx] &= ~2;
       }
 
       if (pulses & 0xFFFE) {
         outVal = pulsesHelper(outVal * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0;
       }
 
-      if(!actDown && value != BINARY_EVENT) {
-        if(round(outVal*1000) != round((1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0)) * 1000)) {
-          outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
-        }
-      }
-      
       if(startVal != outVal) {
         AtemSwitcher[devIndex].setCameraControlIris(cam, outVal * (1<<11));
       }
@@ -1591,7 +1645,7 @@ namespace ATEM {
           }
         }
 
-        if (actDown && value == BINARY_EVENT) {      // Binary (never value)
+        if (HWcType & HWC_BINARY && actDown) {      // Binary (never value)
           if (globalConfigMem[actionPtr + 2] == 0) { // cycle
             pulses = 2;
           } else { // Set
@@ -1622,7 +1676,7 @@ namespace ATEM {
           }
         }
 
-        if (actDown && value == BINARY_EVENT) {      // Binary (never value)
+        if (HWcType & HWC_BINARY && actDown) {      // Binary (never value)
           if (globalConfigMem[actionPtr + 2] == 0) { // cycle
             pulses = 2;
           } else { // Set
@@ -1653,13 +1707,14 @@ namespace ATEM {
           }
         }
 
-        if (actDown && value == BINARY_EVENT) {      // Binary (never value)
+        if (HWcType & HWC_BINARY && actDown) {      // Binary (never value)
           if (globalConfigMem[actionPtr + 2] == 0) { // cycle
             pulses = 2;
           } else { // Set
             AtemSwitcher[devIndex].setCameraControlWhiteBalance(cam, pgm_read_word_near(whiteBalances + globalConfigMem[actionPtr + 2] - 1));
           }
         }
+
         if ((pulses & 0xFFFE)) {
           AtemSwitcher[devIndex].setCameraControlWhiteBalance(cam, pgm_read_word_near(whiteBalances + pulsesHelper(currentWhiteBalanceIndex, 0, 18 - 1, false, pulses, 1, 1)));
         }
@@ -1675,9 +1730,13 @@ namespace ATEM {
     case 36: // Gamma
     case 37: // Gain
       cam = idxToCamera(globalConfigMem[actionPtr + 2]);
-      if (actDown) {                                                    // Binary or Value input...
-        int16_t outValue = globalConfigMem[actionPtr] == 37 ? 2048 : 0; // Binary (reset) value by default
-        if (value != BINARY_EVENT) {                                    // Value input different from -32768
+      if (actDown) {  
+        int16_t outValue;
+        if(HWcType & HWC_BINARY) { // Binary (reset) value by default
+          int16_t outValue = globalConfigMem[actionPtr] == 37 ? 2048 : 0;
+        }
+
+        if (HWcType & HWC_ANALOG) {
           switch (globalConfigMem[actionPtr]) {
           case 35: // Lift:
             outValue = constrain(map(value, 0, 1000, -4096 / 8, 4096 / 8), -4096, 4096);
@@ -1690,6 +1749,7 @@ namespace ATEM {
             break;
           }
         }
+
         switch (globalConfigMem[actionPtr]) {
         case 35: // Lift:
           switch (globalConfigMem[actionPtr + 1]) {
@@ -1880,13 +1940,15 @@ namespace ATEM {
     case 38: // Hue
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
       if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+        if (HWcType & HWC_ANALOG) { // Value input
           int16_t outValue = constrain(map(value, 0, 1000, -2048, 2048), -2048, 2048);
           AtemSwitcher[devIndex].setCameraControlHue(cam, outValue);
-        } else { // Binary - reset
+        }
+        if(HWcType & HWC_BINARY) { // Binary - reset
           AtemSwitcher[devIndex].setCameraControlHue(cam, 0);
         }
       }
+
       if (pulses & 0xFFFE) {
         AtemSwitcher[devIndex].setCameraControlHue(cam, pulsesHelper(AtemSwitcher[devIndex].getCameraControlHue(cam), -2048, 2048, true, pulses, 20, 200));
       }
@@ -1901,10 +1963,11 @@ namespace ATEM {
     case 39: // Contrast
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
       if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+        if (HWcType & HWC_ANALOG) { // Value input
           int16_t outValue = constrain(map(value, 0, 1000, 0, 4096), 0, 4096);
           AtemSwitcher[devIndex].setCameraControlContrast(cam, outValue);
-        } else { // Binary - reset
+        }
+        if(HWcType & HWC_BINARY) { // Binary - reset
           AtemSwitcher[devIndex].setCameraControlContrast(cam, 2048);
         }
       }
@@ -1922,10 +1985,11 @@ namespace ATEM {
     case 40: // Saturation
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
       if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+        if (HWcType & HWC_ANALOG) { // Value input
           int16_t outValue = constrain(map(value, 0, 1000, 0, 4096), 0, 4096);
           AtemSwitcher[devIndex].setCameraControlSaturation(cam, outValue);
-        } else { // Binary - reset
+        }
+        if(HWcType & HWC_BINARY) { // Binary - reset
           AtemSwitcher[devIndex].setCameraControlSaturation(cam, globalConfigMem[actionPtr + 2] == 1 ? 2048 : 0);
         }
       }
@@ -1943,36 +2007,38 @@ namespace ATEM {
     case 41: { // Bars
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
       uint8_t duration = globalConfigMem[actionPtr + 3];
-      if (actDown && value == BINARY_EVENT) {
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 0: // Toggle
-          if (AtemSwitcher[devIndex].getCameraControlColorbars(cam) == 0) {
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          switch (globalConfigMem[actionPtr + 2]) {
+          case 0: // Toggle
+            if (AtemSwitcher[devIndex].getCameraControlColorbars(cam) == 0) {
+              AtemSwitcher[devIndex].setCameraControlColorbars(cam, duration);
+            } else {
+              AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
+            }
+            break;
+          case 1: // On
             AtemSwitcher[devIndex].setCameraControlColorbars(cam, duration);
-          } else {
+            break;
+          case 2: // Off
             AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
+            break;
+          case 3: // Hold down
+            AtemSwitcher[devIndex].setCameraControlColorbars(cam, 30);
+            break;
           }
-          break;
-        case 1: // On
-          AtemSwitcher[devIndex].setCameraControlColorbars(cam, duration);
-          break;
-        case 2: // Off
-          AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
-          break;
-        case 3: // Hold down
-          AtemSwitcher[devIndex].setCameraControlColorbars(cam, 30);
-          break;
         }
-      }
 
-      if (actUp && globalConfigMem[actionPtr + 2] == 3) { // Hold down activated
-        AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
+        if (actUp && globalConfigMem[actionPtr + 2] == 3) { // Hold down activated
+          AtemSwitcher[devIndex].setCameraControlColorbars(cam, 0);
+        }
       }
 
       break;
     }
     case 42: // Detail
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
-      if (actDown && value == BINARY_EVENT) { // Button push
+      if (actDown && HWcType & HWC_BINARY) { // Button push
         AtemSwitcher[devIndex].setCameraControlSharpeningLevel(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
       }
 
@@ -2012,46 +2078,16 @@ namespace ATEM {
     case 43: // CCU Settings
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
 
-      if (actDown && value == BINARY_EVENT) {
-        _systemHWcActionCache[HWc][actIdx] = millis();
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 0:
-          // For holddown events, bit 0 must be set
-          _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
-          break;
-        case 1: // Recall
-          if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && millis() - lastSettingsRecall < 10000) {
-            recallCameraPreset(devIndex, cam, 0);
-            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
-          } else {
-            if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
-              _systemHWcActionCacheFlag[HWc][actIdx] = 4;
-            } else {
-              _systemHWcActionCacheFlag[HWc][actIdx] = 0;
-            }
-          }
-          break;
-        case 2: // Store
-          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
-          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
-          break;
-        }
-      }
-
-      if (_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 0:
-          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
-          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
           _systemHWcActionCache[HWc][actIdx] = millis();
-          break;
-        }
-      }
-
-      if (actUp) {
-        if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
-          if (globalConfigMem[actionPtr + 2] == 0) {
-            if ((uint16_t)millis() - lastSettingsRecall < 10000 && lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+          switch (globalConfigMem[actionPtr + 2]) {
+          case 0:
+            // For holddown events, bit 0 must be set
+            _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
+            break;
+          case 1: // Recall
+            if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && millis() - lastSettingsRecall < 10000) {
               recallCameraPreset(devIndex, cam, 0);
               _systemHWcActionCacheFlag[HWc][actIdx] = 0;
             } else {
@@ -2059,12 +2095,44 @@ namespace ATEM {
                 _systemHWcActionCacheFlag[HWc][actIdx] = 4;
               } else {
                 _systemHWcActionCacheFlag[HWc][actIdx] = 0;
-                _systemHWcActionCache[HWc][actIdx] = millis();
               }
             }
+            break;
+          case 2: // Store
+            storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+            break;
           }
-        } else if (globalConfigMem[actionPtr + 2] == 2) {
-          _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+        }
+
+        if (_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
+          switch (globalConfigMem[actionPtr + 2]) {
+          case 0:
+            storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+            _systemHWcActionCache[HWc][actIdx] = millis();
+            break;
+          }
+        }
+
+        if (actUp) {
+          if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+            if (globalConfigMem[actionPtr + 2] == 0) {
+              if ((uint16_t)millis() - lastSettingsRecall < 10000 && lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+                recallCameraPreset(devIndex, cam, 0);
+                _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+              } else {
+                if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+                  _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+                } else {
+                  _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+                  _systemHWcActionCache[HWc][actIdx] = millis();
+                }
+              }
+            }
+          } else if (globalConfigMem[actionPtr + 2] == 2) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+          }
         }
       }
 
@@ -2105,7 +2173,7 @@ namespace ATEM {
       break;
     case 44: // Reset
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
-      if (actDown && value == BINARY_EVENT) {
+      if (actDown && HWcType & HWC_BINARY) {
         switch (globalConfigMem[actionPtr + 2]) {
         case 0:
           Serial << F("Resetting Lift...\n");
@@ -2262,7 +2330,9 @@ namespace ATEM {
       }
 
       bool keyerEnabled = AtemSwitcher[devIndex].getKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
-      if(actDown && value == BINARY_EVENT) {
+
+
+      if(actDown && HWcType & HWC_BINARY) {
         switch(globalConfigMem[actionPtr + 5]) {
           case 0: // Toggle
             if(!keyerEnabled) setParameters = true;
@@ -2290,36 +2360,38 @@ namespace ATEM {
           AtemSwitcher[devIndex].commandBundleEnd();
       }
 
-      if (globalConfigMem[actionPtr + 5] != 4) { // Not auto
-        if (actDown) {
-          if(setParameters) {
-            AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], true);
-          } else {
-            AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
-          }
+      if(HWcType & HWC_BINARY) {
+        if (globalConfigMem[actionPtr + 5] != 4) { // Not auto
+          if (actDown) {
+            if(setParameters) {
+              AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], true);
+            } else {
+              AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
+            }
 
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        }
-        if (actUp) {
-          if(globalConfigMem[actionPtr + 5] == 3) { // Hold down
-            AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;
           }
-          _systemHWcActionCacheFlag[HWc][actIdx] = false;
-        }
-      } else { // Auto
-        if (actDown && !AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1])) {
-          unsigned long startTime = millis();
-          uint8_t transitionStyle = AtemSwitcher[devIndex].getTransitionNextTransition(globalConfigMem[actionPtr + 1]);
-          AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 2] + 1));
-          AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
-
-          // Wait for the transition to actually begin
-          while (!AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1]) || sTools.hasTimedOut(startTime, 200)) {
-            lDelay(2);
+          if (actUp) {
+            if(globalConfigMem[actionPtr + 5] == 3) { // Hold down
+              AtemSwitcher[devIndex].setKeyerOnAirEnabled(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], false);
+            }
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
           }
+        } else { // Auto
+          if (actDown && !AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1])) {
+            unsigned long startTime = millis();
+            uint8_t transitionStyle = AtemSwitcher[devIndex].getTransitionNextTransition(globalConfigMem[actionPtr + 1]);
+            AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], 1 << (globalConfigMem[actionPtr + 2] + 1));
+            AtemSwitcher[devIndex].performAutoME(globalConfigMem[actionPtr + 1]);
 
-          // Set the transition mask back to the initial value
-          AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], transitionStyle);
+            // Wait for the transition to actually begin
+            while (!AtemSwitcher[devIndex].getTransitionInTransition(globalConfigMem[actionPtr + 1]) || sTools.hasTimedOut(startTime, 200)) {
+              lDelay(2);
+            }
+
+            // Set the transition mask back to the initial value
+            AtemSwitcher[devIndex].setTransitionNextTransition(globalConfigMem[actionPtr + 1], transitionStyle);
+          }
         }
       }
 
@@ -2371,24 +2443,23 @@ namespace ATEM {
       if (globalConfigMem[actionPtr + 3] == 1 && globalConfigMem[actionPtr + 4] == 1)
         _systemHWcActionCache[HWc][actIdx] = 2; // Always only adjust w+H together in case of 100-200% zoom option for scaling.
 
-      if (actDown) {
-        if (value == BINARY_EVENT) { // Binary input = reset:
-          switch (globalConfigMem[actionPtr + 3]) {
-          case 0:                                                                                                         // Position
+      if (actDown && HWcType & HWC_BINARY) {
+        switch (globalConfigMem[actionPtr + 3]) {
+        case 0:                                                                                                         // Position
+          AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0); // center
+          AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0); // center
+          break;
+        case 1:                                                                                                                                                    // Size
+          AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 4] == 1 ? 1000 : 500); // 100% or 50%
+          AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 4] == 1 ? 1000 : 500); // 100% or 50%
+          if (globalConfigMem[actionPtr + 4] == 1) {
             AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0); // center
             AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0); // center
-            break;
-          case 1:                                                                                                                                                    // Size
-            AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 4] == 1 ? 1000 : 500); // 100% or 50%
-            AtemSwitcher[devIndex].setKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], globalConfigMem[actionPtr + 4] == 1 ? 1000 : 500); // 100% or 50%
-            if (globalConfigMem[actionPtr + 4] == 1) {
-              AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0); // center
-              AtemSwitcher[devIndex].setKeyDVEPositionY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2], 0); // center
-            }
-            break;
           }
+          break;
         }
       }
+
       if (pulses & 0xFFFE) {
         uint16_t DVEsizeX = AtemSwitcher[devIndex].getKeyDVESizeX(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
         uint16_t DVEsizeY = AtemSwitcher[devIndex].getKeyDVESizeY(globalConfigMem[actionPtr + 1], globalConfigMem[actionPtr + 2]);
@@ -2468,7 +2539,7 @@ namespace ATEM {
       }
       break;
       case 50: // DVE Size
-        if(actDown && value == BINARY_EVENT) {
+        if(actDown && HWcType & HWC_BINARY) {
           if(globalConfigMem[actionPtr+3] != 0) {
             AtemSwitcher[devIndex].setKeyDVESizeX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(globalConfigMem[actionPtr+3]-1)*50);
           }
@@ -2490,7 +2561,7 @@ namespace ATEM {
         }
         break;
       case 51: // DVE Position
-        if(actDown && value == BINARY_EVENT) {
+        if(actDown && HWcType & HWC_BINARY) {
           if(globalConfigMem[actionPtr+4] != 0) {
             AtemSwitcher[devIndex].setKeyDVEPositionX(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2],(int32_t)((int8_t)globalConfigMem[actionPtr+4]-35-1)*1000);
           }
@@ -2512,7 +2583,7 @@ namespace ATEM {
         }
         break;
       case 52: // DVE Border
-        if(actDown && value == BINARY_EVENT) {
+        if(actDown && HWcType & HWC_BINARY) {
           if(globalConfigMem[actionPtr+3] > 0) {
             AtemSwitcher[devIndex].setKeyDVEBorderEnabled(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], globalConfigMem[actionPtr+3] == 1);
           }
@@ -2549,7 +2620,7 @@ namespace ATEM {
         break;
       }
       case 53: // DVE Fill Source
-        if(actDown && value == BINARY_EVENT) {
+        if(actDown && HWcType & HWC_BINARY) {
           AtemSwitcher[devIndex].setKeyerFillSource(globalConfigMem[actionPtr+1], globalConfigMem[actionPtr+2], idxToVideoSrc(devIndex, globalConfigMem[actionPtr + 3]));
         }
       case 54: {// Audio peaks
@@ -2598,7 +2669,7 @@ namespace ATEM {
         break;
       }
       case 55: // Camera zoom (Normalised)
-        if(actDown && value != BINARY_EVENT) {
+        if(actDown && HWcType & HWC_ANALOG) {
 
         }
 

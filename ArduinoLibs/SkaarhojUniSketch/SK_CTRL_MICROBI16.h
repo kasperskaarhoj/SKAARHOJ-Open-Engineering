@@ -70,7 +70,7 @@ void HWrunLoop() {
   bDown = buttons.buttonDownAll();
   uint8_t b16Map[] = {1, 2, 3}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 3; a++) {
-    uint8_t color = actionDispatch(b16Map[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons.setButtonColor(a + 1, (color & 0xF) > 0 ? ((!(color & 0x10) || (millis() & 512) > 0) && ((color & 0xF) != 5) ? 1 : 3) : 0); // This implements the mono color blink bit
   }
 }

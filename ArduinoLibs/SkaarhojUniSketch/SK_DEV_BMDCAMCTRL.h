@@ -118,7 +118,7 @@ namespace BMDCAMCTRL {
   // 5 = dimmed
   // 1,2,3,4 = full (yellow), red, green, yellow
   // Bit 4 (16) = blink flag, filter out for KP01 buttons.
-  uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value) {
+  uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int16_t pulses, int16_t value, uint8_t HWcType) {
     uint16_t retVal = 0;
     int16_t tempInt = 0;
     uint8_t tempByte = 0;

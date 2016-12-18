@@ -158,7 +158,7 @@ void HWrunLoop() {
     for (uint8_t a = 0; a < 5; a++) {
       ai = (i == 0 ? a : 4 - a);
       extRetValPrefersLabel(b16Map[a]);
-      uint8_t color = actionDispatch(b16Map[a], bDown & (B1 << ai), bUp & (B1 << ai));
+      uint8_t color = actionDispatch(b16Map[a], HWC_BINARY, bDown & (B1 << ai), bUp & (B1 << ai));
       buttons[i].setButtonColor(ai + 1, color & 0xF);
     }
 

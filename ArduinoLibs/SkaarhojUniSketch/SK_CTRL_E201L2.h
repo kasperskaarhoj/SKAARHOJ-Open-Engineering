@@ -88,7 +88,7 @@ void HWrunLoop() {
   bDown = buttons.buttonDownAll();
   uint8_t b16Map[] = {1, 2, 3, 4, 5, 6, 7, 8}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 8; a++) {
-    uint8_t color = actionDispatch(b16Map[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons.setButtonColor(a + 1, color & 0xF);
   }
 
@@ -97,7 +97,7 @@ void HWrunLoop() {
   bDown = buttons2.buttonDownAll();
   uint8_t b16Map2[] = {9, 10, 11, 12, 13, 14, 15, 16}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 8; a++) {
-    uint8_t color = actionDispatch(b16Map2[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map2[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons2.setButtonColor(a + 1, color & 0xF);
   }
 
@@ -106,7 +106,7 @@ void HWrunLoop() {
   bDown = buttons3.buttonDownAll();
   uint8_t b16Map3[] = {18, 19, 22, 25, 20, 21, 24, 23}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 8; a++) {
-    uint8_t color = actionDispatch(b16Map3[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map3[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons3.setButtonColor(a + 1, color & 0xF);
   }
 
@@ -115,7 +115,7 @@ void HWrunLoop() {
   bDown = buttons4.buttonDownAll();
   uint8_t b16Map4[] = {26, 27, 28, 29, 30, 31, 32, 33}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 8; a++) {
-    uint8_t color = actionDispatch(b16Map4[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map4[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons4.setButtonColor(a + 1, color & 0xF);
   }
 

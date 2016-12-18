@@ -217,7 +217,7 @@ void HWrunLoop() {
   if (bDown & B100)
     pulses = 1;
   extRetValIsWanted(true);
-  actionDispatch(27, false, false, pulses << 1);
+  actionDispatch(27, HWC_PULSED, false, false, pulses << 1);
   if (oledDisplay_prevHash != extRetValHash()) {
     oledDisplay_prevHash = extRetValHash();
     writeDisplayTile(OLEDmenuDisplay, 16, 16, B1, 0, 0);

@@ -301,7 +301,7 @@ void HWrunLoop() {
   static uint8_t currentAddress = 255;
   bDown = addressSwitch_getAddress();
 
-  actionDispatch(54, currentAddress != bDown, false, 0, map(bDown, 0, 16, 0, 1000) + 1); // +1 is to compensate for rounding errors - in fact, map doesn't round anything, it uses "floor()" in division.
+  actionDispatch(54, HWC_ANALOG, currentAddress != bDown, false, 0, map(bDown, 0, 16, 0, 1000) + 1); // +1 is to compensate for rounding errors - in fact, map doesn't round anything, it uses "floor()" in division.
   currentAddress = bDown;
 
   // BI16 buttons:
@@ -310,7 +310,7 @@ void HWrunLoop() {
   uint8_t b16Map[] = {24, 25, 26, 27, 28, 29, 18, 19, 20, 21, 22, 23, 14, 15, 16, 17}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 16; a++) {
     extRetValPrefersLabel(b16Map[a]);
-    uint8_t color = actionDispatch(b16Map[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons.setButtonColor(a + 1, (color & 15) > 0 ? ((!(color & 16) || (millis() & 512) > 0) && ((color & 15) != 5) ? 1 : 3) : 0); // This implements the mono color blink bit
   }
   encoders.runLoop();
@@ -326,7 +326,7 @@ void HWrunLoop() {
   uint8_t b16Map2[] = {48, 51, 50, 49}; // These numbers refer to the drawing in the web interface
   for (uint8_t a = 0; a < 4; a++) {
     extRetValPrefersLabel(b16Map2[a]);
-    uint8_t color = actionDispatch(b16Map2[a], bDown & (B1 << a), bUp & (B1 << a));
+    uint8_t color = actionDispatch(b16Map2[a], HWC_BINARY, bDown & (B1 << a), bUp & (B1 << a));
     buttons2.setButtonColor(a + 1, color & 0xF);
   }
   encoders.runLoop();
@@ -347,17 +347,17 @@ void HWrunLoop() {
   bool hasMoved = joystick.uniDirectionalSlider_hasMoved();
 
   // actionDispatch(41, hasMoved, false, 0, 1000 - joystick.uniDirectionalSlider_position());
-  actionDispatch(42, hasMoved || firstIteration, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
+  actionDispatch(42, HWC_ANALOG, hasMoved || firstIteration, false, 0, constrain(map(joystick.uniDirectionalSlider_position(), 50, 950, 0, 1000), 0, 1000)); // Mapping temporary response to the joystick not being full range. May need redesign...
 
   // Wheel
   hasMoved = wheel.uniDirectionalSlider_hasMoved();
-  actionDispatch(43, hasMoved || firstIteration, false, 0, wheel.uniDirectionalSlider_position());
+  actionDispatch(43, HWC_ANALOG, hasMoved || firstIteration, false, 0, wheel.uniDirectionalSlider_position());
 
   // Button
   //  Serial << (joystickbutton.uniDirectionalSlider_position() < 500) << "\n";
   joystickbutton.uniDirectionalSlider_hasMoved();
   static bool lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
-  actionDispatch(44, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
+  actionDispatch(44, HWC_BINARY, lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() > 500), !lastPosNotPressed && (joystickbutton.uniDirectionalSlider_position() < 500));
   lastPosNotPressed = joystickbutton.uniDirectionalSlider_position() < 500;
 
   firstIteration = false;
@@ -483,7 +483,7 @@ void HWrunLoop() {
     }
   }
 
-  actionDispatch(53, bDown, bUp);
+  actionDispatch(53, HWC_BINARY, bDown, bUp);
 
   // GPO:
   static bool gpoCache = false;
