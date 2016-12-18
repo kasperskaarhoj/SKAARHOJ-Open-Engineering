@@ -30,7 +30,7 @@ public:
   void drawPixel(int16_t x, int16_t y, uint16_t color);
 
   SkaarhojOLED32x256();
-  void begin(uint8_t address, uint8_t cs = 1);
+  void begin(uint8_t address, uint8_t cs = 0x1F, uint8_t base = 88, bool PCA9672 = false);
 
   void sendCommand(uint8_t c, uint8_t cs);
   void sendData(uint8_t c, uint8_t cs);
@@ -42,7 +42,7 @@ public:
 
 private:
   uint8_t _boardAddress, _dataPin, _clockPin, _cs;
-  bool _dc, _rst, _vcc;
+  bool _dc, _rst, _vcc, _PCA9672;
   bool _zoom2Xenabled;
   void fastSPIwrite(uint8_t c);
 
