@@ -1,10 +1,10 @@
-
+namespace SONYRCP {
 // Button return colors:
 // 0 = off
 // 5 = dimmed
 // 1,2,3,4 = full (yellow), red, green, yellow
 // Bit 4 (16) = blink flag, filter out for KP01 buttons.
-uint16_t evaluateAction_SONYRCP(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
+uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, bool actDown, bool actUp, int pulses, int value) {
   uint16_t retVal = 0;
   int tempInt = 0;
   uint8_t tempByte = 0;
@@ -1773,4 +1773,6 @@ uint16_t evaluateAction_SONYRCP(const uint8_t devIndex, const uint16_t actionPtr
     _systemHWcActionCacheFlag[HWc][actIdx] = false;
   }
   return _systemHWcActionCacheFlag[HWc][actIdx] ? (4 | 0x20) : 5;
+}
+
 }

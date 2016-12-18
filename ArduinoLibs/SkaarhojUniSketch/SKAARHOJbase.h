@@ -3415,84 +3415,84 @@ uint16_t actionDispatch(uint8_t HWcNum, bool actDown, bool actUp, int16_t pulses
                 switch (pgm_read_byte_near(deviceArray + devIdx)) {
                 case SK_DEV_ATEM:
 #if SK_DEVICES_ATEM
-                  retValueT = evaluateAction_ATEM(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = ATEM::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_HYPERDECK:
 #if SK_DEVICES_HYPERDECK
-                  retValueT = evaluateAction_HYPERDECK(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = HYPERDECK::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_VIDEOHUB:
 #if SK_DEVICES_VIDEOHUB
-                  retValueT = evaluateAction_VIDEOHUB(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = VIDEOHUB::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SMARTSCOPE:
 #if SK_DEVICES_SMARTSCOPE
-                  retValueT = evaluateAction_SMARTSCOPE(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = SMARTSCOPE::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_BMDCAMCTRL:
 #if SK_DEVICES_BMDCAMCTRL
-                  retValueT = evaluateAction_BMDCAMCTRL(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = BMDCAMCTRL::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SONYRCP:
 #if SK_DEVICES_SONYRCP
-                  retValueT = evaluateAction_SONYRCP(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = SONYRCP::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_VMIX:
 #if SK_DEVICES_VMIX
-                  retValueT = evaluateAction_VMIX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = VMIX::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_ROLANDVR50:
 #if SK_DEVICES_ROLANDVR50
-                  retValueT = evaluateAction_ROLANDVR50(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = ROLANDVR50::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
-                  retValueT = evaluateAction_PANAAWHEX(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = PANAAWHEX::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_MATROXMONARCH:
 #if SK_DEVICES_MATROXMONARCH
-                  retValueT = evaluateAction_MATROXMONARCH(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = MATROXMONARCH::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_H264REC:
 #if SK_DEVICES_H264REC
-                  retValueT = evaluateAction_H264REC(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = H264REC::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
                   break;
                 case SK_DEV_SONYVISCAIP:
 #if SK_DEVICES_SONYVISCAIP
-                  retValueT = evaluateAction_SONYVISCAIP(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
+                  retValueT = SONYVISCAIP::evaluateAction(deviceMap[devIdx], stateBehaviourPtr + lptr + 1, HWcNum - 1, actIdx, actDown, actUp, pulses, value);
                   if (_retValue == 0)
                     _retValue = retValueT; // Use first ever return value in case of multiple actions.
 #endif
