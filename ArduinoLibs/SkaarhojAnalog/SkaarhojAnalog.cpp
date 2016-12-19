@@ -39,6 +39,8 @@ void SkaarhojAnalog::joystick_init(int16_t tolerance, uint8_t i2cAddress, uint8_
   _joystick_previousValue[0] = -1000;
   _joystick_previousValue[1] = -1000;
   _joystick_previousValue[2] = -1000;
+  _joystick_sentCenterPos = 0;
+  _joystick_range = 100;
 
   // Reset:
   _joystick_centerValue[0] = joystick_AnalogRead(0);
@@ -57,6 +59,10 @@ void SkaarhojAnalog::joystick_init(int16_t tolerance, uint8_t i2cAddress, uint8_
   Serial.println();
 }
 
+void SkaarhojAnalog::joystick_extendedRange(bool state) {
+  _joystick_range = state ? 500 : 100;
+}
+
 bool SkaarhojAnalog::joystick_hasMoved(uint8_t index) { // Index is 0 or 1 or 2
   if (index <= 2) {
     int potValue = joystick_AnalogRead(index) - _joystick_centerValue[index];
@@ -67,15 +73,15 @@ bool SkaarhojAnalog::joystick_hasMoved(uint8_t index) { // Index is 0 or 1 or 2
 
       int joystickPosition = potValue;
       if (potValue < 0) {
-        joystickPosition = (long)100 * (long)joystickPosition / (long)_joystick_centerValue[index];
+        joystickPosition = (long)_joystick_range * (long)joystickPosition / (long)_joystick_centerValue[index];
       } else {
-        joystickPosition = (long)100 * (long)joystickPosition / (long)(1023 - _joystick_centerValue[index]);
+        joystickPosition = (long)_joystick_range * (long)joystickPosition / (long)(1023 - _joystick_centerValue[index]);
       }
-      if (joystickPosition > 97)
-        joystickPosition = 100;
-      if (joystickPosition < -97)
-        joystickPosition = -100;
-      if (joystickPosition < 3 && joystickPosition > -3)
+      if (joystickPosition > (_joystick_range*100)/97)
+        joystickPosition = _joystick_range;
+      if (joystickPosition < (-_joystick_range*100)/97)
+        joystickPosition = -_joystick_range;
+      if (joystickPosition < _joystick_range/30 && joystickPosition > -_joystick_range/30)
         joystickPosition = 0;
 
       if (_joystick_previousPosition[index] != joystickPosition) {
@@ -87,7 +93,11 @@ bool SkaarhojAnalog::joystick_hasMoved(uint8_t index) { // Index is 0 or 1 or 2
   }
 }
 
-int SkaarhojAnalog::joystick_position(uint8_t index) { return _joystick_previousPosition[index]; }
+bool SkaarhojAnalog::joystick_isAtCenter(uint8_t index) {
+  return abs(_joystick_previousPosition[index]) < _joystick_range/30;
+}
+
+int16_t SkaarhojAnalog::joystick_position(uint8_t index) { return _joystick_previousPosition[index]; }
 bool SkaarhojAnalog::joystick_buttonUp() {
   bool buttonChange = (_joystick_buttonStatusLastUp ^ joystick_buttonIsPressed());
   _joystick_buttonStatusLastUp ^= buttonChange;
@@ -113,7 +123,7 @@ int SkaarhojAnalog::joystick_AnalogRead(uint8_t index) {
     return _analogConv.analogRead(3 + (_joystick_index ? 4 : 0)) >> 2;
     break;
   case 2:
-    return _analogConv.analogRead(1 + (_joystick_index ? 4 : 0)) >> 2;
+    return _analogConv.analogRead(4 + (_joystick_index ? 4 : 0)) >> 2;
     break;
   case 3:
     return _analogConv.analogRead(0 + (_joystick_index ? 4 : 0)) >> 2;
