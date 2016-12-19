@@ -33,6 +33,10 @@ with the Panasonic AW-HE library. If not, see http://www.gnu.org/licenses/.
   #include "WProgram.h"
 #endif
 
+#include <Streaming.h>
+
+#define PanaAWHE_BUFSIZE 30
+#define PanaAWHE_QUEUESIZE 100
 
 //  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include <Ethernet.h>
@@ -45,8 +49,10 @@ class ClientPanaAWHExTCP
 	EthernetClient _client;
 	bool _activeHTTPRequest;
 	unsigned long _activeHTTPRequestTime;
+	uint32_t _lastSeen;
 	
 	char _charBuf[96];
+	char _cmdBuf[PanaAWHE_BUFSIZE];
 	
   public:
 
@@ -59,6 +65,7 @@ class ClientPanaAWHExTCP
     void connect();
 	void changeLastIPBytes(uint8_t lastByte);
 	bool isReady();
+	bool isConnected();
 	
     bool doPan(uint8_t panSpeed);
     bool doTilt(uint8_t tiltSpeed);
@@ -73,10 +80,50 @@ class ClientPanaAWHExTCP
 	bool recallPreset(uint8_t presetNum);
 	bool power(bool enable);
 	
+	bool setContrast(uint8_t contrast);
+	bool setColorBars(bool state);
+	bool setShutter(uint8_t shutter);
+	bool setSensorGain(uint8_t gain);
+	bool setGainR(int8_t gain);
+	bool setGainB(int8_t gain);
+	bool setPedestalR(int8_t pedestal);
+	bool setPedestalB(int8_t pedestal);
+	bool setIris(uint16_t iris);
+
+	int8_t getGainR();
+	int8_t getGainB();
+	int8_t getPedestalR();
+	int8_t getPedestalB();
+	uint16_t getIris();
+
   private:
-	void _sendPtzRequest(const String command);
-	void _sendCamRequest(const String command);
-	void _sendRequest(const String command, bool camRequest);
+	void _sendPtzRequest(const char* format, ...);
+	void _sendCamRequest(const char* format, ...);
+	void _sendRequest(const char* command, uint8_t len, bool camRequest);
+	void _addToQueue(const char*, uint8_t cam, bool camRequest);
+	uint8_t _getNextQueue();
+	void _popQueue();
+	void _parseIncoming(char* buffer); 
+	bool _sendPing();
+	void _requestState();
+	uint32_t _lastPingAttempt;
+
+	char _queue[PanaAWHE_QUEUESIZE];
+	uint8_t _queuePtr;
+
+	int8_t _gainR;
+	int8_t _gainB;
+	int8_t _pedestalR;
+	int8_t _pedestalB;
+	uint16_t _iris;
+
+	uint8_t _sensorGain;
+	bool _colorBars;
+
+	uint8_t _stateRequestPointer;
+	uint32_t _lastStateRequest;
+
+	uint32_t _lastSentCommand;
 
 };
 

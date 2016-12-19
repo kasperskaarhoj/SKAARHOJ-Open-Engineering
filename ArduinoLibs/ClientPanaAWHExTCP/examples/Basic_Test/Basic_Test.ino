@@ -6,11 +6,11 @@ EthernetClient client;
 
 
 byte mac[] = {
-  0x90, 0xA2, 0xDA, 0x00, 0xF2, 0x00
+  0x90, 0xA2, 0xDA, 0x00, 0xF2, 0x05
 };
-IPAddress ip(192, 168, 10, 99);
+IPAddress ip(192, 168, 0, 99);
 
-IPAddress camera(192, 168, 10, 14);
+IPAddress camera(192, 168, 0, 14);
 
 
 #include <ClientPanaAWHExTCP.h>
@@ -35,39 +35,21 @@ void setup() {
     W5100.setRetransmissionCount(1);
 
   cameraObj.begin(camera);
-  cameraObj.serialOutput(2);
+  cameraObj.serialOutput(1);
   cameraObj.connect();
 }
 
 
 void loop() {
   int a;
-
-  // Zoom in:
-  for (a = 50; a < 70; a = a + 3)  {
-    cameraObj.doZoom(a);
-    Serial << F("Zoom in: ") << a << F("\n");
-    while (!cameraObj.isReady())  { // Takes about 70ms to get ready...
-      cameraObj.runLoop();
-      Serial << ".";
-      delay(10);
-    }
-    delay(2000);
-  }
-  delay(3000);
-
   // Zoom out:
-  for (a = 50; a > 30; a = a - 3)  {
-    cameraObj.doZoom(a);
-    Serial << F("Zoom out: ") << a << F("\n");
-    while (!cameraObj.isReady())  {
+  for (a = -100; a <= 100; a++)  {
+    //cameraObj.doZoom(a);
+    //cameraObj.setGainR(a);
+    //while (!cameraObj.isReady())  {
       cameraObj.runLoop();
-      Serial << ".";
-      delay(10);
-    }
-    delay(2000);
+
   }
-  delay(3000);
 }
 
 
