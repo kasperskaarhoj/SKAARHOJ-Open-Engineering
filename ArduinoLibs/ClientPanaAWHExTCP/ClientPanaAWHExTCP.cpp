@@ -178,7 +178,7 @@ void ClientPanaAWHExTCP::runLoop() {
 			// Request state from camera
 			for(uint8_t i=0; i < PanaAWHE_NUMCAMS; i++) {
 				uint8_t nextCam = (_lastStateCam+i)%PanaAWHE_NUMCAMS;
-				if(isOnline[nextCam]) {
+				if(isOnline[nextCam] || true) { // Shouldn't take too long time for offline cameras
 					_requestState(nextCam);
 					_lastStateCam = nextCam;
 					break;
@@ -417,7 +417,6 @@ bool ClientPanaAWHExTCP::_sendPing() {
 
 bool ClientPanaAWHExTCP::isConnected(uint8_t cam) {
 	if(cam < PanaAWHE_NUMCAMS) {
-		isOnline[cam] = true; // Take camera online
 		return millis() - _lastSeen[cam] <= 5000;
 	}
 	return false;
@@ -519,8 +518,7 @@ void ClientPanaAWHExTCP::_sendRequest(uint8_t cam, const char* command, uint8_t 
   } 
   else {
     // if you couldn't make a connection:
-    if (_serialOutput) Serial.println("connection failed");
-    if (_serialOutput) Serial.println("disconnecting.");
+    if (_serialOutput > 1) Serial.println("connection failed");
     _client.stop();
 	_activeHTTPRequest = false;
   }
