@@ -137,9 +137,10 @@ namespace BMDCAMCTRL {
     case 0: // Focus
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
       if (actDown) {
-        if (value != BINARY_EVENT) {
+        if (HWcType & HWC_ANALOG) {
           BMDCamCtrl[devIndex].setFocus(cam, (float)value / 1000.0);
-        } else {
+        }
+        if(HWcType & HWC_BINARY) {
           Serial << F("Performing auto focus...");
           BMDCamCtrl[devIndex].setAutoFocus(cam);
         }
@@ -205,28 +206,29 @@ namespace BMDCAMCTRL {
       if(tempVal < 0.0) tempVal = 0.0;
 
 
-      if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+      if (HWcType & HWC_ANALOG) {
+        if (actDown) { // Value input
           outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
-        } else { // Binary - auto iris
+        } else {
+          if(round(outVal*1000) != round((1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0)) * 1000)) {
+            outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
+          }
+        }
+      }
+
+      if(HWcType & HWC_BINARY) { // Binary - auto iris
+        if(actDown) {
           Serial << F("Perform Auto Iris... \n");
           BMDCamCtrl[devIndex].setAutoIris(cam);
           _systemHWcActionCacheFlag[HWc][actIdx] |= 2;
         }
-      }
-
-      if(actUp) {
-        _systemHWcActionCacheFlag[HWc][actIdx] &= ~2;
+        if(actUp) {
+          _systemHWcActionCacheFlag[HWc][actIdx] &= ~2;
+        }
       }
 
       if (pulses & 0xFFFE) {
         outVal = pulsesHelper(BMDCamCtrl[devIndex].getIris(cam) * 1000.0, 0, 1000, false, ((-(pulses >> 1)) << 1) | (pulses & B1), 10, 100) / 1000.0;
-      }
-
-      if(!actDown && value != BINARY_EVENT) {
-        if(round(outVal*1000) != round((1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0)) * 1000)) {
-          outVal = 1.0 - (tempVal*((float)(limHi - limLo)/100.0) + (float)limLo/100.0);
-        }
       }
 
       if(startVal != outVal) {
@@ -258,7 +260,7 @@ namespace BMDCAMCTRL {
       if (c > 0)
         c -= 1;
 
-      if (actDown && value == BINARY_EVENT) {
+      if (actDown && HWcType & HWC_BINARY) {
         if (option == 0) { // Cycle
           pulses = 1;
         } else {
@@ -273,7 +275,6 @@ namespace BMDCAMCTRL {
       }
 
       if (extRetValIsWanted()) {
-        // Original value 19.9315
         extRetVal(round(log10((((int)BMDCamCtrl[devIndex].getSensorGain(cam) >> 1))) * 20.0), 3, _systemHWcActionFineFlag[HWc]);
         extRetValShortLabel(PSTR("Sens.Gain"));
         extRetValLongLabel(PSTR("Sens.Gain Cam "), cam);
@@ -295,7 +296,7 @@ namespace BMDCAMCTRL {
           }
         }
 
-        if (actDown && value == BINARY_EVENT) {      // Binary (never value)
+        if (actDown && HWcType & HWC_BINARY) {      // Binary (never value)
           if (globalConfigMem[actionPtr + 2] == 0) { // cycle
             pulses = 2;
           } else { // Set
@@ -328,7 +329,7 @@ namespace BMDCAMCTRL {
           }
         }
 
-        if (actDown && value == BINARY_EVENT) {      // Binary (never value)
+        if (actDown && HWcType & HWC_BINARY) {      // Binary (never value)
           if (globalConfigMem[actionPtr + 2] == 0) { // cycle
             pulses = 2;
           } else { // Set
@@ -354,9 +355,10 @@ namespace BMDCAMCTRL {
       BMDCamCtrl[devIndex].getCameraLift(cam, val);
 
       if (actDown) {
-        if (value != BINARY_EVENT) {
+        if (HWcType & HWC_ANALOG) {
           val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / (270.0 * 16);
-        } else {
+        }
+        if(HWcType & HWC_BINARY) {
           val[(option + 3) % 4] = 0.0;
         }
         BMDCamCtrl[devIndex].setCameraLift(cam, val);
@@ -384,9 +386,10 @@ namespace BMDCAMCTRL {
       BMDCamCtrl[devIndex].getCameraGamma(cam, val);
 
       if (actDown) {
-        if (value != BINARY_EVENT) {
+        if (HWcType & HWC_ANALOG) {
           val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / (250.0 * 16);
-        } else {
+        }
+        if(HWcType & HWC_BINARY) {
           val[(option + 3) % 4] = 0.0;
         }
         BMDCamCtrl[devIndex].setCameraGamma(cam, val);
@@ -413,9 +416,10 @@ namespace BMDCAMCTRL {
       float val[4];
       BMDCamCtrl[devIndex].getCameraGain(cam, val);
       if (actDown) {
-        if (value != BINARY_EVENT) {
+        if (HWcType & HWC_ANALOG) {
           val[(option + 3) % 4] = (float)map(value, 0, 1000, -500, 500) / 250.0;
-        } else {
+        }
+        if(HWcType & HWC_BINARY){
           val[(option + 3) % 4] = 1.0;
         }
         BMDCamCtrl[devIndex].setCameraGain(cam, val);
@@ -445,10 +449,11 @@ namespace BMDCAMCTRL {
       BMDCamCtrl[devIndex].getCameraColourAdjust(cam, val);
 
       if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+        if (HWcType & HWC_ANALOG) { // Value input
           newValue[0] = (float)(value - 500) / 500.0;
           BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
-        } else { // Binary - reset
+        }
+        if(HWcType & HWC_BINARY){ // Binary - reset
           newValue[0] = 0.0;
           BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
         }
@@ -474,10 +479,11 @@ namespace BMDCAMCTRL {
       BMDCamCtrl[devIndex].getCameraContrast(cam, oldValue);
     
       if (actDown) {
-        if (value != BINARY_EVENT) {
+        if (HWcType & HWC_ANALOG) {
           newValue[1] = (float)value / 500.0;
           BMDCamCtrl[devIndex].setCameraContrast(cam, newValue);
-        } else {
+        }
+        if(HWcType & HWC_BINARY){
           newValue[1] = 1.00;
           BMDCamCtrl[devIndex].setCameraContrast(cam, newValue);
         }
@@ -504,10 +510,11 @@ namespace BMDCAMCTRL {
       BMDCamCtrl[devIndex].getCameraColourAdjust(cam, val);
 
       if (actDown) {
-        if (value != BINARY_EVENT) { // Value input
+        if (HWcType & HWC_ANALOG) { // Value input
           newValue[1] = (float)(value) / 500.0;
           BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
-        } else { // Binary - reset
+        }
+        if(HWcType & HWC_BINARY){ // Binary - reset
           newValue[1] = 1.0;
           BMDCamCtrl[devIndex].setCameraColourAdjust(cam, newValue);
         }
@@ -528,7 +535,7 @@ namespace BMDCAMCTRL {
     case 11: { // Bars
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
       uint8_t duration = globalConfigMem[actionPtr + 3];
-      if (actDown && value == BINARY_EVENT) {
+      if (actDown && HWcType & HWC_BINARY) {
         switch (globalConfigMem[actionPtr + 2]) {
         case 0: // Toggle
           if (BMDCamCtrl[devIndex].getDisplayColorBarsTime(cam) == 0) {
@@ -557,7 +564,7 @@ namespace BMDCAMCTRL {
     }
     case 12: // Detail
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
-      if (actDown && value == BINARY_EVENT) { // Button push
+      if (actDown && HWcType & HWC_BINARY) { // Button push
         if(globalConfigMem[actionPtr + 2] == 0) { // cycle
           BMDCamCtrl[devIndex].setVideoSharpening(cam, BMDCamCtrl[devIndex].getVideoSharpening((cam+1)%4));
         } else {
@@ -604,58 +611,60 @@ namespace BMDCAMCTRL {
     case 13: // CCU Settings
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
 
-      if (actDown && value == BINARY_EVENT) {
-        _systemHWcActionCache[HWc][actIdx] = millis();
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 0:
-          // For holddown events, bit 0 must be set
-          _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
-          break;
-        case 1: // Recall
-          if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && millis() - lastSettingsRecall < 10000) {
-            recallCameraPreset(devIndex, cam, 0);
-            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
-          } else {
-            if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
-              _systemHWcActionCacheFlag[HWc][actIdx] = 4;
-            } else {
-              _systemHWcActionCacheFlag[HWc][actIdx] = 0;
-            }
-          }
-          break;
-        case 2: // Store
-          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
-          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
-          break;
-        }
-      }
-
-      if (_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
-        switch (globalConfigMem[actionPtr + 2]) {
-        case 0:
-          storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
-          _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
           _systemHWcActionCache[HWc][actIdx] = millis();
-          break;
-        }
-      }
-
-      if (actUp) {
-        if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
-          if (globalConfigMem[actionPtr + 2] == 0) {
-            if (millis() - lastSettingsRecall < 10000 && lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+          switch (globalConfigMem[actionPtr + 2]) {
+          case 0:
+            // For holddown events, bit 0 must be set
+            _systemHWcActionCacheFlag[HWc][actIdx] = 16 | 1;
+            break;
+          case 1: // Recall
+            if (_systemHWcActionCacheFlag[HWc][actIdx] == 4 && millis() - lastSettingsRecall < 10000) {
               recallCameraPreset(devIndex, cam, 0);
               _systemHWcActionCacheFlag[HWc][actIdx] = 0;
             } else {
               if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
                 _systemHWcActionCacheFlag[HWc][actIdx] = 4;
               } else {
-                _systemHWcActionCacheFlag[HWc][actIdx] = 0; 
+                _systemHWcActionCacheFlag[HWc][actIdx] = 0;
               }
             }
+            break;
+          case 2: // Store
+            storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+            break;
           }
-        } else if (globalConfigMem[actionPtr + 2] == 2) {
-          _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+        }
+
+        if (_systemHWcActionCacheFlag[HWc][actIdx] & 1 && (uint16_t)millis() - _systemHWcActionCache[HWc][actIdx] > 1000) {
+          switch (globalConfigMem[actionPtr + 2]) {
+          case 0:
+            storeCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3]);
+            _systemHWcActionCacheFlag[HWc][actIdx] = 2;
+            _systemHWcActionCache[HWc][actIdx] = millis();
+            break;
+          }
+        }
+
+        if (actUp) {
+          if (_systemHWcActionCacheFlag[HWc][actIdx] & 1) {
+            if (globalConfigMem[actionPtr + 2] == 0) {
+              if (millis() - lastSettingsRecall < 10000 && lastLoadedPreset == globalConfigMem[actionPtr + 3]) {
+                recallCameraPreset(devIndex, cam, 0);
+                _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+              } else {
+                if (recallCameraPreset(devIndex, cam, globalConfigMem[actionPtr + 3])) {
+                  _systemHWcActionCacheFlag[HWc][actIdx] = 4;
+                } else {
+                  _systemHWcActionCacheFlag[HWc][actIdx] = 0; 
+                }
+              }
+            }
+          } else if (globalConfigMem[actionPtr + 2] == 2) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = 0;
+          }
         }
       }
 
@@ -696,7 +705,7 @@ namespace BMDCAMCTRL {
       break;
     case 14: { // Reset
       cam = idxToCamera(globalConfigMem[actionPtr + 1]);
-      if (actDown && value == BINARY_EVENT) {
+      if (actDown && HWcType & HWC_BINARY) {
         switch (globalConfigMem[actionPtr + 2]) {
           case 0: {
             Serial << F("Resetting Lift...\n");
@@ -730,7 +739,7 @@ namespace BMDCAMCTRL {
       uint8_t direction = globalConfigMem[actionPtr + 3];
 
       if (actDown) {
-        if (value != BINARY_EVENT) { // Analog input
+        if (HWcType & HWC_SPEED) { // Analog input
           Serial << "Servo " << servo << " set to value " << value << "\n";
           BMDCamCtrl[devIndex].setServoSpeed(cam, servo, value);
         }
@@ -744,25 +753,34 @@ namespace BMDCAMCTRL {
       bool prv, pgm;
       BMDCamCtrl[devIndex].getTally(cam, pgm, prv);
 
-      if(actDown && value == BINARY_EVENT) {
-        bool toggle = globalConfigMem[actionPtr + 3] > 0;
+      if(HWcType & HWC_BINARY) {
+        if(actDown) {
+          bool toggle = globalConfigMem[actionPtr + 3] > 0;
 
-        switch(globalConfigMem[actionPtr + 2]) {
-          case 0: // Tally off
-            BMDCamCtrl[devIndex].setTally(cam, false, false);
-            break;
-          case 1: // Red tally
-            BMDCamCtrl[devIndex].setTally(cam, (toggle?!pgm:pgm), false);
-            break;
-          case 2: // Green tally
-            BMDCamCtrl[devIndex].setTally(cam, false, (toggle?!prv:prv));
-            break;
-          case 3: // Both
-            BMDCamCtrl[devIndex].setTally(cam, (toggle?!pgm:pgm), (toggle?!prv:prv));
-            break;
+          switch(globalConfigMem[actionPtr + 2]) {
+            case 0: // Tally off
+              BMDCamCtrl[devIndex].setTally(cam, false, false);
+              break;
+            case 1: // Red tally
+              BMDCamCtrl[devIndex].setTally(cam, (toggle?!pgm:pgm), false);
+              break;
+            case 2: // Green tally
+              BMDCamCtrl[devIndex].setTally(cam, false, (toggle?!prv:prv));
+              break;
+            case 3: // Both
+              BMDCamCtrl[devIndex].setTally(cam, (toggle?!pgm:pgm), (toggle?!prv:prv));
+              break;
+          }
+
+          _systemHWcActionCacheFlag[HWc][actIdx] = (pgm << 2) | (prv << 1) | 1;
         }
 
-        _systemHWcActionCacheFlag[HWc][actIdx] = (pgm << 2) | (prv << 1) | 1;
+        if(actUp && _systemHWcActionCacheFlag[HWc][actIdx] && globalConfigMem[actionPtr+3]==1) {
+            if(globalConfigMem[actionPtr + 3] == 1) {
+              BMDCamCtrl[devIndex].setTally(cam, (_systemHWcActionCacheFlag[HWc][actIdx] >> 2) & 1, (_systemHWcActionCacheFlag[HWc][actIdx] >> 1) & 1);
+            }
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
       }
 
       if(pulses & 0xFFFE) {
@@ -782,13 +800,6 @@ namespace BMDCAMCTRL {
               BMDCamCtrl[devIndex].setTally(cam, (tally >> 1) & 1, tally & 1);
               break;
         }
-      }
-
-      if(actUp && _systemHWcActionCacheFlag[HWc][actIdx] && globalConfigMem[actionPtr+3]==1) {
-          if(globalConfigMem[actionPtr + 3] == 1) {
-            BMDCamCtrl[devIndex].setTally(cam, (_systemHWcActionCacheFlag[HWc][actIdx] >> 2) & 1, (_systemHWcActionCacheFlag[HWc][actIdx] >> 1) & 1);
-          }
-          _systemHWcActionCacheFlag[HWc][actIdx] = false;
       }
 
       // Set return values 

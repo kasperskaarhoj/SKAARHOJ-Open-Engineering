@@ -15,16 +15,18 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
   switch (globalConfigMem[actionPtr]) {
   case 0: // Play
     speed = playspeeds[globalConfigMem[actionPtr + 1]];
-    if (actDown) {
-      _systemHWcActionCache[HWc][actIdx] = HyperDeck[devIndex].getPlaySpeed();
-      if (globalConfigMem[actionPtr + 2] == 1 && HyperDeck[devIndex].isPlaying()) {
-        HyperDeck[devIndex].stop();
-      } else {
-        HyperDeck[devIndex].playWithSpeed(speed);
+    if(HWcType & HWC_BINARY) {
+      if (actDown) {
+        _systemHWcActionCache[HWc][actIdx] = HyperDeck[devIndex].getPlaySpeed();
+        if (globalConfigMem[actionPtr + 2] == 1 && HyperDeck[devIndex].isPlaying()) {
+          HyperDeck[devIndex].stop();
+        } else {
+          HyperDeck[devIndex].playWithSpeed(speed);
+        }
       }
-    }
-    if (actUp && globalConfigMem[actionPtr + 2] == 2) { // globalConfigMem[actionPtr + 2] == "Hold Down"
-      HyperDeck[devIndex].stop();
+      if (actUp && globalConfigMem[actionPtr + 2] == 2) { // globalConfigMem[actionPtr + 2] == "Hold Down"
+        HyperDeck[devIndex].stop();
+      }
     }
 
     // Cycle between play/pause if pulsed input is used
@@ -56,8 +58,8 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
     return retVal;
     break;
   case 1: // Stop
-    if (actDown) {
-       if (HyperDeck[devIndex].isStopped() && globalConfigMem[actionPtr + 1] == 2) {
+    if (actDown && HWcType & HWC_BINARY) {
+      if (HyperDeck[devIndex].isStopped() && globalConfigMem[actionPtr + 1] == 2) {
         HyperDeck[devIndex].gotoClipStart();
       } else {
         HyperDeck[devIndex].stop();
@@ -83,15 +85,17 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
     return HyperDeck[devIndex].isStopped() ? (4 | 0x20) : 5;
     break;
   case 2: // Record
-    if (actDown) {
-      if (globalConfigMem[actionPtr + 1] == 1 && HyperDeck[devIndex].isRecording()) {
-        HyperDeck[devIndex].stop();
-      } else {
-        HyperDeck[devIndex].record();
+    if(HWcType & HWC_BINARY) {
+      if (actDown) {
+        if (globalConfigMem[actionPtr + 1] == 1 && HyperDeck[devIndex].isRecording()) {
+          HyperDeck[devIndex].stop();
+        } else {
+          HyperDeck[devIndex].record();
+        }
       }
-    }
-    if (actUp && globalConfigMem[actionPtr + 1] == 2) { // globalConfigMem[actionPtr + 2] == "Hold Down"
-      HyperDeck[devIndex].stop();
+      if (actUp && globalConfigMem[actionPtr + 1] == 2) { // globalConfigMem[actionPtr + 2] == "Hold Down"
+        HyperDeck[devIndex].stop();
+      }
     }
 
     if(pulses & 0xFFFE) {
@@ -112,7 +116,8 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
     return HyperDeck[devIndex].isRecording() ? (2 | 0x20) : 5;
     break;
   case 3: // Preview
-    if (actDown) {
+
+    if (actDown && HWcType & HWC_BINARY) {
       if(HyperDeck[devIndex].isInPreview()) {
         HyperDeck[devIndex].previewEnable(false);
       } else {
@@ -142,7 +147,7 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
     case 5: // Previous clip
       retVal = 5;
 
-      if(actDown && value == BINARY_EVENT) {
+      if(actDown && HWcType & HWC_BINARY) {
         pulses = (globalConfigMem[actionPtr] == 4 ? 2 : -2);
         retVal = 4 | 0x20;
       }
@@ -165,7 +170,7 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
     case 6: // Fast forward
       speed = HyperDeck[devIndex].getPlaySpeed();
 
-      if(actDown && value == BINARY_EVENT) {
+      if(actDown && HWcType & HWC_BINARY) {
         pulses = 2;
       }
 
@@ -220,7 +225,7 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
 
       speed = -HyperDeck[devIndex].getPlaySpeed();
 
-      if(actDown && value == BINARY_EVENT) {
+      if(actDown && HWcType & HWC_BINARY) {
         pulses = 2;
       }
 
@@ -272,7 +277,7 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
       return retVal | (speed>=200?0x20:0);
       break;
     case 8: // Jog
-      if(actDown && value == BINARY_EVENT) {
+      if(actDown && HWcType & HWC_BINARY) {
         _systemHWcActionCache[HWc][actIdx] = millis();
         _systemHWcActionCacheFlag[HWc][actIdx] = 1;
       }
@@ -315,7 +320,7 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
     case 11: // Slot select
       retVal = 0;
 
-      if(actDown && value == BINARY_EVENT) {
+      if(actDown && HWcType & HWC_BINARY) {
         switch(globalConfigMem[actionPtr + 1]) {
           case 0: // Cycle
             pulses = 2;
@@ -372,7 +377,7 @@ uint16_t evaluateAction(const uint8_t devIndex, const uint16_t actionPtr, const 
       uint8_t videoInput = HyperDeck[devIndex].getVideoInput();
       uint8_t audioInput = HyperDeck[devIndex].getAudioInput();
 
-      if(actDown && value == BINARY_EVENT) {
+      if(actDown && HWcType & HWC_BINARY) {
         HyperDeck[devIndex].setVideoInput(globalConfigMem[actionPtr+1]+1);
         HyperDeck[devIndex].setAudioInput(globalConfigMem[actionPtr+2]+1);
       }

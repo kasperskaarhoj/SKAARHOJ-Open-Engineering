@@ -23,13 +23,7 @@
 #define SK_C90D_OPTION_VARIANT 4    // AUTOGEN: 0,1,2,3,4
 #define SK_C90D_OPTION_GPIO true    // AUTOGEN: true,false
 
-#define SK_C90MII_OPTION_GPIO true    // AUTOGEN: true,false
-
-
-
-
-
-
+#define SK_C90MII_OPTION_GPIO false    // AUTOGEN: true,false
 
 
 // ****************************
@@ -358,7 +352,7 @@ uint16_t _retValue = 0;                                                    // Re
 // Pre-declaring. Implemented in "SKAARHOJbase.h":
 int32_t pulsesHelper(int32_t inValue, const int32_t lower, const int32_t higher, const bool cycle, const int16_t pulses, const int16_t scaleFine = 1, const int16_t scaleNormal = 1);
 uint16_t customActionHandlerNative(const uint16_t actionPtr, const uint8_t HWc, const uint8_t actIdx, const bool actDown = false, const bool actUp = false, const uint8_t pulses = 0, const int16_t value = 0);
-uint16_t actionDispatch(const uint8_t HWcNum, const bool actDown = false, const bool actUp = false, const int16_t pulses = 0, const int16_t value = 0x8000, const uint8_t specificAction = 0);
+uint16_t actionDispatch(const uint8_t HWcNum, const uint8_t HWcType = 0, const bool actDown = false, const bool actUp = false, const int16_t pulses = 0, const int16_t value = 0x8000, const uint8_t specificAction = 0);
 uint16_t getNumOfActions(const uint8_t HWcNum);
 void lDelay(uint16_t delayVal);
 uint8_t HWsetupL();
@@ -622,6 +616,12 @@ uint16_t extRetValHash() {
 
 #define BINARY_EVENT INT16_MIN
 
+// Definitions of HWc Types
+#define HWC_BINARY 1
+#define HWC_PULSED 2
+#define HWC_ANALOG 4
+#define HWC_SPEED  32
+
 /****************************************
 
    INCLUDING DEVICE RELATED LIBRARIES
@@ -684,28 +684,28 @@ uint8_t SonyRCP_initIdx = 0;
 
 #if SK_DEVICES_VMIX
 #include "ClientVMixUDP.h"
-ClientVMixUDP VMIX[SK_DEVICES_VMIX];
+ClientVMixUDP VMix[SK_DEVICES_VMIX];
 uint8_t VMIX_initIdx = 0;
 #include "SK_DEV_VMIX.h";
 #endif
 
 #if SK_DEVICES_ROLANDVR50
 #include "ClientRolandVR50IP.h"
-ClientRolandVR50IP ROLANDVR50[SK_DEVICES_ROLANDVR50];
+ClientRolandVR50IP RolandVR50[SK_DEVICES_ROLANDVR50];
 uint8_t ROLANDVR50_initIdx = 0;
 #include "SK_DEV_ROLANDVR50.h";
 #endif
 
 #if SK_DEVICES_PANAAWHEX
 #include "ClientPanaAWHExTCP.h"
-ClientPanaAWHExTCP PANAAWHEX[SK_DEVICES_PANAAWHEX];
+ClientPanaAWHExTCP PanaAWHEX[SK_DEVICES_PANAAWHEX];
 uint8_t PANAAWHEX_initIdx = 0;
 #include "SK_DEV_PANAAWHEX.h";
 #endif
 
 #if SK_DEVICES_MATROXMONARCH
 #include "ClientMatroxMonarch.h"
-ClientMatroxMonarch MATROXMONARCH[SK_DEVICES_MATROXMONARCH];
+ClientMatroxMonarch MatroxMonarch[SK_DEVICES_MATROXMONARCH];
 uint8_t MATROXMONARCH_initIdx = 0;
 #include "SK_DEV_MATROXMONARCH.h";
 #endif
@@ -713,14 +713,14 @@ uint8_t MATROXMONARCH_initIdx = 0;
 #if SK_DEVICES_H264REC
 #include "GenericHTTPClient.h"
 #include "ClientLLabH264Recorder.h"
-ClientLLabH264Recorder H264REC[SK_DEVICES_H264REC];
+ClientLLabH264Recorder H264Rec[SK_DEVICES_H264REC];
 uint8_t H264REC_initIdx = 0;
 #include "SK_DEV_H264REC.h";
 #endif
 
 #if SK_DEVICES_SONYVISCAIP
 #include "ClientSonyVISCAoverIP.h"
-ClientSonyVISCAoverIP SONYVISCAIP[SK_DEVICES_SONYVISCAIP];
+ClientSonyVISCAoverIP SonyVISCAIP[SK_DEVICES_SONYVISCAIP];
 uint8_t SONYVISCAIP_initIdx = 0;
 #include "SK_DEV_SONYVISCAIP.h";
 #endif

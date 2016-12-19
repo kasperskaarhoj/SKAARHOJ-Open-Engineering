@@ -962,12 +962,15 @@ namespace ATEM {
 
       return retVal;
       break;
-    case 18:                         // Transition Pos
+    case 18:  // Transition Pos
       if(HWcType & HWC_ANALOG) {
         if (actDown) {                 // Use actDown as "has moved"
+          // Take care of directionality
+          value = _systemHWcActionCacheFlag[HWc][actIdx] ? 1000 - value : value;
           AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], value * 10);
           if (actUp) { // Use actUp as "at end"
             AtemSwitcher[devIndex].setTransitionPosition(globalConfigMem[actionPtr + 1], 0);
+            _systemHWcActionCacheFlag[HWc][actIdx] = value > 500;
           }
         }
       }

@@ -80,32 +80,36 @@ namespace VIDEOHUB {
     }
     switch (globalConfigMem[actionPtr]) {
     case 0:
-      if (actDown && value == BINARY_EVENT) {
-        if (globalConfigMem[actionPtr + 3] == 5) { // Source cycle by button push
-          pulses = 2;
-          _systemHWcActionCacheFlag[HWc][actIdx] = true;
-        } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
-          _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
-          _systemHWcActionCache[HWc][actIdx] = VideoHub[devIndex].getRoute(idxToNumber(globalConfigMem[actionPtr + 2]));
-          if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) {
-            pushToHoldGroup(globalConfigMem[actionPtr + 3] - 3, VideoHub[devIndex].getRoute(idxToNumber(globalConfigMem[actionPtr + 2])), HWc);
+      if(HWcType & HWC_BINARY) {
+        if (actDown) {
+          if (globalConfigMem[actionPtr + 3] == 5) { // Source cycle by button push
+            pulses = 2;
+            _systemHWcActionCacheFlag[HWc][actIdx] = true;
+          } else if (globalConfigMem[actionPtr + 3] != 2 || !_systemHWcActionCacheFlag[HWc][actIdx]) {
+            _systemHWcActionCacheFlag[HWc][actIdx] = true; // Used for toggle feature
+            _systemHWcActionCache[HWc][actIdx] = VideoHub[devIndex].getRoute(idxToNumber(globalConfigMem[actionPtr + 2]));
+            if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) {
+              pushToHoldGroup(globalConfigMem[actionPtr + 3] - 3, VideoHub[devIndex].getRoute(idxToNumber(globalConfigMem[actionPtr + 2])), HWc);
+            }
+            VideoHub[devIndex].routeInputToOutput(idxToNumber(globalConfigMem[actionPtr + 1]), idxToNumber(globalConfigMem[actionPtr + 2]),true);	// Waiting for confirmation is important for really solid hold group functionality.
+          } else {
+    		VideoHub[devIndex].routeInputToOutput(_systemHWcActionCache[HWc][actIdx], idxToNumber(globalConfigMem[actionPtr + 2]),true);
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
           }
-          VideoHub[devIndex].routeInputToOutput(idxToNumber(globalConfigMem[actionPtr + 1]), idxToNumber(globalConfigMem[actionPtr + 2]),true);	// Waiting for confirmation is important for really solid hold group functionality.
-        } else {
-  		VideoHub[devIndex].routeInputToOutput(_systemHWcActionCache[HWc][actIdx], idxToNumber(globalConfigMem[actionPtr + 2]),true);
-          _systemHWcActionCacheFlag[HWc][actIdx] = false;
         }
-      }
-      if (actUp && globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
-    	  VideoHub[devIndex].routeInputToOutput(_systemHWcActionCache[HWc][actIdx], idxToNumber(globalConfigMem[actionPtr + 2]),true);
-      }
-      if (actUp && (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4)) { // "Hold Groups"
-        uint16_t fallBackSrc = pullFromHoldGroup(globalConfigMem[actionPtr + 3] - 3, HWc);
-        if (fallBackSrc != 0x8000)
-          VideoHub[devIndex].routeInputToOutput(fallBackSrc, idxToNumber(globalConfigMem[actionPtr + 2]),true);
-      }
-      if (actUp && globalConfigMem[actionPtr + 3] == 5) { // "Cycle"
-        _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        if(actUp) {
+          if (globalConfigMem[actionPtr + 3] == 1) { // "Hold Down"
+        	  VideoHub[devIndex].routeInputToOutput(_systemHWcActionCache[HWc][actIdx], idxToNumber(globalConfigMem[actionPtr + 2]),true);
+          }
+          if (globalConfigMem[actionPtr + 3] == 3 || globalConfigMem[actionPtr + 3] == 4) { // "Hold Groups"
+            uint16_t fallBackSrc = pullFromHoldGroup(globalConfigMem[actionPtr + 3] - 3, HWc);
+            if (fallBackSrc != 0x8000)
+              VideoHub[devIndex].routeInputToOutput(fallBackSrc, idxToNumber(globalConfigMem[actionPtr + 2]),true);
+          }
+          if (globalConfigMem[actionPtr + 3] == 5) { // "Cycle"
+            _systemHWcActionCacheFlag[HWc][actIdx] = false;
+          }
+        }
       }
 
       if (pulses & 0xFFFE) {

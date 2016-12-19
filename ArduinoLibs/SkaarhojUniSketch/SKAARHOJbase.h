@@ -2000,8 +2000,8 @@ void deviceRunLoop() {
         break;
       case SK_DEV_PANAAWHEX:
 #if SK_DEVICES_PANAAWHEX
-        PANAAWHEX[deviceMap[a]].runLoop();
-        deviceReady[a] = PANAAWHEX[deviceMap[a]].isConnected();
+        PanaAWHEX[deviceMap[a]].runLoop();
+        deviceReady[a] = PanaAWHEX[deviceMap[a]].isConnected(0);
 #endif
         break;
       case SK_DEV_MATROXMONARCH:
@@ -2135,6 +2135,7 @@ uint8_t HWsetup() {
   Serial << F("Init Slider\n");
   uint16_t *cal1 = getAnalogComponentCalibration(1);
   slider.uniDirectionalSlider_init(cal1[2], cal1[0], cal1[1], A0);
+  slider.uniDirectionalSlider_disableUnidirectionality(true);
   slider.uniDirectionalSlider_hasMoved();
   statusLED(QUICKBLANK);
 #endif
