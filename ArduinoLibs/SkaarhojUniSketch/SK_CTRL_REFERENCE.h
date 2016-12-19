@@ -144,7 +144,8 @@ uint8_t HWsetupL() {
   infoDisplay2.display(B1); // Write to all
 
   Serial << F("Init 4-axis joystick JOY-4AXIS @ ( 73) = 1001001_ = 72+1\n");
-  Joystick.joystick_init(50, 0, 0);
+  Joystick.joystick_init(5, 0, 0);
+  Joystick.joystick_extendedRange(true); // Range -500 - 500
 
     Serial << F("Init OLED Menu Display\n");
   OLEDmenuDisplay.begin(6);
@@ -187,8 +188,10 @@ uint8_t HWsetupL() {
   audio.begin(2, 0);
   uint16_t *cal1 = getAnalogComponentCalibration(3);
   audioPot_1.uniDirectionalSlider_init(cal1[2], cal1[0], cal1[1], 2, 0);
+  audioPot_1.uniDirectionalSlider_disableUnidirectionality(true);
   uint16_t *cal2 = getAnalogComponentCalibration(4);
   audioPot_2.uniDirectionalSlider_init(cal2[2], cal2[0], cal2[1], 2, 1);
+  audioPot_2.uniDirectionalSlider_disableUnidirectionality(true);
 
   Serial << "I2C Chain 2 setup:\n";
   setI2Cchain(2);
@@ -570,10 +573,10 @@ void HWrunLoop() {
   // lastPosNotPressed = Fader_btn.uniDirectionalSlider_position() < 500;
   // 4-Axis joystick
 
-  hasMoved = Joystick.joystick_hasMoved(0);
-  actionDispatch(103, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(0));
   hasMoved = Joystick.joystick_hasMoved(1);
-  actionDispatch(104, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(1));
+  actionDispatch(103, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(1));
+  hasMoved = Joystick.joystick_hasMoved(0);
+  actionDispatch(104, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(0));
   hasMoved = Joystick.joystick_hasMoved(2);
   actionDispatch(105, HWC_SPEED, hasMoved, false, 0, Joystick.joystick_position(2));
   static bool lastButtonPressed = false;
@@ -581,7 +584,6 @@ void HWrunLoop() {
     actionDispatch(106, HWC_BINARY, lastButtonPressed, !lastButtonPressed);
     lastButtonPressed = Joystick.joystick_buttonIsPressed();
   }
-
 
   setI2Cchain(2);
 
