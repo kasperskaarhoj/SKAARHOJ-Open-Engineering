@@ -82,6 +82,9 @@ void HWrunLoop() {
   // SmartSwitch buttons:
   uint8_t b16Map2[] = {4, 3}; // These numbers refer to the drawing in the web interface
   HWrunLoop_SSWbuttons(b16Map2, 2);
+
+  uint8_t joystickMap[] = {5,6,0,7}; // LR, UD, Wheel, Button
+  HWrunLoop_joystick(joystickMap);
 }
 
 uint8_t HWnumOfAnalogComponents() { return 0; }

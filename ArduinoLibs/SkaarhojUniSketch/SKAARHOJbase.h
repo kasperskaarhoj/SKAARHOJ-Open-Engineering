@@ -2142,6 +2142,7 @@ uint8_t HWsetup() {
 #if (SK_HWEN_JOYSTICK)
   Serial << F("Init Joystick\n");
   joystick.joystick_init(10, 0);
+  joystick.joystick_extendedRange(true);
   statusLED(QUICKBLANK);
 #endif
 #if (SK_HWEN_MENU)
@@ -2643,6 +2644,27 @@ void HWrunLoop_slider(const uint8_t HWc) {
     }
   }
   actionDispatch(HWc, HWC_ANALOG, hasMoved, hasMoved && slider.uniDirectionalSlider_isAtEnd(), 0, slider.uniDirectionalSlider_position());
+}
+#endif
+
+#if SK_HWEN_JOYSTICK
+void HWrunLoop_joystick(const uint8_t *HWcMap) {
+  bool hasMoved = joystick.joystick_hasMoved(1);
+  actionDispatch(HWcMap[1], HWC_SPEED, hasMoved, false, 0, joystick.joystick_position(1));
+  hasMoved = joystick.joystick_hasMoved(0);
+  actionDispatch(HWcMap[0], HWC_SPEED, hasMoved, false, 0, joystick.joystick_position(0));
+  
+  if(HWcMap[2] != 0) {
+    hasMoved = joystick.joystick_hasMoved(2);
+    actionDispatch(HWcMap[2], HWC_SPEED, hasMoved, false, 0, joystick.joystick_position(2));
+  }
+  
+  static bool lastButtonPressed = false;
+  if (joystick.joystick_buttonIsPressed() != lastButtonPressed) {
+    actionDispatch(HWcMap[3], HWC_BINARY, lastButtonPressed, !lastButtonPressed);
+    lastButtonPressed = joystick.joystick_buttonIsPressed();
+  }
+
 }
 #endif
 
