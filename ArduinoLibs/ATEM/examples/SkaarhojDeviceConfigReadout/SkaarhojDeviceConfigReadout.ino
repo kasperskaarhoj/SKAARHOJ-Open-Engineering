@@ -26,14 +26,14 @@ int calibrationCoordinatesY[5];
 
 // No-cost stream operator as described at 
 // http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+//template<class T>
+//inline Print &operator <<(Print &obj, T arg)
+//{  
+//  obj.print(arg); 
+//  return obj; 
+//}
 
-
+#include<Streaming.h>
 
 char buffer[18];
 uint8_t checksumByte;
@@ -41,7 +41,7 @@ uint8_t checksumByte;
 void setup() { 
 
   // Start the Ethernet, Serial (debugging) and UDP:
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial << F("\n- - - - - - - -\nSerial Started\n");  
 
 

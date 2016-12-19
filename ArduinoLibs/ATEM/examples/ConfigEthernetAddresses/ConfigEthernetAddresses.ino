@@ -20,7 +20,7 @@ static uint8_t mac[] = {
 char buffer[18];
 
 void setup() { 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("\n- - - - - - - -\nSerial Started (ConfigMACAddress)\n");
 
   // 10-16: Arduino MAC address (6+1 byte)

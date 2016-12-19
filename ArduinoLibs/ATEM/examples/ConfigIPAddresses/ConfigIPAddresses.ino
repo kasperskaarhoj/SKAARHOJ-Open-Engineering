@@ -21,21 +21,21 @@ static uint8_t atemip[] = {
 
 
 
-// No-cost stream operator as described at 
-// http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
-{  
-  obj.print(arg); 
-  return obj; 
-}
+//// No-cost stream operator as described at 
+//// http://arduiniana.org/libraries/streaming/
+//template<class T>
+//inline Print &operator <<(Print &obj, T arg)
+//{  
+//  obj.print(arg); 
+//  return obj; 
+//}
 
-
+#include<Streaming.h>
 
 char buffer[18];
 
 void setup() { 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("\n- - - - - - - -\nSerial Started (ConfigIPAddresses)\n");
 
   // Set these random values so this initialization is only run once! 
