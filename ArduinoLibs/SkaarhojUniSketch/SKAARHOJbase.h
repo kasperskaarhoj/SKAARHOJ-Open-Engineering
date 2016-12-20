@@ -2867,7 +2867,7 @@ void HWrunLoop_encoders(SkaarhojEncoders &encoders, const uint8_t *encMap, uint8
         }
         break;
       }
-      actionDispatch(encMap[a], HWC_PULSED, actDown, actDown, (((a == 0 && reverseFirst ? -1 : 1) * clicks) << 1) | _systemHWcActionFineFlag[encMap[a] - 1]);
+      actionDispatch(encMap[a], HWC_PULSED | HWC_BINARY, actDown, actDown, (((a == 0 && reverseFirst ? -1 : 1) * clicks) << 1) | _systemHWcActionFineFlag[encMap[a] - 1]);
     }
   }
 }

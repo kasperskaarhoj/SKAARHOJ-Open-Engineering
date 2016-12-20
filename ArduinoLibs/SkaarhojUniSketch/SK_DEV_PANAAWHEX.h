@@ -99,7 +99,7 @@ namespace PANAAWHEX {
       }
 
       retVal = _systemHWcActionCacheFlag[HWc][actIdx] ? (4|0x20) : 5;
-      retVal = PanaAWHEX[devIndex].presetExists(cam, tempByte-1) ? retVal : 0;
+      return PanaAWHEX[devIndex].presetExists(cam, tempByte-1) ? retVal : 0;
       break;
     case 3: // Move
       cam = idxToCamera(globalConfigMem[actionPtr+1]);
@@ -179,26 +179,26 @@ namespace PANAAWHEX {
           break;
         }
       }
-
+      break;
     case 5: // Pedestal
-      int8_t setValue = 0;
       cam = idxToCamera(globalConfigMem[actionPtr+1]);
       if(actDown) {
+        int8_t setValue = 0;
         if(HWcType & HWC_BINARY) {
           setValue = 0;
         }
         if(HWcType & HWC_ANALOG) {
          setValue = map(constrain(value, 0, 1000), 0, 1000, -100, 100);
         }
-      }
+        switch(globalConfigMem[actionPtr+2]) {
+          case 0:
+            PanaAWHEX[devIndex].setPedestalR(cam, setValue);
+            break;
+          case 1:
+            PanaAWHEX[devIndex].setPedestalB(cam, setValue);
+            break;
+        }
 
-      switch(globalConfigMem[actionPtr+2]) {
-        case 0:
-          PanaAWHEX[devIndex].setPedestalR(cam, setValue);
-          break;
-        case 1:
-          PanaAWHEX[devIndex].setPedestalB(cam, setValue);
-          break;
       }
 
       if(pulses & 0xFFFE) {
@@ -240,6 +240,35 @@ namespace PANAAWHEX {
             break;
         }
       }
+      break;
+    case 6: // Preset recall speed
+      cam = idxToCamera(globalConfigMem[actionPtr + 1]);
+      if(actDown) {
+        if(HWcType & HWC_BINARY) {
+          uint8_t value = constrain(globalConfigMem[actionPtr + 2], 1, 30);
+          PanaAWHEX[devIndex].setPresetSpeed(cam, value);
+        }
+        if(HWcType & HWC_ANALOG) {
+          uint8_t value = map(value, 0, 1000, 0, 255);
+          PanaAWHEX[devIndex].setPresetSpeed(cam, value);
+        }
+      }
+
+      if(pulses & 0xFFFE) {
+        uint8_t value = PanaAWHEX[devIndex].getPresetSpeed(cam);
+        value = pulsesHelper(value, 1, 30, false, pulses, 1, 10);
+        PanaAWHEX[devIndex].setPresetSpeed(cam, value);
+      }
+
+      if (extRetValIsWanted()) {
+        uint8_t value = PanaAWHEX[devIndex].getPresetSpeed(cam);
+        extRetVal(map(constrain(value, 1, 30), 1, 30, 0, 100), 2, _systemHWcActionFineFlag[HWc]);
+        extRetValScale(1, 0, 100, 0, 100);
+        extRetValShortLabel(PSTR("Recall spd"));
+        extRetValLongLabel(PSTR("Recall speed cam"), cam);
+        extRetValColor(B011011);
+      }
+      break;
     }
 
     // Default:
