@@ -99,6 +99,8 @@ class ClientPanaAWHExTCP
 	int8_t getPedestalR(uint8_t cam);
 	int8_t getPedestalB(uint8_t cam);
 	uint16_t getIris(uint8_t cam);
+	bool presetExists(uint8_t cam, uint8_t preset);
+	
 
   private:
 	void _sendPtzRequest(uint8_t cam, uint8_t cmdlen, const char* format, ...);
@@ -120,15 +122,13 @@ class ClientPanaAWHExTCP
 	int8_t _pedestalR[PanaAWHE_NUMCAMS];
 	int8_t _pedestalB[PanaAWHE_NUMCAMS];
 	uint16_t _iris[PanaAWHE_NUMCAMS];
-
 	uint8_t _sensorGain[PanaAWHE_NUMCAMS];
 	bool _colorBars[PanaAWHE_NUMCAMS];
+	uint32_t _presetState[PanaAWHE_NUMCAMS];
 
 	uint8_t _stateRequestPointer[PanaAWHE_NUMCAMS];
 	uint32_t _lastStateRequest;
-
 	uint32_t _lastSentCommand[PanaAWHE_NUMCAMS];
-
 	uint8_t _lastStateCam;
 };
 

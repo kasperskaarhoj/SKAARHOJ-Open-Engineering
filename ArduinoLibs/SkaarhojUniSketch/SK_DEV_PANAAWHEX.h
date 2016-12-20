@@ -43,6 +43,63 @@ namespace PANAAWHEX {
       }
       break;
     case 2: // Preset
+      cam = idxToCamera(globalConfigMem[actionPtr+1]);
+      tempByte = globalConfigMem[actionPtr+2]; // Preset selection
+      if(HWcType & HWC_BINARY) {
+        if(actDown) {
+          switch(globalConfigMem[actionPtr + 3]) {
+            case 0:
+            case 2: // Recall
+              PanaAWHEX[devIndex].recallPreset(cam, tempByte-1);
+              break;
+            case 1: // Store
+              PanaAWHEX[devIndex].storePreset(cam, tempByte-1);
+              break;
+            case 3: // Delete
+              PanaAWHEX[devIndex].deletePreset(cam, tempByte-1);
+              break;
+          }
+          _systemHWcActionCacheFlag[HWc][actIdx] = true;
+        }
+        if(actUp) {
+          _systemHWcActionCacheFlag[HWc][actIdx] = false;
+        }
+      }
+
+      if (extRetValIsWanted()) { // Update displays:
+        extRetVal(tempByte, 0);
+
+        snprintf(_extRetShort, 11, "Cam %d: ", cam);
+        _extRetShortPtr += 6;
+        switch (globalConfigMem[actionPtr + 3]) {
+          case 0:
+          case 2:
+            extRetValShortLabel("Rec");
+            break;
+          case 1:
+            extRetValShortLabel("Str");
+            break;
+          case 3:
+            extRetValShortLabel("Del");
+            break;
+        }
+
+        switch (globalConfigMem[actionPtr + 3]) {
+          case 0:
+          case 2:
+            extRetValColor(0b011101);
+            break;
+          case 1:
+            extRetValColor(0b010111);
+            break;
+          case 3:
+            extRetValColor(0b110101);
+            break;
+        }
+      }
+
+      retVal = _systemHWcActionCacheFlag[HWc][actIdx] ? (4|0x20) : 5;
+      retVal = PanaAWHEX[devIndex].presetExists(cam, tempByte-1) ? retVal : 0;
       break;
     case 3: // Move
       cam = idxToCamera(globalConfigMem[actionPtr+1]);

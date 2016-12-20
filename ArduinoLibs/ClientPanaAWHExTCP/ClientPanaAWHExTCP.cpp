@@ -60,6 +60,7 @@ void ClientPanaAWHExTCP::begin(const IPAddress ip){
 	memset(_stateRequestPointer, 0, PanaAWHE_NUMCAMS);
 	memset(_lastSeen, 0, PanaAWHE_NUMCAMS*4);
 	memset(_lastSentCommand, 0, PanaAWHE_NUMCAMS*4); // 32 bit integer
+	memset(_presetState, 0, PanaAWHE_NUMCAMS*4);
 	memset(isOnline, 0, PanaAWHE_NUMCAMS);
 }
 
@@ -72,7 +73,7 @@ void ClientPanaAWHExTCP::serialOutput(bool flag){
 
 void ClientPanaAWHExTCP::_parseIncoming(char* buffer) {
 	uint8_t cam = _cameraIP[3] - _baseAddr;
-	if(cam > PanaAWHE_NUMCAMS) return;
+	if(cam >= PanaAWHE_NUMCAMS) return;
 
 	if(!strncmp(buffer, "ORI:", 4)) {
 		uint16_t val = strtol(buffer+4, NULL, 16);
@@ -103,6 +104,10 @@ void ClientPanaAWHExTCP::_parseIncoming(char* buffer) {
 	} else
 	if(!strncmp(buffer, "ORV:", 4)) {
 		_iris[cam] = strtol(buffer+4, NULL, 16);
+	} else
+	if(!strncmp(buffer, "pE00", 4)) {
+		buffer[4+8] = 0; // Null terminate for strtoul
+		_presetState[cam] = strtoul(buffer+4, NULL, 16);
 	} else {
 		if(_serialOutput > 1) {
 			Serial << "Unhandled response: " << buffer << "\n";
@@ -111,7 +116,7 @@ void ClientPanaAWHExTCP::_parseIncoming(char* buffer) {
 }
 
 void ClientPanaAWHExTCP::_requestState(uint8_t cam) {
-	if(cam > PanaAWHE_NUMCAMS) return;
+	if(cam >= PanaAWHE_NUMCAMS) return;
 
 	char* stateGetters[] = {
 		"QRI", // Gain R
@@ -121,13 +126,14 @@ void ClientPanaAWHExTCP::_requestState(uint8_t cam) {
 		"QGU", // Sensor Gain
 		"QBR", // Color bars
 		"QRV",  // Iris
+		"#PE00" // Presets 01-40
 	};
 
 	if(millis() - _lastStateRequest > 500 && isReady()) {
 		_stateRequestPointer[cam]++;
 		_stateRequestPointer[cam] %= sizeof(stateGetters)/sizeof(char*);
 		if(stateGetters[_stateRequestPointer[cam]][0] == '#') {
-			_sendPtzRequest(cam, 3, stateGetters[_stateRequestPointer[cam]]);
+			_sendPtzRequest(cam, 3, stateGetters[_stateRequestPointer[cam]]+1);
 		} else {
 			_sendCamRequest(cam, 3, stateGetters[_stateRequestPointer[cam]]);
 		}
@@ -376,6 +382,9 @@ int8_t ClientPanaAWHExTCP::getPedestalB(uint8_t cam) {
 }
 uint16_t ClientPanaAWHExTCP::getIris(uint8_t cam) {
 	return _iris[cam];
+}
+bool ClientPanaAWHExTCP::presetExists(uint8_t cam, uint8_t preset) {
+	return _presetState[cam] & (uint32_t)1UL << preset; 
 }
 
 bool ClientPanaAWHExTCP::isReady()	{
