@@ -67,8 +67,14 @@ namespace PANAAWHEX {
         uint16_t value = PanaAWHEX[devIndex].getIris(cam);
         extRetVal(map(value, 0, 1023, 0, 100), 2, _systemHWcActionFineFlag[HWc]);
         extRetValScale(1, 0, 100, 0, 100);
+        if(autoIris) {
+          extRetValShortLabel("Auto");
+          extRetValLongLabel("Auto");
+          extRetValSetLabel(true);
+        }
         extRetValShortLabel(PSTR("Iris"));
         extRetValLongLabel(PSTR("Iris camera "), cam);
+        
         extRetValColor(B011011);
       }
 
@@ -302,6 +308,118 @@ namespace PANAAWHEX {
         extRetValColor(B011011);
       }
       break;
+    case 7: {// Shutter
+      cam = idxToCamera(globalConfigMem[actionPtr+1]);
+      int8_t valueMap[] = {-1,0,-1,2,3,4,5,6,7,8,9,0xA,0xB,0xC};
+      uint8_t currentVal = PanaAWHEX[devIndex].getShutter(cam);
+      uint8_t currentIdx = 0;
+      
+      // Find the index of the current setting
+      for(uint8_t i = 0; i < sizeof(valueMap); i++) {
+        if(currentVal == valueMap[i]) {
+          currentIdx = i;
+          break;
+        }
+      }
+
+      if(actDown) {
+        if(HWcType & HWC_BINARY) {
+          if(globalConfigMem[actionPtr + 2] < sizeof(valueMap)) {
+            uint8_t val = valueMap[globalConfigMem[actionPtr + 2]];
+            PanaAWHEX[devIndex].setShutter(cam, val);
+          }
+        }
+      }
+
+      if(pulses & 0xFFFE) {
+        int8_t newIdx = currentIdx;
+        while(valueMap[newIdx = pulsesHelper(newIdx, 1, sizeof(valueMap)-1, false, pulses, 1, 1)] == -1);
+        PanaAWHEX[devIndex].setShutter(cam, valueMap[newIdx]);
+      }
+
+      if (extRetValIsWanted()) {
+        extRetVal(0,7);
+        switch(valueMap[currentIdx]) {
+          case 0:
+            extRetValTxt("Off", 0);
+            break;
+          case 2: 
+            extRetVal(60, 5);
+            break;
+          case 3: 
+            extRetVal(100, 5);
+            break;
+          case 4:
+            extRetVal(120, 5);
+            break;
+          case 5: 
+            extRetVal(250, 5);
+            break;
+          case 6: 
+            extRetVal(500, 5);
+            break;
+          case 7: 
+            extRetVal(1000, 5);
+            break;
+          case 8: 
+            extRetVal(2000, 5);
+            break;
+          case 9: 
+            extRetVal(4000, 5);
+            break;
+          case 0xA: 
+            extRetVal(10000, 5);
+            break;
+          case 0xB:
+            extRetValTxt("Syncr", 0);
+            break;
+          case 0xC:
+            extRetValTxt("ELC", 0);
+            break;
+          default:
+            extRetValTxt("N/A", 0);
+        }
+
+        extRetValShortLabel(PSTR("Shutter"));
+        extRetValLongLabel(PSTR("Shutter Cam "), cam);
+        extRetValColor(B011110);
+      }
+
+      break;
+    }
+    case 8: { // Sensor gain
+      cam = idxToCamera(globalConfigMem[actionPtr + 1]);
+      uint8_t currentVal = PanaAWHEX[devIndex].getSensorGain(cam);
+
+      if(actDown) {
+        if(HWcType & HWC_BINARY) {
+          uint8_t value = globalConfigMem[actionPtr + 2] * 3;
+          PanaAWHEX[devIndex].setSensorGain(cam, value); // Values > 18 sets auto gain
+        }
+      }
+
+      if(pulses & 0xFFFE) {
+        if(currentVal == 0xFF) currentVal = 21;
+        currentVal /= 3; // Reduce value to 0-7
+        uint8_t value = pulsesHelper(currentVal, 0, 7, false, pulses, 1, 1) * 3;
+        PanaAWHEX[devIndex].setSensorGain(cam, value);
+      }
+
+      if(extRetValIsWanted()) {
+        extRetVal(0, 7);
+        if(currentVal <= 18) {
+          extRetVal(currentVal, 3);
+        } else {
+          extRetValTxt("Auto", 0);
+        }
+
+        extRetValShortLabel(PSTR("Sens.Gain"));
+        extRetValLongLabel(PSTR("Sensor Gain cam "), cam);
+        extRetValColor(B011110);
+      }
+
+      break;
+    }
     }
 
     // Default:

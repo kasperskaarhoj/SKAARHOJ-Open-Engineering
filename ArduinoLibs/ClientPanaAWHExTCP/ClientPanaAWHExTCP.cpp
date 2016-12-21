@@ -64,6 +64,7 @@ void ClientPanaAWHExTCP::begin(const IPAddress ip){
 	memset(isOnline, 0, PanaAWHE_NUMCAMS);
 	memset(_presetSpeed, 0, PanaAWHE_NUMCAMS);
 	memset(_autoIris, 0, PanaAWHE_NUMCAMS);
+	memset(_shutter, 0, PanaAWHE_NUMCAMS);
 }
 
 /**
@@ -117,6 +118,9 @@ void ClientPanaAWHExTCP::_parseIncoming(char* buffer) {
 	} else
 	if(!strncmp(buffer, "uPVS", 4)) {
 		_presetSpeed[cam] = map(constrain(strtoul(buffer+4, NULL, 10), 250, 999), 250, 999, 1, 30);
+	} else 
+	if(!strncmp(buffer, "OSH:", 4)) {
+		_shutter[cam] = strtoul(buffer+4, NULL, 16);
 	} else {
 		if(_serialOutput > 1) {
 			Serial << "Unhandled response: " << buffer << "\n";
@@ -134,6 +138,7 @@ void ClientPanaAWHExTCP::_requestState(uint8_t cam) {
 		"QBP", // Pedestal B
 		"QGU", // Sensor Gain
 		"QBR", // Color bars
+		"QSH", // Shutter
 		"#GI",  // Iris
 		"#PE00", // Presets 01-40
 		"#UPVS", // Preset recall speed
@@ -317,6 +322,7 @@ bool ClientPanaAWHExTCP::setColorBars(uint8_t cam, bool state) {
 bool ClientPanaAWHExTCP::setShutter(uint8_t cam, uint8_t shutter) {
 	if(cam < PanaAWHE_NUMCAMS) {
 		_sendCamRequest(cam, 4, "OSH:%X", constrain(shutter, 0, 0xE));
+		_shutter[cam] = shutter;
 		return true;
 	}
 	return false;
@@ -330,6 +336,7 @@ bool ClientPanaAWHExTCP::setSensorGain(uint8_t cam, uint8_t gain) {
 			gain = 0x80;
 		}
 		_sendCamRequest(cam, 4, "OGU:%02X", gain);
+		_sensorGain[cam] = gain <= 0x80 ? gain-8 : 0xFF;
 		return true;
 	}
 	return false;
@@ -380,7 +387,7 @@ bool ClientPanaAWHExTCP::setPedestalB(uint8_t cam, int8_t pedestal) {
 }
 
 bool ClientPanaAWHExTCP::setIris(uint8_t cam, uint16_t iris) {
-	if(cam < PanaAWHE_NUMCAMS) {
+	if(cam < PanaAWHE_NUMCAMS && !_autoIris[cam]) {
 		_sendPtzRequest(cam, 3, "AXI%03X", map(iris, 0, 1023, 0x555, 0xFFF));
 		_iris[cam] = iris;
 		return true;
@@ -415,10 +422,14 @@ uint16_t ClientPanaAWHExTCP::getIris(uint8_t cam) {
 bool ClientPanaAWHExTCP::getAutoIris(uint8_t cam) {
 	return _autoIris[cam];
 }
-
-
 uint8_t ClientPanaAWHExTCP::getPresetSpeed(uint8_t cam) {
 	return _presetSpeed[cam];
+}
+uint8_t ClientPanaAWHExTCP::getShutter(uint8_t cam) {
+	return _shutter[cam];
+}
+uint8_t ClientPanaAWHExTCP::getSensorGain(uint8_t cam) {
+	return _sensorGain[cam];
 }
 
 bool ClientPanaAWHExTCP::presetExists(uint8_t cam, uint8_t preset) {
