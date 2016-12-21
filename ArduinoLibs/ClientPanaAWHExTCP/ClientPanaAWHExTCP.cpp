@@ -63,6 +63,7 @@ void ClientPanaAWHExTCP::begin(const IPAddress ip){
 	memset(_presetState, 0, PanaAWHE_NUMCAMS*4);
 	memset(isOnline, 0, PanaAWHE_NUMCAMS);
 	memset(_presetSpeed, 0, PanaAWHE_NUMCAMS);
+	memset(_autoIris, 0, PanaAWHE_NUMCAMS);
 }
 
 /**
@@ -103,8 +104,13 @@ void ClientPanaAWHExTCP::_parseIncoming(char* buffer) {
 	if(!strncmp(buffer, "OBR:", 4) || !strncmp(buffer, "DCB:", 4)) {
 		_colorBars[cam] = buffer[4] == '1';
 	} else
-	if(!strncmp(buffer, "ORV:", 4)) {
-		_iris[cam] = strtol(buffer+4, NULL, 16);
+	if(!strncmp(buffer, "gi", 2)) {
+		_autoIris[cam] = buffer[5] - '0';
+		buffer[5] = 0; // Null terminate for strtol
+		_iris[cam] = map(strtol(buffer+2, NULL, 16), 0x555, 0xFFF, 0, 0x3FF);
+	} else
+	if(!strncmp(buffer, "axi", 3)) {
+		_iris[cam] = map(strtol(buffer+3, NULL, 16), 0x555, 0xFFF, 0, 0x3FF);
 	} else
 	if(!strncmp(buffer, "pE00", 4)) {
 		_presetState[cam] = strtoul(buffer+4+2, NULL, 16);
@@ -128,9 +134,9 @@ void ClientPanaAWHExTCP::_requestState(uint8_t cam) {
 		"QBP", // Pedestal B
 		"QGU", // Sensor Gain
 		"QBR", // Color bars
-		"QRV",  // Iris
+		"#GI",  // Iris
 		"#PE00", // Presets 01-40
-		"#UPVS" // Preset recall speed
+		"#UPVS", // Preset recall speed
 	};
 
 	if(millis() - _lastStateRequest > 500 && isReady()) {
@@ -258,18 +264,22 @@ bool ClientPanaAWHExTCP::onTouchAutofocus(uint8_t cam) {
 	return true;
 }
 bool ClientPanaAWHExTCP::setAutoIris(uint8_t cam, bool enable) {
-	_sendPtzRequest(cam, 1, "D3%d", enable);
-	return true;
+	if(cam < PanaAWHE_NUMCAMS) {
+		_sendPtzRequest(cam, 1, "D3%d", enable);
+		_autoIris[cam] = enable;
+		return true;
+	}
+	return false;
 }
 bool ClientPanaAWHExTCP::deletePreset(uint8_t cam, uint8_t presetNum) {	// 00-99
-	_sendPtzRequest(cam, 1, "C%02d", constrain(presetNum, 0, 99));
+	_sendPtzRequest(cam, 3, "C%02d", constrain(presetNum, 0, 99));
 	if(cam < PanaAWHE_NUMCAMS && presetNum < 32) {
 		_presetState[cam] &= ~(1UL << presetNum);
 	}
 	return true;
 }
 bool ClientPanaAWHExTCP::storePreset(uint8_t cam, uint8_t presetNum) {	// 00-99
-	_sendPtzRequest(cam, 1, "M%02d", constrain(presetNum, 0, 99));
+	_sendPtzRequest(cam, 3, "M%02d", constrain(presetNum, 0, 99));
 	if(cam < PanaAWHE_NUMCAMS && presetNum < 32) {
 		_presetState[cam] |= 1UL << presetNum;
 	}
@@ -371,7 +381,7 @@ bool ClientPanaAWHExTCP::setPedestalB(uint8_t cam, int8_t pedestal) {
 
 bool ClientPanaAWHExTCP::setIris(uint8_t cam, uint16_t iris) {
 	if(cam < PanaAWHE_NUMCAMS) {
-		_sendCamRequest(cam, 4, "ORV:%03X", iris);
+		_sendPtzRequest(cam, 3, "AXI%03X", map(iris, 0, 1023, 0x555, 0xFFF));
 		_iris[cam] = iris;
 		return true;
 	}
@@ -402,6 +412,10 @@ int8_t ClientPanaAWHExTCP::getPedestalB(uint8_t cam) {
 uint16_t ClientPanaAWHExTCP::getIris(uint8_t cam) {
 	return _iris[cam];
 }
+bool ClientPanaAWHExTCP::getAutoIris(uint8_t cam) {
+	return _autoIris[cam];
+}
+
 
 uint8_t ClientPanaAWHExTCP::getPresetSpeed(uint8_t cam) {
 	return _presetSpeed[cam];

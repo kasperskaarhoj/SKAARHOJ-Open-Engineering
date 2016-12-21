@@ -30,18 +30,51 @@ namespace PANAAWHEX {
 
     switch (globalConfigMem[actionPtr]) {
     case 0: // Focus
-      break;
-    case 1: // Iris
       cam = idxToCamera(globalConfigMem[actionPtr+1]);
       if(actDown) {
         if(HWcType & HWC_BINARY) {
-
+          PanaAWHEX[devIndex].onTouchAutofocus(cam);
+        }
+        if(HWcType & HWC_ANALOG) {
+          PanaAWHEX[devIndex].doFocus(cam, map(value, 0, 1000, 1, 99));
+        }
+      }
+      break;
+    case 1: {// Iris
+      cam = idxToCamera(globalConfigMem[actionPtr+1]);
+      bool autoIris = PanaAWHEX[devIndex].getAutoIris(cam);
+      if(actDown) {
+        if(HWcType & HWC_BINARY) {
+          PanaAWHEX[devIndex].setAutoIris(cam, !autoIris);
+          _systemHWcActionCacheFlag[HWc][actIdx] = true;
         }
         if(HWcType & HWC_ANALOG) {
           PanaAWHEX[devIndex].setIris(cam, map(value, 0, 1000, 0, 1023));
         }
       }
+
+      if(actUp && HWcType & HWC_BINARY) {
+        _systemHWcActionCacheFlag[HWc][actIdx] = false;
+      }
+
+      if(pulses & 0xFFFE) {
+        uint16_t iris = PanaAWHEX[devIndex].getIris(cam);
+        iris = pulsesHelper(iris, 0, 1023, false, pulses, 10, 100);
+        PanaAWHEX[devIndex].setIris(cam, iris);
+      }
+
+      if (extRetValIsWanted()) {
+        uint16_t value = PanaAWHEX[devIndex].getIris(cam);
+        extRetVal(map(value, 0, 1023, 0, 100), 2, _systemHWcActionFineFlag[HWc]);
+        extRetValScale(1, 0, 100, 0, 100);
+        extRetValShortLabel(PSTR("Iris"));
+        extRetValLongLabel(PSTR("Iris camera "), cam);
+        extRetValColor(B011011);
+      }
+
+      return (_systemHWcActionCacheFlag[HWc][actIdx] || autoIris) ? (4 | 0x20) : 5;
       break;
+    }
     case 2: // Preset
       cam = idxToCamera(globalConfigMem[actionPtr+1]);
       tempByte = globalConfigMem[actionPtr+2]; // Preset selection

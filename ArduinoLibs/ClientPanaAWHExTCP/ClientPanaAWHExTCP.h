@@ -102,6 +102,7 @@ class ClientPanaAWHExTCP
 	uint16_t getIris(uint8_t cam);
 	uint8_t getPresetSpeed(uint8_t cam);
 	bool presetExists(uint8_t cam, uint8_t preset);
+	bool getAutoIris(uint8_t cam);
 
 
   private:
@@ -126,6 +127,7 @@ class ClientPanaAWHExTCP
 	uint16_t _iris[PanaAWHE_NUMCAMS];
 	uint8_t _sensorGain[PanaAWHE_NUMCAMS];
 	bool _colorBars[PanaAWHE_NUMCAMS];
+	bool _autoIris[PanaAWHE_NUMCAMS];
 	uint32_t _presetState[PanaAWHE_NUMCAMS];
 	uint8_t _presetSpeed[PanaAWHE_NUMCAMS];
 
