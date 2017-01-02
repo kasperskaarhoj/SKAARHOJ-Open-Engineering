@@ -30,9 +30,9 @@ void setup()   {
   //display.begin(0); // Demo display
   //display.begin(0, 0x3, 32, true); // BI16-1x6OLED
   //display.begin(1, 0x3, 32, true); // BI16-1x8OLED
-  // display.begin(2, 0x3, 32); // PCB-SIL-1x6OLED
-  //display.begin(x, 0x1F, 32, true); // PCB-SIL-1x10OLED - not tested yet, substitute x with the A0+A1 value
-  display.begin(3, 0x3, 32);    // PCB-1x6 
+  //display.begin(2, 0x3, 32); // PCB-SIL-1x6OLED
+   display.begin(3, 0x1F, 32, true); // PCB-SIL-1x10OLED (addr: 2+3)
+  //display.begin(3, 0x3, 32);    // PCB-1x6 
 }
 
 int8_t dy = 1, dx = 1;
