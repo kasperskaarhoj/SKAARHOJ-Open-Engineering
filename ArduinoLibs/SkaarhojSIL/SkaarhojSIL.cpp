@@ -280,8 +280,7 @@ bool SkaarhojSIL::isButtonIn(uint8_t buttonNumber, uint16_t allButtonsState)	{
 	return false;
 }
 
-
-
+#include <Streaming.h>
 // Private methods:
 void SkaarhojSIL::_writeButtonLed(uint8_t buttonNumber, uint8_t color)  {
 	if (_validColorNumber(color) && _validButtonNumber(buttonNumber) && ((_buttonColorCache[(buttonNumber-1)] != color) || _disableColorCache))		{
@@ -290,8 +289,8 @@ void SkaarhojSIL::_writeButtonLed(uint8_t buttonNumber, uint8_t color)  {
 		// Set color R,G,B components
 		for(uint8_t i=0; i<3; i++) {
 			uint8_t c = (i==0?_colorBalanceRed[color]:
-						(i==1?_colorBalanceGreen[color]:
-							  _colorBalanceBlue[color]));
+						(i==1?_colorBalanceBlue[color]:
+							  _colorBalanceGreen[color]));
 			if(buttonNumber>5) {
 				_buttonLed2.setLEDDimmed((buttonNumber-6)*3+i, 100-c);
 			} else {
