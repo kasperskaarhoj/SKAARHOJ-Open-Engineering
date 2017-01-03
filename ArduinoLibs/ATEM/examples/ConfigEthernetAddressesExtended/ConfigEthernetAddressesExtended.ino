@@ -35,7 +35,7 @@ static uint8_t videohubip[] = {
 char buffer[18];
 
 void setup() { 
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("\n- - - - - - - -\nSerial Started (ConfigEthernetAddresses - EXTENDED)\n");
 
   // Set these random values so this initialization is only run once!

@@ -20,57 +20,58 @@ static uint8_t buffer32256[SKAARHOJOLED32x256_LCDHEIGHT * SKAARHOJOLED32x256_LCD
 
 // The most basic function, set a single pixel
 void SkaarhojOLED32x256::drawPixel(int16_t x, int16_t y, uint16_t color) {
-	if ((x < 0) || (x >= width()) || (y < 0) || (y >= height()))
-  	   return;
+  if ((x < 0) || (x >= width()) || (y < 0) || (y >= height()))
+    return;
 
-	if ((bbox_width > 0 && x >= bbox_width) || (bbox_height > 0 && y >= bbox_height))
-    	return;
+  if ((bbox_width > 0 && x >= bbox_width) || (bbox_height > 0 && y >= bbox_height))
+    return;
 
-	x += bbox_x;
-	y += bbox_y;
+  x += bbox_x;
+  y += bbox_y;
 
-	uint8_t ox = x;
-	uint8_t oy = y;
-	for (uint8_t a = 0; a < (_zoom2Xenabled ? 4 : 1); a++) {
-	    if (_zoom2Xenabled) {
-			x=ox*2+(a&B1);
-			y=oy*2+((a>>1)&B1);
-	    }
-	    // check rotation, move pixel around if necessary
-	    switch (getRotation()) {
-	    case 1:
-	      swap(x, y);
-	      x = WIDTH - x - 1;
-	      break;
-	    case 2:
-	      x = WIDTH - x - 1;
-	      y = HEIGHT - y - 1;
-	      break;
-	    case 3:
-	      swap(x, y);
-	      y = HEIGHT - y - 1;
-	      break;
-	    }
+  uint8_t ox = x;
+  uint8_t oy = y;
+  for (uint8_t a = 0; a < (_zoom2Xenabled ? 4 : 1); a++) {
+    if (_zoom2Xenabled) {
+      x = ox * 2 + (a & B1);
+      y = oy * 2 + ((a >> 1) & B1);
+    }
+    // check rotation, move pixel around if necessary
+    switch (getRotation()) {
+    case 1:
+      swap(x, y);
+      x = WIDTH - x - 1;
+      break;
+    case 2:
+      x = WIDTH - x - 1;
+      y = HEIGHT - y - 1;
+      break;
+    case 3:
+      swap(x, y);
+      y = HEIGHT - y - 1;
+      break;
+    }
 
-	    if(color == WHITE) {
-			buffer32256[y*SKAARHOJOLED32x256_LCDHEIGHT + x/8] |= 1 << (x & 0x7);
-		} else {
-			buffer32256[y*SKAARHOJOLED32x256_LCDHEIGHT + x/8] &= ~(1 << (x & 0x7));
-		}
-	}
+    if (color == WHITE) {
+      buffer32256[y * SKAARHOJOLED32x256_LCDHEIGHT + x / 8] |= 1 << (x & 0x7);
+    } else {
+      buffer32256[y * SKAARHOJOLED32x256_LCDHEIGHT + x / 8] &= ~(1 << (x & 0x7));
+    }
+  }
 }
 
 // Empty constructor.
 SkaarhojOLED32x256::SkaarhojOLED32x256() : Adafruit_GFX(SKAARHOJOLED32x256_LCDWIDTH, SKAARHOJOLED32x256_LCDHEIGHT) {}
 
-void SkaarhojOLED32x256::begin(uint8_t address, uint8_t cs) {
+void SkaarhojOLED32x256::begin(uint8_t address, uint8_t cs, uint8_t base, bool PCA9672) {
 // NOTE: Wire.h should definitely be initialized at this point! (Wire.begin())
 
 #if defined(ARDUINO_SKAARDUINO_V1) || defined(ARDUINO_SKAARDUINO_DUE)
   SPI.begin();
 #endif
   _zoom2Xenabled = false;
-  _boardAddress = 88 | (address & B111); // 0-7
+  _boardAddress = base | (address & B111); // 0-7
+  _PCA9672 = PCA9672;
 
   // Set SPI pins up:
   _clockPin = 48;
@@ -156,7 +157,7 @@ void SkaarhojOLED32x256::begin(uint8_t address, uint8_t cs) {
   // Select default linear gray scale table
   sendCommand(0xB7, cs);
 
-  // Set pre charge 
+  // Set pre charge
   sendCommand(0xBB, cs);
   sendCommand(0x35, cs);
   sendCommand(0xFF, cs);
@@ -214,11 +215,11 @@ void SkaarhojOLED32x256::invertDisplay(bool i, uint8_t cs) {
 
 void SkaarhojOLED32x256::display(uint8_t cs) {
   sendCommand(0x15, cs); // Column reset:
-  sendCommand(0, cs);      // 0
+  sendCommand(0, cs);    // 0
   sendCommand(0x1F, cs); // 31
   sendCommand(0x75, cs); // Row reset:
-  sendCommand(0, cs);       // 0
-  sendCommand(0x1F, cs);      // 31
+  sendCommand(0, cs);    // 0
+  sendCommand(0x1F, cs); // 31
 
   // SPI
   chipSelect(0);
@@ -226,7 +227,7 @@ void SkaarhojOLED32x256::display(uint8_t cs) {
   chipSelect(cs);
 
   for (uint16_t i = 0; i < (SKAARHOJOLED32x256_LCDWIDTH * SKAARHOJOLED32x256_LCDHEIGHT / 8); i++) {
-  	  fastSPIwrite(buffer32256[i]);
+    fastSPIwrite(buffer32256[i]);
   }
 
   chipSelect(0);
@@ -269,8 +270,12 @@ void SkaarhojOLED32x256::setVCC(bool vcc) {
 
 void SkaarhojOLED32x256::writeControlPins() {
   Wire.beginTransmission(_boardAddress);
-  Wire.write(((uint8_t)~_cs));
-  Wire.write((_rst << 7) | (_dc << 6) | (_vcc << 5));
+  if (_PCA9672) {
+    Wire.write((((uint8_t)~_cs) & 0x1F) | (_rst << 7) | (_dc << 6) | (_vcc << 5));
+  } else {
+    Wire.write(((uint8_t)~_cs) & 0x1F);
+    Wire.write((_rst << 7) | (_dc << 6) | (_vcc << 5));
+  }
   Wire.endTransmission();
 }
 void SkaarhojOLED32x256::zoom2x(bool enable) { _zoom2Xenabled = enable; }
