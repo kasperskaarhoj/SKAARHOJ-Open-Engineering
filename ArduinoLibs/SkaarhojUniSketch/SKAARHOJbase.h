@@ -3309,8 +3309,14 @@ uint16_t evaluateAction_system(const uint16_t actionPtr, const uint8_t HWc, cons
   case 13: // Range Limiter
     if (globalConfigMem[actionPtr + 1] < 4) {
       if (actDown) {
-        _systemRangeLower[globalConfigMem[actionPtr + 1]] = 0;
-        _systemRangeUpper[globalConfigMem[actionPtr + 1]] = 255;
+        if(HWcType & HWC_BINARY) {
+          _systemRangeLower[globalConfigMem[actionPtr + 1]] = 0;
+          _systemRangeUpper[globalConfigMem[actionPtr + 1]] = 255;
+        }
+        if(HWcType & HWC_ANALOG) {
+          _systemRangeLower[globalConfigMem[actionPtr + 1]] = 0;
+          _systemRangeUpper[globalConfigMem[actionPtr + 1]] = map(value, 0, 1000, 1, 255);
+        }
       }
       if (pulses & 0xFFFE) { // Encoder:
         if (!(pulses & B1)) {
