@@ -141,12 +141,6 @@ void SkaarhojSIL::setButtonType(uint8_t type)	{
 		break;
 	}
 }
-void SkaarhojSIL::setColorBalance(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart) {
-	if (_validColorNumber(colorNumber) && _validPercentage(redPart) && _validPercentage(greenPart))	{
-		_colorBalanceRed[colorNumber] = redPart;
-		_colorBalanceGreen[colorNumber] = greenPart;
-	}
-}
 void SkaarhojSIL::setColorBalanceRGB(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart, uint8_t bluePart) {
 	if (_validColorNumber(colorNumber) && _validPercentage(redPart) && _validPercentage(greenPart) && _validPercentage(bluePart))	{
 		_colorBalanceRed[colorNumber] = redPart;

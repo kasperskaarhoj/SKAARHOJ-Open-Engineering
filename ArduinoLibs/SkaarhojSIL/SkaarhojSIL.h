@@ -68,7 +68,6 @@ class SkaarhojSIL
 	void disableColorCache(bool disable);
 	void debugMode();
 	void setButtonType(uint8_t type);
-	void setColorBalance(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart);
 	void setColorBalanceRGB(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart, uint8_t bluePart);
 	uint8_t getColorRed(uint8_t colorNumber);
 	uint8_t getColorGreen(uint8_t colorNumber);
