@@ -45,6 +45,8 @@ private:
   bool _joystick_buttonStatus;
   bool _joystick_buttonStatusLastUp;
   bool _joystick_buttonStatusLastDown;
+  int16_t _joystick_range;
+  uint8_t _joystick_sentCenterPos;
 
   uint8_t _uniDirectionalSlider_pinIndex;
   int16_t _uniDirectionalSlider_sliderTolerance;
@@ -62,11 +64,13 @@ public:
   // Joystick functions:
   void joystick_init(int16_t tolerance, uint8_t i2cAddress, uint8_t index = 0);
   bool joystick_hasMoved(uint8_t index);
-  int joystick_position(uint8_t index);
+  int16_t joystick_position(uint8_t index);
   bool joystick_buttonUp();
   bool joystick_buttonDown();
   bool joystick_buttonIsPressed();
   int joystick_AnalogRead(uint8_t index);
+  void joystick_extendedRange(bool state);
+  bool joystick_isAtCenter(uint8_t index);
 
   // Slider functions:
   void uniDirectionalSlider_init(int16_t sliderTolerance, int16_t sliderLowEndOffset, int16_t sliderHighEndOffset, uint8_t i2cAddress, uint8_t pinIndex);
