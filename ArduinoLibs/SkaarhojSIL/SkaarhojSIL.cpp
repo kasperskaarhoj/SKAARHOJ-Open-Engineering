@@ -111,18 +111,18 @@ void SkaarhojSIL::setButtonType(uint8_t type)	{
 		_colorBalanceRed[2] = 70;
 		_colorBalanceRed[3] = 0;
 		_colorBalanceRed[4] = 30;
-		_colorBalanceRed[5] = 5;
+		_colorBalanceRed[5] = 2;
 		_colorBalanceRed[6] = 0;
 		_colorBalanceRed[7] = 0;
 		_colorBalanceRed[8] = 0;
 		_colorBalanceRed[9] = 100*0.5;
 
 		_colorBalanceGreen[0] = 0;
-		_colorBalanceGreen[1] = 70*0.8;	// Most recent batch of buttons require this - maybe find another way to create this balance?
+		_colorBalanceGreen[1] = 70;	// Most recent batch of buttons require this - maybe find another way to create this balance?
 		_colorBalanceGreen[2] = 0;
 		_colorBalanceGreen[3] = 70;
-		_colorBalanceGreen[4] = 30*0.8;	// Most recent batch of buttons require this - maybe find another way to create this balance?
-		_colorBalanceGreen[5] = 5*0.8;	// Most recent batch of buttons require this - maybe find another way to create this balance?
+		_colorBalanceGreen[4] = 30;	// Most recent batch of buttons require this - maybe find another way to create this balance?
+		_colorBalanceGreen[5] = 5;	// Most recent batch of buttons require this - maybe find another way to create this balance?
 		_colorBalanceGreen[6] = 0;
 		_colorBalanceGreen[7] = 0;
 		_colorBalanceGreen[8] = 0;
@@ -133,7 +133,7 @@ void SkaarhojSIL::setButtonType(uint8_t type)	{
 		_colorBalanceBlue[2] = 0;
 		_colorBalanceBlue[3] = 0;
 		_colorBalanceBlue[4] = 0;
-		_colorBalanceBlue[5] = 0;
+		_colorBalanceBlue[5] = 5;
 		_colorBalanceBlue[6] = 100;
 		_colorBalanceBlue[7] = 50;
 		_colorBalanceBlue[8] = 20;
