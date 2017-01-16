@@ -36,6 +36,10 @@ void ClientAJAKumoTCP::begin(IPAddress ip) {
 	_receivedRouting = 0;
 }
 
+bool ClientAJAKumoTCP::isConnected() {
+	return _isConnected;
+}
+
 void ClientAJAKumoTCP::serialOutput(uint8_t level) {
 	_serialOutput = level;
 }
@@ -90,10 +94,17 @@ void ClientAJAKumoTCP::transmitPacket(char* data) {
 	free(_buffer);
 }
 
-void ClientAJAKumoTCP::routeInputToOutput(uint8_t input, uint8_t output) {
+void ClientAJAKumoTCP::routeInputToOutput(uint8_t input, uint8_t output, bool wait) {
 	char buffer[10];
 	sprintf(buffer, "TI,%d,%d", output, input);
 	transmitPacket(buffer);
+
+	if (wait)	{
+	  uint32_t timer = millis();
+	  while(getRoute(output) != input && millis()-500 < timer)	{
+		runLoop();
+	  }
+  }
 }
 
 char ClientAJAKumoTCP::toASCII(uint8_t c) {
@@ -233,8 +244,8 @@ void ClientAJAKumoTCP::runLoop() {
 	if(_client.connected()) {
 		receiveData();
 
-		if(millis() - _lastRoutingUpdate > 500) {
-			if(_receivedRouting == _updatePointer || millis() - _lastSingleRouteUpdate > 100) {
+		if(millis() - _lastRoutingUpdate > 300) {
+			if(_receivedRouting == _updatePointer || millis() - _lastSingleRouteUpdate > 50) {
 				_updatePointer = ++_updatePointer % ClientAJAKumoTCP_NUMOUTPUTS;
 				updateRouting(_updatePointer);
 				_lastSingleRouteUpdate = millis();

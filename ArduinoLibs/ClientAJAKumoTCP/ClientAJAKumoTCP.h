@@ -66,10 +66,11 @@ public:
 	ClientAJAKumoTCP();
 	void begin(IPAddress ip);
 
-	void routeInputToOutput(uint8_t input, uint8_t output);
+	void routeInputToOutput(uint8_t input, uint8_t output, bool wait=false);
 	uint8_t getRoute(uint8_t output);
 	void runLoop();
 	void serialOutput(uint8_t level);
+	bool isConnected();
 
 };
 
