@@ -36,11 +36,15 @@ private:
 	char toASCII(uint8_t c);
 	uint8_t fromASCII(char c);
 	bool receiveData(); 
-	void transmitPacket(char *buffer);
+	void transmitPacket(char *buffer, bool useBuffer = false);
 	void parseIncoming(uint8_t *buffer, uint8_t len);
 	void updateRouting(uint8_t num);
 	void handleCmd(char* cmd, char* parameter, char* data);
 	uint16_t hexToDec(char* str, uint8_t len);
+	bool _bundleEnabled;
+
+	uint8_t _outputBuffer[255];
+	uint8_t _outputPos;
 
 	uint8_t _sessionID;
 
@@ -68,9 +72,12 @@ public:
 
 	void routeInputToOutput(uint8_t input, uint8_t output, bool wait=false);
 	uint8_t getRoute(uint8_t output);
-	void runLoop();
+	void runLoop(bool noWait=false);
 	void serialOutput(uint8_t level);
 	bool isConnected();
+
+	void startBundle();
+	void endBundle();
 
 };
 
