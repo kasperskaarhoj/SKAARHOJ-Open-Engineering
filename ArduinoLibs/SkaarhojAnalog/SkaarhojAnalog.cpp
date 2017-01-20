@@ -173,10 +173,10 @@ bool SkaarhojAnalog::uniDirectionalSlider_hasMoved() {
   int sliderValue = _analogConv.analogRead(_uniDirectionalSlider_pinIndex) >> 2;
   bool closeToEnd = false;
 
-  if (sliderValue < _uniDirectionalSlider_sliderTolerance && sliderValue < _uniDirectionalSlider_previousSliderValue)
-    closeToEnd = true;
-  if (sliderValue > 1024 - _uniDirectionalSlider_sliderTolerance && sliderValue > _uniDirectionalSlider_previousSliderValue)
-    closeToEnd = true;
+  if (sliderValue - _uniDirectionalSlider_sliderLowEndOffset < _uniDirectionalSlider_sliderTolerance && sliderValue < _uniDirectionalSlider_previousSliderValue)
+  closeToEnd = true;
+  if (sliderValue + _uniDirectionalSlider_sliderHighEndOffset > 1023 - _uniDirectionalSlider_sliderTolerance && sliderValue > _uniDirectionalSlider_previousSliderValue)
+  closeToEnd = true;
 
   if (abs(sliderValue - _uniDirectionalSlider_previousSliderValue) >= _uniDirectionalSlider_sliderTolerance || closeToEnd) {
 
