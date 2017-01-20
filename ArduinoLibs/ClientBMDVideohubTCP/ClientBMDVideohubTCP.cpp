@@ -57,10 +57,10 @@ void ClientBMDVideohubTCP::_resetDeviceStateVariables() {
   _numProcUnits = 0;
   _serialPorts = 0;
 
-  for (uint8_t inputNum = 0; inputNum < ClientBMDVideohubTCP_NUMINPUTS; inputNum++) {
+  for (uint8_t inputNum = 0; inputNum < ClientBMDVideohubTCP_LABELCOUNT; inputNum++) {
     memset(_inputLabels[inputNum], 0, ClientBMDVideohubTCP_LABELLEN);
   }
-  for (uint8_t outputNum = 0; outputNum < ClientBMDVideohubTCP_NUMOUTPUTS; outputNum++) {
+  for (uint8_t outputNum = 0; outputNum < ClientBMDVideohubTCP_LABELCOUNT; outputNum++) {
     memset(_outputLabels[outputNum], 0, ClientBMDVideohubTCP_LABELLEN);
     _outputLocks[outputNum] = ' ';
     _outputRouting[outputNum] = 255;
@@ -161,7 +161,7 @@ void ClientBMDVideohubTCP::_parseline() {
       break;
     case 3: // INPUT LABELS
       inputNum = parseInt();
-      if (inputNum < ClientBMDVideohubTCP_NUMINPUTS) {
+      if (inputNum < ClientBMDVideohubTCP_LABELCOUNT) {
         _bufferReadIndex++;
 
         uint8_t idx = 0;
@@ -183,7 +183,7 @@ void ClientBMDVideohubTCP::_parseline() {
       break;
     case 4: // OUTPUT LABELS
       outputNum = parseInt();
-      if (outputNum < ClientBMDVideohubTCP_NUMOUTPUTS) {
+      if (outputNum < ClientBMDVideohubTCP_LABELCOUNT) {
         _bufferReadIndex++;
 
         uint8_t idx = 0;
