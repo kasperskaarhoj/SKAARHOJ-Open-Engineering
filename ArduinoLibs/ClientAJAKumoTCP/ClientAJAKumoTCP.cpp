@@ -34,6 +34,12 @@ void ClientAJAKumoTCP::begin(IPAddress ip) {
 
 	_serialOutput = 0;
 	_receivedRouting = 0;
+	_bundleEnabled = false;
+	_outputPos = 0;
+}
+
+bool ClientAJAKumoTCP::isConnected() {
+	return _isConnected;
 }
 
 void ClientAJAKumoTCP::serialOutput(uint8_t level) {
@@ -53,7 +59,13 @@ uint16_t ClientAJAKumoTCP::calculateChecksum(uint8_t* packet, uint8_t len) {
 	return retVal;
 }
 
-void ClientAJAKumoTCP::transmitPacket(char* data) {
+void ClientAJAKumoTCP::transmitPacket(char* data, bool useBuffer) {
+	if(useBuffer) {
+		_client.write(_outputBuffer, _outputPos);
+		_outputPos = 0;
+		return;
+	}
+
 	uint8_t len = strlen(data);
 	uint8_t *_buffer = (uint8_t*)malloc(6 + len);
 	// Prepare packet
@@ -84,16 +96,30 @@ void ClientAJAKumoTCP::transmitPacket(char* data) {
 			Serial << "\n";
 		}
 
-		_client.write(_buffer, 6 + len);
+		if(_bundleEnabled) {
+			if(_outputPos + 6 + len > 255) {
+				transmitPacket(0, true);
+			}
+			memcpy(_outputBuffer + _outputPos, _buffer, 6 + len);
+			_outputPos += 6 + len;
+		} else {
+			_client.write(_buffer, 6 + len);
+		}
 	}
-
 	free(_buffer);
 }
 
-void ClientAJAKumoTCP::routeInputToOutput(uint8_t input, uint8_t output) {
+void ClientAJAKumoTCP::routeInputToOutput(uint8_t input, uint8_t output, bool wait) {
 	char buffer[10];
 	sprintf(buffer, "TI,%d,%d", output, input);
 	transmitPacket(buffer);
+
+	if (wait)	{
+	  uint32_t timer = millis();
+	  while(getRoute(output) != input && millis()-100 < timer)	{
+		runLoop(true); // Disable the normal wait in route updating
+	  }
+  }
 }
 
 char ClientAJAKumoTCP::toASCII(uint8_t c) {
@@ -207,6 +233,17 @@ void ClientAJAKumoTCP::updateRouting(uint8_t num) {
 	}
 }
 
+void ClientAJAKumoTCP::startBundle() {
+	_bundleEnabled = true;
+}
+
+void ClientAJAKumoTCP::endBundle() {
+	_bundleEnabled = false;
+	if(_outputPos > 0) {
+		transmitPacket(0, true);
+	}
+}
+
 bool ClientAJAKumoTCP::receiveData() {
 	_inputPos = 0;
 	memset(_inputBuffer, 0, ClientAJAKumoTCP_INPUTBUFFER_SIZE);
@@ -229,12 +266,12 @@ bool ClientAJAKumoTCP::receiveData() {
 	return false;
 }
 
-void ClientAJAKumoTCP::runLoop() {
+void ClientAJAKumoTCP::runLoop(bool noWait) {
 	if(_client.connected()) {
 		receiveData();
 
-		if(millis() - _lastRoutingUpdate > 500) {
-			if(_receivedRouting == _updatePointer || millis() - _lastSingleRouteUpdate > 100) {
+		if(millis() - _lastRoutingUpdate > 300 || noWait) {
+			if(_receivedRouting == _updatePointer || millis() - _lastSingleRouteUpdate > 50 || noWait) {
 				_updatePointer = ++_updatePointer % ClientAJAKumoTCP_NUMOUTPUTS;
 				updateRouting(_updatePointer);
 				_lastSingleRouteUpdate = millis();

@@ -38,16 +38,19 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include <Ethernet.h>
 #include "SkaarhojPgmspace.h" - 23 / 2 2014
 
-#define ClientBMDVideohubTCP_NUMINPUTS 16
-#define ClientBMDVideohubTCP_NUMOUTPUTS 16
+#define ClientBMDVideohubTCP_NUMINPUTS 72
+#define ClientBMDVideohubTCP_NUMOUTPUTS 72
 #define ClientBMDVideohubTCP_LABELLEN 10
+
+// How many in/out labels the system should allocate memory for
+#define ClientBMDVideohubTCP_LABELCOUNT 16
 
 class ClientBMDVideohubTCP : public SkaarhojTCPClient {
 private:
   bool _devicePresent;
 
-  char _inputLabels[ClientBMDVideohubTCP_NUMINPUTS][ClientBMDVideohubTCP_LABELLEN];
-  char _outputLabels[ClientBMDVideohubTCP_NUMOUTPUTS][ClientBMDVideohubTCP_LABELLEN];
+  char _inputLabels[ClientBMDVideohubTCP_LABELCOUNT][ClientBMDVideohubTCP_LABELLEN];
+  char _outputLabels[ClientBMDVideohubTCP_LABELCOUNT][ClientBMDVideohubTCP_LABELLEN];
   char _outputLocks[ClientBMDVideohubTCP_NUMOUTPUTS];
   uint8_t _outputRouting[ClientBMDVideohubTCP_NUMOUTPUTS];
 
