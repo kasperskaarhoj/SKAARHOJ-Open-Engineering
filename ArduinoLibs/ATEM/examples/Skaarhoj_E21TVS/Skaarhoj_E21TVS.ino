@@ -34,8 +34,7 @@ uint8_t mac[6];    // Will hold the Arduino Ethernet shield/board MAC address (l
 
 // No-cost stream operator as described at 
 // http://arduiniana.org/libraries/streaming/
-template<class T>
-inline Print &operator <<(Print &obj, T arg)
+template<class T> inline Print &operator <<(Print &obj, T arg)
 {  
   obj.print(arg); 
   return obj; 
