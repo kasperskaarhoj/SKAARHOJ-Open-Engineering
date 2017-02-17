@@ -56,7 +56,7 @@ class ClientPanaAWHExTCP
 	char _charBuf[96];
 	char _cmdBuf[PanaAWHE_BUFSIZE];
 
-	bool isOnline[PanaAWHE_NUMCAMS];
+	bool _isOnline[PanaAWHE_NUMCAMS];
 	
   public:
 
@@ -116,7 +116,7 @@ class ClientPanaAWHExTCP
 	void _popQueue(uint8_t pos = 0);
 	void _parseIncoming(char* buffer); 
 	bool _sendPing();
-	void _requestState(uint8_t cam);
+	bool _requestState(uint8_t cam);
 	uint32_t _lastPingAttempt;
 
 	char _queue[PanaAWHE_QUEUESIZE];
