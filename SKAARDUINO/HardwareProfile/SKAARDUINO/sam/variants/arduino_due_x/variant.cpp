@@ -291,6 +291,9 @@ extern const PinDescription g_APinDescription[]=
   { NULL, 0, 0, PIO_NOT_A_PIN, PIO_DEFAULT, 0, NO_ADC, NO_ADC, NOT_ON_PWM, NOT_ON_TIMER }
 } ;
 
+
+uint8_t g_pinStatus[PINS_COUNT] = {0};
+
 #ifdef __cplusplus
 }
 #endif
@@ -308,7 +311,7 @@ void serialEvent() { }
 // IT handlers
 void UART_Handler(void)
 {
-//  Serial.IrqHandler();
+  //Serial.IrqHandler();
 }
 
 // ----------------------------------------------------------------------------
@@ -376,9 +379,6 @@ void init( void )
     // Capture error
     while (true);
   }
-
-  // Disable watchdog
-  WDT_Disable(WDT);
 
   // Initialize C library
   __libc_init_array();
