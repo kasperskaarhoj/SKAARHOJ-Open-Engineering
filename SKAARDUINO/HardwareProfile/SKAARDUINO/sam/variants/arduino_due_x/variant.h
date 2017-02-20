@@ -129,7 +129,7 @@ extern "C"{
 	(x==BOARD_SPI_SS1 ? 1 : \
 	(x==BOARD_SPI_SS2 ? 2 : 3)))
 
-static const uint8_t SS   = BOARD_SPI_SS0;
+static const uint8_t SS   = PIN_SPI_SS0;
 static const uint8_t SS1  = BOARD_SPI_SS1;
 static const uint8_t SS2  = BOARD_SPI_SS2;
 static const uint8_t SS3  = BOARD_SPI_SS3;
