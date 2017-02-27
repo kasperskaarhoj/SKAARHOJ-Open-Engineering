@@ -234,7 +234,7 @@ void ClientBMDCamCtrl::setNormZoom(uint8_t camera, float zoom, bool offset) {
   if(!validCamera(camera)) return;
   clampValue(&zoom, 0.0f, 1.0f);
   cameraZoomValue[camera - 1] = zoom;
-  _cameraControl.writeCommandInt16(camera, 0, 8, (offset ? 1 : 0), zoom);
+  _cameraControl.writeCommandFixed16(camera, 0, 8, (offset ? 1 : 0), zoom);
 }
 
 void ClientBMDCamCtrl::setContinuousZoom(uint8_t camera, float rate, bool offset) { // -1.0 wide, 0.0 stop, 1.0 tele

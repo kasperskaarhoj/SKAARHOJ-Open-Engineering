@@ -61,7 +61,7 @@ void ClientPanaAWHExTCP::begin(const IPAddress ip){
 	memset(_lastSeen, 0, PanaAWHE_NUMCAMS*4);
 	memset(_lastSentCommand, 0, PanaAWHE_NUMCAMS*4); // 32 bit integer
 	memset(_presetState, 0, PanaAWHE_NUMCAMS*4);
-	memset(isOnline, 0, PanaAWHE_NUMCAMS);
+	memset(_isOnline, 0, PanaAWHE_NUMCAMS);
 	memset(_presetSpeed, 0, PanaAWHE_NUMCAMS);
 	memset(_autoIris, 0, PanaAWHE_NUMCAMS);
 	memset(_shutter, 0, PanaAWHE_NUMCAMS);
@@ -128,8 +128,8 @@ void ClientPanaAWHExTCP::_parseIncoming(char* buffer) {
 	}
 }
 
-void ClientPanaAWHExTCP::_requestState(uint8_t cam) {
-	if(cam >= PanaAWHE_NUMCAMS) return;
+bool ClientPanaAWHExTCP::_requestState(uint8_t cam) {
+	if(cam >= PanaAWHE_NUMCAMS) return false;
 
 	char* stateGetters[] = {
 		"QRI", // Gain R
@@ -144,7 +144,7 @@ void ClientPanaAWHExTCP::_requestState(uint8_t cam) {
 		"#UPVS", // Preset recall speed
 	};
 
-	if(millis() - _lastStateRequest > 500 && isReady()) {
+	if(millis() - _lastStateRequest > 100 && isReady()) {
 		_stateRequestPointer[cam]++;
 		_stateRequestPointer[cam] %= sizeof(stateGetters)/sizeof(char*);
 		if(stateGetters[_stateRequestPointer[cam]][0] == '#') {
@@ -154,7 +154,9 @@ void ClientPanaAWHExTCP::_requestState(uint8_t cam) {
 		}
 
 		_lastStateRequest = millis();
+		return true;
 	}
+	return false;
 }
 
 void ClientPanaAWHExTCP::runLoop() {
@@ -195,16 +197,15 @@ void ClientPanaAWHExTCP::runLoop() {
 		  		}
 		  		startPos = nextPos;
 			}
-		} else { // _queuePtr == 0
+		} else if(millis() - _lastStateRequest > 130) { // _queuePtr == 0
 			// Request state from camera
-			for(uint8_t i=0; i < PanaAWHE_NUMCAMS; i++) {
-				uint8_t nextCam = (_lastStateCam+i)%PanaAWHE_NUMCAMS;
-				if(isOnline[nextCam] || true) { // Shouldn't take too long time for offline cameras
-					_requestState(nextCam);
-					_lastStateCam = nextCam;
-					break;
+			uint8_t nextCam = (_lastStateCam+1)%PanaAWHE_NUMCAMS;
+			if(_isOnline[nextCam] || millis() - _lastSentCommand[nextCam] > 5000) { // Shouldn't take too long time for offline cameras
+				if(_requestState(nextCam)) {
+					_lastSentCommand[nextCam] = millis();
 				}
 			}
+			_lastStateCam = nextCam;
 		}
 	}
 
@@ -445,7 +446,7 @@ void ClientPanaAWHExTCP::_sendPtzRequest(uint8_t cam, uint8_t cmdlen, const char
 
 	vsnprintf(_cmdBuf, PanaAWHE_BUFSIZE, format, args);
 	_addToQueue(cam, cmdlen, _cmdBuf, false);
-	Serial << "PTZ Request: " << _cmdBuf << "\n";
+	//Serial << "PTZ Request: " << _cmdBuf << "\n";
 
 	va_end(args);
 }
@@ -475,7 +476,8 @@ bool ClientPanaAWHExTCP::_sendPing() {
 
 bool ClientPanaAWHExTCP::isConnected(uint8_t cam) {
 	if(cam < PanaAWHE_NUMCAMS) {
-		return millis() - _lastSeen[cam] <= 5000;
+		//return millis() - _lastSeen[cam] <= 5000;
+		return _isOnline[cam];
 	}
 	return false;
 }
@@ -530,55 +532,59 @@ void ClientPanaAWHExTCP::_popQueue(uint8_t startPos) {
 }
 
 void ClientPanaAWHExTCP::_sendRequest(uint8_t cam, const char* command, uint8_t len, bool camRequest) {
+	if(cam >= PanaAWHE_NUMCAMS) return;
+	_activeHTTPRequestTime = millis();
+	_cameraIP[3] = _baseAddr + cam;
+	uint8_t tries = 0;
+	while (tries++ < 5) {
+		if(_isOnline[cam] = _client.connect(_cameraIP, 80)) {
+			if (_serialOutput > 1) Serial.println("connecting...");
+			// send the HTTP PUT request:
+			//if (_serialOutput) Serial.println(command);
 
-  _activeHTTPRequestTime = millis();
-  _cameraIP[3] = _baseAddr + cam;
-  if (_client.connect(_cameraIP, 80)) {
-    if (_serialOutput > 1) Serial.println("connecting...");
-    // send the HTTP PUT request:
-	//if (_serialOutput) Serial.println(command);
+			uint8_t charIdx = 0;
 
-	uint8_t charIdx = 0;
+			memset(_charBuf,0,96);
 
-	memset(_charBuf,0,96);
+			if (len<=34) {
+				if (camRequest)	{
+					strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_cam?cmd="));	// 24 chars
+					charIdx+=strlen_P("GET /cgi-bin/aw_cam?cmd=");
+				} else {
+					strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_ptz?cmd=%23"));	// 27 chars
+					charIdx+=strlen_P("GET /cgi-bin/aw_ptz?cmd=%23");
+				}
 
-	if (len<=34)	{
-		if (camRequest)	{
-			strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_cam?cmd="));	// 24 chars
-			charIdx+=strlen_P("GET /cgi-bin/aw_cam?cmd=");
+				memcpy(_charBuf+charIdx, command, len);
+				charIdx+=len;
+
+				strcpy_P(_charBuf+charIdx, PSTR("&res=1 HTTP/1.1\r\n"));	// 17 chars
+				charIdx+=strlen_P("&res=1 HTTP/1.1\r\n");
+
+				strcpy_P(_charBuf+charIdx, PSTR("Host: 1.2.3.4\r\n"));	// 15 chars
+				charIdx+=strlen_P("Host: 1.2.3.4\r\n");
+
+				strcpy_P(_charBuf+charIdx, PSTR("\r\n"));	// 2 chars
+				charIdx+=strlen_P("\r\n");
+				
+				//if (_serialOutput) Serial.println("*");
+				//if (_serialOutput) Serial.println(_charBuf);
+				//if (_serialOutput) Serial.println("*");
+				
+				_client.print(_charBuf);
+
+				_activeHTTPRequest = true;
+			} else {
+			    if (_serialOutput) Serial.println("Command too long (>34 chars)");
+			}
+
+			break;
 		} else {
-			strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_ptz?cmd=%23"));	// 27 chars
-			charIdx+=strlen_P("GET /cgi-bin/aw_ptz?cmd=%23");
+			// if you couldn't make a connection:
+			if (_serialOutput > 1) Serial.println("connection failed");
+			_client.stop();
+			_activeHTTPRequest = false;
+			tries++;
 		}
-
-		memcpy(_charBuf+charIdx, command, len);
-		charIdx+=len;
-	
-		strcpy_P(_charBuf+charIdx, PSTR("&res=1 HTTP/1.1\r\n"));	// 17 chars
-		charIdx+=strlen_P("&res=1 HTTP/1.1\r\n");
-
-		strcpy_P(_charBuf+charIdx, PSTR("Host: 1.2.3.4\r\n"));	// 15 chars
-		charIdx+=strlen_P("Host: 1.2.3.4\r\n");
-
-		strcpy_P(_charBuf+charIdx, PSTR("\r\n"));	// 2 chars
-		charIdx+=strlen_P("\r\n");
-		
-		//if (_serialOutput) Serial.println("*");
-		//if (_serialOutput) Serial.println(_charBuf);
-		//if (_serialOutput) Serial.println("*");
-		
-		_client.print(_charBuf);
-
-		_activeHTTPRequest = true;
-	} else {
-	    if (_serialOutput) Serial.println("Command too long (>34 chars)");
 	}
-  } 
-  else {
-    // if you couldn't make a connection:
-    if (_serialOutput > 1) Serial.println("connection failed");
-    _client.stop();
-	_activeHTTPRequest = false;
-  }
-
 }

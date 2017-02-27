@@ -155,6 +155,16 @@ typedef enum _ETCChannel
 #define PIN_ATTR_PWM           (1UL<<3)
 #define PIN_ATTR_TIMER         (1UL<<4)
 
+#define PIN_STATUS_DIGITAL_INPUT_PULLUP  (0x01)
+#define PIN_STATUS_DIGITAL_INPUT         (0x02)
+#define PIN_STATUS_DIGITAL_OUTPUT        (0x03)
+#define PIN_STATUS_ANALOG                (0x04)
+#define PIN_STATUS_PWM                   (0x05)
+#define PIN_STATUS_TIMER                 (0x06)
+#define PIN_STATUS_SERIAL                (0x07)
+#define PIN_STATUS_DW_LOW                (0x10)
+#define PIN_STATUS_DW_HIGH               (0x11)
+
 /* Types used for the tables below */
 typedef struct _PinDescription
 {
@@ -169,6 +179,8 @@ typedef struct _PinDescription
   EPWMChannel ulPWMChannel ;
   ETCChannel ulTCChannel ;
 } PinDescription ;
+
+extern uint8_t g_pinStatus[];
 
 /* Pins table to be instanciated into variant.cpp */
 extern const PinDescription g_APinDescription[] ;
@@ -194,11 +206,17 @@ extern const PinDescription g_APinDescription[] ;
 #include "wiring_shift.h"
 #include "WInterrupts.h"
 
+#include "watchdog.h"
+
 // USB Device
-#define USB_VID            0x2341 // arduino LLC vid
-#define USB_PID_LEONARDO   0x0034
-#define USB_PID_MICRO      0x0035
-#define USB_PID_DUE        0x003E
+#ifndef USB_VID
+#define USB_VID 0x2341 // arduino LLC vid
+#endif
+
+#ifndef USB_PID
+#define USB_PID 0x003E // arduino Due pid
+#endif
+
 #include "USB/USBDesc.h"
 #include "USB/USBCore.h"
 #include "USB/USBAPI.h"
