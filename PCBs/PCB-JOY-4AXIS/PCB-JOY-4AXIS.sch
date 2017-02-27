@@ -3069,6 +3069,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <part name="C5" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C23" library="freetronics" deviceset="CAP_POL" device="1206" value="10uF 6.3V A TANT"/>
 <part name="C11" library="freetronics" deviceset="CAP_POL" device="1206" value="10uF 6.3V A TANT"/>
+<part name="C4" library="SparkFun" deviceset="CAP" device="0603-CAP" value="1nF"/>
 </parts>
 <sheets>
 <sheet>
@@ -3130,6 +3131,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <attribute name="NAME" x="43.434" y="32.385" size="1.778" layer="95"/>
 <attribute name="VALUE" x="42.418" y="25.273" size="1.778" layer="96"/>
 </instance>
+<instance part="C4" gate="G$1" x="7.62" y="25.4"/>
 </instances>
 <busses>
 </busses>
@@ -3296,7 +3298,8 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <pinref part="U$13" gate="G$1" pin="GND"/>
 <junction x="-20.32" y="22.86"/>
 <pinref part="C23" gate="G$1" pin="-"/>
-<wire x1="27.94" y1="22.86" x2="-20.32" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="22.86" x2="7.62" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="7.62" y1="22.86" x2="-20.32" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="-29.21" y1="25.4" x2="-29.21" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="-29.21" y1="22.86" x2="-20.32" y2="22.86" width="0.1524" layer="91"/>
 <pinref part="C5" gate="G$1" pin="2"/>
@@ -3305,6 +3308,8 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <wire x1="27.94" y1="22.86" x2="49.53" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="49.53" y1="22.86" x2="49.53" y2="25.4" width="0.1524" layer="91"/>
 <junction x="27.94" y="22.86"/>
+<pinref part="C4" gate="G$1" pin="2"/>
+<junction x="7.62" y="22.86"/>
 </segment>
 </net>
 <net name="A1" class="0">
@@ -3483,6 +3488,14 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <wire x1="-152.4" y1="-15.24" x2="-152.4" y2="7.62" width="0.1524" layer="91"/>
 <junction x="-152.4" y="7.62"/>
 <label x="-152.4" y="38.1" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="P4"/>
+<pinref part="C4" gate="G$1" pin="1"/>
+<wire x1="2.54" y1="33.02" x2="7.62" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="7.62" y1="33.02" x2="7.62" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

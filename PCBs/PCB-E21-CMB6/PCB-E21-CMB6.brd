@@ -157,13 +157,12 @@
 </layers>
 <board>
 <plain>
-<text x="149.4155" y="91.3765" size="0.8128" layer="122" font="vector" ratio="12" rot="MR180">PCB-E21-CMB6, v03-16
+<text x="149.4155" y="91.3765" size="0.8128" layer="122" font="vector" ratio="12" rot="MR180">PCB-E21-CMB6, v02-17
 SKAARHOJ</text>
 <text x="56.134" y="74.8665" size="1.016" layer="121" rot="R270">1</text>
-<wire x1="0" y1="99.5" x2="0" y2="0" width="0.254" layer="20"/>
-<wire x1="0" y1="0" x2="200" y2="0" width="0.254" layer="20"/>
-<wire x1="200" y1="0" x2="200" y2="56" width="0.254" layer="20"/>
-<wire x1="0" y1="99.5" x2="165.1" y2="99.5" width="0.254" layer="20"/>
+<wire x1="0" y1="88.9" x2="0" y2="13.97" width="0.254" layer="20"/>
+<wire x1="22.86" y1="2.7" x2="200" y2="2.7" width="0.254" layer="20"/>
+<wire x1="200" y1="2.7" x2="200" y2="56" width="0.254" layer="20"/>
 <rectangle x1="153.24343125" y1="84.708896875" x2="155.10525" y2="84.793734375" layer="200"/>
 <rectangle x1="155.86725" y1="84.708896875" x2="156.37525" y2="84.793734375" layer="200"/>
 <rectangle x1="157.30743125" y1="84.708896875" x2="158.66125" y2="84.793734375" layer="200"/>
@@ -455,6 +454,7 @@ SKAARHOJ</text>
 <rectangle x1="167.6376125" y1="86.656315625" x2="168.22943125" y2="86.740896875" layer="200"/>
 <rectangle x1="169.24543125" y1="86.656315625" x2="170.34525" y2="86.740896875" layer="200"/>
 <rectangle x1="172.37725" y1="86.656315625" x2="173.05543125" y2="86.740896875" layer="200"/>
+<wire x1="10.16" y1="97.3" x2="165.1" y2="97.3" width="0.254" layer="20"/>
 <wire x1="173.03" y1="87.122" x2="173.03" y2="56" width="0.254" layer="20"/>
 <wire x1="173.03" y1="56" x2="200" y2="56" width="0.254" layer="20"/>
 <rectangle x1="0" y1="0" x2="223" y2="6.5" layer="41"/>
@@ -466,7 +466,15 @@ SKAARHOJ</text>
 <wire x1="141.986" y1="83.82" x2="141.986" y2="79.756" width="0.3048" layer="121"/>
 <wire x1="141.986" y1="79.756" x2="145.542" y2="79.756" width="0.3048" layer="121"/>
 <wire x1="173.03" y1="87.122" x2="165.1" y2="87.122" width="0.254" layer="20"/>
-<wire x1="165.1" y1="87.122" x2="165.1" y2="99.5" width="0.254" layer="20"/>
+<wire x1="165.1" y1="87.122" x2="165.1" y2="97.3" width="0.254" layer="20"/>
+<wire x1="0" y1="13.97" x2="2.54" y2="11.43" width="0.254" layer="20"/>
+<wire x1="2.54" y1="11.43" x2="19.05" y2="11.43" width="0.254" layer="20"/>
+<wire x1="19.05" y1="11.43" x2="22.86" y2="7.62" width="0.254" layer="20"/>
+<wire x1="22.86" y1="7.62" x2="22.86" y2="2.7" width="0.254" layer="20"/>
+<wire x1="0" y1="88.9" x2="2.54" y2="91.44" width="0.254" layer="20"/>
+<wire x1="2.54" y1="91.44" x2="8.89" y2="91.44" width="0.254" layer="20"/>
+<wire x1="8.89" y1="91.44" x2="10.16" y2="92.71" width="0.254" layer="20"/>
+<wire x1="10.16" y1="92.71" x2="10.16" y2="97.3" width="0.254" layer="20"/>
 </plain>
 <libraries>
 <library name="SparkFun">
@@ -2099,6 +2107,18 @@ design rules under a new name.</description>
 <wire x1="136.525" y1="46.99" x2="136.58" y2="46.99" width="0.4064" layer="16"/>
 <wire x1="133.985" y1="53.975" x2="134.112" y2="54.014" width="0.4064" layer="16"/>
 <contactref element="POT2" pad="3"/>
+<polygon width="0.4064" layer="1">
+<vertex x="0" y="2.54"/>
+<vertex x="199.39" y="2.54"/>
+<vertex x="199.39" y="97.79"/>
+<vertex x="0" y="97.79"/>
+</polygon>
+<polygon width="0.4064" layer="16">
+<vertex x="0" y="2.54"/>
+<vertex x="199.39" y="2.54"/>
+<vertex x="199.39" y="97.79"/>
+<vertex x="0" y="97.79"/>
+</polygon>
 </signal>
 <signal name="5V" class="1">
 <contactref element="SERIAL" pad="2"/>

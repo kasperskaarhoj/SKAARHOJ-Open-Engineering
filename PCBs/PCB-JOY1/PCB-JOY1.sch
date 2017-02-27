@@ -2488,6 +2488,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <part name="U$5" library="SparkFun" deviceset="5V" device=""/>
 <part name="C5" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C8" library="freetronics" deviceset="CAP_POL" device="1206" value="10uF 6.3V A TANT"/>
+<part name="C3" library="SparkFun" deviceset="CAP" device="0603-CAP" value="1nF"/>
 </parts>
 <sheets>
 <sheet>
@@ -2525,6 +2526,7 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <attribute name="NAME" x="53.594" y="-5.715" size="1.778" layer="95"/>
 <attribute name="VALUE" x="52.578" y="-12.827" size="1.778" layer="96"/>
 </instance>
+<instance part="C3" gate="G$1" x="17.78" y="-12.7"/>
 </instances>
 <busses>
 </busses>
@@ -2664,13 +2666,16 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <pinref part="U2" gate="G$1" pin="GND"/>
 <pinref part="U$13" gate="G$1" pin="GND"/>
 <junction x="-10.16" y="-15.24"/>
-<wire x1="38.1" y1="-15.24" x2="-10.16" y2="-15.24" width="0.1524" layer="91"/>
+<wire x1="38.1" y1="-15.24" x2="17.78" y2="-15.24" width="0.1524" layer="91"/>
 <pinref part="C5" gate="G$1" pin="2"/>
+<wire x1="17.78" y1="-15.24" x2="-10.16" y2="-15.24" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="-15.24" x2="38.1" y2="-12.7" width="0.1524" layer="91"/>
 <pinref part="C8" gate="G$1" pin="-"/>
 <wire x1="38.1" y1="-15.24" x2="59.69" y2="-15.24" width="0.1524" layer="91"/>
 <wire x1="59.69" y1="-15.24" x2="59.69" y2="-12.7" width="0.1524" layer="91"/>
 <junction x="38.1" y="-15.24"/>
+<pinref part="C3" gate="G$1" pin="2"/>
+<junction x="17.78" y="-15.24"/>
 </segment>
 </net>
 <net name="I2C_SDA" class="0">
@@ -2825,6 +2830,14 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <pinref part="JOYSTICK" gate="G$1" pin="H+"/>
 <wire x1="40.64" y1="53.34" x2="38.1" y2="53.34" width="0.1524" layer="91"/>
 <label x="38.1" y="53.34" size="1.778" layer="95" rot="R180"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="P4"/>
+<pinref part="C3" gate="G$1" pin="1"/>
+<wire x1="12.7" y1="-5.08" x2="17.78" y2="-5.08" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="-5.08" x2="17.78" y2="-7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

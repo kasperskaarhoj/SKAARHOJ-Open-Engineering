@@ -405,16 +405,16 @@ void SkaarhojBI8::_readButtonStatus() {	// Reads button status from MCP23017 chi
 		((buttonStatus & B1000000) << 3);	// B10
 		
 	if (_extendedBicolor)	{
-		uint16_t extraButtonStatus = 
-			((buttonStatus & B10000) >> 4) | 	// B1
-			((buttonStatus & B100000) >> 4) | 	// B2
-			((buttonStatus & B1000000) >> 4) | 	// B3
-			((buttonStatus & B10000000) >> 4) | 	// B4
-			((buttonStatus & B1000) << 1) | 	// B5
-			((buttonStatus & B100) << 3) | 	// B6
-			((buttonStatus & B10) << 5) | 	// B7
-			((buttonStatus & B1) << 7);
-		_buttonStatus = (_buttonStatus & 0xFF) | (extraButtonStatus << 8);
+          uint16_t extraButtonStatus =
+              ((buttonStatus & B10000) >> 4) |   // B1
+              ((buttonStatus & B100000) >> 4) |  // B2
+              ((buttonStatus & B1000000) >> 4) |   // B3
+              ((buttonStatus & B10000000) >> 4) |  // B4
+              ((buttonStatus & B1000) << 1) |      // B5
+              ((buttonStatus & B100) << 3) |       // B6
+              ((buttonStatus & B10) << 5) |        // B7
+              ((buttonStatus & B1) << 7);
+                _buttonStatus = (_buttonStatus & 0xFF) | (extraButtonStatus << 8);
 	}
 	
 	if (_buttonStatus != _lastButtonStatus)	{

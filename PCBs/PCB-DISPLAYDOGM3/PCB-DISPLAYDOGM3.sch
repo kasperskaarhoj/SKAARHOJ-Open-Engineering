@@ -8694,13 +8694,13 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="C10" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="C12" library="SparkFun" deviceset="CAP" device="0603-CAP" value="100nF"/>
 <part name="U$24" library="SparkFun" deviceset="5V" device=""/>
-<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="120R">
+<part name="R1" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="120R/1%">
 <attribute name="SKAARHOJ_ID" value="SK_120R"/>
 </part>
-<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="510R">
+<part name="R3" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="510R/1%">
 <attribute name="SKAARHOJ_ID" value="SK_510R"/>
 </part>
-<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="200R">
+<part name="R4" library="SparkFun" deviceset="RESISTOR" device="0603-RES" value="200R/1%">
 <attribute name="SKAARHOJ_ID" value="SK_200R"/>
 </part>
 </parts>
