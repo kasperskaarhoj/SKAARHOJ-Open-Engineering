@@ -1,16 +1,16 @@
 /*****************
- * Basis control for the SKAARHOJ E21TVS series devices
- * This example is programmed for ATEM TVS versions
- * The button rows are assumed to be configured as 1-2-3-4-5-6 (PGM) / 1-2-3-4-5-6 (PRV) / CUT, AUTO / KEY, MPL1
- *
- * This example also uses several custom libraries which you must install first.
- * Search for "#include" in this file to find the libraries. Then download the libraries from http://skaarhoj.com/wiki/index.php/Libraries_for_Arduino
- *
- * Works with ethernet-enabled arduino devices (Arduino Ethernet or a model with Ethernet shield)
- * Make sure to configure IP and addresses first using the sketch "ConfigEthernetAddresses"
- *
- * - kasper
- */
+   Basis control for the SKAARHOJ E21TVS series devices
+   This example is programmed for ATEM TVS versions
+   The button rows are assumed to be configured as 1-2-3-4-5-6 (PGM) / 1-2-3-4-5-6 (PRV) / CUT, AUTO / KEY, MPL1
+
+   This example also uses several custom libraries which you must install first.
+   Search for "#include" in this file to find the libraries. Then download the libraries from http://skaarhoj.com/wiki/index.php/Libraries_for_Arduino
+
+   Works with ethernet-enabled arduino devices (Arduino Ethernet or a model with Ethernet shield)
+   Make sure to configure IP and addresses first using the sketch "ConfigEthernetAddresses"
+
+   - kasper
+*/
 
 
 
@@ -56,11 +56,11 @@ int redled = 3;
 
 
 /*************************************************************
- *
- *
- *                     Webserver
- *
- *
+
+
+                       Webserver
+
+
  **********************************************************/
 
 
@@ -72,9 +72,9 @@ WebServer webserver(PREFIX, 80);
 void logoCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, bool tail_complete)
 {
   /* this data was taken from a PNG file that was converted to a C data structure
-   * by running it through the directfb-csource application.
-   * (Alternatively by PHPSH script "HeaderGraphicsWebInterfaceInUnitsPNG8.phpsh")
-   */
+     by running it through the directfb-csource application.
+     (Alternatively by PHPSH script "HeaderGraphicsWebInterfaceInUnitsPNG8.phpsh")
+  */
   P(logoData) = {
     0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00,
     0x00, 0x0d, 0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x02, 0xa2,
@@ -424,6 +424,24 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
     server << F("</select></td>");
   }
+  server << F("</tr></n>");
+
+  // Set third routing for Top buttons
+  for (i = 1; i <= 2; ++i)
+  {
+    server << F("<td></p>");
+    server << F("<select name='Buttons1F3") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(714 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+
+    // Macro 1-20
+    for (uint8_t j = 1; j <= 20; j++)  {
+      server << F("<option value='") << j << F("'") << (EEPROM.read(714 + i) == j ? F(" selected='selected'") : F("")) << F(">Macro ") << j << F("</option>");
+    }
+
+    server << F("</select></td>");
+  }
   server << F("</tr></table><hr/>");
 
   ////////////////////////////////////////////////////
@@ -477,10 +495,6 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 53 << F("'") << (EEPROM.read(415 - i) == 53 ? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
     server << F("<option value='") << 54 << F("'") << (EEPROM.read(415 - i) == 54 ? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
 
-    //server << F("<option value='") << 23 << F("'") << (EEPROM.read(420+i)==23?" selected='selected'":"") << F(">Cut") << F("</option>");
-    //server << F("<option value='") << 24 << F("'") << (EEPROM.read(420+i)==24?" selected='selected'":"") << F(">Auto") << F("</option>");
-    //server << F("<option value='") << 25 << F("'") << (EEPROM.read(420+i)==25?" selected='selected'":"") << F(">FTB") << F("</option>");
-
     server << F("<option value='") << 255 << F("'") << (EEPROM.read(415 - i) == 255 ? F(" selected='selected'") : F("")) << F(">Default") << F("</option>");
 
     server << F("</select></td>");
@@ -513,6 +527,25 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 10 << F("'") << (EEPROM.read(515 - i) == 10 ? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
     server << F("<option value='") << 11 << F("'") << (EEPROM.read(515 - i) == 11 ? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
     server << F("<option value='") << 12 << F("'") << (EEPROM.read(515 - i) == 12 ? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
+
+    server << F("</select></td>");
+  }
+
+  server << F("</tr></n>");
+
+  // Set third routing for Side buttons
+  for (i = 1; i <= 2; ++i)
+  {
+    server << F("<td></p>");
+    server << F("<select name='Buttons2F3") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(715 - i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+
+    // Macro 1-20
+    for (uint8_t j = 1; j <= 20; j++)  {
+      server << F("<option value='") << j << F("'") << (EEPROM.read(715 - i) == j ? F(" selected='selected'") : F("")) << F(">Macro ") << j << F("</option>");
+    }
 
     server << F("</select></td>");
   }
@@ -605,6 +638,24 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
 
     server << F("</select></td>");
   }
+  server << F("</tr></n>");
+
+  // Set third routing for Top row buttons
+  for (i = 1; i <= 6; ++i)
+  {
+    server << F("<td></p>");
+    server << F("<select name='Buttons3F3") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(706 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+
+    // Macro 1-20
+    for (uint8_t j = 1; j <= 20; j++)  {
+      server << F("<option value='") << j << F("'") << (EEPROM.read(706 + i) == j ? F(" selected='selected'") : F("")) << F(">Macro ") << j << F("</option>");
+    }
+
+    server << F("</select></td>");
+  }
 
   server << F("</tr></table><hr/>");
 
@@ -655,11 +706,6 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 52 << F("'") << (EEPROM.read(400 + i) == 52 ? F(" selected='selected'") : F("")) << F(">PgmMedia2") << F("</option>");
     server << F("<option value='") << 53 << F("'") << (EEPROM.read(400 + i) == 53 ? F(" selected='selected'") : F("")) << F(">PvwSSource") << F("</option>");
     server << F("<option value='") << 54 << F("'") << (EEPROM.read(400 + i) == 54 ? F(" selected='selected'") : F("")) << F(">PgmSSource") << F("</option>");
-
-    //server << F("<option value='") << 23 << F("'") << (EEPROM.read(460+i)==23?" selected='selected'":"") << F(">Cut") << F("</option>");
-    //server << F("<option value='") << 24 << F("'") << (EEPROM.read(460+i)==24?" selected='selected'":"") << F(">Auto") << F("</option>");
-    //server << F("<option value='") << 25 << F("'") << (EEPROM.read(460+i)==25?" selected='selected'":"") << F(">FTB") << F("</option>");
-
     server << F("<option value='") << 255 << F("'") << (EEPROM.read(400 + i) == 255 ? F(" selected='selected'") : F("")) << F(">Default") << F("</option>");
 
     server << F("</select></td>");
@@ -692,6 +738,24 @@ void webDefaultView(WebServer &server, WebServer::ConnectionType type)
     server << F("<option value='") << 10 << F("'") << (EEPROM.read(500 + i) == 10 ? F(" selected='selected'") : F("")) << F(">Auto") << F("</option>");
     server << F("<option value='") << 11 << F("'") << (EEPROM.read(500 + i) == 11 ? F(" selected='selected'") : F("")) << F(">FTB") << F("</option>");
     server << F("<option value='") << 12 << F("'") << (EEPROM.read(500 + i) == 12 ? F(" selected='selected'") : F("")) << F(">Keys Off") << F("</option>");
+
+    server << F("</select></td>");
+  }
+  server << F("</tr></n>");
+
+  // Set third routing for Bottom row buttons
+  for (i = 1; i <= 6; ++i)
+  {
+    server << F("<td></p>");
+    server << F("<select name='Buttons4F3") << i << F(":'div style='width:78px;>");
+    server << F("<option value='0'></option>");
+
+    server << F("<option value='") << 0 << F("'") << (EEPROM.read(700 + i) == 0 ? F(" selected='selected'") : F("")) << F("> \t") << F("</option>");
+
+    // Macro 1-20
+    for (uint8_t j = 1; j <= 20; j++)  {
+      server << F("<option value='") << j << F("'") << (EEPROM.read(700 + i) == j ? F(" selected='selected'") : F("")) << F(">Macro ") << j << F("</option>");
+    }
 
     server << F("</select></td>");
   }
@@ -783,6 +847,13 @@ void formCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, 
           EEPROM.write(514 + inputNum, val);
         }
       }
+      if (Name.startsWith("Buttons1F3"))  {
+        int inputNum = strtoul(name + 10, NULL, 10);
+        int val = strtoul(value, NULL, 10);
+        if (inputNum >= 1 && inputNum <= 2)  {
+          EEPROM.write(714 + inputNum, val);
+        }
+      }
       if (Name.startsWith("Buttons2A1"))  {
         int inputNum = strtoul(name + 10, NULL, 10);
         int val = strtoul(value, NULL, 10);
@@ -802,6 +873,13 @@ void formCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, 
         int val = strtoul(value, NULL, 10);
         if (inputNum >= 1 && inputNum <= 2)  {
           EEPROM.write(515 - inputNum, val);
+        }
+      }
+      if (Name.startsWith("Buttons2F3"))  {
+        int inputNum = strtoul(name + 10, NULL, 10);
+        int val = strtoul(value, NULL, 10);
+        if (inputNum >= 1 && inputNum <= 2)  {
+          EEPROM.write(715 - inputNum, val);
         }
       }
       if (Name.startsWith("Buttons3A1"))  {
@@ -825,6 +903,13 @@ void formCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, 
           EEPROM.write(506 + inputNum, val);
         }
       }
+      if (Name.startsWith("Buttons3F3"))  {
+        int inputNum = strtoul(name + 10, NULL, 10);
+        int val = strtoul(value, NULL, 10);
+        if (inputNum >= 1 && inputNum <= 6)  {
+          EEPROM.write(706 + inputNum, val);
+        }
+      }
       if (Name.startsWith("Buttons4A1"))  {
         int inputNum = strtoul(name + 10, NULL, 10);
         int val = strtoul(value, NULL, 10);
@@ -844,6 +929,13 @@ void formCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail, 
         int val = strtoul(value, NULL, 10);
         if (inputNum >= 1 && inputNum <= 6)  {
           EEPROM.write(500 + inputNum, val);
+        }
+      }
+      if (Name.startsWith("Buttons4F3"))  {
+        int inputNum = strtoul(name + 10, NULL, 10);
+        int val = strtoul(value, NULL, 10);
+        if (inputNum >= 1 && inputNum <= 6)  {
+          EEPROM.write(700 + inputNum, val);
         }
       }
       // Slider
@@ -895,11 +987,11 @@ void defaultCmd(WebServer &server, WebServer::ConnectionType type, char *url_tai
 
 
 /*************************************************************
- *
- *
- *                     MAIN PROGRAM CODE AHEAD
- *
- *
+
+
+                       MAIN PROGRAM CODE AHEAD
+
+
  **********************************************************/
 
 
@@ -908,7 +1000,13 @@ bool isConfigMode;  // If set, the system will run the Web Configurator, not the
 uint8_t buttonsATEM[16];
 uint8_t buttons1function[16];
 uint8_t buttons2function[16];
+uint8_t buttons3function[16];
 uint8_t slider;
+
+void runTest();
+void lDelay(unsigned long timeout);
+void setButtonColors();
+void commandDispatch();
 
 void setup() {
 
@@ -990,10 +1088,10 @@ void setup() {
   //  Serial << F("SKAARHOJ Device MAC address: ") << buffer << F(" - Checksum: ")
   //    << ((mac[0]+mac[1]+mac[2]+mac[3]+mac[4]+mac[5]) & 0xFF);
   if ((uint8_t)EEPROM.read(16) != ((mac[0] + mac[1] + mac[2] + mac[3] + mac[4] + mac[5]) & 0xFF))  {
-        Serial << F("MAC address not found in EEPROM memory!\n") <<
-     F("Please load example sketch ConfigEthernetAddresses to set it.\n") <<
-     F("The MAC address is found on the backside of your Ethernet Shield/Board\n (STOP)");
-         while (true);
+    Serial << F("MAC address not found in EEPROM memory!\n") <<
+           F("Please load example sketch ConfigEthernetAddresses to set it.\n") <<
+           F("The MAC address is found on the backside of your Ethernet Shield/Board\n (STOP)");
+    while (true);
 
   }
 
@@ -1035,7 +1133,7 @@ void setup() {
   }
   else {
     Serial << F("\nWork mode\n");
-    
+
     // Set Bi-color LED orange - indicates "connecting...":
     digitalWrite(redled, false);
     digitalWrite(greenled, false);
@@ -1045,8 +1143,9 @@ void setup() {
       buttonsATEM[i - 1] = (EEPROM.read(600 + i));
       buttons1function[i - 1] = (EEPROM.read(400 + i));
       buttons2function[i - 1] = (EEPROM.read(500 + i));
+      buttons3function[i - 1] = (EEPROM.read(700 + i));
     }
-    if (EEPROM.read(99) >1) {
+    if (EEPROM.read(99) > 1) {
       EEPROM.write(99, 0);
     }
     slider = EEPROM.read(99);
@@ -1119,7 +1218,7 @@ void loop() {
 
 
 /*******************************
- * Set buttons functions
+   Set buttons functions
  *******************************/
 
 void commandDispatch() {
@@ -1408,14 +1507,49 @@ void commandDispatch() {
           for (int j = 1; j <= 2; j++) {
             AtemSwitcher.setDownstreamKeyerOnAir(j - 1, 0);
           }
+          break;
       }
-      break;
+      switch (buttons3function[i - 1]) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+          if (AtemSwitcher.getMacroPropertiesIsUsed(buttons3function[i - 1] - 1) && !AtemSwitcher.getMacroRecordingStatusIsRecording())  {
+            if (AtemSwitcher.getMacroRunStatusState())  {  // Something is running...
+              if (AtemSwitcher.getMacroRunStatusIndex() == buttons3function[i - 1] - 1)  {
+                if (AtemSwitcher.getMacroRunStatusState() & B10)  {  // Waiting...
+                  AtemSwitcher.setMacroAction(0xffff, 4);  // Continue
+                } else {  // Just running:
+                  AtemSwitcher.setMacroAction(0xffff, 1);  // Stop macro...
+                }
+              }
+            } else {  // All is stopped:
+              AtemSwitcher.setMacroAction(buttons3function[i - 1] - 1, 0); // Run macro...
+            }
+          }
+          break;
+      }
     }
   }
 }
 
 /*********************************
- * Set buttons colors
+   Set buttons colors
  *********************************/
 
 void setButtonColors() {
@@ -1423,6 +1557,25 @@ void setButtonColors() {
     switch (buttons1function[i - 1]) {
       case 0:
         switch (buttons2function[i - 1]) {
+          case 0:
+            if (AtemSwitcher.getMacroPropertiesIsUsed(buttons3function[i - 1] - 1) && !AtemSwitcher.getMacroRecordingStatusIsRecording())  { // There is a macro and nothing is recording...
+              if (AtemSwitcher.getMacroRunStatusState())  {  // Something is running...
+                if (AtemSwitcher.getMacroRunStatusIndex() == buttons3function[i - 1] - 1)  {
+                  if (AtemSwitcher.getMacroRunStatusState() & B10)  {  // Waiting...
+                    buttons.setButtonColor(i, millis() & 512 ? 3 : 2);
+                  } else {  // Just running:
+                    buttons.setButtonColor(i, 1);
+                  }
+                } else {
+                  buttons.setButtonColor(i, 0);
+                }
+              } else {  // All is stopped:
+                buttons.setButtonColor(i, 3);
+              }
+            } else {
+              buttons.setButtonColor(i, 0);
+            }
+            break;
           case 1:
             buttons.setButtonColor(i, AtemSwitcher.getKeyerOnAirEnabled(buttonsATEM[i - 1], 0) ? 1 : 3);
             break;
