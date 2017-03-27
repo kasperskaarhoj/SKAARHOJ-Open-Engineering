@@ -215,6 +215,16 @@ void SkaarhojBI8::setColorBalanceRGB(uint8_t colorNumber, uint8_t redPart, uint8
 		_colorBalanceBlue[colorNumber] = bluePart;
 	}
 }
+
+void SkaarhojBI8::setButtonDefaultColor(uint16_t R, uint16_t G, uint16_t B) {
+	R = map(R, 0, 4095, 0, 100);
+	G = map(G, 0, 4095, 0, 100);
+	B = map(B, 0, 4095, 0, 100);
+
+	setColorBalanceRGB(4, R, G, B);
+	setColorBalanceRGB(5, R/10, G/10, B/10);
+}
+
 uint8_t SkaarhojBI8::getColorRed(uint8_t colorNumber)	{
 	return _colorBalanceRed[colorNumber];
 }

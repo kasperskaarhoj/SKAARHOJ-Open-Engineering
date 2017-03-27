@@ -79,6 +79,7 @@ class SkaarhojBI8
 	void setButtonType(uint8_t type);
 	void setColorBalance(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart);
 	void setColorBalanceRGB(uint8_t colorNumber, uint8_t redPart, uint8_t greenPart, uint8_t bluePart);
+	void setButtonDefaultColor(uint16_t R, uint16_t G, uint16_t B);
 	uint8_t getColorRed(uint8_t colorNumber);
 	uint8_t getColorGreen(uint8_t colorNumber);
 	uint8_t getColorBlue(uint8_t colorNumber);
