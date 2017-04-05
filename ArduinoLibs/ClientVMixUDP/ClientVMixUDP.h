@@ -187,9 +187,19 @@ public:
 			uint16_t getInputPosition(uint8_t input);
 			void setInputPositionPosition(uint8_t input, uint16_t position);
 			void setInputPositionEnable(bool enable);
-			void performReplayAction(bool action);
+			void performReplayLastevent(bool lastevent);
+			void performReplaySelectedevent(bool selectedevent);
 			void setReplayPropertiesSeconds(uint16_t seconds);
 			void setReplayPropertiesSpeed(uint16_t speed);
+			void setReplayPropertiesEvents(uint8_t events);
+			void setReplayPropertiesJump(uint8_t jump);
+			void setReplayEventsSettingsMoveTo(uint8_t moveTo);
+			void setReplayEventsSettingsCopyTo(uint8_t copyTo);
+			void setReplayEventsSettingsNext(uint8_t next);
+			void setReplayEventsSettingsPrevious(uint8_t previous);
+			void setReplayEventsSettingsTogglecamera(uint8_t togglecamera);
+			void setReplayEventsSettingsTogglelive(bool togglelive);
+			void setReplayEventsSettingsToggledirection(bool toggledirection);
 			int getXamlValue(uint8_t input, uint8_t index);
 			void setXamlValue(uint8_t input, uint8_t index, int value);
 			void setCountDownMode(uint8_t input, uint8_t index, uint8_t mode);
@@ -222,7 +232,6 @@ public:
 			uint16_t getvMixVersionC();
 			uint16_t getvMixVersionD();
 			uint8_t getTopologyInputs();
-
 };
 
 

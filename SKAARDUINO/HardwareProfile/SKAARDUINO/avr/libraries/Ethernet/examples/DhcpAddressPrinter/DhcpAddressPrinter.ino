@@ -29,12 +29,14 @@ byte mac[] = {
 EthernetClient client;
 
 void setup() {
+  delay(5000);
+
   // Open serial communications and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(115200);
   // this check is only needed on the Leonardo:
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
-  }
+
+  Serial.println("LALALALAL");
+  
 
   // start the Ethernet connection:
   if (Ethernet.begin(mac) == 0) {
