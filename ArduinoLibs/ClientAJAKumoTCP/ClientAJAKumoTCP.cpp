@@ -36,6 +36,8 @@ void ClientAJAKumoTCP::begin(IPAddress ip) {
 	_receivedRouting = 0;
 	_bundleEnabled = false;
 	_outputPos = 0;
+
+	memset(routingState, 0xFF, ClientAJAKumoTCP_NUMOUTPUTS);
 }
 
 bool ClientAJAKumoTCP::isConnected() {
@@ -155,7 +157,7 @@ void ClientAJAKumoTCP::handleCmd(char *cmd, char* parameter, char* data) {
 			_receivedRouting = output-1;
 
 			if(output <= ClientAJAKumoTCP_NUMOUTPUTS) {
-				if(routingState[output-1] != input-1) {
+				if(input && output && routingState[output-1] != input-1) {
 					if(_serialOutput > 0)
 						Serial << "Route changed: " << input << " --> " << output << "\n";
 					routingState[output-1] = input-1;
