@@ -118,8 +118,8 @@ void ClientAJAKumoTCP::routeInputToOutput(uint8_t input, uint8_t output, bool wa
 
 	if (wait)	{
 	  uint32_t timer = millis();
-	  while(getRoute(output) != input && millis()-100 < timer)	{
-		runLoop(true); // Disable the normal wait in route updating
+	  while(getRoute(output) != input && millis()-200 < timer)	{
+	  	runLoop();
 	  }
   }
 }
