@@ -120,7 +120,7 @@ void SkaarhojGPIO2x8::setOutputAll(uint16_t states)	{
 
 // Private methods:
 void SkaarhojGPIO2x8::_readInputStatus() {	// Reads input status from MCP23017 chip.
-	word inputStatus = _GPIOchip.digitalWordRead();
+	uint16_t inputStatus = _GPIOchip.digitalWordRead();
 	switch(_mode) {
 		case 0:
 			_inputStatus = ~(inputStatus >> 8);
@@ -129,7 +129,7 @@ void SkaarhojGPIO2x8::_readInputStatus() {	// Reads input status from MCP23017 c
 			_inputStatus = 0;
 			break;
 		case 2:
-			_inputStatus = ~inputStatus;
+			_inputStatus = ~(inputStatus >> 8 | (inputStatus << 8));
 			break;
 	}
 }
