@@ -172,6 +172,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
+
 		// *********************************
 		// **
 		// ** Implementations in ATEMuni.c:
@@ -246,7 +247,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				videoSource = word(_packetBuffer[0],_packetBuffer[1]);
 				if (getVideoSrcIndex(videoSource)<=46) {
 					memset(atemInputLongName[getVideoSrcIndex(videoSource)],0,21);
-					strncpy(atemInputLongName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+2), 20);
+					strncpy(atemInputLongName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+2), _packetBuffer[5] > 20 ? 20 : _packetBuffer[5]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemInputLongName[getVideoSrcIndex(videoSource)=")); Serial.print(getVideoSrcIndex(videoSource)); Serial.print(F("] = "));
@@ -255,7 +256,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#endif
 					
 					memset(atemInputShortName[getVideoSrcIndex(videoSource)],0,5);
-					strncpy(atemInputShortName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+22), 4);
+					strncpy(atemInputShortName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+22), _packetBuffer[5] > 4 ? 4 : _packetBuffer[5]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemInputShortName[getVideoSrcIndex(videoSource)=")); Serial.print(getVideoSrcIndex(videoSource)); Serial.print(F("] = "));
@@ -1913,7 +1914,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#endif
 					
 					memset(atemMacroPropertiesName[macroIndex],0,11);
-					strncpy(atemMacroPropertiesName[macroIndex], (char *)(_packetBuffer+8), 10);
+					strncpy(atemMacroPropertiesName[macroIndex], (char *)(_packetBuffer+8), _packetBuffer[5] > 10 ? 10 : _packetBuffer[5]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemMacroPropertiesName[macroIndex=")); Serial.print(macroIndex); Serial.print(F("] = "));
