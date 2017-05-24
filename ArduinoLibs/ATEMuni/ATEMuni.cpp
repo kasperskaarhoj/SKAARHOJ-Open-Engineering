@@ -172,13 +172,6 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
-
-
-
-
-
-
-
 		// *********************************
 		// **
 		// ** Implementations in ATEMuni.c:
@@ -186,7 +179,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 		// *********************************
 
 		void ATEMuni::_parseGetCommands(const char *cmdStr)	{
-			uint8_t multiViewer,windowIndex,mE,keyer,aUXChannel,input,mediaPlayer,stillBank,macroIndex;
+			uint8_t multiViewer,windowIndex,mE,keyer,aUXChannel,input,mediaPlayer,stillBank,macroIndex,box;
 			uint16_t videoSource,index,audioSource,sources;
 			long temp;
 			uint8_t readBytesForTlSr;
@@ -804,7 +797,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerTop[mE][keyer];
 					#endif
-					atemKeyerTop[mE][keyer] = (int16_t) word(_packetBuffer[12], _packetBuffer[13]);
+					atemKeyerTop[mE][keyer] = _packetBuffer[12];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerTop[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerTop[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -815,7 +808,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerBottom[mE][keyer];
 					#endif
-					atemKeyerBottom[mE][keyer] = (int16_t) word(_packetBuffer[14], _packetBuffer[15]);
+					atemKeyerBottom[mE][keyer] = _packetBuffer[14];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerBottom[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerBottom[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -826,7 +819,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerLeft[mE][keyer];
 					#endif
-					atemKeyerLeft[mE][keyer] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemKeyerLeft[mE][keyer] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerLeft[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerLeft[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -837,7 +830,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerRight[mE][keyer];
 					#endif
-					atemKeyerRight[mE][keyer] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
+					atemKeyerRight[mE][keyer] = _packetBuffer[18];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerRight[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerRight[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -855,7 +848,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVESizeX[mE][keyer];
 					#endif
-					atemKeyDVESizeX[mE][keyer] = (unsigned long)_packetBuffer[4]<<24 | (unsigned long)_packetBuffer[5]<<16 | (unsigned long)_packetBuffer[6]<<8 | (unsigned long)_packetBuffer[7];
+					atemKeyDVESizeX[mE][keyer] = _packetBuffer[4];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVESizeX[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVESizeX[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -866,7 +859,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVESizeY[mE][keyer];
 					#endif
-					atemKeyDVESizeY[mE][keyer] = (unsigned long)_packetBuffer[8]<<24 | (unsigned long)_packetBuffer[9]<<16 | (unsigned long)_packetBuffer[10]<<8 | (unsigned long)_packetBuffer[11];
+					atemKeyDVESizeY[mE][keyer] = _packetBuffer[8];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVESizeY[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVESizeY[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -877,7 +870,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEPositionX[mE][keyer];
 					#endif
-					atemKeyDVEPositionX[mE][keyer] = (unsigned long)_packetBuffer[12]<<24 | (unsigned long)_packetBuffer[13]<<16 | (unsigned long)_packetBuffer[14]<<8 | (unsigned long)_packetBuffer[15];
+					atemKeyDVEPositionX[mE][keyer] = _packetBuffer[12];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEPositionX[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEPositionX[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -888,7 +881,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEPositionY[mE][keyer];
 					#endif
-					atemKeyDVEPositionY[mE][keyer] = (unsigned long)_packetBuffer[16]<<24 | (unsigned long)_packetBuffer[17]<<16 | (unsigned long)_packetBuffer[18]<<8 | (unsigned long)_packetBuffer[19];
+					atemKeyDVEPositionY[mE][keyer] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEPositionY[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEPositionY[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -899,7 +892,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVERotation[mE][keyer];
 					#endif
-					atemKeyDVERotation[mE][keyer] = (unsigned long)_packetBuffer[20]<<24 | (unsigned long)_packetBuffer[21]<<16 | (unsigned long)_packetBuffer[22]<<8 | (unsigned long)_packetBuffer[23];
+					atemKeyDVERotation[mE][keyer] = _packetBuffer[20];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVERotation[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVERotation[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1086,7 +1079,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVETop[mE][keyer];
 					#endif
-					atemKeyDVETop[mE][keyer] = (int16_t) word(_packetBuffer[48], _packetBuffer[49]);
+					atemKeyDVETop[mE][keyer] = _packetBuffer[48];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVETop[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVETop[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1097,7 +1090,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEBottom[mE][keyer];
 					#endif
-					atemKeyDVEBottom[mE][keyer] = (int16_t) word(_packetBuffer[50], _packetBuffer[51]);
+					atemKeyDVEBottom[mE][keyer] = _packetBuffer[50];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEBottom[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEBottom[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1108,7 +1101,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVELeft[mE][keyer];
 					#endif
-					atemKeyDVELeft[mE][keyer] = (int16_t) word(_packetBuffer[52], _packetBuffer[53]);
+					atemKeyDVELeft[mE][keyer] = _packetBuffer[52];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVELeft[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVELeft[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1119,7 +1112,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVERight[mE][keyer];
 					#endif
-					atemKeyDVERight[mE][keyer] = (int16_t) word(_packetBuffer[54], _packetBuffer[55]);
+					atemKeyDVERight[mE][keyer] = _packetBuffer[54];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVERight[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVERight[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1252,7 +1245,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerTop[keyer];
 					#endif
-					atemDownstreamKeyerTop[keyer] = (int16_t) word(_packetBuffer[10], _packetBuffer[11]);
+					atemDownstreamKeyerTop[keyer] = _packetBuffer[10];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerTop[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerTop[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1263,7 +1256,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerBottom[keyer];
 					#endif
-					atemDownstreamKeyerBottom[keyer] = (int16_t) word(_packetBuffer[12], _packetBuffer[13]);
+					atemDownstreamKeyerBottom[keyer] = _packetBuffer[12];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerBottom[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerBottom[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1274,7 +1267,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerLeft[keyer];
 					#endif
-					atemDownstreamKeyerLeft[keyer] = (int16_t) word(_packetBuffer[14], _packetBuffer[15]);
+					atemDownstreamKeyerLeft[keyer] = _packetBuffer[14];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerLeft[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerLeft[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1285,7 +1278,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerRight[keyer];
 					#endif
-					atemDownstreamKeyerRight[keyer] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemDownstreamKeyerRight[keyer] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerRight[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerRight[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1427,7 +1420,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlIris[input];
 					#endif
-					atemCameraControlIris[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlIris[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlIris[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlIris[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1442,7 +1435,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlFocus[input];
 					#endif
-					atemCameraControlFocus[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlFocus[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlFocus[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlFocus[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1457,7 +1450,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGain[input];
 					#endif
-					atemCameraControlGain[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlGain[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGain[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGain[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1472,7 +1465,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlWhiteBalance[input];
 					#endif
-					atemCameraControlWhiteBalance[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlWhiteBalance[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlWhiteBalance[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlWhiteBalance[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1487,7 +1480,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlSharpeningLevel[input];
 					#endif
-					atemCameraControlSharpeningLevel[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlSharpeningLevel[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlSharpeningLevel[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlSharpeningLevel[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1502,7 +1495,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlZoomNormalized[input];
 					#endif
-					atemCameraControlZoomNormalized[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlZoomNormalized[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlZoomNormalized[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlZoomNormalized[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1517,7 +1510,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlZoomSpeed[input];
 					#endif
-					atemCameraControlZoomSpeed[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlZoomSpeed[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlZoomSpeed[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlZoomSpeed[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1532,7 +1525,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlColorbars[input];
 					#endif
-					atemCameraControlColorbars[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlColorbars[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlColorbars[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlColorbars[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1547,7 +1540,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftR[input];
 					#endif
-					atemCameraControlLiftR[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlLiftR[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftR[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftR[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1562,7 +1555,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaR[input];
 					#endif
-					atemCameraControlGammaR[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlGammaR[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaR[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaR[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1577,7 +1570,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainR[input];
 					#endif
-					atemCameraControlGainR[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlGainR[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainR[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainR[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1592,7 +1585,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLumMix[input];
 					#endif
-					atemCameraControlLumMix[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlLumMix[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLumMix[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLumMix[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1607,7 +1600,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlHue[input];
 					#endif
-					atemCameraControlHue[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					atemCameraControlHue[input] = _packetBuffer[16];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlHue[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlHue[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1622,7 +1615,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlShutter[input];
 					#endif
-					atemCameraControlShutter[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
+					atemCameraControlShutter[input] = _packetBuffer[18];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlShutter[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlShutter[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1637,7 +1630,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftG[input];
 					#endif
-					atemCameraControlLiftG[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
+					atemCameraControlLiftG[input] = _packetBuffer[18];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftG[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftG[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1652,7 +1645,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaG[input];
 					#endif
-					atemCameraControlGammaG[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
+					atemCameraControlGammaG[input] = _packetBuffer[18];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaG[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaG[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1667,7 +1660,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainG[input];
 					#endif
-					atemCameraControlGainG[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
+					atemCameraControlGainG[input] = _packetBuffer[18];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainG[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainG[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1682,7 +1675,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlContrast[input];
 					#endif
-					atemCameraControlContrast[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
+					atemCameraControlContrast[input] = _packetBuffer[18];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlContrast[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlContrast[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1697,7 +1690,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlSaturation[input];
 					#endif
-					atemCameraControlSaturation[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
+					atemCameraControlSaturation[input] = _packetBuffer[18];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlSaturation[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlSaturation[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1712,7 +1705,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftB[input];
 					#endif
-					atemCameraControlLiftB[input] = (int16_t) word(_packetBuffer[20], _packetBuffer[21]);
+					atemCameraControlLiftB[input] = _packetBuffer[20];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftB[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftB[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1727,7 +1720,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaB[input];
 					#endif
-					atemCameraControlGammaB[input] = (int16_t) word(_packetBuffer[20], _packetBuffer[21]);
+					atemCameraControlGammaB[input] = _packetBuffer[20];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaB[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaB[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1742,7 +1735,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainB[input];
 					#endif
-					atemCameraControlGainB[input] = (int16_t) word(_packetBuffer[20], _packetBuffer[21]);
+					atemCameraControlGainB[input] = _packetBuffer[20];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainB[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainB[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1757,7 +1750,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftY[input];
 					#endif
-					atemCameraControlLiftY[input] = (int16_t) word(_packetBuffer[22], _packetBuffer[23]);
+					atemCameraControlLiftY[input] = _packetBuffer[22];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftY[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftY[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1772,7 +1765,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaY[input];
 					#endif
-					atemCameraControlGammaY[input] = (int16_t) word(_packetBuffer[22], _packetBuffer[23]);
+					atemCameraControlGammaY[input] = _packetBuffer[22];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaY[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaY[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1787,7 +1780,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainY[input];
 					#endif
-					atemCameraControlGainY[input] = (int16_t) word(_packetBuffer[22], _packetBuffer[23]);
+					atemCameraControlGainY[input] = _packetBuffer[22];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainY[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainY[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1930,6 +1923,345 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					
 				}
 			} else 
+			if(!strcmp_P(cmdStr, PSTR("SSrc"))) {
+				
+					#if ATEM_debug
+					temp = atemSuperSourceFillSource;
+					#endif
+					atemSuperSourceFillSource = word(_packetBuffer[0], _packetBuffer[1]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceFillSource!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceFillSource = "));
+						Serial.println(atemSuperSourceFillSource);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceKeySource;
+					#endif
+					atemSuperSourceKeySource = word(_packetBuffer[2], _packetBuffer[3]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceKeySource!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceKeySource = "));
+						Serial.println(atemSuperSourceKeySource);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceForeground;
+					#endif
+					atemSuperSourceForeground = _packetBuffer[4];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceForeground!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceForeground = "));
+						Serial.println(atemSuperSourceForeground);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourcePreMultiplied;
+					#endif
+					atemSuperSourcePreMultiplied = _packetBuffer[5];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourcePreMultiplied!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourcePreMultiplied = "));
+						Serial.println(atemSuperSourcePreMultiplied);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceClip;
+					#endif
+					atemSuperSourceClip = word(_packetBuffer[6], _packetBuffer[7]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceClip!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceClip = "));
+						Serial.println(atemSuperSourceClip);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceGain;
+					#endif
+					atemSuperSourceGain = word(_packetBuffer[8], _packetBuffer[9]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceGain!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceGain = "));
+						Serial.println(atemSuperSourceGain);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceInvertKey;
+					#endif
+					atemSuperSourceInvertKey = _packetBuffer[10];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceInvertKey!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceInvertKey = "));
+						Serial.println(atemSuperSourceInvertKey);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderEnabled;
+					#endif
+					atemSuperSourceBorderEnabled = _packetBuffer[11];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderEnabled!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderEnabled = "));
+						Serial.println(atemSuperSourceBorderEnabled);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderBevel;
+					#endif
+					atemSuperSourceBorderBevel = _packetBuffer[12];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderBevel!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderBevel = "));
+						Serial.println(atemSuperSourceBorderBevel);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderOuterWidth;
+					#endif
+					atemSuperSourceBorderOuterWidth = word(_packetBuffer[14], _packetBuffer[15]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderOuterWidth!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderOuterWidth = "));
+						Serial.println(atemSuperSourceBorderOuterWidth);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderInnerWidth;
+					#endif
+					atemSuperSourceBorderInnerWidth = word(_packetBuffer[16], _packetBuffer[17]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderInnerWidth!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderInnerWidth = "));
+						Serial.println(atemSuperSourceBorderInnerWidth);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderOuterSoftness;
+					#endif
+					atemSuperSourceBorderOuterSoftness = _packetBuffer[18];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderOuterSoftness!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderOuterSoftness = "));
+						Serial.println(atemSuperSourceBorderOuterSoftness);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderInnerSoftness;
+					#endif
+					atemSuperSourceBorderInnerSoftness = _packetBuffer[19];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderInnerSoftness!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderInnerSoftness = "));
+						Serial.println(atemSuperSourceBorderInnerSoftness);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderBevelSoftness;
+					#endif
+					atemSuperSourceBorderBevelSoftness = _packetBuffer[20];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderBevelSoftness!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderBevelSoftness = "));
+						Serial.println(atemSuperSourceBorderBevelSoftness);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderBevelPosition;
+					#endif
+					atemSuperSourceBorderBevelPosition = _packetBuffer[21];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderBevelPosition!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderBevelPosition = "));
+						Serial.println(atemSuperSourceBorderBevelPosition);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderHue;
+					#endif
+					atemSuperSourceBorderHue = word(_packetBuffer[22], _packetBuffer[23]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderHue!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderHue = "));
+						Serial.println(atemSuperSourceBorderHue);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderSaturation;
+					#endif
+					atemSuperSourceBorderSaturation = word(_packetBuffer[24], _packetBuffer[25]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderSaturation!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderSaturation = "));
+						Serial.println(atemSuperSourceBorderSaturation);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBorderLuma;
+					#endif
+					atemSuperSourceBorderLuma = word(_packetBuffer[26], _packetBuffer[27]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBorderLuma!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBorderLuma = "));
+						Serial.println(atemSuperSourceBorderLuma);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceLightSourceDirection;
+					#endif
+					atemSuperSourceLightSourceDirection = word(_packetBuffer[28], _packetBuffer[29]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceLightSourceDirection!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceLightSourceDirection = "));
+						Serial.println(atemSuperSourceLightSourceDirection);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceLightSourceAltitude;
+					#endif
+					atemSuperSourceLightSourceAltitude = _packetBuffer[30];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceLightSourceAltitude!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceLightSourceAltitude = "));
+						Serial.println(atemSuperSourceLightSourceAltitude);
+					}
+					#endif
+					
+			} else 
+			if(!strcmp_P(cmdStr, PSTR("SSBP"))) {
+				
+				box = _packetBuffer[0];
+				if (box<=3) {
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersEnabled[box];
+					#endif
+					atemSuperSourceBoxParametersEnabled[box] = _packetBuffer[1];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersEnabled[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersEnabled[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersEnabled[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersInputSource[box];
+					#endif
+					atemSuperSourceBoxParametersInputSource[box] = word(_packetBuffer[2], _packetBuffer[3]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersInputSource[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersInputSource[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersInputSource[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersPositionX[box];
+					#endif
+					atemSuperSourceBoxParametersPositionX[box] = _packetBuffer[4];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersPositionX[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersPositionX[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersPositionX[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersPositionY[box];
+					#endif
+					atemSuperSourceBoxParametersPositionY[box] = _packetBuffer[6];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersPositionY[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersPositionY[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersPositionY[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersSize[box];
+					#endif
+					atemSuperSourceBoxParametersSize[box] = word(_packetBuffer[8], _packetBuffer[9]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersSize[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersSize[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersSize[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersCropped[box];
+					#endif
+					atemSuperSourceBoxParametersCropped[box] = _packetBuffer[10];
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersCropped[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersCropped[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersCropped[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersCropTop[box];
+					#endif
+					atemSuperSourceBoxParametersCropTop[box] = word(_packetBuffer[12], _packetBuffer[13]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersCropTop[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersCropTop[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersCropTop[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersCropBottom[box];
+					#endif
+					atemSuperSourceBoxParametersCropBottom[box] = word(_packetBuffer[14], _packetBuffer[15]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersCropBottom[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersCropBottom[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersCropBottom[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersCropLeft[box];
+					#endif
+					atemSuperSourceBoxParametersCropLeft[box] = word(_packetBuffer[16], _packetBuffer[17]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersCropLeft[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersCropLeft[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersCropLeft[box]);
+					}
+					#endif
+					
+					#if ATEM_debug
+					temp = atemSuperSourceBoxParametersCropRight[box];
+					#endif
+					atemSuperSourceBoxParametersCropRight[box] = word(_packetBuffer[18], _packetBuffer[19]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersCropRight[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemSuperSourceBoxParametersCropRight[box=")); Serial.print(box); Serial.print(F("] = "));
+						Serial.println(atemSuperSourceBoxParametersCropRight[box]);
+					}
+					#endif
+					
+				}
+			} else 
 			if(!strcmp_P(cmdStr, PSTR("AMIP"))) {
 				
 				audioSource = word(_packetBuffer[0],_packetBuffer[1]);
@@ -1959,7 +2291,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)];
 					#endif
-					atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)] = (int16_t) word(_packetBuffer[12], _packetBuffer[13]);
+					atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)] = _packetBuffer[12];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)=")); Serial.print(getAudioSrcIndex(audioSource)); Serial.print(F("] = "));
@@ -3204,7 +3536,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyerTop(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyerTop(uint8_t mE, uint8_t keyer) {
 				return atemKeyerTop[mE][keyer];
 			}
 			
@@ -3213,7 +3545,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyerBottom(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyerBottom(uint8_t mE, uint8_t keyer) {
 				return atemKeyerBottom[mE][keyer];
 			}
 			
@@ -3222,7 +3554,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyerLeft(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyerLeft(uint8_t mE, uint8_t keyer) {
 				return atemKeyerLeft[mE][keyer];
 			}
 			
@@ -3231,7 +3563,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyerRight(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyerRight(uint8_t mE, uint8_t keyer) {
 				return atemKeyerRight[mE][keyer];
 			}
 			
@@ -3282,7 +3614,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMuni::getKeyDVESizeX(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMuni::getKeyDVESizeX(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVESizeX[mE][keyer];
 			}
 			
@@ -3291,7 +3623,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMuni::getKeyDVESizeY(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMuni::getKeyDVESizeY(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVESizeY[mE][keyer];
 			}
 			
@@ -3300,7 +3632,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMuni::getKeyDVEPositionX(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMuni::getKeyDVEPositionX(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVEPositionX[mE][keyer];
 			}
 			
@@ -3309,7 +3641,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMuni::getKeyDVEPositionY(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMuni::getKeyDVEPositionY(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVEPositionY[mE][keyer];
 			}
 			
@@ -3318,7 +3650,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMuni::getKeyDVERotation(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMuni::getKeyDVERotation(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVERotation[mE][keyer];
 			}
 			
@@ -3471,7 +3803,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyDVETop(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyDVETop(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVETop[mE][keyer];
 			}
 			
@@ -3480,7 +3812,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyDVEBottom(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyDVEBottom(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVEBottom[mE][keyer];
 			}
 			
@@ -3489,7 +3821,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyDVELeft(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyDVELeft(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVELeft[mE][keyer];
 			}
 			
@@ -3498,7 +3830,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMuni::getKeyDVERight(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMuni::getKeyDVERight(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVERight[mE][keyer];
 			}
 			
@@ -3517,7 +3849,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * sizeX 	Example: 1000: 1.000
 			 */
-			void ATEMuni::setKeyDVESizeX(uint8_t mE, uint8_t keyer, long sizeX) {
+			void ATEMuni::setKeyDVESizeX(uint8_t mE, uint8_t keyer, int32_t sizeX) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -3528,10 +3860,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+8] = (long)((sizeX>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+9] = (long)((sizeX>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+10] = (long)((sizeX>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+11] = (long)(sizeX & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+8] = sizeX;
 				
 	 	   		_finishCommandPacket();
 		
@@ -3543,7 +3872,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * sizeY 	Example: 2000: 2.000
 			 */
-			void ATEMuni::setKeyDVESizeY(uint8_t mE, uint8_t keyer, long sizeY) {
+			void ATEMuni::setKeyDVESizeY(uint8_t mE, uint8_t keyer, int32_t sizeY) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -3554,10 +3883,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+12] = (long)((sizeY>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+13] = (long)((sizeY>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+14] = (long)((sizeY>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+15] = (long)(sizeY & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+12] = sizeY;
 				
 	 	   		_finishCommandPacket();
 		
@@ -3569,7 +3895,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * positionX 	Example: 1000: 1.000
 			 */
-			void ATEMuni::setKeyDVEPositionX(uint8_t mE, uint8_t keyer, long positionX) {
+			void ATEMuni::setKeyDVEPositionX(uint8_t mE, uint8_t keyer, int32_t positionX) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -3580,10 +3906,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+16] = (long)((positionX>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+17] = (long)((positionX>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+18] = (long)((positionX>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+19] = (long)(positionX & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+16] = positionX;
 				
 	 	   		_finishCommandPacket();
 		
@@ -3595,7 +3918,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * positionY 	Example: -1000: -1.000
 			 */
-			void ATEMuni::setKeyDVEPositionY(uint8_t mE, uint8_t keyer, long positionY) {
+			void ATEMuni::setKeyDVEPositionY(uint8_t mE, uint8_t keyer, int32_t positionY) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -3606,10 +3929,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+20] = (long)((positionY>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+21] = (long)((positionY>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+22] = (long)((positionY>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+23] = (long)(positionY & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+20] = positionY;
 				
 	 	   		_finishCommandPacket();
 		
@@ -3621,7 +3941,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * rotation 	Example: 3670: 1 rotation+7 degress
 			 */
-			void ATEMuni::setKeyDVERotation(uint8_t mE, uint8_t keyer, long rotation) {
+			void ATEMuni::setKeyDVERotation(uint8_t mE, uint8_t keyer, int32_t rotation) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -3632,10 +3952,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+24] = (long)((rotation>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+25] = (long)((rotation>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+26] = (long)((rotation>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+27] = (long)(rotation & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+24] = rotation;
 				
 	 	   		_finishCommandPacket();
 		
@@ -4021,7 +4338,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * top 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMuni::setKeyDVETop(uint8_t mE, uint8_t keyer, int top) {
+			void ATEMuni::setKeyDVETop(uint8_t mE, uint8_t keyer, int16_t top) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -4032,8 +4349,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+52] = highByte(top);
-				_packetBuffer[12+_cBBO+4+4+53] = lowByte(top);
+				_packetBuffer[12+_cBBO+4+4+52] = top;
 				
 	 	   		_finishCommandPacket();
 		
@@ -4045,7 +4361,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * bottom 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMuni::setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom) {
+			void ATEMuni::setKeyDVEBottom(uint8_t mE, uint8_t keyer, int16_t bottom) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -4056,8 +4372,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+54] = highByte(bottom);
-				_packetBuffer[12+_cBBO+4+4+55] = lowByte(bottom);
+				_packetBuffer[12+_cBBO+4+4+54] = bottom;
 				
 	 	   		_finishCommandPacket();
 		
@@ -4069,7 +4384,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * left 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMuni::setKeyDVELeft(uint8_t mE, uint8_t keyer, int left) {
+			void ATEMuni::setKeyDVELeft(uint8_t mE, uint8_t keyer, int16_t left) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -4080,8 +4395,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+56] = highByte(left);
-				_packetBuffer[12+_cBBO+4+4+57] = lowByte(left);
+				_packetBuffer[12+_cBBO+4+4+56] = left;
 				
 	 	   		_finishCommandPacket();
 		
@@ -4093,7 +4407,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * right 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMuni::setKeyDVERight(uint8_t mE, uint8_t keyer, int right) {
+			void ATEMuni::setKeyDVERight(uint8_t mE, uint8_t keyer, int16_t right) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -4104,8 +4418,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+58] = highByte(right);
-				_packetBuffer[12+_cBBO+4+4+59] = lowByte(right);
+				_packetBuffer[12+_cBBO+4+4+58] = right;
 				
 	 	   		_finishCommandPacket();
 		
@@ -4246,7 +4559,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Top
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMuni::getDownstreamKeyerTop(uint8_t keyer) {
+			int16_t ATEMuni::getDownstreamKeyerTop(uint8_t keyer) {
 				return atemDownstreamKeyerTop[keyer];
 			}
 			
@@ -4254,7 +4567,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Bottom
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMuni::getDownstreamKeyerBottom(uint8_t keyer) {
+			int16_t ATEMuni::getDownstreamKeyerBottom(uint8_t keyer) {
 				return atemDownstreamKeyerBottom[keyer];
 			}
 			
@@ -4262,7 +4575,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Left
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMuni::getDownstreamKeyerLeft(uint8_t keyer) {
+			int16_t ATEMuni::getDownstreamKeyerLeft(uint8_t keyer) {
 				return atemDownstreamKeyerLeft[keyer];
 			}
 			
@@ -4270,7 +4583,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Right
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMuni::getDownstreamKeyerRight(uint8_t keyer) {
+			int16_t ATEMuni::getDownstreamKeyerRight(uint8_t keyer) {
 				return atemDownstreamKeyerRight[keyer];
 			}
 			
@@ -4456,7 +4769,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Iris
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlIris(uint8_t input) {
+			int16_t ATEMuni::getCameraControlIris(uint8_t input) {
 				return atemCameraControlIris[input];
 			}
 			
@@ -4464,7 +4777,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Focus
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlFocus(uint8_t input) {
+			int16_t ATEMuni::getCameraControlFocus(uint8_t input) {
 				return atemCameraControlFocus[input];
 			}
 			
@@ -4472,7 +4785,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGain(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGain(uint8_t input) {
 				return atemCameraControlGain[input];
 			}
 			
@@ -4480,7 +4793,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; White Balance
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlWhiteBalance(uint8_t input) {
+			int16_t ATEMuni::getCameraControlWhiteBalance(uint8_t input) {
 				return atemCameraControlWhiteBalance[input];
 			}
 			
@@ -4488,7 +4801,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Sharpening Level
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlSharpeningLevel(uint8_t input) {
+			int16_t ATEMuni::getCameraControlSharpeningLevel(uint8_t input) {
 				return atemCameraControlSharpeningLevel[input];
 			}
 			
@@ -4496,7 +4809,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Zoom Normalized
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlZoomNormalized(uint8_t input) {
+			int16_t ATEMuni::getCameraControlZoomNormalized(uint8_t input) {
 				return atemCameraControlZoomNormalized[input];
 			}
 			
@@ -4504,7 +4817,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Zoom Speed
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlZoomSpeed(uint8_t input) {
+			int16_t ATEMuni::getCameraControlZoomSpeed(uint8_t input) {
 				return atemCameraControlZoomSpeed[input];
 			}
 			
@@ -4512,7 +4825,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Colorbars
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlColorbars(uint8_t input) {
+			int16_t ATEMuni::getCameraControlColorbars(uint8_t input) {
 				return atemCameraControlColorbars[input];
 			}
 			
@@ -4520,7 +4833,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift R
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlLiftR(uint8_t input) {
+			int16_t ATEMuni::getCameraControlLiftR(uint8_t input) {
 				return atemCameraControlLiftR[input];
 			}
 			
@@ -4528,7 +4841,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma R
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGammaR(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGammaR(uint8_t input) {
 				return atemCameraControlGammaR[input];
 			}
 			
@@ -4536,7 +4849,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain R
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGainR(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGainR(uint8_t input) {
 				return atemCameraControlGainR[input];
 			}
 			
@@ -4544,7 +4857,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lum Mix
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlLumMix(uint8_t input) {
+			int16_t ATEMuni::getCameraControlLumMix(uint8_t input) {
 				return atemCameraControlLumMix[input];
 			}
 			
@@ -4552,7 +4865,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Hue
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlHue(uint8_t input) {
+			int16_t ATEMuni::getCameraControlHue(uint8_t input) {
 				return atemCameraControlHue[input];
 			}
 			
@@ -4560,7 +4873,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Shutter
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlShutter(uint8_t input) {
+			int16_t ATEMuni::getCameraControlShutter(uint8_t input) {
 				return atemCameraControlShutter[input];
 			}
 			
@@ -4568,7 +4881,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift G
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlLiftG(uint8_t input) {
+			int16_t ATEMuni::getCameraControlLiftG(uint8_t input) {
 				return atemCameraControlLiftG[input];
 			}
 			
@@ -4576,7 +4889,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma G
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGammaG(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGammaG(uint8_t input) {
 				return atemCameraControlGammaG[input];
 			}
 			
@@ -4584,7 +4897,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain G
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGainG(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGainG(uint8_t input) {
 				return atemCameraControlGainG[input];
 			}
 			
@@ -4592,7 +4905,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Contrast
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlContrast(uint8_t input) {
+			int16_t ATEMuni::getCameraControlContrast(uint8_t input) {
 				return atemCameraControlContrast[input];
 			}
 			
@@ -4600,7 +4913,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Saturation
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlSaturation(uint8_t input) {
+			int16_t ATEMuni::getCameraControlSaturation(uint8_t input) {
 				return atemCameraControlSaturation[input];
 			}
 			
@@ -4608,7 +4921,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift B
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlLiftB(uint8_t input) {
+			int16_t ATEMuni::getCameraControlLiftB(uint8_t input) {
 				return atemCameraControlLiftB[input];
 			}
 			
@@ -4616,7 +4929,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma B
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGammaB(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGammaB(uint8_t input) {
 				return atemCameraControlGammaB[input];
 			}
 			
@@ -4624,7 +4937,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain B
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGainB(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGainB(uint8_t input) {
 				return atemCameraControlGainB[input];
 			}
 			
@@ -4632,7 +4945,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift Y
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlLiftY(uint8_t input) {
+			int16_t ATEMuni::getCameraControlLiftY(uint8_t input) {
 				return atemCameraControlLiftY[input];
 			}
 			
@@ -4640,7 +4953,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma Y
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGammaY(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGammaY(uint8_t input) {
 				return atemCameraControlGammaY[input];
 			}
 			
@@ -4648,7 +4961,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain Y
 			 * input 	1-8: Camera
 			 */
-			int ATEMuni::getCameraControlGainY(uint8_t input) {
+			int16_t ATEMuni::getCameraControlGainY(uint8_t input) {
 				return atemCameraControlGainY[input];
 			}
 			
@@ -4658,7 +4971,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* Command takes no input
 				*/
 
-			void ATEMuni::setCameraControlAutoIris(uint8_t input, int autoiris) {
+			void ATEMuni::setCameraControlAutoIris(uint8_t input, int16_t autoiris) {
 					_prepareCommandPacket(PSTR("CCmd"), 24);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -4677,7 +4990,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* 0: Off, 1: Low, 2: Medium, 3: High
 				*/
 
-			void ATEMuni::setCameraControlSharpeningLevel(uint8_t input, int detail) {
+			void ATEMuni::setCameraControlSharpeningLevel(uint8_t input, int16_t detail) {
 					_prepareCommandPacket(PSTR("CCmd"), 20);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -4698,7 +5011,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* Command takes no input
 				*/
 
-			void ATEMuni::setCameraControlAutoFocus(uint8_t input, int autoiris) {
+			void ATEMuni::setCameraControlAutoFocus(uint8_t input, int16_t autoiris) {
 					_prepareCommandPacket(PSTR("CCmd"), 24);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -4716,7 +5029,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* Command takes no input
 				*/
 
-			void ATEMuni::setCameraControlResetAll(uint8_t input, int reset) {
+			void ATEMuni::setCameraControlResetAll(uint8_t input, int16_t reset) {
 					_prepareCommandPacket(PSTR("CCmd"), 24);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -4754,7 +5067,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * iris 	0-2048
 			 */
-			void ATEMuni::setCameraControlIris(uint8_t input, int iris) {
+			void ATEMuni::setCameraControlIris(uint8_t input, int16_t iris) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4778,7 +5091,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * colorbars: duration in secs (0=disable)
 			 */
-			void ATEMuni::setCameraControlColorbars(uint8_t input, int colorbars) {
+			void ATEMuni::setCameraControlColorbars(uint8_t input, int16_t colorbars) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"), 20);
 
@@ -4803,7 +5116,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * focus 	0-65535
 			 */
-			void ATEMuni::setCameraControlFocus(uint8_t input, int focus) {
+			void ATEMuni::setCameraControlFocus(uint8_t input, int16_t focus) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4829,7 +5142,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gain 	512: 0db, 1024: 6db, 2048: 12db, 4096: 18db
 			 */
-			void ATEMuni::setCameraControlGain(uint8_t input, int gain) {
+			void ATEMuni::setCameraControlGain(uint8_t input, int16_t gain) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4854,7 +5167,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 *
 			 */
-			void ATEMuni::setCameraControlWhiteBalance(uint8_t input, int whiteBalance) {
+			void ATEMuni::setCameraControlWhiteBalance(uint8_t input, int16_t whiteBalance) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4879,7 +5192,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 *
 			 */
-			void ATEMuni::setCameraControlZoomNormalized(uint8_t input, int zoomNormalized) {
+			void ATEMuni::setCameraControlZoomNormalized(uint8_t input, int16_t zoomNormalized) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4904,7 +5217,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 *
 			 */
-			void ATEMuni::setCameraControlZoomSpeed(uint8_t input, int zoomSpeed) {
+			void ATEMuni::setCameraControlZoomSpeed(uint8_t input, int16_t zoomSpeed) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4929,7 +5242,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftR 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlLiftR(uint8_t input, int liftR) {
+			void ATEMuni::setCameraControlLiftR(uint8_t input, int16_t liftR) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4961,7 +5274,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaR 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGammaR(uint8_t input, int gammaR) {
+			void ATEMuni::setCameraControlGammaR(uint8_t input, int16_t gammaR) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -4993,7 +5306,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainR 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGainR(uint8_t input, int gainR) {
+			void ATEMuni::setCameraControlGainR(uint8_t input, int16_t gainR) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5024,7 +5337,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * lumMix 	0-2048: 0-100%
 			 */
-			void ATEMuni::setCameraControlLumMix(uint8_t input, int lumMix) {
+			void ATEMuni::setCameraControlLumMix(uint8_t input, int16_t lumMix) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5049,7 +5362,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * hue 	-2048-2048: 0-360 degrees
 			 */
-			void ATEMuni::setCameraControlHue(uint8_t input, int hue) {
+			void ATEMuni::setCameraControlHue(uint8_t input, int16_t hue) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5077,7 +5390,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * shutter 	20000: 1/50, 16667: 1/60, 13333: 1/75, 11111: 1/90, 10000: 1/100, 8333: 1/120, 6667: 1/150, 5556: 1/180, 4000: 1/250, 2778: 1/360, 2000: 1/500, 1379: 1/750, 1000: 1/1000, 690: 1/1450, 500: 1/2000
 			 */
-			void ATEMuni::setCameraControlShutter(uint8_t input, int shutter) {
+			void ATEMuni::setCameraControlShutter(uint8_t input, int16_t shutter) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5102,7 +5415,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftG 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlLiftG(uint8_t input, int liftG) {
+			void ATEMuni::setCameraControlLiftG(uint8_t input, int16_t liftG) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5136,7 +5449,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaG 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGammaG(uint8_t input, int gammaG) {
+			void ATEMuni::setCameraControlGammaG(uint8_t input, int16_t gammaG) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5169,7 +5482,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainG 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGainG(uint8_t input, int gainG) {
+			void ATEMuni::setCameraControlGainG(uint8_t input, int16_t gainG) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5202,7 +5515,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * contrast 	0-4096: 0-100%
 			 */
-			void ATEMuni::setCameraControlContrast(uint8_t input, int contrast) {
+			void ATEMuni::setCameraControlContrast(uint8_t input, int16_t contrast) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5227,7 +5540,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * saturation 	0-4096: 0-100%
 			 */
-			void ATEMuni::setCameraControlSaturation(uint8_t input, int saturation) {
+			void ATEMuni::setCameraControlSaturation(uint8_t input, int16_t saturation) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5255,7 +5568,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftB 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlLiftB(uint8_t input, int liftB) {
+			void ATEMuni::setCameraControlLiftB(uint8_t input, int16_t liftB) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5288,7 +5601,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaB 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGammaB(uint8_t input, int gammaB) {
+			void ATEMuni::setCameraControlGammaB(uint8_t input, int16_t gammaB) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5321,7 +5634,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainB 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGainB(uint8_t input, int gainB) {
+			void ATEMuni::setCameraControlGainB(uint8_t input, int16_t gainB) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5354,7 +5667,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftY 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlLiftY(uint8_t input, int liftY) {
+			void ATEMuni::setCameraControlLiftY(uint8_t input, int16_t liftY) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5386,7 +5699,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaY 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGammaY(uint8_t input, int gammaY) {
+			void ATEMuni::setCameraControlGammaY(uint8_t input, int16_t gammaY) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5419,7 +5732,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainY 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMuni::setCameraControlGainY(uint8_t input, int gainY) {
+			void ATEMuni::setCameraControlGainY(uint8_t input, int16_t gainY) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -5620,6 +5933,782 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			}
 			
 			/**
+			 * Get Super Source; Fill Source
+			 */
+			uint16_t ATEMuni::getSuperSourceFillSource() {
+				return atemSuperSourceFillSource;
+			}
+			
+			/**
+			 * Get Super Source; Key Source
+			 */
+			uint16_t ATEMuni::getSuperSourceKeySource() {
+				return atemSuperSourceKeySource;
+			}
+			
+			/**
+			 * Get Super Source; Foreground
+			 */
+			bool ATEMuni::getSuperSourceForeground() {
+				return atemSuperSourceForeground;
+			}
+			
+			/**
+			 * Get Super Source; Pre Multiplied
+			 */
+			bool ATEMuni::getSuperSourcePreMultiplied() {
+				return atemSuperSourcePreMultiplied;
+			}
+			
+			/**
+			 * Get Super Source; Clip
+			 */
+			uint16_t ATEMuni::getSuperSourceClip() {
+				return atemSuperSourceClip;
+			}
+			
+			/**
+			 * Get Super Source; Gain
+			 */
+			uint16_t ATEMuni::getSuperSourceGain() {
+				return atemSuperSourceGain;
+			}
+			
+			/**
+			 * Get Super Source; Invert Key
+			 */
+			bool ATEMuni::getSuperSourceInvertKey() {
+				return atemSuperSourceInvertKey;
+			}
+			
+			/**
+			 * Get Super Source; Border Enabled
+			 */
+			bool ATEMuni::getSuperSourceBorderEnabled() {
+				return atemSuperSourceBorderEnabled;
+			}
+			
+			/**
+			 * Get Super Source; Border Bevel
+			 */
+			uint8_t ATEMuni::getSuperSourceBorderBevel() {
+				return atemSuperSourceBorderBevel;
+			}
+			
+			/**
+			 * Get Super Source; Border Outer Width
+			 */
+			uint16_t ATEMuni::getSuperSourceBorderOuterWidth() {
+				return atemSuperSourceBorderOuterWidth;
+			}
+			
+			/**
+			 * Get Super Source; Border Inner Width
+			 */
+			uint16_t ATEMuni::getSuperSourceBorderInnerWidth() {
+				return atemSuperSourceBorderInnerWidth;
+			}
+			
+			/**
+			 * Get Super Source; Border Outer Softness
+			 */
+			uint8_t ATEMuni::getSuperSourceBorderOuterSoftness() {
+				return atemSuperSourceBorderOuterSoftness;
+			}
+			
+			/**
+			 * Get Super Source; Border Inner Softness
+			 */
+			uint8_t ATEMuni::getSuperSourceBorderInnerSoftness() {
+				return atemSuperSourceBorderInnerSoftness;
+			}
+			
+			/**
+			 * Get Super Source; Border Bevel Softness
+			 */
+			uint8_t ATEMuni::getSuperSourceBorderBevelSoftness() {
+				return atemSuperSourceBorderBevelSoftness;
+			}
+			
+			/**
+			 * Get Super Source; Border Bevel Position
+			 */
+			uint8_t ATEMuni::getSuperSourceBorderBevelPosition() {
+				return atemSuperSourceBorderBevelPosition;
+			}
+			
+			/**
+			 * Get Super Source; Border Hue
+			 */
+			uint16_t ATEMuni::getSuperSourceBorderHue() {
+				return atemSuperSourceBorderHue;
+			}
+			
+			/**
+			 * Get Super Source; Border Saturation
+			 */
+			uint16_t ATEMuni::getSuperSourceBorderSaturation() {
+				return atemSuperSourceBorderSaturation;
+			}
+			
+			/**
+			 * Get Super Source; Border Luma
+			 */
+			uint16_t ATEMuni::getSuperSourceBorderLuma() {
+				return atemSuperSourceBorderLuma;
+			}
+			
+			/**
+			 * Get Super Source; Light Source Direction
+			 */
+			uint16_t ATEMuni::getSuperSourceLightSourceDirection() {
+				return atemSuperSourceLightSourceDirection;
+			}
+			
+			/**
+			 * Get Super Source; Light Source Altitude
+			 */
+			uint8_t ATEMuni::getSuperSourceLightSourceAltitude() {
+				return atemSuperSourceLightSourceAltitude;
+			}
+			
+			/**
+			 * Set Super Source; Fill Source
+			 * fillSource 	(See video source list)
+			 */
+			void ATEMuni::setSuperSourceFillSource(uint16_t fillSource) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 1
+				_packetBuffer[12+_cBBO+4+4+3] |= 1;
+						
+				_packetBuffer[12+_cBBO+4+4+4] = highByte(fillSource);
+				_packetBuffer[12+_cBBO+4+4+5] = lowByte(fillSource);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Key Source
+			 * keySource 	(See video source list)
+			 */
+			void ATEMuni::setSuperSourceKeySource(uint16_t keySource) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 2
+				_packetBuffer[12+_cBBO+4+4+3] |= 2;
+						
+				_packetBuffer[12+_cBBO+4+4+6] = highByte(keySource);
+				_packetBuffer[12+_cBBO+4+4+7] = lowByte(keySource);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Foreground
+			 * foreground 	Bit 0: On/Off
+			 */
+			void ATEMuni::setSuperSourceForeground(bool foreground) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 4
+				_packetBuffer[12+_cBBO+4+4+3] |= 4;
+						
+				_packetBuffer[12+_cBBO+4+4+8] = foreground;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Pre Multiplied
+			 * preMultiplied 	Bit 0: On/Off
+			 */
+			void ATEMuni::setSuperSourcePreMultiplied(bool preMultiplied) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 8
+				_packetBuffer[12+_cBBO+4+4+3] |= 8;
+						
+				_packetBuffer[12+_cBBO+4+4+9] = preMultiplied;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Clip
+			 * clip 	0-1000: 0-100%
+			 */
+			void ATEMuni::setSuperSourceClip(uint16_t clip) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 16
+				_packetBuffer[12+_cBBO+4+4+3] |= 16;
+						
+				_packetBuffer[12+_cBBO+4+4+10] = highByte(clip);
+				_packetBuffer[12+_cBBO+4+4+11] = lowByte(clip);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Gain
+			 * gain 	0-1000: 0-100%
+			 */
+			void ATEMuni::setSuperSourceGain(uint16_t gain) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 32
+				_packetBuffer[12+_cBBO+4+4+3] |= 32;
+						
+				_packetBuffer[12+_cBBO+4+4+12] = highByte(gain);
+				_packetBuffer[12+_cBBO+4+4+13] = lowByte(gain);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Invert Key
+			 * invertKey 	Bit 0: On/Off
+			 */
+			void ATEMuni::setSuperSourceInvertKey(bool invertKey) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 64
+				_packetBuffer[12+_cBBO+4+4+3] |= 64;
+						
+				_packetBuffer[12+_cBBO+4+4+14] = invertKey;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Enabled
+			 * borderEnabled 	Bit 0: On/Off
+			 */
+			void ATEMuni::setSuperSourceBorderEnabled(bool borderEnabled) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 128
+				_packetBuffer[12+_cBBO+4+4+3] |= 128;
+						
+				_packetBuffer[12+_cBBO+4+4+15] = borderEnabled;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Bevel
+			 * borderBevel 	0: No, 1: In/Out, 2: In, 3: Out
+			 */
+			void ATEMuni::setSuperSourceBorderBevel(uint8_t borderBevel) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 256
+				_packetBuffer[12+_cBBO+4+4+2] |= 1;
+						
+				_packetBuffer[12+_cBBO+4+4+16] = borderBevel;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Outer Width
+			 * borderOuterWidth 	0-1600: 0-16.00
+			 */
+			void ATEMuni::setSuperSourceBorderOuterWidth(uint16_t borderOuterWidth) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 512
+				_packetBuffer[12+_cBBO+4+4+2] |= 2;
+						
+				_packetBuffer[12+_cBBO+4+4+18] = highByte(borderOuterWidth);
+				_packetBuffer[12+_cBBO+4+4+19] = lowByte(borderOuterWidth);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Inner Width
+			 * borderInnerWidth 	0-1600: 0-16.00
+			 */
+			void ATEMuni::setSuperSourceBorderInnerWidth(uint16_t borderInnerWidth) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 1024
+				_packetBuffer[12+_cBBO+4+4+2] |= 4;
+						
+				_packetBuffer[12+_cBBO+4+4+20] = highByte(borderInnerWidth);
+				_packetBuffer[12+_cBBO+4+4+21] = lowByte(borderInnerWidth);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Outer Softness
+			 * borderOuterSoftness 	0-100: 0-100%
+			 */
+			void ATEMuni::setSuperSourceBorderOuterSoftness(uint8_t borderOuterSoftness) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 2048
+				_packetBuffer[12+_cBBO+4+4+2] |= 8;
+						
+				_packetBuffer[12+_cBBO+4+4+22] = borderOuterSoftness;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Inner Softness
+			 * borderInnerSoftness 	0-100: 0-100%
+			 */
+			void ATEMuni::setSuperSourceBorderInnerSoftness(uint8_t borderInnerSoftness) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 4096
+				_packetBuffer[12+_cBBO+4+4+2] |= 16;
+						
+				_packetBuffer[12+_cBBO+4+4+23] = borderInnerSoftness;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Bevel Softness
+			 * borderBevelSoftness 	0-100: 0.0-1.0
+			 */
+			void ATEMuni::setSuperSourceBorderBevelSoftness(uint8_t borderBevelSoftness) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 8192
+				_packetBuffer[12+_cBBO+4+4+2] |= 32;
+						
+				_packetBuffer[12+_cBBO+4+4+24] = borderBevelSoftness;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Bevel Position
+			 * borderBevelPosition 	0-100: 0.0-1.0
+			 */
+			void ATEMuni::setSuperSourceBorderBevelPosition(uint8_t borderBevelPosition) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 16384
+				_packetBuffer[12+_cBBO+4+4+2] |= 64;
+						
+				_packetBuffer[12+_cBBO+4+4+25] = borderBevelPosition;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Hue
+			 * borderHue 	0-3599: 0-359.9 Degrees
+			 */
+			void ATEMuni::setSuperSourceBorderHue(uint16_t borderHue) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 32768
+				_packetBuffer[12+_cBBO+4+4+2] |= 128;
+						
+				_packetBuffer[12+_cBBO+4+4+26] = highByte(borderHue);
+				_packetBuffer[12+_cBBO+4+4+27] = lowByte(borderHue);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Saturation
+			 * borderSaturation 	0-1000: 0-100%
+			 */
+			void ATEMuni::setSuperSourceBorderSaturation(uint16_t borderSaturation) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 65536
+				_packetBuffer[12+_cBBO+4+4+1] |= 1;
+						
+				_packetBuffer[12+_cBBO+4+4+28] = highByte(borderSaturation);
+				_packetBuffer[12+_cBBO+4+4+29] = lowByte(borderSaturation);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Border Luma
+			 * borderLuma 	0-1000: 0-100%
+			 */
+			void ATEMuni::setSuperSourceBorderLuma(uint16_t borderLuma) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 131072
+				_packetBuffer[12+_cBBO+4+4+1] |= 2;
+						
+				_packetBuffer[12+_cBBO+4+4+30] = highByte(borderLuma);
+				_packetBuffer[12+_cBBO+4+4+31] = lowByte(borderLuma);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Light Source Direction
+			 * lightSourceDirection 	0-3590: 0-359 Degrees
+			 */
+			void ATEMuni::setSuperSourceLightSourceDirection(uint16_t lightSourceDirection) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 262144
+				_packetBuffer[12+_cBBO+4+4+1] |= 4;
+						
+				_packetBuffer[12+_cBBO+4+4+32] = highByte(lightSourceDirection);
+				_packetBuffer[12+_cBBO+4+4+33] = lowByte(lightSourceDirection);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source; Light Source Altitude
+			 * lightSourceAltitude 	10-100: 10-100
+			 */
+			void ATEMuni::setSuperSourceLightSourceAltitude(uint8_t lightSourceAltitude) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSSc"),36);
+		
+					// Set Mask: 524288
+				_packetBuffer[12+_cBBO+4+4+1] |= 8;
+						
+				_packetBuffer[12+_cBBO+4+4+34] = lightSourceAltitude;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Enabled
+			 * box 	0-3: Box 1-4
+			 */
+			bool ATEMuni::getSuperSourceBoxParametersEnabled(uint8_t box) {
+				return atemSuperSourceBoxParametersEnabled[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Input Source
+			 * box 	0-3: Box 1-4
+			 */
+			uint16_t ATEMuni::getSuperSourceBoxParametersInputSource(uint8_t box) {
+				return atemSuperSourceBoxParametersInputSource[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Position X
+			 * box 	0-3: Box 1-4
+			 */
+			int16_t ATEMuni::getSuperSourceBoxParametersPositionX(uint8_t box) {
+				return atemSuperSourceBoxParametersPositionX[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Position Y
+			 * box 	0-3: Box 1-4
+			 */
+			int16_t ATEMuni::getSuperSourceBoxParametersPositionY(uint8_t box) {
+				return atemSuperSourceBoxParametersPositionY[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Size
+			 * box 	0-3: Box 1-4
+			 */
+			uint16_t ATEMuni::getSuperSourceBoxParametersSize(uint8_t box) {
+				return atemSuperSourceBoxParametersSize[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Cropped
+			 * box 	0-3: Box 1-4
+			 */
+			bool ATEMuni::getSuperSourceBoxParametersCropped(uint8_t box) {
+				return atemSuperSourceBoxParametersCropped[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Crop Top
+			 * box 	0-3: Box 1-4
+			 */
+			uint16_t ATEMuni::getSuperSourceBoxParametersCropTop(uint8_t box) {
+				return atemSuperSourceBoxParametersCropTop[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Crop Bottom
+			 * box 	0-3: Box 1-4
+			 */
+			uint16_t ATEMuni::getSuperSourceBoxParametersCropBottom(uint8_t box) {
+				return atemSuperSourceBoxParametersCropBottom[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Crop Left
+			 * box 	0-3: Box 1-4
+			 */
+			uint16_t ATEMuni::getSuperSourceBoxParametersCropLeft(uint8_t box) {
+				return atemSuperSourceBoxParametersCropLeft[box];
+			}
+			
+			/**
+			 * Get Super Source Box Parameters; Crop Right
+			 * box 	0-3: Box 1-4
+			 */
+			uint16_t ATEMuni::getSuperSourceBoxParametersCropRight(uint8_t box) {
+				return atemSuperSourceBoxParametersCropRight[box];
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Enabled
+			 * box 	0-3: Box 1-4
+			 * enabled 	Bit 0: On/Off
+			 */
+			void ATEMuni::setSuperSourceBoxParametersEnabled(uint8_t box, bool enabled) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 1
+				_packetBuffer[12+_cBBO+4+4+1] |= 1;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+3] = enabled;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Input Source
+			 * box 	0-3: Box 1-4
+			 * inputSource 	(See video source list)
+			 */
+			void ATEMuni::setSuperSourceBoxParametersInputSource(uint8_t box, uint16_t inputSource) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 2
+				_packetBuffer[12+_cBBO+4+4+1] |= 2;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+4] = highByte(inputSource);
+				_packetBuffer[12+_cBBO+4+4+5] = lowByte(inputSource);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Position X
+			 * box 	0-3: Box 1-4
+			 * positionX 	-4800-4800: -48.00-48.00
+			 */
+			void ATEMuni::setSuperSourceBoxParametersPositionX(uint8_t box, int16_t positionX) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 4
+				_packetBuffer[12+_cBBO+4+4+1] |= 4;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+6] = positionX;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Position Y
+			 * box 	0-3: Box 1-4
+			 * positionY 	-2700-2700: -27.00-27.00
+			 */
+			void ATEMuni::setSuperSourceBoxParametersPositionY(uint8_t box, int16_t positionY) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 8
+				_packetBuffer[12+_cBBO+4+4+1] |= 8;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+8] = positionY;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Size
+			 * box 	0-3: Box 1-4
+			 * size 	70-1000: 0.07-1.00
+			 */
+			void ATEMuni::setSuperSourceBoxParametersSize(uint8_t box, uint16_t size) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 16
+				_packetBuffer[12+_cBBO+4+4+1] |= 16;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+10] = highByte(size);
+				_packetBuffer[12+_cBBO+4+4+11] = lowByte(size);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Cropped
+			 * box 	0-3: Box 1-4
+			 * cropped 	Bit 0: On/Off
+			 */
+			void ATEMuni::setSuperSourceBoxParametersCropped(uint8_t box, bool cropped) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 32
+				_packetBuffer[12+_cBBO+4+4+1] |= 32;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+12] = cropped;
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Crop Top
+			 * box 	0-3: Box 1-4
+			 * cropTop 	0-18000: 0.0-18.0
+			 */
+			void ATEMuni::setSuperSourceBoxParametersCropTop(uint8_t box, uint16_t cropTop) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 64
+				_packetBuffer[12+_cBBO+4+4+1] |= 64;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+14] = highByte(cropTop);
+				_packetBuffer[12+_cBBO+4+4+15] = lowByte(cropTop);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Crop Bottom
+			 * box 	0-3: Box 1-4
+			 * cropBottom 	0-18000: 0.0-18.0
+			 */
+			void ATEMuni::setSuperSourceBoxParametersCropBottom(uint8_t box, uint16_t cropBottom) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 128
+				_packetBuffer[12+_cBBO+4+4+1] |= 128;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+16] = highByte(cropBottom);
+				_packetBuffer[12+_cBBO+4+4+17] = lowByte(cropBottom);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Crop Left
+			 * box 	0-3: Box 1-4
+			 * cropLeft 	0-32000: 0.0-32.0
+			 */
+			void ATEMuni::setSuperSourceBoxParametersCropLeft(uint8_t box, uint16_t cropLeft) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 256
+				_packetBuffer[12+_cBBO+4+4+0] |= 1;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+18] = highByte(cropLeft);
+				_packetBuffer[12+_cBBO+4+4+19] = lowByte(cropLeft);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
+			 * Set Super Source Box Parameters; Crop Right
+			 * box 	0-3: Box 1-4
+			 * cropRight 	0-32000: 0.0-32.0
+			 */
+			void ATEMuni::setSuperSourceBoxParametersCropRight(uint8_t box, uint16_t cropRight) {
+			
+	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
+		
+					// Set Mask: 512
+				_packetBuffer[12+_cBBO+4+4+0] |= 2;
+						
+				_packetBuffer[12+_cBBO+4+4+2] = box;
+				
+				_packetBuffer[12+_cBBO+4+4+20] = highByte(cropRight);
+				_packetBuffer[12+_cBBO+4+4+21] = lowByte(cropRight);
+				
+	 	   		_finishCommandPacket();
+		
+			}
+			
+			/**
 			 * Get Audio Mixer Input; Mix Option
 			 * audioSource 	(See audio source list)
 			 */
@@ -5639,7 +6728,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Input; Balance
 			 * audioSource 	(See audio source list)
 			 */
-			int ATEMuni::getAudioMixerInputBalance(uint16_t audioSource) {
+			int16_t ATEMuni::getAudioMixerInputBalance(uint16_t audioSource) {
 				return atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)];
 			}
 			
@@ -5691,7 +6780,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * audioSource 	(See audio source list)
 			 * balance 	-10000-10000: Left/Right Extremes
 			 */
-			void ATEMuni::setAudioMixerInputBalance(uint16_t audioSource, int balance) {
+			void ATEMuni::setAudioMixerInputBalance(uint16_t audioSource, int16_t balance) {
 			
 	  	  		_prepareCommandPacket(PSTR("CAMI"),12,(_packetBuffer[12+_cBBO+4+4+2]==highByte(audioSource)) && (_packetBuffer[12+_cBBO+4+4+3]==lowByte(audioSource)));
 		
@@ -5701,8 +6790,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+2] = highByte(audioSource);
 				_packetBuffer[12+_cBBO+4+4+3] = lowByte(audioSource);
 				
-				_packetBuffer[12+_cBBO+4+4+8] = highByte(balance);
-				_packetBuffer[12+_cBBO+4+4+9] = lowByte(balance);
+				_packetBuffer[12+_cBBO+4+4+8] = balance;
 				
 	 	   		_finishCommandPacket();
 		
@@ -5903,35 +6991,35 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			/**
 			 * Get Audio Mixer Levels; Master Left
 			 */
-			long ATEMuni::getAudioMixerLevelsMasterLeft() {
+			int32_t ATEMuni::getAudioMixerLevelsMasterLeft() {
 				return atemAudioMixerLevelsMasterLeft;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Master Right
 			 */
-			long ATEMuni::getAudioMixerLevelsMasterRight() {
+			int32_t ATEMuni::getAudioMixerLevelsMasterRight() {
 				return atemAudioMixerLevelsMasterRight;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Master Peak Left
 			 */
-			long ATEMuni::getAudioMixerLevelsMasterPeakLeft() {
+			int32_t ATEMuni::getAudioMixerLevelsMasterPeakLeft() {
 				return atemAudioMixerLevelsMasterPeakLeft;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Master Peak Right
 			 */
-			long ATEMuni::getAudioMixerLevelsMasterPeakRight() {
+			int32_t ATEMuni::getAudioMixerLevelsMasterPeakRight() {
 				return atemAudioMixerLevelsMasterPeakRight;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Monitor
 			 */
-			long ATEMuni::getAudioMixerLevelsMonitor() {
+			int32_t ATEMuni::getAudioMixerLevelsMonitor() {
 				return atemAudioMixerLevelsMonitor;
 			}
 			
@@ -5947,7 +7035,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Left
 			 * sources 	0-24: Number of
 			 */
-			long ATEMuni::getAudioMixerLevelsSourceLeft(uint16_t sources) {
+			int32_t ATEMuni::getAudioMixerLevelsSourceLeft(uint16_t sources) {
 				return atemAudioMixerLevelsSourceLeft[sources];
 			}
 			
@@ -5955,7 +7043,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Right
 			 * sources 	0-24: Number of
 			 */
-			long ATEMuni::getAudioMixerLevelsSourceRight(uint16_t sources) {
+			int32_t ATEMuni::getAudioMixerLevelsSourceRight(uint16_t sources) {
 				return atemAudioMixerLevelsSourceRight[sources];
 			}
 			
@@ -5963,7 +7051,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Peak Left
 			 * sources 	0-24: Number of
 			 */
-			long ATEMuni::getAudioMixerLevelsSourcePeakLeft(uint16_t sources) {
+			int32_t ATEMuni::getAudioMixerLevelsSourcePeakLeft(uint16_t sources) {
 				return atemAudioMixerLevelsSourcePeakLeft[sources];
 			}
 			
@@ -5971,7 +7059,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Peak Right
 			 * sources 	0-24: Number of
 			 */
-			long ATEMuni::getAudioMixerLevelsSourcePeakRight(uint16_t sources) {
+			int32_t ATEMuni::getAudioMixerLevelsSourcePeakRight(uint16_t sources) {
 				return atemAudioMixerLevelsSourcePeakRight[sources];
 			}
 			
