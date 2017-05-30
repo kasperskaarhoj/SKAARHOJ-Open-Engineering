@@ -247,7 +247,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				videoSource = word(_packetBuffer[0],_packetBuffer[1]);
 				if (getVideoSrcIndex(videoSource)<=46) {
 					memset(atemInputLongName[getVideoSrcIndex(videoSource)],0,21);
-					strncpy(atemInputLongName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+2), _packetBuffer[5] > 20 ? 20 : _packetBuffer[5]);
+					strncpy(atemInputLongName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+2), 20);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemInputLongName[getVideoSrcIndex(videoSource)=")); Serial.print(getVideoSrcIndex(videoSource)); Serial.print(F("] = "));
@@ -256,7 +256,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#endif
 					
 					memset(atemInputShortName[getVideoSrcIndex(videoSource)],0,5);
-					strncpy(atemInputShortName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+22), _packetBuffer[5] > 4 ? 4 : _packetBuffer[5]);
+					strncpy(atemInputShortName[getVideoSrcIndex(videoSource)], (char *)(_packetBuffer+22), 4);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemInputShortName[getVideoSrcIndex(videoSource)=")); Serial.print(getVideoSrcIndex(videoSource)); Serial.print(F("] = "));
@@ -798,7 +798,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerTop[mE][keyer];
 					#endif
-					atemKeyerTop[mE][keyer] = _packetBuffer[12];
+					atemKeyerTop[mE][keyer] = (int16_t) word(_packetBuffer[12], _packetBuffer[13]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerTop[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerTop[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -809,7 +809,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerBottom[mE][keyer];
 					#endif
-					atemKeyerBottom[mE][keyer] = _packetBuffer[14];
+					atemKeyerBottom[mE][keyer] = (int16_t) word(_packetBuffer[14], _packetBuffer[15]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerBottom[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerBottom[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -820,7 +820,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerLeft[mE][keyer];
 					#endif
-					atemKeyerLeft[mE][keyer] = _packetBuffer[16];
+					atemKeyerLeft[mE][keyer] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerLeft[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerLeft[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -831,7 +831,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyerRight[mE][keyer];
 					#endif
-					atemKeyerRight[mE][keyer] = _packetBuffer[18];
+					atemKeyerRight[mE][keyer] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyerRight[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyerRight[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -849,7 +849,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVESizeX[mE][keyer];
 					#endif
-					atemKeyDVESizeX[mE][keyer] = _packetBuffer[4];
+					atemKeyDVESizeX[mE][keyer] = (uint32_t)_packetBuffer[4]<<24 | (uint32_t)_packetBuffer[5]<<16 | (uint32_t)_packetBuffer[6]<<8 | (uint32_t)_packetBuffer[7];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVESizeX[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVESizeX[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -860,7 +860,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVESizeY[mE][keyer];
 					#endif
-					atemKeyDVESizeY[mE][keyer] = _packetBuffer[8];
+					atemKeyDVESizeY[mE][keyer] = (uint32_t)_packetBuffer[8]<<24 | (uint32_t)_packetBuffer[9]<<16 | (uint32_t)_packetBuffer[10]<<8 | (uint32_t)_packetBuffer[11];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVESizeY[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVESizeY[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -871,7 +871,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEPositionX[mE][keyer];
 					#endif
-					atemKeyDVEPositionX[mE][keyer] = _packetBuffer[12];
+					atemKeyDVEPositionX[mE][keyer] = (uint32_t)_packetBuffer[12]<<24 | (uint32_t)_packetBuffer[13]<<16 | (uint32_t)_packetBuffer[14]<<8 | (uint32_t)_packetBuffer[15];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEPositionX[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEPositionX[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -882,7 +882,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEPositionY[mE][keyer];
 					#endif
-					atemKeyDVEPositionY[mE][keyer] = _packetBuffer[16];
+					atemKeyDVEPositionY[mE][keyer] = (uint32_t)_packetBuffer[16]<<24 | (uint32_t)_packetBuffer[17]<<16 | (uint32_t)_packetBuffer[18]<<8 | (uint32_t)_packetBuffer[19];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEPositionY[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEPositionY[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -893,7 +893,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVERotation[mE][keyer];
 					#endif
-					atemKeyDVERotation[mE][keyer] = _packetBuffer[20];
+					atemKeyDVERotation[mE][keyer] = (uint32_t)_packetBuffer[20]<<24 | (uint32_t)_packetBuffer[21]<<16 | (uint32_t)_packetBuffer[22]<<8 | (uint32_t)_packetBuffer[23];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVERotation[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVERotation[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1080,7 +1080,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVETop[mE][keyer];
 					#endif
-					atemKeyDVETop[mE][keyer] = _packetBuffer[48];
+					atemKeyDVETop[mE][keyer] = (int16_t) word(_packetBuffer[48], _packetBuffer[49]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVETop[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVETop[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1091,7 +1091,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEBottom[mE][keyer];
 					#endif
-					atemKeyDVEBottom[mE][keyer] = _packetBuffer[50];
+					atemKeyDVEBottom[mE][keyer] = (int16_t) word(_packetBuffer[50], _packetBuffer[51]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEBottom[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEBottom[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1102,7 +1102,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVELeft[mE][keyer];
 					#endif
-					atemKeyDVELeft[mE][keyer] = _packetBuffer[52];
+					atemKeyDVELeft[mE][keyer] = (int16_t) word(_packetBuffer[52], _packetBuffer[53]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVELeft[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVELeft[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1113,7 +1113,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVERight[mE][keyer];
 					#endif
-					atemKeyDVERight[mE][keyer] = _packetBuffer[54];
+					atemKeyDVERight[mE][keyer] = (int16_t) word(_packetBuffer[54], _packetBuffer[55]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVERight[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVERight[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1246,7 +1246,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerTop[keyer];
 					#endif
-					atemDownstreamKeyerTop[keyer] = _packetBuffer[10];
+					atemDownstreamKeyerTop[keyer] = (int16_t) word(_packetBuffer[10], _packetBuffer[11]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerTop[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerTop[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1257,7 +1257,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerBottom[keyer];
 					#endif
-					atemDownstreamKeyerBottom[keyer] = _packetBuffer[12];
+					atemDownstreamKeyerBottom[keyer] = (int16_t) word(_packetBuffer[12], _packetBuffer[13]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerBottom[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerBottom[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1268,7 +1268,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerLeft[keyer];
 					#endif
-					atemDownstreamKeyerLeft[keyer] = _packetBuffer[14];
+					atemDownstreamKeyerLeft[keyer] = (int16_t) word(_packetBuffer[14], _packetBuffer[15]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerLeft[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerLeft[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1279,7 +1279,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemDownstreamKeyerRight[keyer];
 					#endif
-					atemDownstreamKeyerRight[keyer] = _packetBuffer[16];
+					atemDownstreamKeyerRight[keyer] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemDownstreamKeyerRight[keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemDownstreamKeyerRight[keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1421,7 +1421,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlIris[input];
 					#endif
-					atemCameraControlIris[input] = _packetBuffer[16];
+					atemCameraControlIris[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlIris[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlIris[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1436,7 +1436,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlFocus[input];
 					#endif
-					atemCameraControlFocus[input] = _packetBuffer[16];
+					atemCameraControlFocus[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlFocus[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlFocus[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1451,7 +1451,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGain[input];
 					#endif
-					atemCameraControlGain[input] = _packetBuffer[16];
+					atemCameraControlGain[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGain[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGain[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1466,7 +1466,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlWhiteBalance[input];
 					#endif
-					atemCameraControlWhiteBalance[input] = _packetBuffer[16];
+					atemCameraControlWhiteBalance[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlWhiteBalance[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlWhiteBalance[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1481,7 +1481,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlSharpeningLevel[input];
 					#endif
-					atemCameraControlSharpeningLevel[input] = _packetBuffer[16];
+					atemCameraControlSharpeningLevel[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlSharpeningLevel[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlSharpeningLevel[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1496,7 +1496,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlZoomNormalized[input];
 					#endif
-					atemCameraControlZoomNormalized[input] = _packetBuffer[16];
+					atemCameraControlZoomNormalized[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlZoomNormalized[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlZoomNormalized[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1511,7 +1511,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlZoomSpeed[input];
 					#endif
-					atemCameraControlZoomSpeed[input] = _packetBuffer[16];
+					atemCameraControlZoomSpeed[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlZoomSpeed[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlZoomSpeed[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1526,7 +1526,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlColorbars[input];
 					#endif
-					atemCameraControlColorbars[input] = _packetBuffer[16];
+					atemCameraControlColorbars[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlColorbars[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlColorbars[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1541,7 +1541,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftR[input];
 					#endif
-					atemCameraControlLiftR[input] = _packetBuffer[16];
+					atemCameraControlLiftR[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftR[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftR[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1556,7 +1556,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaR[input];
 					#endif
-					atemCameraControlGammaR[input] = _packetBuffer[16];
+					atemCameraControlGammaR[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaR[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaR[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1571,7 +1571,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainR[input];
 					#endif
-					atemCameraControlGainR[input] = _packetBuffer[16];
+					atemCameraControlGainR[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainR[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainR[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1586,7 +1586,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLumMix[input];
 					#endif
-					atemCameraControlLumMix[input] = _packetBuffer[16];
+					atemCameraControlLumMix[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLumMix[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLumMix[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1601,7 +1601,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlHue[input];
 					#endif
-					atemCameraControlHue[input] = _packetBuffer[16];
+					atemCameraControlHue[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlHue[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlHue[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1616,7 +1616,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlShutter[input];
 					#endif
-					atemCameraControlShutter[input] = _packetBuffer[18];
+					atemCameraControlShutter[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlShutter[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlShutter[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1631,7 +1631,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftG[input];
 					#endif
-					atemCameraControlLiftG[input] = _packetBuffer[18];
+					atemCameraControlLiftG[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftG[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftG[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1646,7 +1646,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaG[input];
 					#endif
-					atemCameraControlGammaG[input] = _packetBuffer[18];
+					atemCameraControlGammaG[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaG[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaG[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1661,7 +1661,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainG[input];
 					#endif
-					atemCameraControlGainG[input] = _packetBuffer[18];
+					atemCameraControlGainG[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainG[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainG[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1676,7 +1676,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlContrast[input];
 					#endif
-					atemCameraControlContrast[input] = _packetBuffer[18];
+					atemCameraControlContrast[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlContrast[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlContrast[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1691,7 +1691,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlSaturation[input];
 					#endif
-					atemCameraControlSaturation[input] = _packetBuffer[18];
+					atemCameraControlSaturation[input] = (int16_t) word(_packetBuffer[18], _packetBuffer[19]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlSaturation[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlSaturation[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1706,7 +1706,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftB[input];
 					#endif
-					atemCameraControlLiftB[input] = _packetBuffer[20];
+					atemCameraControlLiftB[input] = (int16_t) word(_packetBuffer[20], _packetBuffer[21]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftB[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftB[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1721,7 +1721,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaB[input];
 					#endif
-					atemCameraControlGammaB[input] = _packetBuffer[20];
+					atemCameraControlGammaB[input] = (int16_t) word(_packetBuffer[20], _packetBuffer[21]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaB[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaB[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1736,7 +1736,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainB[input];
 					#endif
-					atemCameraControlGainB[input] = _packetBuffer[20];
+					atemCameraControlGainB[input] = (int16_t) word(_packetBuffer[20], _packetBuffer[21]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainB[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainB[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1751,7 +1751,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlLiftY[input];
 					#endif
-					atemCameraControlLiftY[input] = _packetBuffer[22];
+					atemCameraControlLiftY[input] = (int16_t) word(_packetBuffer[22], _packetBuffer[23]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlLiftY[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlLiftY[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1766,7 +1766,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGammaY[input];
 					#endif
-					atemCameraControlGammaY[input] = _packetBuffer[22];
+					atemCameraControlGammaY[input] = (int16_t) word(_packetBuffer[22], _packetBuffer[23]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGammaY[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGammaY[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1781,7 +1781,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemCameraControlGainY[input];
 					#endif
-					atemCameraControlGainY[input] = _packetBuffer[22];
+					atemCameraControlGainY[input] = (int16_t) word(_packetBuffer[22], _packetBuffer[23]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemCameraControlGainY[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemCameraControlGainY[input=")); Serial.print(input); Serial.print(F("] = "));
@@ -1920,8 +1920,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 						Serial.print(F("atemMacroPropertiesName[macroIndex=")); Serial.print(macroIndex); Serial.print(F("] = "));
 						Serial.println(atemMacroPropertiesName[macroIndex]);
 					}
-					#endif
-					
+					#endif	
+			
 				}
 			} else 
 			if(!strcmp_P(cmdStr, PSTR("SSrc"))) {
@@ -2176,7 +2176,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemSuperSourceBoxParametersPositionX[box];
 					#endif
-					atemSuperSourceBoxParametersPositionX[box] = _packetBuffer[4];
+					atemSuperSourceBoxParametersPositionX[box] = (int16_t) word(_packetBuffer[4], _packetBuffer[5]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersPositionX[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemSuperSourceBoxParametersPositionX[box=")); Serial.print(box); Serial.print(F("] = "));
@@ -2187,7 +2187,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemSuperSourceBoxParametersPositionY[box];
 					#endif
-					atemSuperSourceBoxParametersPositionY[box] = _packetBuffer[6];
+					atemSuperSourceBoxParametersPositionY[box] = (int16_t) word(_packetBuffer[6], _packetBuffer[7]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemSuperSourceBoxParametersPositionY[box]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemSuperSourceBoxParametersPositionY[box=")); Serial.print(box); Serial.print(F("] = "));
@@ -2292,7 +2292,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)];
 					#endif
-					atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)] = _packetBuffer[12];
+					atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)] = (int16_t) word(_packetBuffer[12], _packetBuffer[13]);
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)=")); Serial.print(getAudioSrcIndex(audioSource)); Serial.print(F("] = "));
@@ -3861,7 +3861,10 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+8] = sizeX;
+				_packetBuffer[12+_cBBO+4+4+8] = (int32_t)((sizeX>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+9] = (int32_t)((sizeX>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+10] = (int32_t)((sizeX>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+11] = (int32_t)(sizeX & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -3884,7 +3887,10 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+12] = sizeY;
+				_packetBuffer[12+_cBBO+4+4+12] = (int32_t)((sizeY>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+13] = (int32_t)((sizeY>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+14] = (int32_t)((sizeY>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+15] = (int32_t)(sizeY & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -3907,7 +3913,10 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+16] = positionX;
+				_packetBuffer[12+_cBBO+4+4+16] = (int32_t)((positionX>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+17] = (int32_t)((positionX>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+18] = (int32_t)((positionX>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+19] = (int32_t)(positionX & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -3930,7 +3939,10 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+20] = positionY;
+				_packetBuffer[12+_cBBO+4+4+20] = (int32_t)((positionY>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+21] = (int32_t)((positionY>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+22] = (int32_t)((positionY>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+23] = (int32_t)(positionY & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -3953,7 +3965,10 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+24] = rotation;
+				_packetBuffer[12+_cBBO+4+4+24] = (int32_t)((rotation>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+25] = (int32_t)((rotation>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+26] = (int32_t)((rotation>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+27] = (int32_t)(rotation & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -4350,7 +4365,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+52] = top;
+				_packetBuffer[12+_cBBO+4+4+52] = highByte(top);
+				_packetBuffer[12+_cBBO+4+4+53] = lowByte(top);
 				
 	 	   		_finishCommandPacket();
 		
@@ -4373,7 +4389,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+54] = bottom;
+				_packetBuffer[12+_cBBO+4+4+54] = highByte(bottom);
+				_packetBuffer[12+_cBBO+4+4+55] = lowByte(bottom);
 				
 	 	   		_finishCommandPacket();
 		
@@ -4396,7 +4413,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+56] = left;
+				_packetBuffer[12+_cBBO+4+4+56] = highByte(left);
+				_packetBuffer[12+_cBBO+4+4+57] = lowByte(left);
 				
 	 	   		_finishCommandPacket();
 		
@@ -4419,7 +4437,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+58] = right;
+				_packetBuffer[12+_cBBO+4+4+58] = highByte(right);
+				_packetBuffer[12+_cBBO+4+4+59] = lowByte(right);
 				
 	 	   		_finishCommandPacket();
 		
@@ -6558,7 +6577,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 						
 				_packetBuffer[12+_cBBO+4+4+2] = box;
 				
-				_packetBuffer[12+_cBBO+4+4+6] = positionX;
+				_packetBuffer[12+_cBBO+4+4+6] = highByte(positionX);
+				_packetBuffer[12+_cBBO+4+4+7] = lowByte(positionX);
 				
 	 	   		_finishCommandPacket();
 		
@@ -6578,7 +6598,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 						
 				_packetBuffer[12+_cBBO+4+4+2] = box;
 				
-				_packetBuffer[12+_cBBO+4+4+8] = positionY;
+				_packetBuffer[12+_cBBO+4+4+8] = highByte(positionY);
+				_packetBuffer[12+_cBBO+4+4+9] = lowByte(positionY);
 				
 	 	   		_finishCommandPacket();
 		
@@ -6791,7 +6812,8 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+2] = highByte(audioSource);
 				_packetBuffer[12+_cBBO+4+4+3] = lowByte(audioSource);
 				
-				_packetBuffer[12+_cBBO+4+4+8] = balance;
+				_packetBuffer[12+_cBBO+4+4+8] = highByte(balance);
+				_packetBuffer[12+_cBBO+4+4+9] = lowByte(balance);
 				
 	 	   		_finishCommandPacket();
 		
