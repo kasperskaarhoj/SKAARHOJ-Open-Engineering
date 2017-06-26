@@ -172,6 +172,9 @@ void SkaarhojOLED32x256::begin(uint8_t address, uint8_t cs, uint8_t base, bool P
 
   // Display ON
   sendCommand(0xAF, cs);
+  
+  clearDisplay();
+  display(cs);
 
   // Turn on VCC:
   setVCC(true);
