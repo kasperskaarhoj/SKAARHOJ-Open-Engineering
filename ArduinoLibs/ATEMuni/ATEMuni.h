@@ -55,7 +55,6 @@ class ATEMuni : public ATEMbase
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMuni.h:

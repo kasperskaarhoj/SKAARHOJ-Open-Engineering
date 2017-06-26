@@ -5548,6 +5548,10 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 				_packetBuffer[12+_cBBO+4+4+0] = input;
 
+				// Pivot = 0.5 (Fixed16 1024)
+				_packetBuffer[12+_cBBO+4+4+16] = 4;
+				_packetBuffer[12+_cBBO+4+4+17] = 0;
+
 				_packetBuffer[12+_cBBO+4+4+18] = highByte(contrast);
 				_packetBuffer[12+_cBBO+4+4+19] = lowByte(contrast);
 
@@ -7131,6 +7135,3 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			uint8_t ATEMuni::getTallyBySourceTallyFlags(uint16_t sources) {
 				return atemTallyBySourceTallyFlags[sources];
 			}
-			
-
-	

@@ -172,11 +172,6 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
-
-
-
-
-
 		// *********************************
 		// **
 		// ** Implementations in ATEMext.c:
@@ -485,7 +480,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemVideoMixerConfigModes;
 					#endif
-					atemVideoMixerConfigModes = (unsigned long)_packetBuffer[1]<<16 | (unsigned long)_packetBuffer[2]<<8 | (unsigned long)_packetBuffer[3];
+					atemVideoMixerConfigModes = (uint32_t)_packetBuffer[1]<<16 | (uint32_t)_packetBuffer[2]<<8 | (uint32_t)_packetBuffer[3];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemVideoMixerConfigModes!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemVideoMixerConfigModes = "));
@@ -1431,7 +1426,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVESizeX[mE][keyer];
 					#endif
-					atemKeyDVESizeX[mE][keyer] = (unsigned long)_packetBuffer[4]<<24 | (unsigned long)_packetBuffer[5]<<16 | (unsigned long)_packetBuffer[6]<<8 | (unsigned long)_packetBuffer[7];
+					atemKeyDVESizeX[mE][keyer] = (uint32_t)_packetBuffer[4]<<24 | (uint32_t)_packetBuffer[5]<<16 | (uint32_t)_packetBuffer[6]<<8 | (uint32_t)_packetBuffer[7];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVESizeX[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVESizeX[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1442,7 +1437,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVESizeY[mE][keyer];
 					#endif
-					atemKeyDVESizeY[mE][keyer] = (unsigned long)_packetBuffer[8]<<24 | (unsigned long)_packetBuffer[9]<<16 | (unsigned long)_packetBuffer[10]<<8 | (unsigned long)_packetBuffer[11];
+					atemKeyDVESizeY[mE][keyer] = (uint32_t)_packetBuffer[8]<<24 | (uint32_t)_packetBuffer[9]<<16 | (uint32_t)_packetBuffer[10]<<8 | (uint32_t)_packetBuffer[11];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVESizeY[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVESizeY[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1453,7 +1448,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEPositionX[mE][keyer];
 					#endif
-					atemKeyDVEPositionX[mE][keyer] = (unsigned long)_packetBuffer[12]<<24 | (unsigned long)_packetBuffer[13]<<16 | (unsigned long)_packetBuffer[14]<<8 | (unsigned long)_packetBuffer[15];
+					atemKeyDVEPositionX[mE][keyer] = (uint32_t)_packetBuffer[12]<<24 | (uint32_t)_packetBuffer[13]<<16 | (uint32_t)_packetBuffer[14]<<8 | (uint32_t)_packetBuffer[15];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEPositionX[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEPositionX[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1464,7 +1459,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVEPositionY[mE][keyer];
 					#endif
-					atemKeyDVEPositionY[mE][keyer] = (unsigned long)_packetBuffer[16]<<24 | (unsigned long)_packetBuffer[17]<<16 | (unsigned long)_packetBuffer[18]<<8 | (unsigned long)_packetBuffer[19];
+					atemKeyDVEPositionY[mE][keyer] = (uint32_t)_packetBuffer[16]<<24 | (uint32_t)_packetBuffer[17]<<16 | (uint32_t)_packetBuffer[18]<<8 | (uint32_t)_packetBuffer[19];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVEPositionY[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVEPositionY[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -1475,7 +1470,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					#if ATEM_debug
 					temp = atemKeyDVERotation[mE][keyer];
 					#endif
-					atemKeyDVERotation[mE][keyer] = (unsigned long)_packetBuffer[20]<<24 | (unsigned long)_packetBuffer[21]<<16 | (unsigned long)_packetBuffer[22]<<8 | (unsigned long)_packetBuffer[23];
+					atemKeyDVERotation[mE][keyer] = (uint32_t)_packetBuffer[20]<<24 | (uint32_t)_packetBuffer[21]<<16 | (uint32_t)_packetBuffer[22]<<8 | (uint32_t)_packetBuffer[23];
 					#if ATEM_debug
 					if ((_serialOutput==0x80 && atemKeyDVERotation[mE][keyer]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
 						Serial.print(F("atemKeyDVERotation[mE=")); Serial.print(mE); Serial.print(F("][keyer=")); Serial.print(keyer); Serial.print(F("] = "));
@@ -2112,6 +2107,21 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					
 				}
 				
+				if (_packetBuffer[1]==0 && _packetBuffer[2]==8)	{
+					
+					#if ATEM_debug
+					temp = atemCameraControlZoomNormalized[input];
+					#endif
+					atemCameraControlZoomNormalized[input] = (int16_t) word(_packetBuffer[16], _packetBuffer[17]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && atemCameraControlZoomNormalized[input]!=temp) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemCameraControlZoomNormalized[input=")); Serial.print(input); Serial.print(F("] = "));
+						Serial.println(atemCameraControlZoomNormalized[input]);
+					}
+					#endif
+					
+				}
+				
 				if (_packetBuffer[1]==0 && _packetBuffer[2]==9)	{
 					
 					#if ATEM_debug
@@ -2627,6 +2637,15 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					}
 					#endif
 					
+					memset(atemMacroPropertiesName[macroIndex],0,11);
+					strncpy(atemMacroPropertiesName[macroIndex], (char *)(_packetBuffer+8), _packetBuffer[5] > 10 ? 10 : _packetBuffer[5]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemMacroPropertiesName[macroIndex=")); Serial.print(macroIndex); Serial.print(F("] = "));
+						Serial.println(atemMacroPropertiesName[macroIndex]);
+					}
+					#endif	
+			
 				}
 			} else 
 			if(!strcmp_P(cmdStr, PSTR("MRcS"))) {
@@ -3520,7 +3539,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			/**
 			 * Get Video Mixer Config; Modes
 			 */
-			long ATEMext::getVideoMixerConfigModes() {
+			uint32_t ATEMext::getVideoMixerConfigModes() {
 				return atemVideoMixerConfigModes;
 			}
 			
@@ -4931,7 +4950,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyerTop(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyerTop(uint8_t mE, uint8_t keyer) {
 				return atemKeyerTop[mE][keyer];
 			}
 			
@@ -4940,7 +4959,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyerBottom(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyerBottom(uint8_t mE, uint8_t keyer) {
 				return atemKeyerBottom[mE][keyer];
 			}
 			
@@ -4949,7 +4968,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyerLeft(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyerLeft(uint8_t mE, uint8_t keyer) {
 				return atemKeyerLeft[mE][keyer];
 			}
 			
@@ -4958,7 +4977,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyerRight(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyerRight(uint8_t mE, uint8_t keyer) {
 				return atemKeyerRight[mE][keyer];
 			}
 			
@@ -5037,7 +5056,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * top 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMext::setKeyerTop(uint8_t mE, uint8_t keyer, int top) {
+			void ATEMext::setKeyerTop(uint8_t mE, uint8_t keyer, int16_t top) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -5061,7 +5080,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * bottom 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMext::setKeyerBottom(uint8_t mE, uint8_t keyer, int bottom) {
+			void ATEMext::setKeyerBottom(uint8_t mE, uint8_t keyer, int16_t bottom) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -5085,7 +5104,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * left 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMext::setKeyerLeft(uint8_t mE, uint8_t keyer, int left) {
+			void ATEMext::setKeyerLeft(uint8_t mE, uint8_t keyer, int16_t left) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -5109,7 +5128,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * right 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMext::setKeyerRight(uint8_t mE, uint8_t keyer, int right) {
+			void ATEMext::setKeyerRight(uint8_t mE, uint8_t keyer, int16_t right) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -5697,7 +5716,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMext::getKeyDVESizeX(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMext::getKeyDVESizeX(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVESizeX[mE][keyer];
 			}
 			
@@ -5706,7 +5725,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMext::getKeyDVESizeY(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMext::getKeyDVESizeY(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVESizeY[mE][keyer];
 			}
 			
@@ -5715,7 +5734,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMext::getKeyDVEPositionX(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMext::getKeyDVEPositionX(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVEPositionX[mE][keyer];
 			}
 			
@@ -5724,7 +5743,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMext::getKeyDVEPositionY(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMext::getKeyDVEPositionY(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVEPositionY[mE][keyer];
 			}
 			
@@ -5733,7 +5752,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			long ATEMext::getKeyDVERotation(uint8_t mE, uint8_t keyer) {
+			int32_t ATEMext::getKeyDVERotation(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVERotation[mE][keyer];
 			}
 			
@@ -5886,7 +5905,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyDVETop(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyDVETop(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVETop[mE][keyer];
 			}
 			
@@ -5895,7 +5914,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyDVEBottom(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyDVEBottom(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVEBottom[mE][keyer];
 			}
 			
@@ -5904,7 +5923,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyDVELeft(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyDVELeft(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVELeft[mE][keyer];
 			}
 			
@@ -5913,7 +5932,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * mE 	0: ME1, 1: ME2
 			 * keyer 	0-3: Keyer 1-4
 			 */
-			int ATEMext::getKeyDVERight(uint8_t mE, uint8_t keyer) {
+			int16_t ATEMext::getKeyDVERight(uint8_t mE, uint8_t keyer) {
 				return atemKeyDVERight[mE][keyer];
 			}
 			
@@ -5932,7 +5951,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * sizeX 	Example: 1000: 1.000
 			 */
-			void ATEMext::setKeyDVESizeX(uint8_t mE, uint8_t keyer, long sizeX) {
+			void ATEMext::setKeyDVESizeX(uint8_t mE, uint8_t keyer, int32_t sizeX) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -5943,10 +5962,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+8] = (long)((sizeX>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+9] = (long)((sizeX>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+10] = (long)((sizeX>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+11] = (long)(sizeX & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+8] = (int32_t)((sizeX>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+9] = (int32_t)((sizeX>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+10] = (int32_t)((sizeX>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+11] = (int32_t)(sizeX & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -5958,7 +5977,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * sizeY 	Example: 2000: 2.000
 			 */
-			void ATEMext::setKeyDVESizeY(uint8_t mE, uint8_t keyer, long sizeY) {
+			void ATEMext::setKeyDVESizeY(uint8_t mE, uint8_t keyer, int32_t sizeY) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -5969,10 +5988,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+12] = (long)((sizeY>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+13] = (long)((sizeY>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+14] = (long)((sizeY>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+15] = (long)(sizeY & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+12] = (int32_t)((sizeY>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+13] = (int32_t)((sizeY>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+14] = (int32_t)((sizeY>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+15] = (int32_t)(sizeY & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -5984,7 +6003,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * positionX 	Example: 1000: 1.000
 			 */
-			void ATEMext::setKeyDVEPositionX(uint8_t mE, uint8_t keyer, long positionX) {
+			void ATEMext::setKeyDVEPositionX(uint8_t mE, uint8_t keyer, int32_t positionX) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -5995,10 +6014,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+16] = (long)((positionX>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+17] = (long)((positionX>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+18] = (long)((positionX>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+19] = (long)(positionX & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+16] = (int32_t)((positionX>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+17] = (int32_t)((positionX>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+18] = (int32_t)((positionX>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+19] = (int32_t)(positionX & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -6010,7 +6029,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * positionY 	Example: -1000: -1.000
 			 */
-			void ATEMext::setKeyDVEPositionY(uint8_t mE, uint8_t keyer, long positionY) {
+			void ATEMext::setKeyDVEPositionY(uint8_t mE, uint8_t keyer, int32_t positionY) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -6021,10 +6040,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+20] = (long)((positionY>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+21] = (long)((positionY>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+22] = (long)((positionY>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+23] = (long)(positionY & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+20] = (int32_t)((positionY>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+21] = (int32_t)((positionY>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+22] = (int32_t)((positionY>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+23] = (int32_t)(positionY & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -6036,7 +6055,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * rotation 	Example: 3670: 1 rotation+7 degress
 			 */
-			void ATEMext::setKeyDVERotation(uint8_t mE, uint8_t keyer, long rotation) {
+			void ATEMext::setKeyDVERotation(uint8_t mE, uint8_t keyer, int32_t rotation) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -6047,10 +6066,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+24] = (long)((rotation>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+25] = (long)((rotation>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+26] = (long)((rotation>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+27] = (long)(rotation & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+24] = (int32_t)((rotation>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+25] = (int32_t)((rotation>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+26] = (int32_t)((rotation>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+27] = (int32_t)(rotation & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -6436,7 +6455,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * top 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMext::setKeyDVETop(uint8_t mE, uint8_t keyer, int top) {
+			void ATEMext::setKeyDVETop(uint8_t mE, uint8_t keyer, int16_t top) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -6460,7 +6479,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * bottom 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMext::setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom) {
+			void ATEMext::setKeyDVEBottom(uint8_t mE, uint8_t keyer, int16_t bottom) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -6484,7 +6503,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * left 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMext::setKeyDVELeft(uint8_t mE, uint8_t keyer, int left) {
+			void ATEMext::setKeyDVELeft(uint8_t mE, uint8_t keyer, int16_t left) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -6508,7 +6527,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * right 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMext::setKeyDVERight(uint8_t mE, uint8_t keyer, int right) {
+			void ATEMext::setKeyDVERight(uint8_t mE, uint8_t keyer, int16_t right) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -6724,7 +6743,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Top
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMext::getDownstreamKeyerTop(uint8_t keyer) {
+			int16_t ATEMext::getDownstreamKeyerTop(uint8_t keyer) {
 				return atemDownstreamKeyerTop[keyer];
 			}
 			
@@ -6732,7 +6751,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Bottom
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMext::getDownstreamKeyerBottom(uint8_t keyer) {
+			int16_t ATEMext::getDownstreamKeyerBottom(uint8_t keyer) {
 				return atemDownstreamKeyerBottom[keyer];
 			}
 			
@@ -6740,7 +6759,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Left
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMext::getDownstreamKeyerLeft(uint8_t keyer) {
+			int16_t ATEMext::getDownstreamKeyerLeft(uint8_t keyer) {
 				return atemDownstreamKeyerLeft[keyer];
 			}
 			
@@ -6748,7 +6767,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Downstream Keyer; Right
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMext::getDownstreamKeyerRight(uint8_t keyer) {
+			int16_t ATEMext::getDownstreamKeyerRight(uint8_t keyer) {
 				return atemDownstreamKeyerRight[keyer];
 			}
 			
@@ -6893,7 +6912,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * top 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMext::setDownstreamKeyerTop(uint8_t keyer, int top) {
+			void ATEMext::setDownstreamKeyerTop(uint8_t keyer, int16_t top) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -6914,7 +6933,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * bottom 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMext::setDownstreamKeyerBottom(uint8_t keyer, int bottom) {
+			void ATEMext::setDownstreamKeyerBottom(uint8_t keyer, int16_t bottom) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -6935,7 +6954,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * left 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMext::setDownstreamKeyerLeft(uint8_t keyer, int left) {
+			void ATEMext::setDownstreamKeyerLeft(uint8_t keyer, int16_t left) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -6956,7 +6975,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * keyer 	0-3: Keyer 1-4
 			 * right 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMext::setDownstreamKeyerRight(uint8_t keyer, int right) {
+			void ATEMext::setDownstreamKeyerRight(uint8_t keyer, int16_t right) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -7224,7 +7243,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Iris
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlIris(uint8_t input) {
+			int16_t ATEMext::getCameraControlIris(uint8_t input) {
 				return atemCameraControlIris[input];
 			}
 			
@@ -7232,7 +7251,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Focus
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlFocus(uint8_t input) {
+			int16_t ATEMext::getCameraControlFocus(uint8_t input) {
 				return atemCameraControlFocus[input];
 			}
 			
@@ -7240,7 +7259,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGain(uint8_t input) {
+			int16_t ATEMext::getCameraControlGain(uint8_t input) {
 				return atemCameraControlGain[input];
 			}
 			
@@ -7248,7 +7267,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; White Balance
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlWhiteBalance(uint8_t input) {
+			int16_t ATEMext::getCameraControlWhiteBalance(uint8_t input) {
 				return atemCameraControlWhiteBalance[input];
 			}
 			
@@ -7256,15 +7275,23 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Sharpening Level
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlSharpeningLevel(uint8_t input) {
+			int16_t ATEMext::getCameraControlSharpeningLevel(uint8_t input) {
 				return atemCameraControlSharpeningLevel[input];
+			}
+			
+			/**
+			 * Get Camera Control; Zoom Normalized
+			 * input 	1-8: Camera
+			 */
+			int16_t ATEMext::getCameraControlZoomNormalized(uint8_t input) {
+				return atemCameraControlZoomNormalized[input];
 			}
 			
 			/**
 			 * Get Camera Control; Zoom Speed
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlZoomSpeed(uint8_t input) {
+			int16_t ATEMext::getCameraControlZoomSpeed(uint8_t input) {
 				return atemCameraControlZoomSpeed[input];
 			}
 			
@@ -7272,7 +7299,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Colorbars
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlColorbars(uint8_t input) {
+			int16_t ATEMext::getCameraControlColorbars(uint8_t input) {
 				return atemCameraControlColorbars[input];
 			}
 			
@@ -7280,7 +7307,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift R
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlLiftR(uint8_t input) {
+			int16_t ATEMext::getCameraControlLiftR(uint8_t input) {
 				return atemCameraControlLiftR[input];
 			}
 			
@@ -7288,7 +7315,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma R
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGammaR(uint8_t input) {
+			int16_t ATEMext::getCameraControlGammaR(uint8_t input) {
 				return atemCameraControlGammaR[input];
 			}
 			
@@ -7296,7 +7323,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain R
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGainR(uint8_t input) {
+			int16_t ATEMext::getCameraControlGainR(uint8_t input) {
 				return atemCameraControlGainR[input];
 			}
 			
@@ -7304,7 +7331,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lum Mix
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlLumMix(uint8_t input) {
+			int16_t ATEMext::getCameraControlLumMix(uint8_t input) {
 				return atemCameraControlLumMix[input];
 			}
 			
@@ -7312,7 +7339,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Hue
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlHue(uint8_t input) {
+			int16_t ATEMext::getCameraControlHue(uint8_t input) {
 				return atemCameraControlHue[input];
 			}
 			
@@ -7320,7 +7347,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Shutter
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlShutter(uint8_t input) {
+			int16_t ATEMext::getCameraControlShutter(uint8_t input) {
 				return atemCameraControlShutter[input];
 			}
 			
@@ -7328,7 +7355,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift G
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlLiftG(uint8_t input) {
+			int16_t ATEMext::getCameraControlLiftG(uint8_t input) {
 				return atemCameraControlLiftG[input];
 			}
 			
@@ -7336,7 +7363,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma G
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGammaG(uint8_t input) {
+			int16_t ATEMext::getCameraControlGammaG(uint8_t input) {
 				return atemCameraControlGammaG[input];
 			}
 			
@@ -7344,7 +7371,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain G
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGainG(uint8_t input) {
+			int16_t ATEMext::getCameraControlGainG(uint8_t input) {
 				return atemCameraControlGainG[input];
 			}
 			
@@ -7352,7 +7379,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Contrast
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlContrast(uint8_t input) {
+			int16_t ATEMext::getCameraControlContrast(uint8_t input) {
 				return atemCameraControlContrast[input];
 			}
 			
@@ -7360,7 +7387,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Saturation
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlSaturation(uint8_t input) {
+			int16_t ATEMext::getCameraControlSaturation(uint8_t input) {
 				return atemCameraControlSaturation[input];
 			}
 			
@@ -7368,7 +7395,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift B
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlLiftB(uint8_t input) {
+			int16_t ATEMext::getCameraControlLiftB(uint8_t input) {
 				return atemCameraControlLiftB[input];
 			}
 			
@@ -7376,7 +7403,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma B
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGammaB(uint8_t input) {
+			int16_t ATEMext::getCameraControlGammaB(uint8_t input) {
 				return atemCameraControlGammaB[input];
 			}
 			
@@ -7384,7 +7411,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain B
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGainB(uint8_t input) {
+			int16_t ATEMext::getCameraControlGainB(uint8_t input) {
 				return atemCameraControlGainB[input];
 			}
 			
@@ -7392,7 +7419,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Lift Y
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlLiftY(uint8_t input) {
+			int16_t ATEMext::getCameraControlLiftY(uint8_t input) {
 				return atemCameraControlLiftY[input];
 			}
 			
@@ -7400,7 +7427,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gamma Y
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGammaY(uint8_t input) {
+			int16_t ATEMext::getCameraControlGammaY(uint8_t input) {
 				return atemCameraControlGammaY[input];
 			}
 			
@@ -7408,7 +7435,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Camera Control; Gain Y
 			 * input 	1-8: Camera
 			 */
-			int ATEMext::getCameraControlGainY(uint8_t input) {
+			int16_t ATEMext::getCameraControlGainY(uint8_t input) {
 				return atemCameraControlGainY[input];
 			}
 			
@@ -7418,7 +7445,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* Command takes no input
 				*/
 
-			void ATEMext::setCameraControlAutoIris(uint8_t input, int autoiris) {
+			void ATEMext::setCameraControlAutoIris(uint8_t input, int16_t autoiris) {
 					_prepareCommandPacket(PSTR("CCmd"), 24);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -7437,7 +7464,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* 0: Off, 1: Low, 2: Medium, 3: High
 				*/
 
-			void ATEMext::setCameraControlSharpeningLevel(uint8_t input, int detail) {
+			void ATEMext::setCameraControlSharpeningLevel(uint8_t input, int16_t detail) {
 					_prepareCommandPacket(PSTR("CCmd"), 20);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -7458,7 +7485,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* Command takes no input
 				*/
 
-			void ATEMext::setCameraControlAutoFocus(uint8_t input, int autoiris) {
+			void ATEMext::setCameraControlAutoFocus(uint8_t input, int16_t autoiris) {
 					_prepareCommandPacket(PSTR("CCmd"), 24);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -7476,7 +7503,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				* Command takes no input
 				*/
 
-			void ATEMext::setCameraControlResetAll(uint8_t input, int reset) {
+			void ATEMext::setCameraControlResetAll(uint8_t input, int16_t reset) {
 					_prepareCommandPacket(PSTR("CCmd"), 24);
 
 					_packetBuffer[12+_cBBO+4+4+0] = input;
@@ -7514,7 +7541,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * iris 	0-2048
 			 */
-			void ATEMext::setCameraControlIris(uint8_t input, int iris) {
+			void ATEMext::setCameraControlIris(uint8_t input, int16_t iris) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7538,7 +7565,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * colorbars: duration in secs (0=disable)
 			 */
-			void ATEMext::setCameraControlColorbars(uint8_t input, int colorbars) {
+			void ATEMext::setCameraControlColorbars(uint8_t input, int16_t colorbars) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"), 20);
 
@@ -7563,7 +7590,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * focus 	0-65535
 			 */
-			void ATEMext::setCameraControlFocus(uint8_t input, int focus) {
+			void ATEMext::setCameraControlFocus(uint8_t input, int16_t focus) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7589,7 +7616,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gain 	512: 0db, 1024: 6db, 2048: 12db, 4096: 18db
 			 */
-			void ATEMext::setCameraControlGain(uint8_t input, int gain) {
+			void ATEMext::setCameraControlGain(uint8_t input, int16_t gain) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7614,7 +7641,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 *
 			 */
-			void ATEMext::setCameraControlWhiteBalance(uint8_t input, int whiteBalance) {
+			void ATEMext::setCameraControlWhiteBalance(uint8_t input, int16_t whiteBalance) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7635,11 +7662,36 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			}
 
 			/**
+			 * Set Camera Control; Zoom Normalized
+			 * input 	0-7: Camera
+			 *
+			 */
+			void ATEMext::setCameraControlZoomNormalized(uint8_t input, int16_t zoomNormalized) {
+
+		  		_prepareCommandPacket(PSTR("CCmd"),24);
+
+					// Preset values:
+				_packetBuffer[12+_cBBO+4+4+1] = 0;
+				_packetBuffer[12+_cBBO+4+4+2] = 8;
+
+				_packetBuffer[12+_cBBO+4+4+4] = 0x80;
+				_packetBuffer[12+_cBBO+4+4+9] = 0x01;
+
+				_packetBuffer[12+_cBBO+4+4+0] = input;
+
+				_packetBuffer[12+_cBBO+4+4+16] = highByte(zoomNormalized);
+				_packetBuffer[12+_cBBO+4+4+17] = lowByte(zoomNormalized);
+
+		   		_finishCommandPacket();
+
+			}
+
+			/**
 			 * Set Camera Control; Zoom
 			 * input 	0-7: Camera
 			 *
 			 */
-			void ATEMext::setCameraControlZoomSpeed(uint8_t input, int zoomSpeed) {
+			void ATEMext::setCameraControlZoomSpeed(uint8_t input, int16_t zoomSpeed) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7664,7 +7716,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftR 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlLiftR(uint8_t input, int liftR) {
+			void ATEMext::setCameraControlLiftR(uint8_t input, int16_t liftR) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7696,7 +7748,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaR 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGammaR(uint8_t input, int gammaR) {
+			void ATEMext::setCameraControlGammaR(uint8_t input, int16_t gammaR) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7728,7 +7780,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainR 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGainR(uint8_t input, int gainR) {
+			void ATEMext::setCameraControlGainR(uint8_t input, int16_t gainR) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7759,7 +7811,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * lumMix 	0-2048: 0-100%
 			 */
-			void ATEMext::setCameraControlLumMix(uint8_t input, int lumMix) {
+			void ATEMext::setCameraControlLumMix(uint8_t input, int16_t lumMix) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7784,7 +7836,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * hue 	-2048-2048: 0-360 degrees
 			 */
-			void ATEMext::setCameraControlHue(uint8_t input, int hue) {
+			void ATEMext::setCameraControlHue(uint8_t input, int16_t hue) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7812,7 +7864,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * shutter 	20000: 1/50, 16667: 1/60, 13333: 1/75, 11111: 1/90, 10000: 1/100, 8333: 1/120, 6667: 1/150, 5556: 1/180, 4000: 1/250, 2778: 1/360, 2000: 1/500, 1379: 1/750, 1000: 1/1000, 690: 1/1450, 500: 1/2000
 			 */
-			void ATEMext::setCameraControlShutter(uint8_t input, int shutter) {
+			void ATEMext::setCameraControlShutter(uint8_t input, int16_t shutter) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7837,7 +7889,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftG 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlLiftG(uint8_t input, int liftG) {
+			void ATEMext::setCameraControlLiftG(uint8_t input, int16_t liftG) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7871,7 +7923,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaG 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGammaG(uint8_t input, int gammaG) {
+			void ATEMext::setCameraControlGammaG(uint8_t input, int16_t gammaG) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7904,7 +7956,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainG 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGainG(uint8_t input, int gainG) {
+			void ATEMext::setCameraControlGainG(uint8_t input, int16_t gainG) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7937,7 +7989,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * contrast 	0-4096: 0-100%
 			 */
-			void ATEMext::setCameraControlContrast(uint8_t input, int contrast) {
+			void ATEMext::setCameraControlContrast(uint8_t input, int16_t contrast) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7949,6 +8001,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+9] = 0x02;
 
 				_packetBuffer[12+_cBBO+4+4+0] = input;
+
+				// Pivot = 0.5 (Fixed16 1024)
+				_packetBuffer[12+_cBBO+4+4+16] = 4;
+				_packetBuffer[12+_cBBO+4+4+17] = 0;
 
 				_packetBuffer[12+_cBBO+4+4+18] = highByte(contrast);
 				_packetBuffer[12+_cBBO+4+4+19] = lowByte(contrast);
@@ -7962,7 +8018,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * saturation 	0-4096: 0-100%
 			 */
-			void ATEMext::setCameraControlSaturation(uint8_t input, int saturation) {
+			void ATEMext::setCameraControlSaturation(uint8_t input, int16_t saturation) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -7990,7 +8046,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftB 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlLiftB(uint8_t input, int liftB) {
+			void ATEMext::setCameraControlLiftB(uint8_t input, int16_t liftB) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -8023,7 +8079,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaB 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGammaB(uint8_t input, int gammaB) {
+			void ATEMext::setCameraControlGammaB(uint8_t input, int16_t gammaB) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -8056,7 +8112,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainB 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGainB(uint8_t input, int gainB) {
+			void ATEMext::setCameraControlGainB(uint8_t input, int16_t gainB) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -8089,7 +8145,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * liftY 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlLiftY(uint8_t input, int liftY) {
+			void ATEMext::setCameraControlLiftY(uint8_t input, int16_t liftY) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -8121,7 +8177,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gammaY 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGammaY(uint8_t input, int gammaY) {
+			void ATEMext::setCameraControlGammaY(uint8_t input, int16_t gammaY) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -8154,7 +8210,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * input 	0-7: Camera
 			 * gainY 	-4096-4096: -1.00-1.00
 			 */
-			void ATEMext::setCameraControlGainY(uint8_t input, int gainY) {
+			void ATEMext::setCameraControlGainY(uint8_t input, int16_t gainY) {
 
 		  		_prepareCommandPacket(PSTR("CCmd"),24);
 
@@ -8510,6 +8566,14 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 */
 			bool ATEMext::getMacroPropertiesIsUsed(uint8_t macroIndex) {
 				return atemMacroPropertiesIsUsed[macroIndex];
+			}
+			
+			/**
+			 * Get Macro Properties; Name
+			 * macroIndex 	0-9: Macro Index Number
+			 */
+			char *  ATEMext::getMacroPropertiesName(uint8_t macroIndex) {
+				return atemMacroPropertiesName[macroIndex];
 			}
 			
 			/**
@@ -9065,7 +9129,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Super Source Box Parameters; Position X
 			 * box 	0-3: Box 1-4
 			 */
-			int ATEMext::getSuperSourceBoxParametersPositionX(uint8_t box) {
+			int16_t ATEMext::getSuperSourceBoxParametersPositionX(uint8_t box) {
 				return atemSuperSourceBoxParametersPositionX[box];
 			}
 			
@@ -9073,7 +9137,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Super Source Box Parameters; Position Y
 			 * box 	0-3: Box 1-4
 			 */
-			int ATEMext::getSuperSourceBoxParametersPositionY(uint8_t box) {
+			int16_t ATEMext::getSuperSourceBoxParametersPositionY(uint8_t box) {
 				return atemSuperSourceBoxParametersPositionY[box];
 			}
 			
@@ -9171,7 +9235,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * box 	0-3: Box 1-4
 			 * positionX 	-4800-4800: -48.00-48.00
 			 */
-			void ATEMext::setSuperSourceBoxParametersPositionX(uint8_t box, int positionX) {
+			void ATEMext::setSuperSourceBoxParametersPositionX(uint8_t box, int16_t positionX) {
 			
 	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
 		
@@ -9192,7 +9256,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * box 	0-3: Box 1-4
 			 * positionY 	-2700-2700: -27.00-27.00
 			 */
-			void ATEMext::setSuperSourceBoxParametersPositionY(uint8_t box, int positionY) {
+			void ATEMext::setSuperSourceBoxParametersPositionY(uint8_t box, int16_t positionY) {
 			
 	  	  		_prepareCommandPacket(PSTR("CSBP"),24,(_packetBuffer[12+_cBBO+4+4+2]==box));
 		
@@ -9377,7 +9441,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Input; Balance
 			 * audioSource 	(See audio source list)
 			 */
-			int ATEMext::getAudioMixerInputBalance(uint16_t audioSource) {
+			int16_t ATEMext::getAudioMixerInputBalance(uint16_t audioSource) {
 				return atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)];
 			}
 			
@@ -9429,7 +9493,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * audioSource 	(See audio source list)
 			 * balance 	-10000-10000: Left/Right Extremes
 			 */
-			void ATEMext::setAudioMixerInputBalance(uint16_t audioSource, int balance) {
+			void ATEMext::setAudioMixerInputBalance(uint16_t audioSource, int16_t balance) {
 			
 	  	  		_prepareCommandPacket(PSTR("CAMI"),12,(_packetBuffer[12+_cBBO+4+4+2]==highByte(audioSource)) && (_packetBuffer[12+_cBBO+4+4+3]==lowByte(audioSource)));
 		
@@ -9641,35 +9705,35 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			/**
 			 * Get Audio Mixer Levels; Master Left
 			 */
-			long ATEMext::getAudioMixerLevelsMasterLeft() {
+			int32_t ATEMext::getAudioMixerLevelsMasterLeft() {
 				return atemAudioMixerLevelsMasterLeft;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Master Right
 			 */
-			long ATEMext::getAudioMixerLevelsMasterRight() {
+			int32_t ATEMext::getAudioMixerLevelsMasterRight() {
 				return atemAudioMixerLevelsMasterRight;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Master Peak Left
 			 */
-			long ATEMext::getAudioMixerLevelsMasterPeakLeft() {
+			int32_t ATEMext::getAudioMixerLevelsMasterPeakLeft() {
 				return atemAudioMixerLevelsMasterPeakLeft;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Master Peak Right
 			 */
-			long ATEMext::getAudioMixerLevelsMasterPeakRight() {
+			int32_t ATEMext::getAudioMixerLevelsMasterPeakRight() {
 				return atemAudioMixerLevelsMasterPeakRight;
 			}
 			
 			/**
 			 * Get Audio Mixer Levels; Monitor
 			 */
-			long ATEMext::getAudioMixerLevelsMonitor() {
+			int32_t ATEMext::getAudioMixerLevelsMonitor() {
 				return atemAudioMixerLevelsMonitor;
 			}
 			
@@ -9685,7 +9749,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Left
 			 * sources 	0-24: Number of
 			 */
-			long ATEMext::getAudioMixerLevelsSourceLeft(uint16_t sources) {
+			int32_t ATEMext::getAudioMixerLevelsSourceLeft(uint16_t sources) {
 				return atemAudioMixerLevelsSourceLeft[sources];
 			}
 			
@@ -9693,7 +9757,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Right
 			 * sources 	0-24: Number of
 			 */
-			long ATEMext::getAudioMixerLevelsSourceRight(uint16_t sources) {
+			int32_t ATEMext::getAudioMixerLevelsSourceRight(uint16_t sources) {
 				return atemAudioMixerLevelsSourceRight[sources];
 			}
 			
@@ -9701,7 +9765,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Peak Left
 			 * sources 	0-24: Number of
 			 */
-			long ATEMext::getAudioMixerLevelsSourcePeakLeft(uint16_t sources) {
+			int32_t ATEMext::getAudioMixerLevelsSourcePeakLeft(uint16_t sources) {
 				return atemAudioMixerLevelsSourcePeakLeft[sources];
 			}
 			
@@ -9709,7 +9773,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			 * Get Audio Mixer Levels; Source Peak Right
 			 * sources 	0-24: Number of
 			 */
-			long ATEMext::getAudioMixerLevelsSourcePeakRight(uint16_t sources) {
+			int32_t ATEMext::getAudioMixerLevelsSourcePeakRight(uint16_t sources) {
 				return atemAudioMixerLevelsSourcePeakRight[sources];
 			}
 			

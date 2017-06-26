@@ -150,28 +150,13 @@ private:
 
 
 
-
-
-
-
-
-
-
-
-
-	
-
-
-
-
-
-
-
 // *********************************
 // **
 // ** Implementations in ATEMstd.h:
 // **
 // *********************************
+
+
 
 private:
 	void _parseGetCommands(const char *cmdStr);
@@ -198,10 +183,10 @@ private:
 			uint16_t atemDownstreamKeyerGain[2];
 			bool atemDownstreamKeyerInvertKey[2];
 			bool atemDownstreamKeyerMasked[2];
-			int atemDownstreamKeyerTop[2];
-			int atemDownstreamKeyerBottom[2];
-			int atemDownstreamKeyerLeft[2];
-			int atemDownstreamKeyerRight[2];
+			int16_t atemDownstreamKeyerTop[2];
+			int16_t atemDownstreamKeyerBottom[2];
+			int16_t atemDownstreamKeyerLeft[2];
+			int16_t atemDownstreamKeyerRight[2];
 			bool atemDownstreamKeyerOnAir[2];
 			bool atemDownstreamKeyerInTransition[2];
 			bool atemDownstreamKeyerIsAutoTransitioning[2];
@@ -218,11 +203,12 @@ private:
 			bool atemMacroRunStatusIsLooping;
 			uint16_t atemMacroRunStatusIndex;
 			bool atemMacroPropertiesIsUsed[10];
+			char atemMacroPropertiesName[10][11];
 			bool atemMacroRecordingStatusIsRecording;
 			uint16_t atemMacroRecordingStatusIndex;
 			uint8_t atemAudioMixerInputMixOption[25];
 			uint16_t atemAudioMixerInputVolume[25];
-			int atemAudioMixerInputBalance[25];
+			int16_t atemAudioMixerInputBalance[25];
 			uint16_t atemTallyByIndexSources;
 			uint8_t atemTallyByIndexTallyFlags[21];
 
@@ -264,20 +250,20 @@ public:
 			bool getKeyerOnAirEnabled(uint8_t mE, uint8_t keyer);
 			void setKeyerOnAirEnabled(uint8_t mE, uint8_t keyer, bool enabled);
 			void setKeyerMasked(uint8_t mE, uint8_t keyer, bool masked);
-			void setKeyerTop(uint8_t mE, uint8_t keyer, int top);
-			void setKeyerBottom(uint8_t mE, uint8_t keyer, int bottom);
-			void setKeyerLeft(uint8_t mE, uint8_t keyer, int left);
-			void setKeyerRight(uint8_t mE, uint8_t keyer, int right);
+			void setKeyerTop(uint8_t mE, uint8_t keyer, int16_t top);
+			void setKeyerBottom(uint8_t mE, uint8_t keyer, int16_t bottom);
+			void setKeyerLeft(uint8_t mE, uint8_t keyer, int16_t left);
+			void setKeyerRight(uint8_t mE, uint8_t keyer, int16_t right);
 			void setKeyerFillSource(uint8_t mE, uint8_t keyer, uint16_t fillSource);
 			void setKeyLumaPreMultiplied(uint8_t mE, uint8_t keyer, bool preMultiplied);
 			void setKeyLumaClip(uint8_t mE, uint8_t keyer, uint16_t clip);
 			void setKeyLumaGain(uint8_t mE, uint8_t keyer, uint16_t gain);
 			void setKeyLumaInvertKey(uint8_t mE, uint8_t keyer, bool invertKey);
-			void setKeyDVESizeX(uint8_t mE, uint8_t keyer, long sizeX);
-			void setKeyDVESizeY(uint8_t mE, uint8_t keyer, long sizeY);
-			void setKeyDVEPositionX(uint8_t mE, uint8_t keyer, long positionX);
-			void setKeyDVEPositionY(uint8_t mE, uint8_t keyer, long positionY);
-			void setKeyDVERotation(uint8_t mE, uint8_t keyer, long rotation);
+			void setKeyDVESizeX(uint8_t mE, uint8_t keyer, int32_t sizeX);
+			void setKeyDVESizeY(uint8_t mE, uint8_t keyer, int32_t sizeY);
+			void setKeyDVEPositionX(uint8_t mE, uint8_t keyer, int32_t positionX);
+			void setKeyDVEPositionY(uint8_t mE, uint8_t keyer, int32_t positionY);
+			void setKeyDVERotation(uint8_t mE, uint8_t keyer, int32_t rotation);
 			void setKeyDVEBorderEnabled(uint8_t mE, uint8_t keyer, bool borderEnabled);
 			void setKeyDVEShadow(uint8_t mE, uint8_t keyer, bool shadow);
 			void setKeyDVEBorderBevel(uint8_t mE, uint8_t keyer, uint8_t borderBevel);
@@ -294,10 +280,10 @@ public:
 			void setKeyDVELightSourceDirection(uint8_t mE, uint8_t keyer, uint16_t lightSourceDirection);
 			void setKeyDVELightSourceAltitude(uint8_t mE, uint8_t keyer, uint8_t lightSourceAltitude);
 			void setKeyDVEMasked(uint8_t mE, uint8_t keyer, bool masked);
-			void setKeyDVETop(uint8_t mE, uint8_t keyer, int top);
-			void setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom);
-			void setKeyDVELeft(uint8_t mE, uint8_t keyer, int left);
-			void setKeyDVERight(uint8_t mE, uint8_t keyer, int right);
+			void setKeyDVETop(uint8_t mE, uint8_t keyer, int16_t top);
+			void setKeyDVEBottom(uint8_t mE, uint8_t keyer, int16_t bottom);
+			void setKeyDVELeft(uint8_t mE, uint8_t keyer, int16_t left);
+			void setKeyDVERight(uint8_t mE, uint8_t keyer, int16_t right);
 			void setKeyDVERate(uint8_t mE, uint8_t keyer, uint8_t rate);
 			void setRunFlyingKeyKeyFrame(uint8_t mE, uint8_t keyer, uint8_t keyFrame);
 			void setRunFlyingKeyRuntoInfiniteindex(uint8_t mE, uint8_t keyer, uint8_t runtoInfiniteindex);
@@ -310,20 +296,20 @@ public:
 			uint16_t getDownstreamKeyerGain(uint8_t keyer);
 			bool getDownstreamKeyerInvertKey(uint8_t keyer);
 			bool getDownstreamKeyerMasked(uint8_t keyer);
-			int getDownstreamKeyerTop(uint8_t keyer);
-			int getDownstreamKeyerBottom(uint8_t keyer);
-			int getDownstreamKeyerLeft(uint8_t keyer);
-			int getDownstreamKeyerRight(uint8_t keyer);
+			int16_t getDownstreamKeyerTop(uint8_t keyer);
+			int16_t getDownstreamKeyerBottom(uint8_t keyer);
+			int16_t getDownstreamKeyerLeft(uint8_t keyer);
+			int16_t getDownstreamKeyerRight(uint8_t keyer);
 			void setDownstreamKeyerTie(uint8_t keyer, bool tie);
 			void setDownstreamKeyerPreMultiplied(uint8_t keyer, bool preMultiplied);
 			void setDownstreamKeyerClip(uint8_t keyer, uint16_t clip);
 			void setDownstreamKeyerGain(uint8_t keyer, uint16_t gain);
 			void setDownstreamKeyerInvertKey(uint8_t keyer, bool invertKey);
 			void setDownstreamKeyerMasked(uint8_t keyer, bool masked);
-			void setDownstreamKeyerTop(uint8_t keyer, int top);
-			void setDownstreamKeyerBottom(uint8_t keyer, int bottom);
-			void setDownstreamKeyerLeft(uint8_t keyer, int left);
-			void setDownstreamKeyerRight(uint8_t keyer, int right);
+			void setDownstreamKeyerTop(uint8_t keyer, int16_t top);
+			void setDownstreamKeyerBottom(uint8_t keyer, int16_t bottom);
+			void setDownstreamKeyerLeft(uint8_t keyer, int16_t left);
+			void setDownstreamKeyerRight(uint8_t keyer, int16_t right);
 			void performDownstreamKeyerAutoKeyer(uint8_t keyer);
 			bool getDownstreamKeyerOnAir(uint8_t keyer);
 			bool getDownstreamKeyerInTransition(uint8_t keyer);
@@ -356,15 +342,16 @@ public:
 			uint16_t getMacroRunStatusIndex();
 			void setMacroAction(uint16_t index, uint8_t action);
 			bool getMacroPropertiesIsUsed(uint8_t macroIndex);
+			char *  getMacroPropertiesName(uint8_t macroIndex);
 			void setMacroAddPauseFrames(uint16_t frames);
 			bool getMacroRecordingStatusIsRecording();
 			uint16_t getMacroRecordingStatusIndex();
 			uint8_t getAudioMixerInputMixOption(uint16_t audioSource);
 			uint16_t getAudioMixerInputVolume(uint16_t audioSource);
-			int getAudioMixerInputBalance(uint16_t audioSource);
+			int16_t getAudioMixerInputBalance(uint16_t audioSource);
 			void setAudioMixerInputMixOption(uint16_t audioSource, uint8_t mixOption);
 			void setAudioMixerInputVolume(uint16_t audioSource, uint16_t volume);
-			void setAudioMixerInputBalance(uint16_t audioSource, int balance);
+			void setAudioMixerInputBalance(uint16_t audioSource, int16_t balance);
 			void setAudioMixerMasterVolume(uint16_t volume);
 			void setAudioLevelsEnable(bool enable);
 			uint16_t getTallyByIndexSources();

@@ -413,13 +413,6 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 	
 
 
-
-
-
-
-
-
-
 		// *********************************
 		// **
 		// ** Implementations in ATEMstd.c:
@@ -1051,6 +1044,15 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 					}
 					#endif
 					
+					memset(atemMacroPropertiesName[macroIndex],0,11);
+					strncpy(atemMacroPropertiesName[macroIndex], (char *)(_packetBuffer+8), _packetBuffer[5] > 10 ? 10 : _packetBuffer[5]);
+					#if ATEM_debug
+					if ((_serialOutput==0x80 && hasInitialized()) || (_serialOutput==0x81 && !hasInitialized()))	{
+						Serial.print(F("atemMacroPropertiesName[macroIndex=")); Serial.print(macroIndex); Serial.print(F("] = "));
+						Serial.println(atemMacroPropertiesName[macroIndex]);
+					}
+					#endif	
+			
 				}
 			} else 
 			if(!strcmp_P(cmdStr, PSTR("MRcS"))) {
@@ -1681,7 +1683,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * top 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyerTop(uint8_t mE, uint8_t keyer, int top) {
+			void ATEMstd::setKeyerTop(uint8_t mE, uint8_t keyer, int16_t top) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -1705,7 +1707,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * bottom 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyerBottom(uint8_t mE, uint8_t keyer, int bottom) {
+			void ATEMstd::setKeyerBottom(uint8_t mE, uint8_t keyer, int16_t bottom) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -1729,7 +1731,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * left 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyerLeft(uint8_t mE, uint8_t keyer, int left) {
+			void ATEMstd::setKeyerLeft(uint8_t mE, uint8_t keyer, int16_t left) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -1753,7 +1755,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * right 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyerRight(uint8_t mE, uint8_t keyer, int right) {
+			void ATEMstd::setKeyerRight(uint8_t mE, uint8_t keyer, int16_t right) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKMs"),12,(_packetBuffer[12+_cBBO+4+4+1]==mE) && (_packetBuffer[12+_cBBO+4+4+2]==keyer));
 		
@@ -1892,7 +1894,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * sizeX 	Example: 1000: 1.000
 			 */
-			void ATEMstd::setKeyDVESizeX(uint8_t mE, uint8_t keyer, long sizeX) {
+			void ATEMstd::setKeyDVESizeX(uint8_t mE, uint8_t keyer, int32_t sizeX) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -1903,10 +1905,10 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+8] = (long)((sizeX>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+9] = (long)((sizeX>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+10] = (long)((sizeX>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+11] = (long)(sizeX & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+8] = (int32_t)((sizeX>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+9] = (int32_t)((sizeX>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+10] = (int32_t)((sizeX>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+11] = (int32_t)(sizeX & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -1918,7 +1920,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * sizeY 	Example: 2000: 2.000
 			 */
-			void ATEMstd::setKeyDVESizeY(uint8_t mE, uint8_t keyer, long sizeY) {
+			void ATEMstd::setKeyDVESizeY(uint8_t mE, uint8_t keyer, int32_t sizeY) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -1929,10 +1931,10 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+12] = (long)((sizeY>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+13] = (long)((sizeY>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+14] = (long)((sizeY>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+15] = (long)(sizeY & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+12] = (int32_t)((sizeY>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+13] = (int32_t)((sizeY>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+14] = (int32_t)((sizeY>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+15] = (int32_t)(sizeY & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -1944,7 +1946,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * positionX 	Example: 1000: 1.000
 			 */
-			void ATEMstd::setKeyDVEPositionX(uint8_t mE, uint8_t keyer, long positionX) {
+			void ATEMstd::setKeyDVEPositionX(uint8_t mE, uint8_t keyer, int32_t positionX) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -1955,10 +1957,10 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+16] = (long)((positionX>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+17] = (long)((positionX>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+18] = (long)((positionX>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+19] = (long)(positionX & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+16] = (int32_t)((positionX>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+17] = (int32_t)((positionX>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+18] = (int32_t)((positionX>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+19] = (int32_t)(positionX & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -1970,7 +1972,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * positionY 	Example: -1000: -1.000
 			 */
-			void ATEMstd::setKeyDVEPositionY(uint8_t mE, uint8_t keyer, long positionY) {
+			void ATEMstd::setKeyDVEPositionY(uint8_t mE, uint8_t keyer, int32_t positionY) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -1981,10 +1983,10 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+20] = (long)((positionY>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+21] = (long)((positionY>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+22] = (long)((positionY>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+23] = (long)(positionY & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+20] = (int32_t)((positionY>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+21] = (int32_t)((positionY>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+22] = (int32_t)((positionY>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+23] = (int32_t)(positionY & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -1996,7 +1998,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * rotation 	Example: 3670: 1 rotation+7 degress
 			 */
-			void ATEMstd::setKeyDVERotation(uint8_t mE, uint8_t keyer, long rotation) {
+			void ATEMstd::setKeyDVERotation(uint8_t mE, uint8_t keyer, int32_t rotation) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -2007,10 +2009,10 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 				
 				_packetBuffer[12+_cBBO+4+4+5] = keyer;
 				
-				_packetBuffer[12+_cBBO+4+4+24] = (long)((rotation>>24) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+25] = (long)((rotation>>16) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+26] = (long)((rotation>>8) & 0xFF);
-				_packetBuffer[12+_cBBO+4+4+27] = (long)(rotation & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+24] = (int32_t)((rotation>>24) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+25] = (int32_t)((rotation>>16) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+26] = (int32_t)((rotation>>8) & 0xFF);
+				_packetBuffer[12+_cBBO+4+4+27] = (int32_t)(rotation & 0xFF);
 				
 	 	   		_finishCommandPacket();
 		
@@ -2396,7 +2398,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * top 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyDVETop(uint8_t mE, uint8_t keyer, int top) {
+			void ATEMstd::setKeyDVETop(uint8_t mE, uint8_t keyer, int16_t top) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -2420,7 +2422,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * bottom 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyDVEBottom(uint8_t mE, uint8_t keyer, int bottom) {
+			void ATEMstd::setKeyDVEBottom(uint8_t mE, uint8_t keyer, int16_t bottom) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -2444,7 +2446,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * left 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyDVELeft(uint8_t mE, uint8_t keyer, int left) {
+			void ATEMstd::setKeyDVELeft(uint8_t mE, uint8_t keyer, int16_t left) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -2468,7 +2470,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * right 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMstd::setKeyDVERight(uint8_t mE, uint8_t keyer, int right) {
+			void ATEMstd::setKeyDVERight(uint8_t mE, uint8_t keyer, int16_t right) {
 			
 	  	  		_prepareCommandPacket(PSTR("CKDV"),64,(_packetBuffer[12+_cBBO+4+4+4]==mE) && (_packetBuffer[12+_cBBO+4+4+5]==keyer));
 		
@@ -2648,7 +2650,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * Get Downstream Keyer; Top
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMstd::getDownstreamKeyerTop(uint8_t keyer) {
+			int16_t ATEMstd::getDownstreamKeyerTop(uint8_t keyer) {
 				return atemDownstreamKeyerTop[keyer];
 			}
 			
@@ -2656,7 +2658,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * Get Downstream Keyer; Bottom
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMstd::getDownstreamKeyerBottom(uint8_t keyer) {
+			int16_t ATEMstd::getDownstreamKeyerBottom(uint8_t keyer) {
 				return atemDownstreamKeyerBottom[keyer];
 			}
 			
@@ -2664,7 +2666,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * Get Downstream Keyer; Left
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMstd::getDownstreamKeyerLeft(uint8_t keyer) {
+			int16_t ATEMstd::getDownstreamKeyerLeft(uint8_t keyer) {
 				return atemDownstreamKeyerLeft[keyer];
 			}
 			
@@ -2672,7 +2674,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * Get Downstream Keyer; Right
 			 * keyer 	0: DSK1, 1: DSK2
 			 */
-			int ATEMstd::getDownstreamKeyerRight(uint8_t keyer) {
+			int16_t ATEMstd::getDownstreamKeyerRight(uint8_t keyer) {
 				return atemDownstreamKeyerRight[keyer];
 			}
 			
@@ -2800,7 +2802,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * top 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMstd::setDownstreamKeyerTop(uint8_t keyer, int top) {
+			void ATEMstd::setDownstreamKeyerTop(uint8_t keyer, int16_t top) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -2821,7 +2823,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * bottom 	-9000-9000: -9.00-9.00
 			 */
-			void ATEMstd::setDownstreamKeyerBottom(uint8_t keyer, int bottom) {
+			void ATEMstd::setDownstreamKeyerBottom(uint8_t keyer, int16_t bottom) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -2842,7 +2844,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * left 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMstd::setDownstreamKeyerLeft(uint8_t keyer, int left) {
+			void ATEMstd::setDownstreamKeyerLeft(uint8_t keyer, int16_t left) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -2863,7 +2865,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * keyer 	0-3: Keyer 1-4
 			 * right 	-16000-16000: -9.00-9.00
 			 */
-			void ATEMstd::setDownstreamKeyerRight(uint8_t keyer, int right) {
+			void ATEMstd::setDownstreamKeyerRight(uint8_t keyer, int16_t right) {
 			
 	  	  		_prepareCommandPacket(PSTR("CDsM"),12,(_packetBuffer[12+_cBBO+4+4+1]==keyer));
 		
@@ -3316,6 +3318,14 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			}
 			
 			/**
+			 * Get Macro Properties; Name
+			 * macroIndex 	0-9: Macro Index Number
+			 */
+			char *  ATEMstd::getMacroPropertiesName(uint8_t macroIndex) {
+				return atemMacroPropertiesName[macroIndex];
+			}
+			
+			/**
 			 * Set Macro Add Pause; Frames
 			 * frames 	Number of
 			 */
@@ -3364,7 +3374,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * Get Audio Mixer Input; Balance
 			 * audioSource 	(See audio source list)
 			 */
-			int ATEMstd::getAudioMixerInputBalance(uint16_t audioSource) {
+			int16_t ATEMstd::getAudioMixerInputBalance(uint16_t audioSource) {
 				return atemAudioMixerInputBalance[getAudioSrcIndex(audioSource)];
 			}
 			
@@ -3416,7 +3426,7 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 			 * audioSource 	(See audio source list)
 			 * balance 	-10000-10000: Left/Right Extremes
 			 */
-			void ATEMstd::setAudioMixerInputBalance(uint16_t audioSource, int balance) {
+			void ATEMstd::setAudioMixerInputBalance(uint16_t audioSource, int16_t balance) {
 			
 	  	  		_prepareCommandPacket(PSTR("CAMI"),12,(_packetBuffer[12+_cBBO+4+4+2]==highByte(audioSource)) && (_packetBuffer[12+_cBBO+4+4+3]==lowByte(audioSource)));
 		

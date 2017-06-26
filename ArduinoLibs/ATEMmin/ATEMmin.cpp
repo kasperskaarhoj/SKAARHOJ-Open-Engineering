@@ -38,9 +38,6 @@ ATEMmin::ATEMmin(){}
 
 
 
-
-
-
 		// *********************************
 		// **
 		// ** Implementations in ATEMmin.c:
@@ -628,6 +625,3 @@ ATEMmin::ATEMmin(){}
 			uint8_t ATEMmin::getTallyByIndexTallyFlags(uint16_t sources) {
 				return atemTallyByIndexTallyFlags[sources];
 			}
-			
-
-	

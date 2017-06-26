@@ -40,21 +40,13 @@ class ATEMmin : public ATEMbase
   public:
 	ATEMmin();  
 	  
-
-
-
-
-
-
-
-
-
-
 // *********************************
 // **
 // ** Implementations in ATEMmin.h:
 // **
 // *********************************
+
+
 
 private:
 	void _parseGetCommands(const char *cmdStr);
