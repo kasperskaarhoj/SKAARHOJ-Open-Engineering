@@ -45,7 +45,8 @@ void UDPmessenger::begin(const IPAddress ip, const uint16_t localPort){
 	_localPort = localPort;		// Local port to write/receive on.
 	
 	_serialOutput = false;
-	_maxResponseTime = 1000;	// 1000 us, should be fine for a local network.
+
+	_maxResponseTime = 10000;	// 1000 us, should be fine for a local network.
 	_retryTimeout = 10000;	// 10000 ms between retries.
 	
 	memset(_slaveLastResponseTime,0,UDPmessenger_SLAVE_POOL+1);
