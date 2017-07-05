@@ -6844,7 +6844,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+2] = highByte(volume);
 				_packetBuffer[12+_cBBO+4+4+3] = lowByte(volume);
 				
-	 	   		_finishCommandPacket();
+				_finishCommandPacket();
 		
 			}
 			
