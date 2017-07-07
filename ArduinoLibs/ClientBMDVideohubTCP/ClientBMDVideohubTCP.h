@@ -40,7 +40,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #define ClientBMDVideohubTCP_NUMINPUTS 72
 #define ClientBMDVideohubTCP_NUMOUTPUTS 72
-#define ClientBMDVideohubTCP_LABELLEN 10
+#define ClientBMDVideohubTCP_LABELLEN 21
 
 // How many in/out labels the system should allocate memory for
 #define ClientBMDVideohubTCP_LABELCOUNT 16
@@ -79,6 +79,8 @@ public:
   char getLock(uint8_t output);
   char *getInputLabel(uint8_t input);
   char *getOutputLabel(uint8_t output);
+  uint8_t getNumInputs();
+  uint8_t getNumOutputs();
 };
 
 #endif
