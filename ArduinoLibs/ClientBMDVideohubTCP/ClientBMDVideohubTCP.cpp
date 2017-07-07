@@ -285,3 +285,5 @@ uint8_t ClientBMDVideohubTCP::getRoute(uint8_t output) { return _outputRouting[o
 char ClientBMDVideohubTCP::getLock(uint8_t output) { return _outputLocks[output - 1]; }
 char *ClientBMDVideohubTCP::getInputLabel(uint8_t input) { return _inputLabels[input - 1]; }
 char *ClientBMDVideohubTCP::getOutputLabel(uint8_t output) { return _outputLabels[output - 1]; }
+uint8_t ClientBMDVideohubTCP::getNumInputs() { return _numInputs; }
+uint8_t ClientBMDVideohubTCP::getNumOutputs() { return _numOutputs; }
