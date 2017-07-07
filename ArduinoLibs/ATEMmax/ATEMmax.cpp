@@ -176,6 +176,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
+
 		// *********************************
 		// **
 		// ** Implementations in ATEMmax.c:
@@ -2446,7 +2447,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			if(!strcmp_P(cmdStr, PSTR("CCdP"))) {
 				
 				input = _packetBuffer[0];
-				if (input<=8) {
+				if (input<=20) {
 				if (_packetBuffer[1]==0 && _packetBuffer[2]==3)	{
 					
 					#if ATEM_debug
@@ -8009,7 +8010,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Iris
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlIris(uint8_t input) {
 				return atemCameraControlIris[input];
@@ -8017,7 +8018,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Focus
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlFocus(uint8_t input) {
 				return atemCameraControlFocus[input];
@@ -8025,7 +8026,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gain
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGain(uint8_t input) {
 				return atemCameraControlGain[input];
@@ -8033,7 +8034,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; White Balance
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlWhiteBalance(uint8_t input) {
 				return atemCameraControlWhiteBalance[input];
@@ -8041,7 +8042,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Sharpening Level
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlSharpeningLevel(uint8_t input) {
 				return atemCameraControlSharpeningLevel[input];
@@ -8049,7 +8050,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Zoom Normalized
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlZoomNormalized(uint8_t input) {
 				return atemCameraControlZoomNormalized[input];
@@ -8057,7 +8058,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Zoom Speed
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlZoomSpeed(uint8_t input) {
 				return atemCameraControlZoomSpeed[input];
@@ -8065,7 +8066,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Colorbars
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlColorbars(uint8_t input) {
 				return atemCameraControlColorbars[input];
@@ -8073,7 +8074,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Lift R
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlLiftR(uint8_t input) {
 				return atemCameraControlLiftR[input];
@@ -8081,7 +8082,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gamma R
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGammaR(uint8_t input) {
 				return atemCameraControlGammaR[input];
@@ -8089,7 +8090,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gain R
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGainR(uint8_t input) {
 				return atemCameraControlGainR[input];
@@ -8097,7 +8098,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Lum Mix
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlLumMix(uint8_t input) {
 				return atemCameraControlLumMix[input];
@@ -8105,7 +8106,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Hue
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlHue(uint8_t input) {
 				return atemCameraControlHue[input];
@@ -8113,7 +8114,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Shutter
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlShutter(uint8_t input) {
 				return atemCameraControlShutter[input];
@@ -8121,7 +8122,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Lift G
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlLiftG(uint8_t input) {
 				return atemCameraControlLiftG[input];
@@ -8129,7 +8130,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gamma G
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGammaG(uint8_t input) {
 				return atemCameraControlGammaG[input];
@@ -8137,7 +8138,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gain G
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGainG(uint8_t input) {
 				return atemCameraControlGainG[input];
@@ -8145,7 +8146,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Contrast
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlContrast(uint8_t input) {
 				return atemCameraControlContrast[input];
@@ -8153,7 +8154,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Saturation
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlSaturation(uint8_t input) {
 				return atemCameraControlSaturation[input];
@@ -8161,7 +8162,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Lift B
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlLiftB(uint8_t input) {
 				return atemCameraControlLiftB[input];
@@ -8169,7 +8170,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gamma B
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGammaB(uint8_t input) {
 				return atemCameraControlGammaB[input];
@@ -8177,7 +8178,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gain B
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGainB(uint8_t input) {
 				return atemCameraControlGainB[input];
@@ -8185,7 +8186,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Lift Y
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlLiftY(uint8_t input) {
 				return atemCameraControlLiftY[input];
@@ -8193,7 +8194,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gamma Y
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGammaY(uint8_t input) {
 				return atemCameraControlGammaY[input];
@@ -8201,7 +8202,7 @@ void ATEMmax::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Camera Control; Gain Y
-			 * input 	1-8: Camera
+			 * input 	1-20: Camera
 			 */
 			int16_t ATEMmax::getCameraControlGainY(uint8_t input) {
 				return atemCameraControlGainY[input];

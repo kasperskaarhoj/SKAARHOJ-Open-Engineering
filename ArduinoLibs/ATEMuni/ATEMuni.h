@@ -54,7 +54,6 @@ class ATEMuni : public ATEMbase
 
 
 
-
 // *********************************
 // **
 // ** Implementations in ATEMuni.h:
@@ -164,31 +163,31 @@ private:
 			bool atemFadeToBlackStateInTransition[2];
 			uint8_t atemFadeToBlackStateFramesRemaining[2];
 			uint16_t atemAuxSourceInput[6];
-			int16_t atemCameraControlIris[9];
-			int16_t atemCameraControlFocus[9];
-			int16_t atemCameraControlGain[9];
-			int16_t atemCameraControlWhiteBalance[9];
-			int16_t atemCameraControlSharpeningLevel[9];
-			int16_t atemCameraControlZoomNormalized[9];
-			int16_t atemCameraControlZoomSpeed[9];
-			int16_t atemCameraControlColorbars[9];
-			int16_t atemCameraControlLiftR[9];
-			int16_t atemCameraControlGammaR[9];
-			int16_t atemCameraControlGainR[9];
-			int16_t atemCameraControlLumMix[9];
-			int16_t atemCameraControlHue[9];
-			int16_t atemCameraControlShutter[9];
-			int16_t atemCameraControlLiftG[9];
-			int16_t atemCameraControlGammaG[9];
-			int16_t atemCameraControlGainG[9];
-			int16_t atemCameraControlContrast[9];
-			int16_t atemCameraControlSaturation[9];
-			int16_t atemCameraControlLiftB[9];
-			int16_t atemCameraControlGammaB[9];
-			int16_t atemCameraControlGainB[9];
-			int16_t atemCameraControlLiftY[9];
-			int16_t atemCameraControlGammaY[9];
-			int16_t atemCameraControlGainY[9];
+			int16_t atemCameraControlIris[21];
+			int16_t atemCameraControlFocus[21];
+			int16_t atemCameraControlGain[21];
+			int16_t atemCameraControlWhiteBalance[21];
+			int16_t atemCameraControlSharpeningLevel[21];
+			int16_t atemCameraControlZoomNormalized[21];
+			int16_t atemCameraControlZoomSpeed[21];
+			int16_t atemCameraControlColorbars[21];
+			int16_t atemCameraControlLiftR[21];
+			int16_t atemCameraControlGammaR[21];
+			int16_t atemCameraControlGainR[21];
+			int16_t atemCameraControlLumMix[21];
+			int16_t atemCameraControlHue[21];
+			int16_t atemCameraControlShutter[21];
+			int16_t atemCameraControlLiftG[21];
+			int16_t atemCameraControlGammaG[21];
+			int16_t atemCameraControlGainG[21];
+			int16_t atemCameraControlContrast[21];
+			int16_t atemCameraControlSaturation[21];
+			int16_t atemCameraControlLiftB[21];
+			int16_t atemCameraControlGammaB[21];
+			int16_t atemCameraControlGainB[21];
+			int16_t atemCameraControlLiftY[21];
+			int16_t atemCameraControlGammaY[21];
+			int16_t atemCameraControlGainY[21];
 			uint8_t atemMediaPlayerSourceType[2];
 			uint8_t atemMediaPlayerSourceStillIndex[2];
 			uint8_t atemMediaPlayerSourceClipIndex[2];
