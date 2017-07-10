@@ -283,7 +283,15 @@ void ClientBMDVideohubTCP::setLock(uint8_t output, char newState) {
 }
 uint8_t ClientBMDVideohubTCP::getRoute(uint8_t output) { return _outputRouting[output - 1] + 1; }
 char ClientBMDVideohubTCP::getLock(uint8_t output) { return _outputLocks[output - 1]; }
-char *ClientBMDVideohubTCP::getInputLabel(uint8_t input) { return _inputLabels[input - 1]; }
-char *ClientBMDVideohubTCP::getOutputLabel(uint8_t output) { return _outputLabels[output - 1]; }
+char *ClientBMDVideohubTCP::getInputLabel(uint8_t input) { 
+  static char _label[] = "Input XX";
+  if (input<99) itoa(input, _label+6, 10);
+  return input > 0 && input <= ClientBMDVideohubTCP_LABELCOUNT ? _inputLabels[input - 1] : _label; 
+}
+char *ClientBMDVideohubTCP::getOutputLabel(uint8_t output) { 
+  static char _label[] = "Output XX";
+  if (output<99) itoa(output, _label+7, 10);
+  return output > 0 && output <= ClientBMDVideohubTCP_LABELCOUNT ? _outputLabels[output - 1] : _label; 
+}
 uint8_t ClientBMDVideohubTCP::getNumInputs() { return _numInputs; }
 uint8_t ClientBMDVideohubTCP::getNumOutputs() { return _numOutputs; }

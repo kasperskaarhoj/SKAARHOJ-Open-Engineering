@@ -49,6 +49,7 @@ class ClientBMDVideohubTCP : public SkaarhojTCPClient {
 private:
   bool _devicePresent;
 
+  char _labelNA[1];
   char _inputLabels[ClientBMDVideohubTCP_LABELCOUNT][ClientBMDVideohubTCP_LABELLEN];
   char _outputLabels[ClientBMDVideohubTCP_LABELCOUNT][ClientBMDVideohubTCP_LABELLEN];
   char _outputLocks[ClientBMDVideohubTCP_NUMOUTPUTS];
