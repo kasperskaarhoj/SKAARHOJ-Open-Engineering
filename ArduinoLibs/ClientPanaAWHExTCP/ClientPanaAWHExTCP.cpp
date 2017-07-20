@@ -51,7 +51,7 @@ void ClientPanaAWHExTCP::begin(const IPAddress ip){
 	_client = client;
 	_lastPingAttempt = 0;
 	
-	_serialOutput = false;
+	_serialOutput = 0;
 	_activeHTTPRequest = false;
 	_lastStateRequest = 0;
 	_queuePtr = 0;
@@ -438,6 +438,11 @@ bool ClientPanaAWHExTCP::presetExists(uint8_t cam, uint8_t preset) {
 }
 
 bool ClientPanaAWHExTCP::isReady()	{
+	// This _may_ need to be increased if the response time is greater than 200 ms
+	if(_activeHTTPRequest && millis() - _activeHTTPRequestTime > 200) {
+		_client.stop();
+		_activeHTTPRequest = false;
+	}
 	return !_activeHTTPRequest;
 }
 void ClientPanaAWHExTCP::_sendPtzRequest(uint8_t cam, uint8_t cmdlen, const char* format, ...) {
@@ -535,56 +540,59 @@ void ClientPanaAWHExTCP::_sendRequest(uint8_t cam, const char* command, uint8_t 
 	if(cam >= PanaAWHE_NUMCAMS) return;
 	_activeHTTPRequestTime = millis();
 	_cameraIP[3] = _baseAddr + cam;
-	uint8_t tries = 0;
-	while (tries++ < 5) {
-		if(_isOnline[cam] = _client.connect(_cameraIP, 80)) {
-			if (_serialOutput > 1) Serial.println("connecting...");
-			// send the HTTP PUT request:
-			//if (_serialOutput) Serial.println(command);
 
-			uint8_t charIdx = 0;
+	uint16_t timeout = W5100.readRTR();
+	uint8_t retry = W5100.readRCR();
 
-			memset(_charBuf,0,96);
+	W5100.setRetransmissionTime(500); // 50 ms
+	W5100.setRetransmissionCount(1);
+	if(_isOnline[cam] = _client.connect(_cameraIP, 80)) {
+		if (_serialOutput > 1) Serial.println("connecting...");
+		// send the HTTP PUT request:
+		//if (_serialOutput) Serial.println(command);
 
-			if (len<=34) {
-				if (camRequest)	{
-					strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_cam?cmd="));	// 24 chars
-					charIdx+=strlen_P("GET /cgi-bin/aw_cam?cmd=");
-				} else {
-					strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_ptz?cmd=%23"));	// 27 chars
-					charIdx+=strlen_P("GET /cgi-bin/aw_ptz?cmd=%23");
-				}
+		uint8_t charIdx = 0;
 
-				memcpy(_charBuf+charIdx, command, len);
-				charIdx+=len;
+		memset(_charBuf,0,96);
 
-				strcpy_P(_charBuf+charIdx, PSTR("&res=1 HTTP/1.1\r\n"));	// 17 chars
-				charIdx+=strlen_P("&res=1 HTTP/1.1\r\n");
-
-				strcpy_P(_charBuf+charIdx, PSTR("Host: 1.2.3.4\r\n"));	// 15 chars
-				charIdx+=strlen_P("Host: 1.2.3.4\r\n");
-
-				strcpy_P(_charBuf+charIdx, PSTR("\r\n"));	// 2 chars
-				charIdx+=strlen_P("\r\n");
-				
-				//if (_serialOutput) Serial.println("*");
-				//if (_serialOutput) Serial.println(_charBuf);
-				//if (_serialOutput) Serial.println("*");
-				
-				_client.print(_charBuf);
-
-				_activeHTTPRequest = true;
+		if (len<=34) {
+			if (camRequest)	{
+				strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_cam?cmd="));	// 24 chars
+				charIdx+=strlen_P("GET /cgi-bin/aw_cam?cmd=");
 			} else {
-			    if (_serialOutput) Serial.println("Command too long (>34 chars)");
+				strcpy_P(_charBuf+charIdx, PSTR("GET /cgi-bin/aw_ptz?cmd=%23"));	// 27 chars
+				charIdx+=strlen_P("GET /cgi-bin/aw_ptz?cmd=%23");
 			}
 
-			break;
+			memcpy(_charBuf+charIdx, command, len);
+			charIdx+=len;
+
+			strcpy_P(_charBuf+charIdx, PSTR("&res=1 HTTP/1.1\r\n"));	// 17 chars
+			charIdx+=strlen_P("&res=1 HTTP/1.1\r\n");
+
+			strcpy_P(_charBuf+charIdx, PSTR("Host: 1.2.3.4\r\n"));	// 15 chars
+			charIdx+=strlen_P("Host: 1.2.3.4\r\n");
+
+			strcpy_P(_charBuf+charIdx, PSTR("\r\n"));	// 2 chars
+			charIdx+=strlen_P("\r\n");
+			
+			//if (_serialOutput) Serial.println("*");
+			//if (_serialOutput) Serial.println(_charBuf);
+			//if (_serialOutput) Serial.println("*");
+			
+			_client.print(_charBuf);
+
+			_activeHTTPRequest = true;
 		} else {
-			// if you couldn't make a connection:
-			if (_serialOutput > 1) Serial.println("connection failed");
-			_client.stop();
-			_activeHTTPRequest = false;
-			tries++;
+		    if (_serialOutput) Serial.println("Command too long (>34 chars)");
 		}
+	} else {
+		// if you couldn't make a connection:
+		if (_serialOutput > 1) Serial.println("connection failed");
+		_client.stop();
+		_activeHTTPRequest = false;
 	}
+
+	W5100.setRetransmissionTime(timeout);
+	W5100.setRetransmissionCount(retry);
 }

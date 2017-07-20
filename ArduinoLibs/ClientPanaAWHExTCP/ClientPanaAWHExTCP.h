@@ -47,10 +47,10 @@ class ClientPanaAWHExTCP
   private:
 	IPAddress _cameraIP;		// IP address of the camera
 	uint8_t _baseAddr;
-	bool _serialOutput;
+	uint8_t _serialOutput;
 	EthernetClient _client;
 	bool _activeHTTPRequest;
-	unsigned long _activeHTTPRequestTime;
+	uint32_t _activeHTTPRequestTime;
 	uint32_t _lastSeen[PanaAWHE_NUMCAMS];
 	
 	char _charBuf[96];
