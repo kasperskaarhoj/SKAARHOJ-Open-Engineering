@@ -314,14 +314,14 @@ void ClientAJAKumoTCP::receiveData() {
 
 char* ClientAJAKumoTCP::getInputLabel(uint8_t input) {
 	char label[10];
-	snprintf("Input %d", input, 9);
+	snprintf(label, 9, "Input %d", input);
 
 	return (input >= 0 && input <= ClientAJAKumoTCP_LABELCOUNT) ? _sourceNames[input-1] : label;
 }
 
 char* ClientAJAKumoTCP::getOutputLabel(uint8_t output) {
 	char label[10];
-	snprintf("Output %d", output, 9);
+	snprintf(label, 9, "Output %d", output);
 
 	return (output >= 0 && output <= ClientAJAKumoTCP_LABELCOUNT) ? _destNames[output-1] : label;
 }
