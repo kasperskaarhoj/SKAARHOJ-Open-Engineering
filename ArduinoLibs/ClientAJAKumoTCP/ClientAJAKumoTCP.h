@@ -47,6 +47,8 @@ private:
 	char _sourceNames[ClientAJAKumoTCP_NUMINPUTS][21];
 	char _destNames[ClientAJAKumoTCP_NUMOUTPUTS][21];
 
+	bool _outputLocks[ClientAJAKumoTCP_NUMOUTPUTS];
+
 	uint8_t _outputBuffer[255];
 	uint8_t _outputPos;
 
@@ -78,6 +80,8 @@ public:
 	void begin(IPAddress ip);
 
 	void routeInputToOutput(uint8_t input, uint8_t output, bool wait=false);
+	bool getLock(uint8_t output);
+	void setLock(uint8_t output);
 	uint8_t getRoute(uint8_t output);
 	char* getInputLabel(uint8_t input);
 	char* getOutputLabel(uint8_t output);

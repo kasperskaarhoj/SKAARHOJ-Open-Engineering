@@ -164,6 +164,7 @@ void ClientAJAKumoTCP::handleCmd(char *cmd, char* parameter, char* data) {
 		case 'QI': { // Output routing info
 			uint8_t output = hexToDec(parameter, 4);
 			uint8_t input = hexToDec(data + strlen(data) - 4, 4);
+			uint8_t lock = (data[6] == 'P');
 			_receivedRouting = output-1;
 
 			if(output <= ClientAJAKumoTCP_NUMOUTPUTS) {
@@ -171,6 +172,7 @@ void ClientAJAKumoTCP::handleCmd(char *cmd, char* parameter, char* data) {
 					if(_serialOutput > 0)
 						Serial << "Route changed: " << input << " --> " << output << "\n";
 					routingState[output-1] = input-1;
+					_outputLocks[output-1] = lock;
 				}
 			}
 
@@ -326,6 +328,14 @@ char* ClientAJAKumoTCP::getOutputLabel(uint8_t output) {
 	return (output >= 0 && output <= ClientAJAKumoTCP_LABELCOUNT) ? _destNames[output-1] : label;
 }
 
+bool ClientAJAKumoTCP::getLock(uint8_t output) {
+	return _outputLocks[output - 1]; 
+}
+
+void ClientAJAKumoTCP::setLock(uint8_t output) {
+
+}
+
 void ClientAJAKumoTCP::runLoop(bool noWait) {
 	if(_client.connected()) {
 		receiveData();
@@ -344,8 +354,8 @@ void ClientAJAKumoTCP::runLoop(bool noWait) {
 
 		if(millis() - _lastNameUpdate > 2000) {
 			startBundle();
-			transmitPacket("QN,IS");
-			transmitPacket("QN,ID");
+			transmitPacket("QN,IS"); // Query source names
+			transmitPacket("QN,ID"); // Query destination names
 			endBundle();
 
 			_lastNameUpdate = millis();
