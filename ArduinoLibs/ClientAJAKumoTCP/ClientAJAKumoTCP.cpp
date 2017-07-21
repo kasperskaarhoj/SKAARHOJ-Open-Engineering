@@ -323,7 +323,7 @@ char* ClientAJAKumoTCP::getOutputLabel(uint8_t output) {
 	char label[10];
 	snprintf("Output %d", output, 9);
 
-	return (output >= 0 && output <= ClientAJAKumoTCP_LABELCOUNT) ? _destNames[input-1] : label;
+	return (output >= 0 && output <= ClientAJAKumoTCP_LABELCOUNT) ? _destNames[output-1] : label;
 }
 
 void ClientAJAKumoTCP::runLoop(bool noWait) {
