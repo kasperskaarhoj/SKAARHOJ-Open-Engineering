@@ -64,12 +64,19 @@ uint16_t ClientAJAKumoTCP::calculateChecksum(uint8_t* packet, uint8_t len) {
 void ClientAJAKumoTCP::transmitPacket(char* data, bool useBuffer) {
 	if(useBuffer) {
 		_client.write(_outputBuffer, _outputPos);
+		_lastTransmit = millis();
 		_outputPos = 0;
 		return;
 	}
 
 	uint8_t len = strlen(data);
+	if(len > 100) {
+		Serial << "Output too large! " << len << " bytes\n";
+		return;
+	}
+
 	uint8_t *_buffer = (uint8_t*)malloc(6 + len);
+
 	// Prepare packet
 	_buffer[0] = 0x01; // SOH
 	_buffer[1] = 'N'; // Protocol ID
@@ -92,6 +99,7 @@ void ClientAJAKumoTCP::transmitPacket(char* data, bool useBuffer) {
 
 	if(_client.connected()) {
 		if(_serialOutput > 1) {
+			Serial << "Outgoing: ";
 			for(uint8_t j=0; j<6+len; j++) {
 				Serial << _HEXPADL(_buffer[j], 2, "0") << ":";
 			}
@@ -107,6 +115,8 @@ void ClientAJAKumoTCP::transmitPacket(char* data, bool useBuffer) {
 		} else {
 			_client.write(_buffer, 6 + len);
 		}
+	} else {
+		Serial << "UNCONNECTED!\n";
 	}
 	free(_buffer);
 }
@@ -166,6 +176,42 @@ void ClientAJAKumoTCP::handleCmd(char *cmd, char* parameter, char* data) {
 
 			break;
 		}
+		case 'QN': {
+			uint8_t state = 0;
+			char name[21];
+			uint8_t src = 0;
+			char* nameData = data + 3;
+			char* token;
+			bool isSource = parameter[0] == 'S';
+			while((token = strsep(&nameData, "\t")) != NULL) {
+				state++;
+				switch(state) {
+					case 1:
+						//memset(name, 0, 21);
+						strncpy(name, token, 20);
+						break;
+					case 2:
+						src = atoi(token);
+						break;
+					case 4:
+						if(_serialOutput > 1) {
+							Serial << (isSource?"Source #":"Dest #") << src << ": " << name << "\n";
+						}
+						if(isSource) {
+							if(src > 0 && src < ClientAJAKumoTCP_LABELCOUNT) {
+								strncpy(_sourceNames[src - 1], name, 20);
+							}
+						} else {
+							if(src > 0 && src < ClientAJAKumoTCP_LABELCOUNT) {
+								strncpy(_destNames[src - 1], name, 20);
+							}
+						}
+						state = 0;
+						break;
+				}
+			}
+			break;
+		}
 		default:
 			if(_serialOutput > 1) 
 				Serial << "Unhandled incoming " << cmd << "," << parameter << " = " << data << "\n";
@@ -193,11 +239,11 @@ void ClientAJAKumoTCP::parseIncoming(uint8_t *buffer, uint8_t len) {
 			} else {
 					char cmd[3];
 					char parameter[11];
-					char data[21];
+					char data[200];
 
 					memset(cmd, 0, 3);
 					memset(parameter, 0, 11);
-					memset(data, 0, 21);
+					memset(data, 0, 51);
 
 					cmd[0] = buffer[4];
 					cmd[1] = buffer[3];
@@ -212,7 +258,7 @@ void ClientAJAKumoTCP::parseIncoming(uint8_t *buffer, uint8_t len) {
 					}
 
 					
-					strncpy(data, (char*)(buffer+i), len-i-4 > 20 ? 20 : len-i-4);
+					strncpy(data, (char*)(buffer+i), len-i-4 > 199 ? 199 : len-i-4);
 
 					handleCmd(cmd, parameter, data);
 			}
@@ -246,7 +292,7 @@ void ClientAJAKumoTCP::endBundle() {
 	}
 }
 
-bool ClientAJAKumoTCP::receiveData() {
+void ClientAJAKumoTCP::receiveData() {
 	_inputPos = 0;
 	memset(_inputBuffer, 0, ClientAJAKumoTCP_INPUTBUFFER_SIZE);
 	while(_client.available() && _inputPos < ClientAJAKumoTCP_INPUTBUFFER_SIZE) {
@@ -262,10 +308,22 @@ bool ClientAJAKumoTCP::receiveData() {
 
 			parseIncoming(_inputBuffer, _inputPos);
 			_inputPos = 0;
-			return true;
 		}
 	}
-	return false;
+}
+
+char* ClientAJAKumoTCP::getInputLabel(uint8_t input) {
+	char label[10];
+	snprintf("Input %d", input, 9);
+
+	return (input >= 0 && input <= ClientAJAKumoTCP_LABELCOUNT) ? _sourceNames[input-1] : label;
+}
+
+char* ClientAJAKumoTCP::getOutputLabel(uint8_t output) {
+	char label[10];
+	snprintf("Output %d", input, 9);
+
+	return (output >= 0 && output <= ClientAJAKumoTCP_LABELCOUNT) ? _destNames[input-1] : label;
 }
 
 void ClientAJAKumoTCP::runLoop(bool noWait) {
@@ -283,15 +341,24 @@ void ClientAJAKumoTCP::runLoop(bool noWait) {
 				_lastRoutingUpdate = millis();
 			}
 		}
+
+		if(millis() - _lastNameUpdate > 2000) {
+			startBundle();
+			transmitPacket("QN,IS");
+			transmitPacket("QN,ID");
+			endBundle();
+
+			_lastNameUpdate = millis();
+		}
 	} else {
 		_client.stop();
 		if(millis() - _lastConnectionAttempt >  1000) {
 			if(_client.connect(_IP, 12345)) {
-				if(_serialOutput > 1)
+				//if(_serialOutput > 1)
 					Serial.println("Connected to AJA KUMO!");
 				_isConnected = true;
 			} else {
-				if(_serialOutput > 1)
+				//if(_serialOutput > 1)
 					Serial.println("Could not connect to AJA KUMO");
 				_isConnected = false;
 			}
