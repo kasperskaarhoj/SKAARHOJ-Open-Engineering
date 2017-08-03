@@ -48,9 +48,9 @@ ATEMext AtemSwitcher;
 // Related to SkaarhojGPIO1x16:
 #include <Wire.h>
 #include <MCP23017.h>
-#include <SkaarhojGPIO1x16.h>
+#include <SkaarhojGPIO2x8.h>
 
-SkaarhojGPIO1x16 GPIOboard;
+SkaarhojGPIO2x8 GPIOboard;
 
 uint8_t greenLED = 22;
 uint8_t redLED = 23;
@@ -559,7 +559,7 @@ void setup() {
 
   Wire.begin(); // Start the wire library for communication with the GPIO chip.
 
-  GPIOboard.begin();
+  GPIOboard.begin(0, 1);
 
   // Set:
   for (int i = 1; i <= numberOfTallyLights*2; i++)  {
@@ -721,7 +721,13 @@ void lDelay(unsigned long timeout)  {
   unsigned long thisTime = millis();
   do {
     AtemSwitcher.runLoop();
-    //Serial << F(".");
+    Serial << F(".");
+    static int k = 1;
+    k++;
+    if (k > 100) {
+      k = 1;
+      Serial << F("\n");
+    }
   }
   while (!sTools.hasTimedOut(thisTime, timeout));
 }
