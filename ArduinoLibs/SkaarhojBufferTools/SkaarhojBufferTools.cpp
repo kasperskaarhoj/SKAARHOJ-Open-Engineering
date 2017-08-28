@@ -161,6 +161,17 @@ char* SkaarhojBufferTools::getRemainingBuffer() {
 }
 
 /**
+ * Advances the internal pointer
+ */
+bool SkaarhojBufferTools::advanceBuffer(uint8_t count) {
+	if(_bufferReadIndex + count < _bufferWriteIndex) {
+		return true;
+		_bufferReadIndex += count;
+	}
+	return false;
+}
+
+/**
  * Parses a line from client
  */
 void SkaarhojBufferTools::_parselineDispatch()	{
