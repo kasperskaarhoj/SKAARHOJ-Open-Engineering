@@ -18,6 +18,7 @@ EthernetClient::EthernetClient() : _sock(MAX_SOCK_NUM) {
 }
 
 EthernetClient::EthernetClient(uint8_t sock) : _sock(sock) {
+  _packetBuffering = false;
 }
 
 int EthernetClient::connect(const char* host, uint16_t port) {
@@ -25,7 +26,6 @@ int EthernetClient::connect(const char* host, uint16_t port) {
   int ret = 0;
   DNSClient dns;
   IPAddress remote_addr;
-  _packetBuffering = false;
 
   dns.begin(Ethernet.dnsServerIP());
   ret = dns.getHostByName(host, remote_addr);
