@@ -35,6 +35,8 @@ namespace BMD
 {
 	class SDICameraControl : public SDIControlShield
 	{
+	private:
+		bool bundleActive;
 	public:
 		/** Camera control setup */
 		void		setOverride(bool enabled) const;
@@ -50,7 +52,7 @@ namespace BMD
 		bool		availableForWrite() const;
 		template <unsigned N>
 		void		write(const byte (&data)[N]) const;
-		void		write(const byte data[], int dataLength) const;
+		void		write(const byte data[], int dataLength, bool forceWrite = false) const;
 		void		flushWrite() const;
 
 		/** High level camera control write operations */
@@ -74,11 +76,14 @@ namespace BMD
 		void 		writeCommandFixed16(byte camera, byte category, byte parameter, byte operation, float (&values)[N]) const;
 		void		writeCommandFixed16(byte camera, byte category, byte parameter, byte operation, float value) const;
 
+		void startBundle();
+		void endBundle();
+
 		/** Format conversion */
 		int16_t		toFixed16(float value) const;
 		float		fromFixed16(int16_t value) const;
 
-		mutable char outputBuffer[63];
+		mutable char outputBuffer[255];
 		mutable uint8_t outputLength;
 	};
 
