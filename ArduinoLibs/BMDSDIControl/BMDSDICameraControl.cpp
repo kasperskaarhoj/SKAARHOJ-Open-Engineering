@@ -60,22 +60,42 @@ namespace BMD {
     return availableLength;
   }
 
-  void SDICameraControl::flushRead() const { regWrite8(kRegOCARM, kRegOCARM_ARM_Mask); }
+  void SDICameraControl::flushRead() const { regWrite8(kRegICARM, kRegICARM_ARM_Mask); }
 
   bool SDICameraControl::availableForWrite() const { return (regRead8(kRegOCARM) & kRegOCARM_ARM_Mask) == 0; }
 
-  void SDICameraControl::write(const byte data[], int dataLength) const {
+  void SDICameraControl::startBundle() {
+    bundleActive = true;
+  }
+
+  void SDICameraControl::endBundle() {
+    write(outputBuffer, outputLength, true);
+    outputLength = 0;
+    bundleActive = false;
+  }
+
+  void SDICameraControl::write(const byte data[], int dataLength, bool forceWrite) const {
 
     if(shieldInitialized) {
-      // Ensure any pending writes are complete before writing new data
-      flushWrite();
+      if(!bundleActive || !forceWrite) {
+        // Ensure any pending writes are complete before writing new data
+        flushWrite();
 
-      // Set up control override length and data
-      regWrite8(kRegOCLENGTH, dataLength);
-      regWrite(kRegOCDATA, data, dataLength);
+        // Set up control override length and data
+        regWrite8(kRegOCLENGTH, dataLength);
+        regWrite(kRegOCDATA, data, dataLength);
 
-      // Arm the control override bank
-      regWrite8(kRegOCARM, kRegOCARM_ARM_Mask);
+        // Arm the control override bank
+        regWrite8(kRegOCARM, kRegOCARM_ARM_Mask);
+      } else {
+        if(outputLength + dataLength < 255) {
+          memcpy(outputBuffer + outputLength, data, dataLength);
+          outputLength += dataLength;
+        } else {
+          write(outputBuffer, outputLength, true);
+          outputLength = 0;
+        }
+      }
     } else {
       memcpy(outputBuffer, data, dataLength);
       outputLength = dataLength;

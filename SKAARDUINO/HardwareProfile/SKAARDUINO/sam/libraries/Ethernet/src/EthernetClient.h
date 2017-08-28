@@ -28,7 +28,8 @@ public:
   virtual bool operator!=(const bool value) { return bool() != value; }
   virtual bool operator==(const EthernetClient&);
   virtual bool operator!=(const EthernetClient& rhs) { return !this->operator==(rhs); };
-
+  virtual uint8_t getSocket() {return _sock;}
+  
   void beginPacket();
   size_t endPacket();
 
