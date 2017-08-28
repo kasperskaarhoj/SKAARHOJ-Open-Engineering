@@ -21,9 +21,12 @@ void W5500Class::init(void)
     delay(1000);
 
     initSS();
-    writeMR(0x80);
 
     SPI.begin();
+
+    SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+    writeMR(0x80);
+    SPI.endTransaction();
   
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     for (int i=0; i<MAX_SOCK_NUM; i++) {
