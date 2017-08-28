@@ -21,6 +21,8 @@ void W5500Class::init(void)
     delay(1000);
 
     initSS();
+    writeMR(0x80);
+
     SPI.begin();
   
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);

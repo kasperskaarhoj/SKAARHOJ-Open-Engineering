@@ -39,6 +39,30 @@ uint8_t socketStatus(SOCKET s)
   return status;
 }
 
+uint8_t socketMode(SOCKET s)
+{
+  SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+  uint8_t mode = W5100.readSnMR(s);
+  SPI.endTransaction();
+  return mode;
+}
+uint16_t socketSrcPort(SOCKET s)
+{
+  SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+  uint16_t port = W5100.readSnPORT(s);
+  SPI.endTransaction();
+  return port;
+}
+uint16_t socketDestPort(SOCKET s)
+{
+  SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+  uint16_t port = W5100.readSnDPORT(s);
+  SPI.endTransaction();
+  return port;
+}
+
+
+
 
 /**
  * @brief	This function close the socket and parameter is "s" which represent the socket number
