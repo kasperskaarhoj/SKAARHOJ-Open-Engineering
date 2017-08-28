@@ -18,16 +18,16 @@ W5500Class W5100;
 
 void W5500Class::init(void)
 {
-    delay(1000);
-
+    delay(500);
     initSS();
-
     SPI.begin();
 
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     writeMR(0x80);
     SPI.endTransaction();
-  
+
+    delay(500);
+
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     for (int i=0; i<MAX_SOCK_NUM; i++) {
         uint8_t cntl_byte = (0x0C + (i<<5));
