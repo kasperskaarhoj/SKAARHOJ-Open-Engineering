@@ -163,7 +163,7 @@ char* SkaarhojBufferTools::getRemainingBuffer() {
 /**
  * Advances the internal pointer
  */
-bool SkaarhojBufferTools::advanceBuffer(uint8_t count) {
+bool SkaarhojBufferTools::advancePointer(uint8_t count) {
 	if(_bufferReadIndex + count < _bufferWriteIndex) {
 		return true;
 		_bufferReadIndex += count;

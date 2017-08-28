@@ -68,7 +68,7 @@ class SkaarhojBufferTools
 	virtual bool isNextPartOfBuffer_P(const char *firstPartStr);
 	virtual bool isBufferEqualTo_P(const char *firstPartStr);
 	char* getRemainingBuffer();
-	bool advanceBuffer(uint8_t count);
+	bool advancePointer(uint8_t count);
 		
   protected:
 	virtual void _parselineDispatch();
