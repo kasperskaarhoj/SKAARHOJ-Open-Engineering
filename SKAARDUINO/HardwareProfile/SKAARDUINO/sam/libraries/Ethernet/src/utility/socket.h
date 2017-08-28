@@ -38,7 +38,8 @@ uint16_t bufferData(SOCKET s, uint16_t offset, const uint8_t* buf, uint16_t len)
   calls to bufferData.
   @return 1 if the datagram was successfully sent, or 0 if there was an error
 */
-int sendUDP(SOCKET s);
 
+int sendUDP(SOCKET s);
+int sendTCP(SOCKET s);
 #endif
 /* _SOCKET_H_ */

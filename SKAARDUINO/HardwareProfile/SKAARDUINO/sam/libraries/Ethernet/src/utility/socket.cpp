@@ -404,11 +404,11 @@ uint16_t igmpsend(SOCKET s, const uint8_t * buf, uint16_t len)
 
 uint16_t bufferData(SOCKET s, uint16_t offset, const uint8_t* buf, uint16_t len)
 {
-  uint16_t ret =0;
+  uint16_t ret = 0;
   SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
-  if (len > W5100.getTXFreeSize(s))
+  if (offset + len > W5100.getTXFreeSize(s))
   {
-    ret = W5100.getTXFreeSize(s); // check size not to exceed MAX size.
+    ret = W5100.getTXFreeSize(s) - offset; // check size not to exceed MAX size.
   }
   else
   {
@@ -438,6 +438,34 @@ int startUDP(SOCKET s, uint8_t* addr, uint16_t port)
     return 1;
   }
 }
+
+int sendTCP(SOCKET s)
+{
+  SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+  W5100.execCmdSn(s, Sock_SEND);
+    
+  /* +2008.01 bj */
+  while ( (W5100.readSnIR(s) & SnIR::SEND_OK) != SnIR::SEND_OK ) 
+  {
+    if (W5100.readSnSR(s) & SnSR::CLOSED)
+    {
+      SPI.endTransaction();
+      close(s);
+      return 0;
+    }
+    SPI.endTransaction();
+    yield();
+    SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+  }
+
+  /* +2008.01 bj */ 
+  W5100.writeSnIR(s, SnIR::SEND_OK);
+  SPI.endTransaction();
+
+  /* Sent ok */
+  return 1;
+}
+
 
 int sendUDP(SOCKET s)
 {

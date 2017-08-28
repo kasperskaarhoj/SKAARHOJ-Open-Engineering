@@ -25,6 +25,7 @@ int EthernetClient::connect(const char* host, uint16_t port) {
   int ret = 0;
   DNSClient dns;
   IPAddress remote_addr;
+  _packetBuffering = false;
 
   dns.begin(Ethernet.dnsServerIP());
   ret = dns.getHostByName(host, remote_addr);
@@ -74,14 +75,40 @@ size_t EthernetClient::write(uint8_t b) {
   return write(&b, 1);
 }
 
+void EthernetClient::beginPacket() {
+  _offset = 0;
+  _packetBuffering = true;
+}
+
+size_t EthernetClient::endPacket() {
+  _packetBuffering = false;
+  return sendTCP(_sock);
+}
+
 size_t EthernetClient::write(const uint8_t *buf, size_t size) {
   if (_sock == MAX_SOCK_NUM) {
     setWriteError();
     return 0;
   }
-  if (!send(_sock, buf, size)) {
-    setWriteError();
-    return 0;
+  if(_packetBuffering) {
+    uint16_t len;
+    do {
+      len = bufferData(_sock, _offset, buf, size);
+      _offset += len;
+      if(len != size) {
+        endPacket();
+        beginPacket();
+        size = size - len;
+        buf += len;
+      }
+    } while(len != size);
+
+    return len;
+  } else {
+    if (!send(_sock, buf, size)) {
+      setWriteError();
+      return 0;
+    }
   }
   return size;
 }

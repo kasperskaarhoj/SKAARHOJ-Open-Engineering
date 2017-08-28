@@ -29,13 +29,17 @@ public:
   virtual bool operator==(const EthernetClient&);
   virtual bool operator!=(const EthernetClient& rhs) { return !this->operator==(rhs); };
 
+  void beginPacket();
+  size_t endPacket();
+
   friend class EthernetServer;
-  
   using Print::write;
 
 private:
   static uint16_t _srcport;
   uint8_t _sock;
+  uint16_t _offset;
+  bool _packetBuffering;
 };
 
 #endif
