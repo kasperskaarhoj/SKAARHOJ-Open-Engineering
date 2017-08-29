@@ -18,7 +18,7 @@ W5500Class W5100;
 
 void W5500Class::init(void)
 {
-    delay(500);
+    delay(1000);
     initSS();
     SPI.begin();
 
