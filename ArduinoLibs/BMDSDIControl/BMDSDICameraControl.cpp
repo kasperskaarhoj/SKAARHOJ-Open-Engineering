@@ -69,7 +69,9 @@ namespace BMD {
   }
 
   void SDICameraControl::endBundle() {
-    write(outputBuffer, outputLength, true);
+    if(outputLength > 0) {
+      write(outputBuffer, outputLength, true);
+    }
     outputLength = 0;
     bundleActive = false;
   }
@@ -77,7 +79,7 @@ namespace BMD {
   void SDICameraControl::write(const byte data[], int dataLength, bool forceWrite) const {
 
     if(shieldInitialized) {
-      if(!bundleActive || !forceWrite) {
+      if(!bundleActive || forceWrite) {
         // Ensure any pending writes are complete before writing new data
         flushWrite();
 
