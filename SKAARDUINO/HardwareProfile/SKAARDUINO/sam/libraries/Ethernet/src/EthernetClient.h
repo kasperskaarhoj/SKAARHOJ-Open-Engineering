@@ -40,7 +40,7 @@ private:
   static uint16_t _srcport;
   uint8_t _sock;
   uint16_t _offset;
-  bool _packetBuffering;
+  bool _packetBuffering = false;
 };
 
 #endif

@@ -268,14 +268,12 @@ void ClientBMDSmartView::_sendCmdRequest(uint8_t monId, const char *str) { _send
  * Notice that str is in PROGMEM (pass string wrapped in PSTR("")) and command is a String object (useful for variable data, but more memory intensive.)
  */
 void ClientBMDSmartView::_sendCmdRequest(uint8_t monId, const char *str, const String command) {
-
   _resetBuffer();
   _addToBuffer_P(PSTR("MONITOR "));
   _addToBuffer_P(monId == 0 ? PSTR("A:\n") : PSTR("B:\n"));
   _addToBuffer_P(str);
   _addToBuffer(command);
   _addToBuffer_P(PSTR("\n\n"));
-
   _sendBuffer();
 }
 

@@ -18,7 +18,6 @@ EthernetClient::EthernetClient() : _sock(MAX_SOCK_NUM) {
 }
 
 EthernetClient::EthernetClient(uint8_t sock) : _sock(sock) {
-  _packetBuffering = false;
 }
 
 int EthernetClient::connect(const char* host, uint16_t port) {
