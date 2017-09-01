@@ -55,6 +55,7 @@ public:
   virtual void connect();    // Connects to device
   virtual void disconnect(); // Disconnects from device
   virtual void stopClient(); // Stop ethernet client
+  virtual void initializeConnection(); // Initialize connection
 
   void runLoop();                   //  Keeps connection alive; Looks for incoming traffic and processes that, if any.
   void runLoop(uint16_t delayTime); // As runLoop but keeps running for delayTime ms before returning (thus implementing a small delay function while still keeping connection alive. )

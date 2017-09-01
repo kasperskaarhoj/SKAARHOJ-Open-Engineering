@@ -70,6 +70,7 @@ void SkaarhojTCPClient::connect() {
     _isConnected = true;
     _lastIncomingMsg = millis();
     _lastStatusRequest = millis();
+    initializeConnection();
   } else {
     if (_serialOutput)
       Serial.println(F(" - connection failed"));
@@ -114,6 +115,12 @@ void SkaarhojTCPClient::stopClient() {
   _section = 0;
 
   _resetDeviceStateVariables();
+}
+
+/**
+ * Initialize Connection
+ */
+void SkaarhojTCPClient::initializeConnection() {
 }
 
 /**
