@@ -180,6 +180,7 @@ void ClientSKAARHOJUniSketchTCP::_sendStatus() {
   _sendCmdRequest(String("list"));
   if (_serialOutput > 1)
     Serial << "Asking for status....\n";
+  //_hasInitialized = true; // Assuming this is the last piece of data to receive.
 }
 
 /**
@@ -200,10 +201,10 @@ void ClientSKAARHOJUniSketchTCP::initializeConnection() {
 bool ClientSKAARHOJUniSketchTCP::getFlag(uint8_t flag) { return _deviceState_FLAG[flag]; }
 void ClientSKAARHOJUniSketchTCP::setFlag(uint8_t flag, bool value) {
   if (flag<64)  {
-    _deviceState_FLAG[flag] = value;
+//    _deviceState_FLAG[flag] = value;
 
     _client.beginPacket();
-    _client << "Flag#" << flag << "=" << _deviceState_FLAG[flag] << "\n";
+    _client << "Flag#" << flag << "=" << value << "\n";
     _client.endPacket();
 
     // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
@@ -213,10 +214,10 @@ void ClientSKAARHOJUniSketchTCP::setFlag(uint8_t flag, bool value) {
 uint8_t ClientSKAARHOJUniSketchTCP::getMem(uint8_t idx) { return _deviceState_MEM[idx]; }
 void ClientSKAARHOJUniSketchTCP::setMem(uint8_t idx, uint8_t value) {
   if (idx<12)  {
-    _deviceState_MEM[idx] = value;
+//    _deviceState_MEM[idx] = value;
 
     _client.beginPacket();
-    _client << "Mem" << char(idx+65) << "=" << _deviceState_MEM[idx] << "\n";
+    _client << "Mem" << char(idx+65) << "=" << value << "\n";
     _client.endPacket();
 
     // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
@@ -226,13 +227,13 @@ void ClientSKAARHOJUniSketchTCP::setMem(uint8_t idx, uint8_t value) {
 uint8_t ClientSKAARHOJUniSketchTCP::getShift(uint8_t idx) { return _deviceState_SHIFT[idx]; }
 void ClientSKAARHOJUniSketchTCP::setShift(uint8_t idx, uint8_t value) {
   if (idx<5)  {
-    _deviceState_SHIFT[idx] = value;
+//    _deviceState_SHIFT[idx] = value;
 
     _client.beginPacket();
     _client << "Shift";
     if (idx>0)
       _client << char(idx+64);
-    _client << "=" << _deviceState_SHIFT[idx] << "\n";
+    _client << "=" << value << "\n";
     _client.endPacket();
 
     // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
@@ -242,13 +243,13 @@ void ClientSKAARHOJUniSketchTCP::setShift(uint8_t idx, uint8_t value) {
 uint8_t ClientSKAARHOJUniSketchTCP::getState(uint8_t idx) { return _deviceState_STATE[idx]; }
 void ClientSKAARHOJUniSketchTCP::setState(uint8_t idx, uint8_t value) {
   if (idx<5)  {
-    _deviceState_STATE[idx] = value;
+//    _deviceState_STATE[idx] = value;
 
     _client.beginPacket();
     _client << "State";
     if (idx>0)
       _client << char(idx+64+15);
-    _client << "=" << _deviceState_STATE[idx] << "\n";
+    _client << "=" << value << "\n";
     _client.endPacket();
 
     // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
@@ -257,9 +258,11 @@ void ClientSKAARHOJUniSketchTCP::setState(uint8_t idx, uint8_t value) {
 
 uint8_t ClientSKAARHOJUniSketchTCP::getInactivePanel() { return _deviceState_INACTIVEPANEL; }
 void ClientSKAARHOJUniSketchTCP::setInactivePanel(bool value) {
-  _deviceState_INACTIVEPANEL = value;
+  //return;
+  //_deviceState_INACTIVEPANEL = value;
+
   _client.beginPacket();
-  _client << "ActivePanel=" << (!_deviceState_INACTIVEPANEL) << "\n";
+  _client << "ActivePanel=" << (!value) << "\n";
   _client.endPacket();
 
   // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
