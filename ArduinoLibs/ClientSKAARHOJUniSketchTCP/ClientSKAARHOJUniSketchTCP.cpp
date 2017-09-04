@@ -79,7 +79,7 @@ void ClientSKAARHOJUniSketchTCP::_parseline() {
     if(next[1] == '=' && next[0] >= 'A' && next[0] <= 'L') {
       idx = constrain(next[0] - 'A',0,11);  // Safety...
       advancePointer(2);
-      _deviceState_MEM[idx] = constrain(parseInt(), 0, 255);
+      _deviceState_MEM[idx] = parseInt();
       if (_serialOutput > 1) {
         Serial << F("MEM #") << idx << F("=") << _deviceState_MEM[idx] << F("\n");
       }
