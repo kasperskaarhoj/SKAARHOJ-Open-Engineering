@@ -165,8 +165,8 @@ char* SkaarhojBufferTools::getRemainingBuffer() {
  */
 bool SkaarhojBufferTools::advancePointer(uint8_t count) {
 	if(_bufferReadIndex + count < _bufferWriteIndex) {
-		return true;
 		_bufferReadIndex += count;
+		return true;
 	}
 	return false;
 }
