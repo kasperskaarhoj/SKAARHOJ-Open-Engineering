@@ -50,8 +50,8 @@ void ClientSKAARHOJUniSketchTCP::begin(IPAddress ip) {
  * Resets local device state variables. (Overloading from superclass)
  */
 void ClientSKAARHOJUniSketchTCP::_resetDeviceStateVariables() {
-  memset(_deviceState_HWC,0,128);
-  memset(_deviceState_MEM,0,12);
+  memset(_deviceState_HWC,0,128); // I think we can extend this to 256, at least HWC numbers up to 256 is allowed.
+  memset(_deviceState_MEM,0,12); 
   memset(_deviceState_FLAG,0,64);
   memset(_deviceState_SHIFT,0,5);
   memset(_deviceState_STATE,0,5);
@@ -66,10 +66,10 @@ void ClientSKAARHOJUniSketchTCP::_parseline() {
 
   if (isNextPartOfBuffer_P(PSTR("HWC#"))) {
     idx = parseInt();
-    if (idx < 128 && isNextPartOfBuffer_P(PSTR("="))) {
-      _deviceState_HWC[idx] = parseInt();
+    if (idx >=1 && idx <= 128 && isNextPartOfBuffer_P(PSTR("="))) {
+      _deviceState_HWC[idx-1] = parseInt();
       if (_serialOutput > 1) {
-        Serial << F("HWC #") << idx << F("=") << _deviceState_HWC[idx] << F("\n");
+        Serial << F("HWC #") << idx << F("=") << _deviceState_HWC[idx-1] << F("\n");
       }
     }
   }
@@ -250,6 +250,7 @@ void ClientSKAARHOJUniSketchTCP::setState(uint8_t idx, uint8_t value) {
     if (idx>0)
       _client << char(idx+64+15);
     _client << "=" << value << "\n";
+    
     _client.endPacket();
 
     // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
@@ -267,3 +268,53 @@ void ClientSKAARHOJUniSketchTCP::setInactivePanel(bool value) {
 
   // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
 }
+
+uint8_t ClientSKAARHOJUniSketchTCP::getHWCoutput(uint8_t hwc) { return _deviceState_HWC[hwc-1]; }
+void ClientSKAARHOJUniSketchTCP::sendHWC_Press(uint8_t hwc) {
+  _client.beginPacket();
+  _client << "HWC#" << hwc << "=Press\n";
+//  Serial << "OUTGOING: HWC#" << hwc << "=Press\n";
+  _client.endPacket();
+}
+void ClientSKAARHOJUniSketchTCP::sendHWC_Down(uint8_t hwc) {
+  _client.beginPacket();
+  _client << "HWC#" << hwc << "=Down\n";
+//  Serial << "OUTGOING: HWC#" << hwc << "=Down\n";
+  _client.endPacket();
+}
+void ClientSKAARHOJUniSketchTCP::sendHWC_Up(uint8_t hwc) {
+  _client.beginPacket();
+  _client << "HWC#" << hwc << "=Up\n";
+//  Serial << "OUTGOING: HWC#" << hwc << "=Up\n";
+  _client.endPacket();
+}
+void ClientSKAARHOJUniSketchTCP::sendHWC_Enc(uint8_t hwc, int pulseCount) {
+  _client.beginPacket();
+  _client << "HWC#" << hwc << "=Enc:" << pulseCount << "\n";
+//  Serial << "OUTGOING: HWC#" << hwc << "=Enc:" << pulseCount << "\n";
+  _client.endPacket();
+}
+void ClientSKAARHOJUniSketchTCP::sendHWC_Abs(uint8_t hwc, int value) {
+  _client.beginPacket();
+  _client << "HWC#" << hwc << "=Abs:" << value << "\n";
+//  Serial << "OUTGOING: HWC#" << hwc << "=Abs:" << value << "\n";
+  _client.endPacket();
+}
+void ClientSKAARHOJUniSketchTCP::sendHWC_Speed(uint8_t hwc, int value) {
+  _client.beginPacket();
+  _client << "HWC#" << hwc << "=Speed:" << value << "\n";
+//  Serial << "OUTGOING: HWC#" << hwc << "=Speed:" << value << "\n";
+  _client.endPacket();
+}
+
+/*
+
+              << F("- HWC#xx=Down : Simulate a Down trigger for HWC xx\n")
+              << F("- HWC#xx=Up : Simulate an Up trigger for HWC xx\n")
+              << F("- HWC#xx=Press : Simulate an immediate Down+Up trigger for HWC xx\n")
+              << F("- HWC#xx=Abs:y : Send absolute value (y=0-1000) to HWC xx\n")
+              << F("- HWC#xx=Enc:y : Send encoder pulses (y=integer) to HWC xx\n")
+              << F("- HWC#xx=Speed:y : Send speed value (y=integer) to HWC xx\n")
+
+              */
+

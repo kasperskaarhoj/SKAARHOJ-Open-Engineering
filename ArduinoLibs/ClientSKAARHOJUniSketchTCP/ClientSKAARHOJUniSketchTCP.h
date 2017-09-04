@@ -66,6 +66,13 @@ public:
   uint8_t getInactivePanel();
   void setInactivePanel(bool value);
 
+  uint8_t getHWCoutput(uint8_t hwc);
+  void sendHWC_Press(uint8_t hwc);
+  void sendHWC_Down(uint8_t hwc);
+  void sendHWC_Up(uint8_t hwc);
+  void sendHWC_Enc(uint8_t hwc, int pulseCount);
+  void sendHWC_Abs(uint8_t hwc, int value);
+  void sendHWC_Speed(uint8_t hwc, int value);
 };
 
 #endif
