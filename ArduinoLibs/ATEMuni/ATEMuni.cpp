@@ -33,7 +33,23 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 /**
  * Constructor (using arguments is deprecated! Use begin() instead)
  */
-ATEMuni::ATEMuni(){}
+ATEMuni::ATEMuni(){
+	for(uint8_t i = 0; i < 21; i++) {
+		atemCameraControlGain[i] = 512;
+		atemCameraControlWhiteBalance[i] = 3200;
+
+		atemCameraControlLumMix[i] = 2048;
+		atemCameraControlShutter[i] = 10000;
+		
+		atemCameraControlContrast[i] = 2048;
+		atemCameraControlSaturation[i] = 2048;
+		
+		atemCameraControlGainR[i] = 2048;		
+		atemCameraControlGainG[i] = 2048;
+		atemCameraControlGainB[i] = 2048;
+		atemCameraControlGainY[i] = 2048;
+	}
+}
 
 
 
