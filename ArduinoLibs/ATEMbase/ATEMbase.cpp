@@ -254,22 +254,26 @@ void ATEMbase::runLoop(uint16_t delayTime) {
 		// After initialization, we check which packages were missed and ask for them:
 		if (!_hasInitialized && _initPayloadSent && !waitingForIncoming)	{
 			for(uint8_t i=1; i<_initPayloadSentAtPacketId; i++)	{
-				if (_missedInitializationPackages[i>>3] & (B1<<(i & 0x7)))	{
+				if(i <= ATEM_maxInitPackageCount) {
+					if (_missedInitializationPackages[i>>3] & (B1<<(i & 0x7)))	{
 
-					#if ATEM_debug
-					if (_serialOutput & 0x80) 	{
-			      		Serial.print(F("Asking for package "));
-					    Serial.println(i, DEC);
+						#if ATEM_debug
+						if (_serialOutput & 0x80) 	{
+				      		Serial.print(F("Asking for package "));
+						    Serial.println(i, DEC);
+						}
+						#endif
+						_wipeCleanPacketBuffer();
+						_createCommandHeader(ATEM_headerCmd_RequestNextAfter, 12);
+					    _packetBuffer[6] = highByte(i-1);  // Resend Packet ID, MSB
+					    _packetBuffer[7] = lowByte(i-1);  // Resend Packet ID, LSB
+					    _packetBuffer[8] = 0x01;
+					
+						_sendPacketBuffer(12);  
+						waitingForIncoming = true;
+						break;
 					}
-					#endif
-					_wipeCleanPacketBuffer();
-					_createCommandHeader(ATEM_headerCmd_RequestNextAfter, 12);
-				    _packetBuffer[6] = highByte(i-1);  // Resend Packet ID, MSB
-				    _packetBuffer[7] = lowByte(i-1);  // Resend Packet ID, LSB
-				    _packetBuffer[8] = 0x01;
-				
-					_sendPacketBuffer(12);  
-					waitingForIncoming = true;
+				} else {
 					break;
 				}
 			}
