@@ -37,9 +37,11 @@ namespace BMD
 	{
 	private:
 		bool bundleActive;
+		bool momentaryOverride = false;
 	public:
 		/** Camera control setup */
 		void		setOverride(bool enabled) const;
+		void 		setMomentaryOverride(bool enabled);
 
 		/** Low level camera control read operations */
 		bool		available() const;

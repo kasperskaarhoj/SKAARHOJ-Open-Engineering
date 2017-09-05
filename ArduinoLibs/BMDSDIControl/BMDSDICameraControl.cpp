@@ -40,6 +40,10 @@ namespace BMD {
     regWrite8(kRegCONTROL, regValue);
   }
 
+  void SDICameraControl::setMomentaryOverride(bool enabled) {
+    momentaryOverride = enabled;
+  }
+
   bool SDICameraControl::available() const { return (regRead8(kRegICARM) & kRegOCARM_ARM_Mask) == 0; }
 
   int SDICameraControl::read(byte data[], int dataLength) const {
@@ -80,6 +84,7 @@ namespace BMD {
 
     if(shieldInitialized) {
       if(!bundleActive || forceWrite) {
+        if(momentaryOverride) setOverride(true);
         // Ensure any pending writes are complete before writing new data
         flushWrite();
 
@@ -89,6 +94,7 @@ namespace BMD {
 
         // Arm the control override bank
         regWrite8(kRegOCARM, kRegOCARM_ARM_Mask);
+        if(momentaryOverride) setOverride(false);
       } else {
         if(outputLength + dataLength < 255) {
           memcpy(outputBuffer + outputLength, data, dataLength);
