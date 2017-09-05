@@ -306,6 +306,8 @@ public:
   __SOCKET_REGISTER16(SnRX_RSR,   0x0026)        // RX Free Size
   __SOCKET_REGISTER16(SnRX_RD,    0x0028)        // RX Read Pointer
   __SOCKET_REGISTER16(SnRX_WR,    0x002A)        // RX Write Pointer (supported?)
+  __SOCKET_REGISTER8(SnKPALVTR,   0x002F)        // Socket Keep Alive timer
+  
   
 #undef __SOCKET_REGISTER8
 #undef __SOCKET_REGISTER16
