@@ -39,6 +39,13 @@ namespace BMD {
 
     regWrite8(kRegCONTROL, regValue);
   }
+  
+  bool SDICameraControl::getOverride() const
+  {
+    byte regValue = regRead8(kRegCONTROL);
+    return regValue & kRegCONTROL_COVERIDE_Mask;
+  }
+
 
   void SDICameraControl::setMomentaryOverride(bool enabled) {
     momentaryOverride = enabled;

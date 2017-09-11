@@ -41,6 +41,7 @@ namespace BMD
 	public:
 		/** Camera control setup */
 		void		setOverride(bool enabled) const;
+		bool 		getOverride() const;
 		void 		setMomentaryOverride(bool enabled);
 
 		/** Low level camera control read operations */
