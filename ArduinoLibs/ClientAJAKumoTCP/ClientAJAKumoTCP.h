@@ -25,9 +25,9 @@ with the ClientAJAKumoTCP library. If not, see http://www.gnu.org/licenses/.
 #include <Ethernet.h>
 #include <Streaming.h>
 
-#define ClientAJAKumoTCP_NUMINPUTS 16
-#define ClientAJAKumoTCP_NUMOUTPUTS 16
-#define ClientAJAKumoTCP_LABELCOUNT 16
+#define ClientAJAKumoTCP_NUMINPUTS 64
+#define ClientAJAKumoTCP_NUMOUTPUTS 64
+#define ClientAJAKumoTCP_LABELCOUNT 64
 
 #define ClientAJAKumoTCP_INPUTBUFFER_SIZE 255
 
@@ -44,8 +44,8 @@ private:
 	uint16_t hexToDec(char* str, uint8_t len);
 	bool _bundleEnabled;
 
-	char _sourceNames[ClientAJAKumoTCP_NUMINPUTS][21];
-	char _destNames[ClientAJAKumoTCP_NUMOUTPUTS][21];
+	char _sourceNames[ClientAJAKumoTCP_LABELCOUNT][21];
+	char _destNames[ClientAJAKumoTCP_LABELCOUNT][21];
 
 	bool _outputLocks[ClientAJAKumoTCP_NUMOUTPUTS];
 

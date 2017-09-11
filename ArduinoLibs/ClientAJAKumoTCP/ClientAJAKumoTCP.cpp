@@ -200,11 +200,11 @@ void ClientAJAKumoTCP::handleCmd(char *cmd, char* parameter, char* data) {
 							Serial << (isSource?"Source #":"Dest #") << src << ": " << name << "\n";
 						}
 						if(isSource) {
-							if(src > 0 && src < ClientAJAKumoTCP_LABELCOUNT) {
+							if(src > 0 && src <= ClientAJAKumoTCP_LABELCOUNT) {
 								strncpy(_sourceNames[src - 1], name, 20);
 							}
 						} else {
-							if(src > 0 && src < ClientAJAKumoTCP_LABELCOUNT) {
+							if(src > 0 && src <= ClientAJAKumoTCP_LABELCOUNT) {
 								strncpy(_destNames[src - 1], name, 20);
 							}
 						}
@@ -318,14 +318,14 @@ char* ClientAJAKumoTCP::getInputLabel(uint8_t input) {
 	char label[10];
 	snprintf(label, 9, "Input %d", input);
 
-	return (input >= 0 && input <= ClientAJAKumoTCP_LABELCOUNT) ? _sourceNames[input-1] : label;
+	return (input > 0 && input <= ClientAJAKumoTCP_LABELCOUNT) ? _sourceNames[input-1] : label;
 }
 
 char* ClientAJAKumoTCP::getOutputLabel(uint8_t output) {
 	char label[10];
 	snprintf(label, 9, "Dest %d", output);
 
-	return (output >= 0 && output <= ClientAJAKumoTCP_LABELCOUNT) ? _destNames[output-1] : label;
+	return (output > 0 && output <= ClientAJAKumoTCP_LABELCOUNT) ? _destNames[output-1] : label;
 }
 
 bool ClientAJAKumoTCP::getLock(uint8_t output) {
