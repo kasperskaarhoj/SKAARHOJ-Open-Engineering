@@ -190,7 +190,6 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 
 
 
-
 		// *********************************
 		// **
 		// ** Implementations in ATEMuni.c:
@@ -5168,13 +5167,12 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+1] = 0;
 				_packetBuffer[12+_cBBO+4+4+2] = 0;
 
-				_packetBuffer[12+_cBBO+4+4+3] = 0x01;	// Relative setting
 				_packetBuffer[12+_cBBO+4+4+4] = 0x80;	// Data type: 5.11 floating point
 				_packetBuffer[12+_cBBO+4+4+9] = 0x01;	// One byte
 
 				_packetBuffer[12+_cBBO+4+4+0] = input;
 
-				_packetBuffer[12+_cBBO+4+4+16] = highByte(focus);		// Relative values...?
+				_packetBuffer[12+_cBBO+4+4+16] = highByte(focus);
 				_packetBuffer[12+_cBBO+4+4+17] = lowByte(focus);
 
 		   		_finishCommandPacket();
