@@ -127,9 +127,10 @@ template <typename T> void I2CPhysical<T>::regWrite8(uint16_t address, uint8_t v
 }
 
 template <typename T> void I2CPhysical<T>::regRead(uint16_t address, uint8_t values[], int length) const {
+  // EDIT 18/9/2017: Takes the buffer size from Wire.h . This allows a custom hardware platform to have sufficient receive performance
   // The Wire library only supports receiving small chunks of data at a time
-  for (int position = 0; position < length; position += 16) {
-    int readLength = min(length - position, 16);
+  for (int position = 0; position < length; position += BUFFER_LENGTH - 2) {
+    int readLength = min(length - position, BUFFER_LENGTH - 2);
 
     Wire.beginTransmission(m_wireAddress);
     Wire.write((uint8_t)(address & 0xFF));
