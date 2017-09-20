@@ -44,7 +44,7 @@ class ATEMuni : public ATEMbase
 	uint8_t getTallyFlags(uint16_t videoSource);
 	uint8_t getAudioTallyFlags(uint16_t audioSource);
 
-	void setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t resolution, uint8_t interlaced);
+	void setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t resolution, uint8_t interlaced, uint8_t mrate = 0);
 	void setCameraControlLift(uint8_t input, int liftR, int liftG, int liftB, int liftY);
 	void setCameraControlGamma(uint8_t input, int gammaR, int gammaG, int gammaB, int gammaY);
 	void setCameraControlGain(uint8_t input, int gainR, int gainG, int gainB, int gainY);
