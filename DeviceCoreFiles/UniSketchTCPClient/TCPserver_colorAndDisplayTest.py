@@ -3,10 +3,11 @@ import socketserver
 import socket
 import base64
 import time
-
+import re
 
 """
-
+	This test sends button colors and graphics as fast as possible
+	Great burn-in test and flashing panel!
 
 """
 
@@ -18,7 +19,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 	
 	def handle(self):
 		self.panelInitialized = False
-		self.request.settimeout(0.2)	# How quick (in seconds) we will try to send new display and color data to the panel - moderated by looking for the BSY command though.
+		self.request.settimeout(0.5)	# How quick (in seconds) we will try to send new display and color data to the panel - moderated by looking for the BSY command though.
 		dimmed = True	# Dim the panel colors
 		color = 0
 
@@ -306,6 +307,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 		imageOrText = False
 
 		#sendValue = 0;
+		HWCtracker = [0] * 256
 
 		while True:
 			try:
@@ -320,27 +322,31 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 					millis = int(round(time.time() * 1000))
 					print(millis-lastMillis)
 					lastMillis = millis
-					for a in range (0, 40):
-						line = "HWC#{}={}\n".format(a,(2+a%3) if not dimmed else 5)
-						self.request.sendall(line.encode('ascii'))
-						
-						if dimmed:
-							line = "HWCc#{}={}\n".format(a,color | 0x80)
-							color = (color+1)%17
+					
+					for a in range (0, 128):
+						if HWCtracker[a] > 0:
+							line = "HWC#{}={}\n".format(HWCtracker[a],(2+HWCtracker[a]%3) if not dimmed else 5)
 							self.request.sendall(line.encode('ascii'))
+							
+							if dimmed:
+								line = "HWCc#{}={}\n".format(HWCtracker[a],color | 0x80)
+								color = (color+1)%17
+								self.request.sendall(line.encode('ascii'))
 					#dimmed = not dimmed	# If full on, the controller crashes - too much power consumed! Maybe LED values need be deminished
 
 					if not imageOrText:
 						imageOrText = True
-						for a in range (0, 24):
-							self.request.sendall(txtStrings[(rotationIndex+a)%len(txtStrings)].format(a+1).encode('ascii')+b"\n")
+						for a in range (0, 128):
+							if HWCtracker[a] > 0:
+								self.request.sendall(txtStrings[(rotationIndex+HWCtracker[a])%len(txtStrings)].format(HWCtracker[a]).encode('ascii')+b"\n")
 					else:
 						imageOrText = False
-						for a in range (0, 24):
-							self.request.sendall(imageStrings[(rotationIndex+a)%len(imageStrings)][0].format(a+1).encode('ascii')+b"\n")
-							self.request.sendall(imageStrings[(rotationIndex+a)%len(imageStrings)][1].format(a+1).encode('ascii')+b"\n")
-							self.request.sendall(imageStrings[(rotationIndex+a)%len(imageStrings)][2].format(a+1).encode('ascii')+b"\n")
-						rotationIndex=rotationIndex+24
+						for a in range (0, 128):
+							if HWCtracker[a] > 0:
+								self.request.sendall(imageStrings[(rotationIndex+HWCtracker[a])%len(imageStrings)][0].format(HWCtracker[a]).encode('ascii')+b"\n")
+								self.request.sendall(imageStrings[(rotationIndex+HWCtracker[a])%len(imageStrings)][1].format(HWCtracker[a]).encode('ascii')+b"\n")
+								self.request.sendall(imageStrings[(rotationIndex+HWCtracker[a])%len(imageStrings)][2].format(HWCtracker[a]).encode('ascii')+b"\n")
+								rotationIndex=rotationIndex+1
 			else:
 				if self.data != b'':
 					for line in self.data.split(b"\n"):
@@ -364,6 +370,13 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 							busy = False
 							print("- Returned 'ack'")
 
+						# Parse map= and turn on the button in dimmed mode for each. 
+						# We could use the data from map to track which HWcs are active on the panel
+						match = re.search(r"^map=([0-9]+):([0-9]+)$", line.decode('ascii'))
+						if match:
+							HWcServer = int(match.group(2));	# Extract the HWc number of the keypress from the match
+							HWcClient = int(match.group(1));	# Extract the HWc number of the keypress from the match
+							HWCtracker[HWcClient] = HWcServer;
 				else:
 					print("{} closed".format(self.client_address[0]))
 					break

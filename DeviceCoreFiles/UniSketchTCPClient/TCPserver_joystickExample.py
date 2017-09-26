@@ -6,11 +6,10 @@ import re
 
 
 """
-A simple server for UniSketch TCP Client
+Test with JoyStick on XC7+XC3
 
 - Keeps the connection alive
-- Turns on light in reported HWcs
-- Receives button presses and cycles colors, highlights/dims buttons
+- 
 """
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
@@ -20,6 +19,8 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 		busy = False;	# This keeps track of the busy/ready state of the client. We can use this to make sure we are not spamming it with data
 		
 		HWCcolor = [2] * 256
+		xSpeed = 0
+		ySpeed = 0
 
 		while True:
 			try:
@@ -47,33 +48,22 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 							outputline = "ack\n"
 							busy = False
 
-						# Parse map= and turn on the button in dimmed mode for each. 
-						# We could use the data from map to track which HWcs are active on the panel
-						match = re.search(r"^map=([0-9]+):([0-9]+)$", line.decode('ascii'))
-						if match:
-							HWc = int(match.group(2));	# Extract the HWc number of the keypress from the match
-							outputline = "HWC#{}={}\n".format(HWc,5)
-
 						# Parse down trigger:
-						match = re.search(r"^HWC#([0-9]+)=Down$", line.decode('ascii'))
+						match = re.search(r"^HWC#([0-9]+)=Speed:([\-0-9]+)$", line.decode('ascii'))
 						if match:
 							HWc = int(match.group(1));	# Extract the HWc number of the keypress from the match
+							if (HWc==44):
+								xSpeed = int(match.group(2));	# Speed
+							if (HWc==43):
+								ySpeed = int(match.group(2));	# Speed
 
-							# Highlight the button and turn on binary output:
-							outputline = "HWC#{}={}\n".format(HWc, 4 | 0x20)
+							if (xSpeed!=0 or ySpeed!=0):
 
-							# Rotate color number:
-							HWCcolor[HWc] = (HWCcolor[HWc] + 1)%17;	# Rotate the internally stored color number
-							outputline = outputline + "HWCc#{}={}\n".format(HWc,HWCcolor[HWc] | 0x80)	# OR'ing 0x80 to identify the color as an externally imposed color. By default the least significant 6 bits will be an index to a color, but you can OR 0x40 and it will instead accept a rrggbb combination.
-
-						# Parse Up trigger:
-						match = re.search(r"^HWC#([0-9]+)=Up$", line.decode('ascii'))
-						if match:
-							HWc = int(match.group(1));	# Extract the HWc number of the keypress from the match
-
-							# Dim the button:
-							outputline = "HWC#{}={}\n".format(HWc,5)
-
+								# Highlight the button and turn on binary output:
+								outputline = "HWCt#40={}|||Speeds:|1|x:|y:|{}|0\n".format(xSpeed, ySpeed)
+							else:
+								outputline = "HWCt#40=|||Speeds:|1|Still\n"
+						
 						# If outputline not empty, send content back to client:
 						if outputline:
 							self.request.sendall(outputline.encode('ascii'))

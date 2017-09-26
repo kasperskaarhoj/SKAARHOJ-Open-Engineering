@@ -5,14 +5,16 @@ import base64
 import re
 import time
 
-class MyTCPHandler(socketserver.BaseRequestHandler):
-	"""
-	The RequestHandler class for our server.
+"""
+An example of serving text and graphics to UniSketch TCP Client
 
-	It is instantiated once per connection to the server, and must
-	override the handle() method to implement communication to the
-	client.
-	"""
+- Keeps the connection alive
+- Turns on light in reported HWcs
+- Receives button presses and cycles graphics
+- Can hold down button to quickly cycle graphics
+"""
+
+class MyTCPHandler(socketserver.BaseRequestHandler):
 	
 	def handle(self):
 		self.request.settimeout(0.1)
@@ -301,7 +303,6 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 			]
 
 
-		HWCcolor = [2] * 256
 		HWCgraphic = -1
 		HWCtimer = [0] * 256
 
