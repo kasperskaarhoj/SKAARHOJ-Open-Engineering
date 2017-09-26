@@ -10,6 +10,7 @@ open-source hardware by purchasing products from Adafruit as well!
 
 //  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include "SkaarhojOLED32x256.h"
+#include "Streaming.h"
 
 #ifdef __arm__ // Arduino Due:
 #define _BV(bit) (1 << (bit))
@@ -216,21 +217,34 @@ void SkaarhojOLED32x256::invertDisplay(bool i, uint8_t cs) {
   }
 }
 
-void SkaarhojOLED32x256::display(uint8_t cs) {
+void SkaarhojOLED32x256::display(uint8_t cs, uint8_t x, uint8_t y, uint16_t w, uint8_t h) {
+  uint8_t nx = x & 0xF8;
+  uint8_t ny = y;
+
+  if (getRotation()==2) { // support rotation to vertical (1+3) also some day...
+    nx = SKAARHOJOLED32x256_LCDWIDTH - w - nx;
+    ny = SKAARHOJOLED32x256_LCDHEIGHT - h - ny;
+  }
+  nx = (nx>>3);
+
   sendCommand(0x15, cs); // Column reset:
-  sendCommand(0, cs);    // 0
-  sendCommand(0x1F, cs); // 31
+  sendCommand(0 + nx, cs);      // 0
+  sendCommand(0 + nx+(w>>3)-1, cs); //
+
   sendCommand(0x75, cs); // Row reset:
-  sendCommand(0, cs);    // 0
-  sendCommand(0x1F, cs); // 31
+  sendCommand(ny, cs);       // 0
+  sendCommand(ny+h-1, cs);      // 31
 
   // SPI
   chipSelect(0);
   setDC(true);
   chipSelect(cs);
 
-  for (uint16_t i = 0; i < (SKAARHOJOLED32x256_LCDWIDTH * SKAARHOJOLED32x256_LCDHEIGHT / 8); i++) {
-    fastSPIwrite(buffer32256[i]);
+  for(uint16_t row=ny; row<ny+h; row++)  {
+    for(uint16_t col=nx; col<nx+(w>>3); col++) {
+      uint16_t i = (row<<5)+col;
+      fastSPIwrite(buffer32256[i]);
+    }
   }
 
   chipSelect(0);

@@ -10,6 +10,7 @@ open-source hardware by purchasing products from Adafruit as well!
 
 //  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include "SkaarhojOLED64x256.h"
+#include "Streaming.h"
 
 #ifdef __arm__ // Arduino Due:
 #define _BV(bit) (1 << (bit))
@@ -221,14 +222,23 @@ void SkaarhojOLED64x256::invertDisplay(bool i, uint8_t cs) {
   }
 }
 
-void SkaarhojOLED64x256::display(uint8_t cs) {
+void SkaarhojOLED64x256::display(uint8_t cs, uint8_t x, uint8_t y, uint16_t w, uint8_t h) {
+  uint8_t nx = x;
+  uint8_t ny = y;
+
+  if (getRotation()==2) { // support rotation to vertical (1+3) also some day...
+    nx = SKAARHOJOLED64x256_LCDWIDTH - w - nx;
+    ny = SKAARHOJOLED64x256_LCDHEIGHT - h - ny;
+  }
+  nx = (nx>>2);
+
   sendCommand(0x15, cs); // Column reset:
-  sendData(28, cs);      // 0
-  sendData(28 + 63, cs); // 	(For each "column" here there are always 4 pixels and therefore two bytes to define it which is why we add 63 and not 255)
+  sendData(28 + nx, cs);      // 0
+  sendData(28 + nx+(w>>2)-1, cs); // 	(For each "column" here there are always 4 pixels and therefore two bytes to define it which is why we add 63 and not 255)
 
   sendCommand(0x75, cs); // Row reset:
-  sendData(0, cs);       // 0
-  sendData(63, cs);      // 63
+  sendData(ny, cs);       // 0
+  sendData(ny+h-1, cs);      // 63
 
   sendCommand(0x5C, cs); // Enable write to data ram
 
@@ -237,13 +247,18 @@ void SkaarhojOLED64x256::display(uint8_t cs) {
   setDC(true);
   chipSelect(cs);
 
-  for (uint16_t i = 0; i < (SKAARHOJOLED64x256_LCDWIDTH * SKAARHOJOLED64x256_LCDHEIGHT / 8); i++) {
-    // Writing 8 pixels in one go:
-    fastSPIwrite((buffer64256[i] & B00100000 ? 0xF : 0x0) | (buffer64256[i] & B00010000 ? 0xF : 0x0) << 4); // Third, Forth
-    fastSPIwrite((buffer64256[i] & B10000000 ? 0xF : 0x0) | (buffer64256[i] & B01000000 ? 0xF : 0x0) << 4); // First, Second
-
-    fastSPIwrite((buffer64256[i] & B0010 ? 0xF : 0x0) | (buffer64256[i] & B0001 ? 0xF : 0x0) << 4); // Third, Forth
-    fastSPIwrite((buffer64256[i] & B1000 ? 0xF : 0x0) | (buffer64256[i] & B0100 ? 0xF : 0x0) << 4); // First, Second
+  for(uint16_t row=ny; row<ny+h; row++)  {
+    for(uint16_t col=nx; col<nx+(w>>2); col++) {
+      uint16_t i = (row<<5)+(col>>1);
+      if (col & B1)  {
+        fastSPIwrite((buffer64256[i] & B0010 ? 0xF : 0x0) | (buffer64256[i] & B0001 ? 0xF : 0x0) << 4); // Third, Forth
+        fastSPIwrite((buffer64256[i] & B1000 ? 0xF : 0x0) | (buffer64256[i] & B0100 ? 0xF : 0x0) << 4); // First, Second
+      } else {
+        // Writing 8 pixels in one go:
+        fastSPIwrite((buffer64256[i] & B00100000 ? 0xF : 0x0) | (buffer64256[i] & B00010000 ? 0xF : 0x0) << 4); // Third, Forth
+        fastSPIwrite((buffer64256[i] & B10000000 ? 0xF : 0x0) | (buffer64256[i] & B01000000 ? 0xF : 0x0) << 4); // First, Second        
+      }
+    }
   }
 
   chipSelect(0);
