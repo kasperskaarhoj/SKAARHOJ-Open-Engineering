@@ -50,12 +50,152 @@ void ClientSKAARHOJUniSketchTCP::begin(IPAddress ip) {
  * Resets local device state variables. (Overloading from superclass)
  */
 void ClientSKAARHOJUniSketchTCP::_resetDeviceStateVariables() {
+  memset(_deviceState_HWCmap,0,128); // I think we can extend this to 256, at least HWC numbers up to 256 is allowed.
+  memset(_deviceState_HWCmap_prev,0,128); // I think we can extend this to 256, at least HWC numbers up to 256 is allowed.
+
   memset(_deviceState_HWC,0,128); // I think we can extend this to 256, at least HWC numbers up to 256 is allowed.
+  memset(_deviceState_HWCc,0,128);
   memset(_deviceState_MEM,0,12); 
   memset(_deviceState_FLAG,0,64);
   memset(_deviceState_SHIFT,0,5);
   memset(_deviceState_STATE,0,5);
+  memset(_imgBufHWC,0,ClientSKAARHOJUniSketchTCP_IMGBUF);
+  memset(_txtBufHWC,0,ClientSKAARHOJUniSketchTCP_TXTBUF);
   _deviceState_INACTIVEPANEL = false;
+  busy = true;
+}
+
+/**
+ * Returns index to a graphics slot - or ClientSKAARHOJUniSketchTCP_IMGBUF if none are available. If a slot was not already found, one is created and returned.
+ */
+uint8_t ClientSKAARHOJUniSketchTCP::getGfxSlotForHWC(uint8_t HWC)  {
+  uint8_t idx = findGfxSlotForHWC(HWC);
+  if (idx < ClientSKAARHOJUniSketchTCP_IMGBUF)  return idx;
+
+  for(uint8_t a=0; a<ClientSKAARHOJUniSketchTCP_IMGBUF; a++)  {
+    if (_imgBufHWC[a]==0) {
+      _imgBufHWC[a] = HWC;
+      //  Serial << "Created one: " << a << "\n";
+      return a;
+    } else if (_imgBufRdy[a]==0) {
+      _imgBufHWC[a] = HWC;
+     // Serial << "Hijacked one: " << a << "\n";
+      return a;
+    }
+  }
+
+  //Serial << "None available..." << "\n";
+  return ClientSKAARHOJUniSketchTCP_IMGBUF;
+}
+
+/**
+ * Find existing gfx slot
+ */
+uint8_t ClientSKAARHOJUniSketchTCP::findGfxSlotForHWC(uint8_t HWC, bool mustBeReady)  {
+  for(uint8_t a=0; a<ClientSKAARHOJUniSketchTCP_IMGBUF; a++)  {
+    if (_imgBufHWC[a]==HWC) {
+      if (!mustBeReady || _imgBufRdy[a])  {
+        //Serial << "Found existing: " << a << "\n";
+        return a;        
+      }
+    }
+  }
+  return ClientSKAARHOJUniSketchTCP_IMGBUF;
+}
+
+/**
+ * Reports if there are graphic slots that can be filled with content
+ */
+bool ClientSKAARHOJUniSketchTCP::isFreeGfxSlots()  {
+  for(uint8_t a=0; a<ClientSKAARHOJUniSketchTCP_IMGBUF; a++)  {
+    if (_imgBufHWC[a]==0 || _imgBufRdy[a]==0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Reset all gfx slows with no regard to whether they are ready or not.
+ */
+void ClientSKAARHOJUniSketchTCP::resetGfxSlots() {
+  memset(_imgBufHWC,0,ClientSKAARHOJUniSketchTCP_IMGBUF);
+}
+
+/**
+ * Reset gfx slots which are "ready" (and therefore assumed written to displays by now) - done just before entering the runloop so that we can fill them up 
+ */
+void ClientSKAARHOJUniSketchTCP::resetReadyGfxSlots() {
+  for(uint8_t a=0; a<ClientSKAARHOJUniSketchTCP_IMGBUF; a++)  {
+    if (_imgBufHWC[a]>0 && _imgBufRdy[a]) {
+      _imgBufHWC[a]=0;
+      _imgBufRdy[a]=false;
+    }
+  }
+}
+
+/**
+ * return image buffer for idx
+ */
+uint8_t * ClientSKAARHOJUniSketchTCP::getGfxForIdx(uint8_t idx) {
+  return _imgBuf[idx];
+}
+
+/**
+ * Returns index to a text slot - or ClientSKAARHOJUniSketchTCP_TXTBUF if none are available
+ */
+uint8_t ClientSKAARHOJUniSketchTCP::getTxtSlotForHWC(uint8_t HWC)  {
+  uint8_t idx = findTxtSlotForHWC(HWC);
+  if (idx < ClientSKAARHOJUniSketchTCP_TXTBUF)  return idx;
+
+  for(uint8_t a=0; a<ClientSKAARHOJUniSketchTCP_TXTBUF; a++)  {
+    if (_txtBufHWC[a]==0) {
+      _txtBufHWC[a] = HWC;
+    //  Serial << "Created txt one: " << a << "\n";
+      return a;
+    }
+  }
+
+  //Serial << "None txt available..." << "\n";
+  return ClientSKAARHOJUniSketchTCP_TXTBUF;
+}
+
+/**
+ * Find existing text slot
+ */
+uint8_t ClientSKAARHOJUniSketchTCP::findTxtSlotForHWC(uint8_t HWC)  {
+  for(uint8_t a=0; a<ClientSKAARHOJUniSketchTCP_TXTBUF; a++)  {
+    if (_txtBufHWC[a]==HWC) {
+      return a;        
+    }
+  }
+  return ClientSKAARHOJUniSketchTCP_TXTBUF;
+}
+
+/**
+ * Reports if there are text slots that can be filled with content
+ */
+bool ClientSKAARHOJUniSketchTCP::isFreeTxtSlots()  {
+  for(uint8_t a=0; a<ClientSKAARHOJUniSketchTCP_TXTBUF; a++)  {
+    if (_txtBufHWC[a]==0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Return text buffer
+ */
+char * ClientSKAARHOJUniSketchTCP::getTxtForIdx(uint8_t idx) {
+  return _txtBuf[idx];
+}
+
+/**
+ * Reset text slots - done just before entering the runloop so that we can fill them up
+ */
+void ClientSKAARHOJUniSketchTCP::resetTxtSlots() {
+  memset(_txtBufHWC,0,ClientSKAARHOJUniSketchTCP_TXTBUF);
 }
 
 /**
@@ -70,6 +210,64 @@ void ClientSKAARHOJUniSketchTCP::_parseline() {
       _deviceState_HWC[idx-1] = parseInt();
       if (_serialOutput > 1) {
         Serial << F("HWC #") << idx << F("=") << _deviceState_HWC[idx-1] << F("\n");
+      }
+    }
+  }
+
+  else if (isNextPartOfBuffer_P(PSTR("HWCc#"))) { // Color
+    idx = parseInt();
+    if (idx >=1 && idx <= 128 && isNextPartOfBuffer_P(PSTR("="))) {
+      _deviceState_HWCc[idx-1] = parseInt();
+      if (_serialOutput > 1) {
+        Serial << F("HWCc #") << idx << F("=") << _deviceState_HWCc[idx-1] << F("\n");
+      }
+    }
+  }
+
+  else if (isNextPartOfBuffer_P(PSTR("HWCg#"))) { // Graphics
+    idx = parseInt();
+    if (idx >=1 && idx <= 128 && isNextPartOfBuffer_P(PSTR("="))) {
+      uint8_t slot = getGfxSlotForHWC(idx);
+      if (slot < ClientSKAARHOJUniSketchTCP_IMGBUF) {
+        uint8_t gPartIndex = parseInt();
+        if (gPartIndex < 3 && isNextPartOfBuffer_P(PSTR(":"))) {
+          base64_decodeImgPart(slot, gPartIndex);
+          if (gPartIndex==2)  {
+            _imgBufRdy[slot] = true;
+          }
+          if (_serialOutput > 1) {
+            Serial << F("HWCg #") << idx << F("=") << gPartIndex << F(":");
+
+            if (gPartIndex==2)  {
+              for(int a = 0; a<256; a++)  {
+                if (a%8==0)  Serial << "\n";
+                Serial << _BINPADL(_imgBuf[0][a],8,"0");
+              }
+              Serial << "\n";
+            }
+          }
+          
+          if (gPartIndex==2 && !isFreeGfxSlots())  {
+            //Serial << "Exits now because there are no more free slots...\n";
+            _exitRunLoop = true;
+            return;
+          }
+        }        
+      }
+    }
+  }
+
+  else if (isNextPartOfBuffer_P(PSTR("HWCt#"))) { // Text
+    idx = parseInt();
+    if (idx >=1 && idx <= 128 && isNextPartOfBuffer_P(PSTR("="))) {
+      uint8_t slot = getTxtSlotForHWC(idx);
+      if (slot < ClientSKAARHOJUniSketchTCP_TXTBUF) {
+        strncpy(_txtBuf[slot], getRemainingBuffer(), 64);
+        if (!isFreeTxtSlots())  {
+          //Serial << "Exits now because there are no more free txt slots...\n";
+          _exitRunLoop = true;
+          return;
+        }
       }
     }
   }
@@ -152,6 +350,13 @@ void ClientSKAARHOJUniSketchTCP::_parseline() {
       }
     }
   }
+  else if (isBufferEqualTo_P(PSTR("list")))  {
+ /*   _client.beginPacket();
+    _client << "_model=" << SK_MODEL << "\n";
+    _client.endPacket();    
+    _client << "_topology=" << htmlSVG << "\n";
+    */
+  }
 }
 
 /**
@@ -180,8 +385,22 @@ void ClientSKAARHOJUniSketchTCP::_sendStatus() {
   _sendCmdRequest(String("list"));
   if (_serialOutput > 1)
     Serial << "Asking for status....\n";
-  //_hasInitialized = true; // Assuming this is the last piece of data to receive.
 }
+
+void ClientSKAARHOJUniSketchTCP::_sendBusy()  {
+  if (!busy)  {
+    _client << "BSY\n";
+    busy = true;    
+  }
+}
+
+void ClientSKAARHOJUniSketchTCP::_sendReady()  {
+  if (busy) {
+    _client << "RDY\n";
+    busy = false;
+  }
+}
+
 
 /**
  * Initialize Connection
@@ -269,7 +488,31 @@ void ClientSKAARHOJUniSketchTCP::setInactivePanel(bool value) {
   // _sendCmdRequest(String("Flag#") + String(flag) + String("=") + String(_deviceState_FLAG[flag]));
 }
 
+
+
 uint8_t ClientSKAARHOJUniSketchTCP::getHWCoutput(uint8_t hwc) { return _deviceState_HWC[hwc-1]; }
+uint8_t ClientSKAARHOJUniSketchTCP::getHWCcolor(uint8_t hwc) { return _deviceState_HWCc[hwc-1]; }
+
+void ClientSKAARHOJUniSketchTCP::setHWCmap(uint8_t hwcLocal, uint8_t hwcRemote) {
+  if (hwcLocal < 128) {
+    _deviceState_HWCmap[hwcLocal] = hwcRemote;
+  }
+}
+void ClientSKAARHOJUniSketchTCP::resetHWCmap() {
+  memset(_deviceState_HWCmap,0,128);
+}
+void ClientSKAARHOJUniSketchTCP::sendAndUpdateServerHWCMap() {
+  for(uint8_t a=0; a<128; a++)  {
+    if (_deviceState_HWCmap_prev[a] != _deviceState_HWCmap[a])  {
+      _deviceState_HWCmap_prev[a] = _deviceState_HWCmap[a];
+
+      _client.beginPacket();
+      _client << "map=" << a << ":" << _deviceState_HWCmap[a] << "\n";
+      _client.endPacket();      
+    }
+  }
+}
+
 void ClientSKAARHOJUniSketchTCP::sendHWC_Press(uint8_t hwc) {
   _client.beginPacket();
   _client << "HWC#" << hwc << "=Press\n";
@@ -318,3 +561,27 @@ void ClientSKAARHOJUniSketchTCP::sendHWC_Speed(uint8_t hwc, int value) {
 
               */
 
+/**
+ * Decode image part from base64
+ */
+void ClientSKAARHOJUniSketchTCP::base64_decodeImgPart(uint8_t slot, uint8_t part) {
+  if (slot < ClientSKAARHOJUniSketchTCP_IMGBUF && part < 3) {
+    char* encoded_string = getRemainingBuffer();
+    int in_len = part == 2 ? 84 : 86;
+    uint8_t offset = part * 86;
+    uint8_t tempParts[4];
+
+    uint8_t j = 0;
+    uint8_t ptr = 0;
+
+    while(j < in_len) {
+      for (uint8_t i = 0; i < 4; i++) {
+        tempParts[i] = encoded_string[ptr] >= 97 ? encoded_string[ptr]-97+26 : (encoded_string[ptr] >= 65 ? encoded_string[ptr]-65+0 : (encoded_string[ptr] >= 48 ? encoded_string[ptr]-48+52 : (encoded_string[ptr] == 43 ? 62 : 63)));
+        ptr++;
+      }
+      if (j < in_len) _imgBuf[slot][offset + (j++)] = (tempParts[0] << 2) + ((tempParts[1] & 0x30) >> 4);
+      if (j < in_len) _imgBuf[slot][offset + (j++)] = ((tempParts[1] & 0xf) << 4) + ((tempParts[2] & 0x3c) >> 2);
+      if (j < in_len) _imgBuf[slot][offset + (j++)] = ((tempParts[2] & 0x3) << 6) + tempParts[3];
+    }
+  }
+}

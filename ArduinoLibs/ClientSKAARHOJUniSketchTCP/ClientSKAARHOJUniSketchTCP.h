@@ -32,15 +32,31 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #include <Ethernet.h>
 
+#define ClientSKAARHOJUniSketchTCP_IMGBUF 4
+#define ClientSKAARHOJUniSketchTCP_TXTBUF 16
+
 
 class ClientSKAARHOJUniSketchTCP : public SkaarhojTCPClient {
 private:
   uint8_t _deviceState_HWC[128];
+  uint8_t _deviceState_HWCc[128];
   uint8_t _deviceState_MEM[12];
   bool _deviceState_FLAG[64];
   uint8_t _deviceState_SHIFT[5];
   uint8_t _deviceState_STATE[5];
   bool _deviceState_INACTIVEPANEL;
+
+  uint8_t _deviceState_HWCmap[128];
+  uint8_t _deviceState_HWCmap_prev[128];
+
+  uint8_t _imgBuf[ClientSKAARHOJUniSketchTCP_IMGBUF][256];
+  uint8_t _imgBufHWC[ClientSKAARHOJUniSketchTCP_IMGBUF];
+  uint8_t _imgBufRdy[ClientSKAARHOJUniSketchTCP_IMGBUF];
+
+  char _txtBuf[ClientSKAARHOJUniSketchTCP_TXTBUF][64];
+  uint8_t _txtBufHWC[ClientSKAARHOJUniSketchTCP_TXTBUF];
+
+  bool busy;
 
 public:
   ClientSKAARHOJUniSketchTCP();
@@ -53,6 +69,9 @@ private: // Overloading:
   void _sendPing();
   void _sendStatus();
   void _sendCmdRequest(const String command);
+
+  void _sendBusy();
+  void _sendReady();
 
 public:
   bool getFlag(uint8_t flag);
@@ -67,12 +86,35 @@ public:
   void setInactivePanel(bool value);
 
   uint8_t getHWCoutput(uint8_t hwc);
+  uint8_t getHWCcolor(uint8_t hwc);
   void sendHWC_Press(uint8_t hwc);
   void sendHWC_Down(uint8_t hwc);
   void sendHWC_Up(uint8_t hwc);
   void sendHWC_Enc(uint8_t hwc, int pulseCount);
   void sendHWC_Abs(uint8_t hwc, int value);
   void sendHWC_Speed(uint8_t hwc, int value);
+
+  void base64_decodeImgPart(uint8_t slot, uint8_t part);
+
+  uint8_t getGfxSlotForHWC(uint8_t HWC);
+  uint8_t findGfxSlotForHWC(uint8_t HWC, bool mustBeReady=false);
+  uint8_t *getGfxForIdx(uint8_t idx);
+  void resetGfxSlots();
+  void resetTxtSlots();
+  void resetReadyGfxSlots();
+  bool isFreeGfxSlots();
+
+  uint8_t findTxtSlotForHWC(uint8_t HWC);
+  char *getTxtForIdx(uint8_t idx);
+  bool isFreeTxtSlots();
+  uint8_t getTxtSlotForHWC(uint8_t HWC);
+
+
+
+  void setHWCmap(uint8_t hwcLocal, uint8_t hwcRemote);
+  void resetHWCmap();
+  void sendAndUpdateServerHWCMap();
+
 };
 
 #endif
