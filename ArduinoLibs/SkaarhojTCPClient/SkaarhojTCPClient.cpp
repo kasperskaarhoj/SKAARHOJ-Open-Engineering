@@ -25,6 +25,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 
 #include "Arduino.h"
 #include "SkaarhojTCPClient.h"
+#include "Streaming.h"
 
 /**
  * Constructor (using arguments is deprecated! Use begin() instead)
@@ -45,6 +46,11 @@ void SkaarhojTCPClient::begin(IPAddress ip, uint16_t port) {
   _localPort = port; // Set local port
 
   _ackMsgResponseTimeout = 3000;
+  _exitRunLoop = false;
+
+  TCPReadBuffer_len = 0;
+  TCPReadBuffer_ptr = 0;
+
 
   _resetDeviceStateVariables();
 }
@@ -141,6 +147,11 @@ void SkaarhojTCPClient::runLoop(uint16_t delayTime) {
       // An assumption here is, that the WHOLE line arrives and is processed immediately by _parselineDispatch() whereafter the buffer is emptied. If say the line data arrives in two turns, in the meantime we risk, that the buffer memory was used to send a command. I guess the issue is more theoretical than practical, but it's good to keep in mind that the same memory area is used for read and write and there is no check in the write-routines if the buffer is currently being filled with incoming data.
       if (_client.available()) {
         _readFromClient();
+        if (_exitRunLoop) {
+          _exitRunLoop = false;
+          _sendBusy();
+          return;
+        }
       }
 
       // Requesting status of the machine:
@@ -154,12 +165,18 @@ void SkaarhojTCPClient::runLoop(uint16_t delayTime) {
 
       // Send a ping:
       if (_ackMsgInterval > 0 && hasTimedOut(_lastIncomingMsg, _ackMsgInterval + (_pendingAnswer ? _ackMsgResponseTimeout : 0))) { // exclude "&& hasInitialized()" because otherwise it can get stuck in the moment between connection and reception of the initial payload. If so, we will not catch if being disconnected!
-        if (_serialOutput > 1)
-          Serial.println(F("Sending Ping."));
-        _pendingAnswer = true;
+        if (_pendingAnswer) {
+          disconnect();
+        } else {
+          if (_serialOutput > 1)
+            Serial.println(F("Sending Ping."));
+          _pendingAnswer = true;
 
-        _sendPing();
+          _sendPing();
+        }
       }
+
+      _sendReady();
     }
 
     // If the server's disconnected, stop the client:
@@ -178,20 +195,26 @@ void SkaarhojTCPClient::runLoop(uint16_t delayTime) {
     }
   } while (delayTime > 0 && !hasTimedOut(enterTime, delayTime));
 }
-void SkaarhojTCPClient::_runSubLoop() { // For overloading
-}
 
 /**
  * Read from client buffer
  */
 void SkaarhojTCPClient::_readFromClient() {
-  while (_client.available()) {
-    char c = _client.read();
+
+  uint8_t loopCounter = 0;
+  while (incomingAvailable()) {
+    char c = incomingRead();
 
     if (c == _EOLChar) { // Line feed, always used
       _parselineDispatch();
       _resetLastIncomingMsg();
       _resetBuffer();
+      loopCounter++;
+      if (loopCounter>50) {
+        _exitRunLoop = true;
+        Serial << "Looped through 50 times, exiting...\n";
+      }
+      if (_exitRunLoop) return;
     } else if (c == 13 || c == 10) {                  // <CR> and <LF> ignored (they should be captured as _EOLChar if necessary)
                                                       // Ignore.
     } else if (_bufferWriteIndex < _bufferSize - 1) { // one byte for null termination reserved
@@ -202,6 +225,31 @@ void SkaarhojTCPClient::_readFromClient() {
         Serial.println(F("ERROR: Buffer overflow."));
     }
   }
+}
+
+/**
+ * Returns true if there are "incoming data" (either in buffer or from wiznet)
+ */
+bool SkaarhojTCPClient::incomingAvailable() {
+  // return _client.available();
+
+  if (TCPReadBuffer_ptr < TCPReadBuffer_len)  return true;
+
+  if(_client.available()) {
+    TCPReadBuffer_len = _client.read(TCPReadBuffer, 128);
+    TCPReadBuffer_ptr = 0;
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Return next char from buffer
+ */
+char SkaarhojTCPClient::incomingRead() {
+  // return _client.read();
+
+  return TCPReadBuffer[TCPReadBuffer_ptr++];
 }
 
 /**
@@ -217,3 +265,4 @@ void SkaarhojTCPClient::_sendBuffer() {
   _pendingAnswer = true;
   _pendingEOT = true;
 }
+  

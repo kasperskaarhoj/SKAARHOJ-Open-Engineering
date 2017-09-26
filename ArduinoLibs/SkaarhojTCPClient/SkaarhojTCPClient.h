@@ -43,6 +43,11 @@ protected:
   uint16_t _localPort; // local port on server
 
   uint16_t _ackMsgResponseTimeout;
+  bool _exitRunLoop;
+
+  uint8_t TCPReadBuffer[128];
+  uint8_t TCPReadBuffer_len;
+  uint8_t TCPReadBuffer_ptr;
 
 public:
   EthernetClient _client; // Object for communication, see constructor.
@@ -63,8 +68,14 @@ public:
 
   // Has to put "virtual" in front of all methods that I want to potentially overload in subclass. Otherwise it doesn't get called super class. Slightly weird I think...
 protected:
-  virtual void _runSubLoop();
+  virtual void _runSubLoop() {};
+  virtual void _sendBusy()  {};
+  virtual void _sendReady()  {};
+
   virtual void _readFromClient();
+
+  bool incomingAvailable();
+  char incomingRead();
 
   virtual void _sendBuffer();
 };
