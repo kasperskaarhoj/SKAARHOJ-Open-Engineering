@@ -96,7 +96,6 @@
  */
 void TWI_ConfigureMaster( Twi* pTwi, uint32_t dwTwCk, uint32_t dwMCk )
 {
-    Serial.println('a');
     assert( pTwi ) ;
 
     /* SVEN: TWI Slave Mode Enabled */
