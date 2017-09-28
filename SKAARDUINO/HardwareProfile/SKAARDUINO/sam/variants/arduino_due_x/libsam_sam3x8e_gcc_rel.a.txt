@@ -191,6 +191,7 @@ twi.o:
 00000000 T TWI_TransferComplete
 00000000 T TWI_WriteByte
          U __assert_func
+00000000 r __func__.7185
 00000000 r __func__.7191
 00000000 r __func__.7206
 00000000 r __func__.7210
