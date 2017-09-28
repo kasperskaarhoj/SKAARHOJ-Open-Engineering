@@ -100,15 +100,13 @@ TwoWire::TwoWire(Twi *_twi, void(*_beginCb)(void), void(*_endCb)(void)) :
 }
 
 void TwoWire::begin(void) {
-	Serial.println('a');
 	if (onBeginCallback)
 		onBeginCallback();
-	Serial.println('b');
+
 	// Disable PDC channel
 	twi->TWI_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
-	Serial.println('c');
+
 	TWI_ConfigureMaster(twi, twiClock, VARIANT_MCK);
-	Serial.println('d');
 	status = MASTER_IDLE;
 }
 
