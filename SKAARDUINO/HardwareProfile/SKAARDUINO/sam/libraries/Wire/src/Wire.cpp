@@ -108,6 +108,7 @@ void TwoWire::begin(void) {
 	twi->TWI_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
 	Serial.println('c');
 	TWI_ConfigureMaster(twi, twiClock, VARIANT_MCK);
+	Serial.println('d');
 	status = MASTER_IDLE;
 }
 
