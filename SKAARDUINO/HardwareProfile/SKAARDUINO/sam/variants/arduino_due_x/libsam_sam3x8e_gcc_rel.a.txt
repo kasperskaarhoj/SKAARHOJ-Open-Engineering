@@ -72,7 +72,7 @@ pmc.o:
 00000000 T pmc_switch_udpck_to_upllck
 
 pwmc.o:
-00000000 t FindClockConfiguration
+00000000 t FindClockConfiguration.part.0
 00000000 T PWMC_ConfigureChannel
 00000000 T PWMC_ConfigureChannelExt
 00000000 T PWMC_ConfigureClocks
@@ -166,9 +166,7 @@ tc.o:
 
 timetick.o:
 00000000 T GetTickCount
-00000000 t NVIC_SetPriority
 00000000 T Sleep
-00000000 t SysTick_Config
 00000000 T TimeTick_Configure
 00000000 T TimeTick_Increment
 00000000 T Wait
@@ -180,6 +178,7 @@ twi.o:
 00000000 T TWI_ConfigureMaster
 00000000 T TWI_ConfigureSlave
 00000000 T TWI_Disable
+00000000 t TWI_Disable.part.1
 00000000 T TWI_DisableIt
 00000000 T TWI_EnableIt
 00000000 T TWI_GetMaskedStatus
@@ -187,11 +186,13 @@ twi.o:
 00000000 T TWI_ReadByte
 00000000 T TWI_SendSTOPCondition
 00000000 T TWI_SetClock
+00000000 t TWI_SetClock.part.0
 00000000 T TWI_StartRead
 00000000 T TWI_StartWrite
 00000000 T TWI_Stop
 00000000 T TWI_TransferComplete
 00000000 T TWI_WriteByte
+00000000 t TWI_WriteByte.part.2
          U __assert_func
 00000000 r __func__.7185
 00000000 r __func__.7191
@@ -301,6 +302,8 @@ startup_sam3xa.o:
          U _szero
 00000000 R exception_table
          U main
+         U memcpy
+         U memset
 
 adc.o:
 00000000 T adc_configure_power_save
@@ -359,8 +362,6 @@ interrupt_sam_nvic.o:
 00000000 D g_interrupt_enabled
 
 uotghs_device.o:
-00000000 t NVIC_EnableIRQ
-00000000 t NVIC_SetPriority
 00000000 T UDD_Attach
 00000000 T UDD_ClearIN
 00000000 T UDD_ClearOUT
@@ -385,9 +386,6 @@ uotghs_device.o:
 00000000 T UDD_WaitForINOrOUT
 00000000 T UDD_WaitIN
 00000000 T UDD_WaitOUT
-00000000 t cpu_irq_is_enabled_flags
-00000000 t cpu_irq_restore
-00000000 t cpu_irq_save
          U g_interrupt_enabled
          U gpf_isr
          U pmc_enable_periph_clk
@@ -398,8 +396,6 @@ uotghs_device.o:
 00000000 b ul_send_fifo_ptr
 
 uotghs_host.o:
-00000000 t NVIC_EnableIRQ
-00000000 t NVIC_SetPriority
 00000000 T UHD_BusReset
 00000000 T UHD_GetVBUSState
 00000000 t UHD_ISR
@@ -412,9 +408,6 @@ uotghs_host.o:
 00000000 T UHD_Pipe_Send
 00000000 T UHD_Pipe_Write
 00000000 T UHD_SetStack
-00000000 t cpu_irq_is_enabled_flags
-00000000 t cpu_irq_restore
-00000000 t cpu_irq_save
          U g_interrupt_enabled
          U gpf_isr
          U pmc_enable_periph_clk
@@ -484,7 +477,6 @@ can.o:
 00000000 T can_reset_all_mailbox
 00000000 T can_reset_internal_timer
 00000000 T can_reset_mailbox_data
-00000000 t can_set_baudrate
 00000000 T can_set_rx_sync_stage
 00000000 T can_set_timestamp_capture_point
          U memset
@@ -498,11 +490,11 @@ efc.o:
 00000000 T efc_get_wait_state
 00000000 T efc_init
 00000000 T efc_perform_command
-000000d4 T efc_perform_fcr
+0000007c T efc_perform_fcr
 00000000 T efc_perform_read_sequence
 00000000 T efc_set_flash_access_mode
 00000000 T efc_set_wait_state
-000000b8 T efc_write_fmr
+00000078 T efc_write_fmr
 00000000 b iap_perform_command.7142
 
 gpbr.o:
@@ -510,7 +502,6 @@ gpbr.o:
 00000000 T gpbr_write
 
 ssc.o:
-         U memset
 00000000 T ssc_disable_interrupt
 00000000 T ssc_disable_rx
 00000000 T ssc_disable_tx
@@ -568,10 +559,6 @@ rstc.o:
 00000000 T rstc_start_software_reset
 
 emac.o:
-00000000 t circ_inc
-00000000 t emac_clear_rx_status
-00000000 t emac_clear_statistics
-00000000 t emac_clear_tx_status
 00000000 T emac_dev_get_tx_load
 00000000 T emac_dev_init
 00000000 T emac_dev_read
@@ -579,34 +566,9 @@ emac.o:
 00000000 T emac_dev_set_rx_callback
 00000000 T emac_dev_set_tx_wakeup_callback
 00000000 T emac_dev_write
-00000000 t emac_disable_broadcast
-00000000 t emac_disable_interrupt
-00000000 t emac_enable_copy_all
-00000000 t emac_enable_interrupt
-00000000 t emac_enable_receive
-00000000 t emac_enable_statistics_write
-00000000 t emac_enable_transmit
-00000000 t emac_get_configure
-00000000 t emac_get_interrupt_mask
-00000000 t emac_get_interrupt_status
-00000000 t emac_get_phy_data
-00000000 t emac_get_rx_status
-00000000 t emac_get_tx_status
 00000000 T emac_handler
-00000000 t emac_init_mem
-00000000 t emac_is_phy_idle
-00000000 t emac_maintain_phy
-00000000 t emac_network_control
 00000000 T emac_phy_read
 00000000 T emac_phy_write
-00000000 t emac_reset_rx_mem
-00000000 t emac_reset_tx_mem
-00000000 t emac_set_address
-00000000 t emac_set_configure
-00000000 t emac_set_rx_queue
-00000000 t emac_set_tx_queue
-00000000 t emac_start_transmission
-00000000 t emac_wait_phy
 00000000 b gs_rx_desc
 00000000 b gs_tx_callback
 00000000 b gs_tx_desc
