@@ -98,15 +98,13 @@ void TWI_ConfigureMaster( Twi* pTwi, uint32_t dwTwCk, uint32_t dwMCk )
 {
     assert( pTwi ) ;
 
-    // /* SVEN: TWI Slave Mode Enabled */
-    // pTwi->TWI_CR = TWI_CR_SVEN ;
+    /* SVEN: TWI Slave Mode Enabled */
+    pTwi->TWI_CR = TWI_CR_SVEN ;
 
-    // TWI_Disable(pTwi);
+    TWI_Disable(pTwi);
 
-    // /* Set master mode */
-    // pTwi->TWI_CR = TWI_CR_MSEN ;
-
-    pTwi->TWI_CR = TWI_CR_MSEN | TWI_CR_SVDIS;
+    /* Set master mode */
+    pTwi->TWI_CR = TWI_CR_MSEN ;
 
     /* Configure clock */
     TWI_SetClock(pTwi, dwTwCk, dwMCk);
