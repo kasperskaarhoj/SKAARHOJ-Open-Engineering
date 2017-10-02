@@ -138,8 +138,11 @@ int SkaarhojBufferTools::parseHex()	{
 /**
  * Checks if next part of buffer equals input string (PROGMEM). Advances the _bufferReadIndex if true
  */
-bool SkaarhojBufferTools::isNextPartOfBuffer_P(const char *firstPartStr)	{
-	if (strncmp_P(_buffer+_bufferReadIndex, firstPartStr, strlen_P(firstPartStr)))	{return false;}
+bool SkaarhojBufferTools::isNextPartOfBuffer_P(const char *firstPartStr, bool forceAdvance)	{
+	if (strncmp_P(_buffer+_bufferReadIndex, firstPartStr, strlen_P(firstPartStr)))	{
+		if (forceAdvance)	_bufferReadIndex+= strlen_P(firstPartStr);
+		return false;
+	}
 	_bufferReadIndex+= strlen_P(firstPartStr);
 	return true;
 }

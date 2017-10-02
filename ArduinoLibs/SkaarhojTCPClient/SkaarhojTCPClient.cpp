@@ -26,6 +26,7 @@ you can keep a clear conscience: http://skaarhoj.com/about/licenses/
 #include "Arduino.h"
 #include "SkaarhojTCPClient.h"
 #include "Streaming.h"
+#include "SkaarhojTools.h"
 
 /**
  * Constructor (using arguments is deprecated! Use begin() instead)
@@ -51,6 +52,8 @@ void SkaarhojTCPClient::begin(IPAddress ip, uint16_t port) {
   TCPReadBuffer_len = 0;
   TCPReadBuffer_ptr = 0;
 
+  _EOLTimeOutTime = 0;
+  _EOLtimer = millis();
 
   _resetDeviceStateVariables();
 }
@@ -154,6 +157,14 @@ void SkaarhojTCPClient::runLoop(uint16_t delayTime) {
         }
       }
 
+      if (_EOLTimeOut())  {
+        //Serial << "_EOLTimeOut...\n";
+        _parselineDispatch();
+        _resetLastIncomingMsg();
+        _resetBuffer();
+      }
+
+
       // Requesting status of the machine:
       if (_statusRequestInterval > 0 && hasTimedOut(_lastStatusRequest, _statusRequestInterval) && hasInitialized()) {
         if (_serialOutput > 1)
@@ -203,7 +214,9 @@ void SkaarhojTCPClient::_readFromClient() {
 
   uint8_t loopCounter = 0;
   while (incomingAvailable()) {
+    _EOLTimeOutReset();
     char c = incomingRead();
+    //Serial << "INCOMING CHAR: " << c << "\n";
 
     if (c == _EOLChar) { // Line feed, always used
       _parselineDispatch();
@@ -225,6 +238,14 @@ void SkaarhojTCPClient::_readFromClient() {
         Serial.println(F("ERROR: Buffer overflow."));
     }
   }
+}
+
+void SkaarhojTCPClient::_EOLTimeOutReset()  {
+  _EOLtimer = millis();
+}
+
+bool SkaarhojTCPClient::_EOLTimeOut()  {
+  return _bufferWriteIndex > 0 && _EOLTimeOutTime > 0 && hasTimedOut(_EOLtimer, _EOLTimeOutTime);
 }
 
 /**

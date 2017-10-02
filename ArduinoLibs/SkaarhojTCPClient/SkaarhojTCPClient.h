@@ -49,6 +49,9 @@ protected:
   uint8_t TCPReadBuffer_len;
   uint8_t TCPReadBuffer_ptr;
 
+  uint16_t _EOLTimeOutTime;
+  unsigned long _EOLtimer;
+
 public:
   EthernetClient _client; // Object for communication, see constructor.
 
@@ -73,6 +76,9 @@ protected:
   virtual void _sendReady()  {};
 
   virtual void _readFromClient();
+
+  void _EOLTimeOutReset();
+  bool _EOLTimeOut();
 
   bool incomingAvailable();
   char incomingRead();

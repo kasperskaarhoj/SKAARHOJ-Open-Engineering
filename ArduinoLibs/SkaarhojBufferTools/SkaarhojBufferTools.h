@@ -65,7 +65,7 @@ class SkaarhojBufferTools
 
 	virtual int parseInt();
 	virtual int parseHex();
-	virtual bool isNextPartOfBuffer_P(const char *firstPartStr);
+	virtual bool isNextPartOfBuffer_P(const char *firstPartStr, bool forceAdvance=false);
 	virtual bool isBufferEqualTo_P(const char *firstPartStr);
 	char* getRemainingBuffer();
 	bool advancePointer(uint8_t count);
