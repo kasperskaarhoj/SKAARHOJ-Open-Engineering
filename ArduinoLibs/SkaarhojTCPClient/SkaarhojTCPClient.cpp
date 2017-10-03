@@ -234,8 +234,11 @@ void SkaarhojTCPClient::_readFromClient() {
       _buffer[_bufferWriteIndex] = c;
       _bufferWriteIndex++;
     } else {
-      if (_serialOutput)
-        Serial.println(F("ERROR: Buffer overflow."));
+      if (_serialOutput)  {
+        Serial.println(F("ERROR: Buffer overflow.:"));
+        Serial << _buffer << "\n"; 
+        _resetBuffer();
+      }
     }
   }
 }
