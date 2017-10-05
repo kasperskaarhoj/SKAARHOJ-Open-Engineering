@@ -123,7 +123,7 @@ void ClientAJAKumoTCP::transmitPacket(char* data, bool useBuffer) {
 
 void ClientAJAKumoTCP::routeInputToOutput(uint8_t input, uint8_t output, bool wait) {
 	char buffer[10];
-	sprintf(buffer, "TI,%d,%d", output, input);
+	sprintf(buffer, "TI,%X,%X", output, input);
 	transmitPacket(buffer);
 
 	if (wait)	{
@@ -278,7 +278,7 @@ void ClientAJAKumoTCP::parseIncoming(uint8_t *buffer, uint8_t len) {
 void ClientAJAKumoTCP::updateRouting(uint8_t num) {
 	char buffer[10];
 	if(num < ClientAJAKumoTCP_NUMOUTPUTS) {
-		sprintf(buffer, "QI,%d", num+1);
+		sprintf(buffer, "QI,%X", num+1);
 		transmitPacket(buffer);
 	}
 }
