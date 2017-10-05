@@ -204,10 +204,9 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
 
     // OPT - host name
     buffer[16] = hostName;
-    buffer[17] = strlen(HOST_NAME) + 6; // length of hostname + last 3 bytes of mac address
+    buffer[17] = strlen(HOST_NAME) + 4; // length of hostname + last 2 bytes of mac address
     strcpy((char*)&(buffer[18]), HOST_NAME);
 
-    printByte((char*)&(buffer[24]), _dhcpMacAddr[3]);
     printByte((char*)&(buffer[26]), _dhcpMacAddr[4]);
     printByte((char*)&(buffer[28]), _dhcpMacAddr[5]);
 
