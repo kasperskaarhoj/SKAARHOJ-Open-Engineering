@@ -41,7 +41,7 @@ void SkaarhojOLEDRocker::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 
   // x is which column
-  if (color == WHITE)
+  if ((color == WHITE)^_invPixels)
     buffer9664[x / 8 + y * SKAARHOJOLEDRocker_LCDWIDTH / 8] |= B10000000 >> (x % 8);
   else
     buffer9664[x / 8 + y * SKAARHOJOLEDRocker_LCDWIDTH / 8] &= ~(B10000000 >> (x % 8));

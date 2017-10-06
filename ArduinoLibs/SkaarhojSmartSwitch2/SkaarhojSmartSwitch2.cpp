@@ -57,7 +57,7 @@ void SkaarhojSmartSwitch2::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 
   // x is which column
-  if (color > 0)
+  if ((color > 0)^_invPixels)
     bufferSSW[(7 - x / 8) + (y * SKAARHOJSMARTSWITCH_LCDWIDTH / 8)] |= _BV((x % 8));
   else
     bufferSSW[(7 - x / 8) + (y * SKAARHOJSMARTSWITCH_LCDWIDTH / 8)] &= ~_BV((x % 8));

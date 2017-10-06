@@ -54,7 +54,7 @@ void SkaarhojOLED64x256::drawPixel(int16_t x, int16_t y, uint16_t color) {
     }
 
     // x is which column
-    if (color == WHITE)
+    if ((color == WHITE)^_invPixels)
       buffer64256[(x>>3) + y * (SKAARHOJOLED64x256_LCDWIDTH >> 3)] |= B10000000 >> (x & 7);
     else
       buffer64256[(x>>3) + y * (SKAARHOJOLED64x256_LCDWIDTH >> 3)] &= ~(B10000000 >> (x & 7));

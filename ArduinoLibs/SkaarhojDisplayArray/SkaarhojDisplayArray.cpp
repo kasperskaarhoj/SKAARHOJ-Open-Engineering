@@ -45,7 +45,7 @@ void SkaarhojDisplayArray::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 
   // x is which column
-  if (color == WHITE)
+  if ((color == WHITE)^_invPixels)
     buffer12832[x + (y / 8) * SKAARHOJDISPARRAY_LCDWIDTH] |= _BV((y % 8));
   else
     buffer12832[x + (y / 8) * SKAARHOJDISPARRAY_LCDWIDTH] &= ~_BV((y % 8));

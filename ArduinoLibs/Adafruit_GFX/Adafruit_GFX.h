@@ -57,7 +57,8 @@ class Adafruit_GFX : public Print {
     setTextColor(uint16_t c, uint16_t bg),
     setTextSize(uint8_t s),
     setTextWrap(boolean w),
-    setRotation(uint8_t r);
+    setRotation(uint8_t r),
+    setInvertPixels(bool invPixels) {_invPixels = invPixels;};
 	
     virtual void clearDisplay(void);
     virtual void display(uint8_t cs);
@@ -85,15 +86,16 @@ class Adafruit_GFX : public Print {
   uint16_t
     textcolor, textbgcolor;
   uint8_t
-  	bbox_width, 
-	bbox_height,  
-	bbox_x,
-	bbox_y,
-	  
+    bbox_width, 
+    bbox_height,  
+    bbox_x,
+    bbox_y,
     textsize,
     rotation;
+  
   boolean
-    wrap; // If set, 'wrap' text at right edge of display
+    wrap, // If set, 'wrap' text at right edge of display
+    _invPixels;
 };
 
 #endif // _ADAFRUIT_GFX_H

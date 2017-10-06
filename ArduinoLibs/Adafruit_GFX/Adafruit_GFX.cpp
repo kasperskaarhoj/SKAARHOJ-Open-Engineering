@@ -53,6 +53,7 @@ Adafruit_GFX::Adafruit_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h) {
   textsize = 1;
   textcolor = textbgcolor = 0xFFFF;
   wrap = true;
+  _invPixels = false;
 }
 
 // Draw a circle outline
