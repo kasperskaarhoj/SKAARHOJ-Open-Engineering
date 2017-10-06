@@ -171,7 +171,7 @@ public:
   IPAddress getDhcpServerIp();
   IPAddress getDnsServerIp();
   
-  int beginWithDHCP(uint8_t *, unsigned long timeout = 60000, unsigned long responseTimeout = 4000);
+  int beginWithDHCP(uint8_t *, unsigned long timeout = 10000, unsigned long responseTimeout = 4000);
   int checkLease();
 };
 
