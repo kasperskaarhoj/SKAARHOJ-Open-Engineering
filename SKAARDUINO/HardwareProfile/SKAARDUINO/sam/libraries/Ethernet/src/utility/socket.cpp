@@ -430,9 +430,10 @@ uint16_t bufferData(SOCKET s, uint16_t offset, const uint8_t* buf, uint16_t len)
 {
   uint16_t ret = 0;
   SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
-  if (offset + len > W5100.getTXFreeSize(s))
+  uint16_t freesize = W5100.getTXFreeSize(s); // Must store this, as it can change quickly
+  if (offset + len > freesize)
   {
-    ret = W5100.getTXFreeSize(s) - offset; // check size not to exceed MAX size.
+    ret = freesize - offset; // check size not to exceed MAX size.
   }
   else
   {

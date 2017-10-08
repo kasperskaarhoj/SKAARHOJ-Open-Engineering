@@ -96,6 +96,7 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size) {
     do {
       ret = bufferData(_sock, _offset, buf, size);
       _offset += ret;
+      Serial << "Sent " << ret << "/" << size << " bytes, offset = " << _offset << "\n";
       if(ret != size) {
         if(endPacket() == 0) {
           return 0;
@@ -103,8 +104,12 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size) {
 
         beginPacket();
         buf += ret;
+      } else {
+        Serial << "Added all " << ret << " to buffer\n";
       }
       size -= ret;
+
+      Serial << "Remaining " << size << "bytes\n";
     } while(size > 0);
     return totalSize;
   } else {
