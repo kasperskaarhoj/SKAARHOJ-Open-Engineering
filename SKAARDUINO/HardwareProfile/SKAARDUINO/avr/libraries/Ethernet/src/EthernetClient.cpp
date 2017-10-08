@@ -79,11 +79,12 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size) {
     setWriteError();
     return 0;
   }
-  if (!send(_sock, buf, size)) {
+  uint16_t ret = send(_sock, buf, size);
+  if(ret == 0) {
     setWriteError();
-    return 0;
   }
-  return size;
+  
+  return ret;
 }
 
 int EthernetClient::available() {

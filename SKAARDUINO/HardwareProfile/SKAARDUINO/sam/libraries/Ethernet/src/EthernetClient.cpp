@@ -84,32 +84,36 @@ size_t EthernetClient::endPacket() {
   return sendTCP(_sock);
 }
 
+#include <Streaming.h>
 size_t EthernetClient::write(const uint8_t *buf, size_t size) {
+  uint16_t ret = 0;
+  uint16_t totalSize = size;
   if (_sock == MAX_SOCK_NUM) {
     setWriteError();
     return 0;
   }
   if(_packetBuffering) {
-    uint16_t len;
     do {
-      len = bufferData(_sock, _offset, buf, size);
-      _offset += len;
-      if(len != size) {
-        endPacket();
-        beginPacket();
-        size = size - len;
-        buf += len;
-      }
-    } while(len != size);
+      ret = bufferData(_sock, _offset, buf, size);
+      _offset += ret;
+      if(ret != size) {
+        if(endPacket() == 0) {
+          return 0;
+        }
 
-    return len;
+        beginPacket();
+        buf += ret;
+      }
+      size -= ret;
+    } while(size > 0);
+    return totalSize;
   } else {
-    if (!send(_sock, buf, size)) {
+    ret = send(_sock, buf, size);
+    if (ret == 0) {
       setWriteError();
-      return 0;
     }
   }
-  return size;
+  return ret;
 }
 
 int EthernetClient::available() {
