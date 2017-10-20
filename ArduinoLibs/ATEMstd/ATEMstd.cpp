@@ -419,6 +419,13 @@ long ATEMstd::getAudioMixerLevelsSourceRight() {
 		// **
 		// *********************************
 
+
+		// *********************************
+		// **
+		// ** Implementations in ATEMstd.c:
+		// **
+		// *********************************
+
 		void ATEMstd::_parseGetCommands(const char *cmdStr)	{
 			uint8_t mE,keyer,colorGenerator,aUXChannel,mediaPlayer,macroIndex;
 			uint16_t index,audioSource,sources;

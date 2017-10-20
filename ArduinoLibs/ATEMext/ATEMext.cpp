@@ -178,6 +178,13 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 		// **
 		// *********************************
 
+
+		// *********************************
+		// **
+		// ** Implementations in ATEMext.c:
+		// **
+		// *********************************
+
 		void ATEMext::_parseGetCommands(const char *cmdStr)	{
 			uint8_t mE,multiViewer,windowIndex,keyer,colorGenerator,aUXChannel,input,mediaPlayer,clipBank,macroIndex,box;
 			uint16_t videoSource,index,audioSource,sources;
@@ -3303,7 +3310,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			if(!strcmp_P(cmdStr, PSTR("TlSr"))) {
 				
 				sources = word(_packetBuffer[0],_packetBuffer[1]);
-				if (sources<=41) {
+				if (sources<=46) {
 					#if ATEM_debug
 					temp = atemTallyBySourceSources;
 					#endif
@@ -7473,7 +7480,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 					_packetBuffer[12+_cBBO+4+4+2] = 8;
 
 					_packetBuffer[12+_cBBO+4+4+4] = 0x01; // Data type: int8
+					
+					// Reduncancy: Support for ATEM Switchers & ATEM Proxy
 					_packetBuffer[12+_cBBO+4+4+7] = 0x01;
+					_packetBuffer[12+_cBBO+4+4+9] = 0x01;
 
 					_packetBuffer[12+_cBBO+4+4+16] = detail & 0xFF;
 
@@ -7576,7 +7586,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+2] = 4;
 
 				_packetBuffer[12+_cBBO+4+4+4] = 0x01;	// Data type: int8
-				_packetBuffer[12+_cBBO+4+4+7] = 0x01;	// ?
+				
+				// Reduncancy: Support for ATEM Switchers & ATEM Proxy
+				_packetBuffer[12+_cBBO+4+4+7] = 0x01;
+				_packetBuffer[12+_cBBO+4+4+9] = 0x01;
 
 
 				_packetBuffer[12+_cBBO+4+4+16] = (colorbars & 0xFF);
@@ -7598,13 +7611,12 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+1] = 0;
 				_packetBuffer[12+_cBBO+4+4+2] = 0;
 
-				_packetBuffer[12+_cBBO+4+4+3] = 0x01;	// Relative setting
 				_packetBuffer[12+_cBBO+4+4+4] = 0x80;	// Data type: 5.11 floating point
 				_packetBuffer[12+_cBBO+4+4+9] = 0x01;	// One byte
 
 				_packetBuffer[12+_cBBO+4+4+0] = input;
 
-				_packetBuffer[12+_cBBO+4+4+16] = highByte(focus);		// Relative values...?
+				_packetBuffer[12+_cBBO+4+4+16] = highByte(focus);
 				_packetBuffer[12+_cBBO+4+4+17] = lowByte(focus);
 
 		   		_finishCommandPacket();
@@ -7625,7 +7637,10 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 				_packetBuffer[12+_cBBO+4+4+2] = 1;
 
 				_packetBuffer[12+_cBBO+4+4+4] = 0x01;
+
+				// Reduncancy: Support for ATEM Switchers & ATEM Proxy
 				_packetBuffer[12+_cBBO+4+4+7] = 0x01;
+				_packetBuffer[12+_cBBO+4+4+9] = 0x01;
 
 				_packetBuffer[12+_cBBO+4+4+0] = input;
 
@@ -9859,7 +9874,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Tally By Source; Video Source
-			 * sources 	0-41: Number of
+			 * sources 	0-46: Number of
 			 */
 			uint16_t ATEMext::getTallyBySourceVideoSource(uint16_t sources) {
 				return atemTallyBySourceVideoSource[sources];
@@ -9867,7 +9882,7 @@ void ATEMext::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Tally By Source; Tally Flags
-			 * sources 	0-41: Number of
+			 * sources 	0-46: Number of
 			 */
 			uint8_t ATEMext::getTallyBySourceTallyFlags(uint16_t sources) {
 				return atemTallyBySourceTallyFlags[sources];

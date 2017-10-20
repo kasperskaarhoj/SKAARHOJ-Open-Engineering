@@ -196,6 +196,14 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 		// **
 		// *********************************
 
+
+
+		// *********************************
+		// **
+		// ** Implementations in ATEMuni.c:
+		// **
+		// *********************************
+
 		void ATEMuni::_parseGetCommands(const char *cmdStr)	{
 			uint8_t multiViewer,windowIndex,mE,keyer,aUXChannel,input,mediaPlayer,stillBank,macroIndex,box;
 			uint16_t videoSource,index,audioSource,sources;
@@ -2508,7 +2516,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			if(!strcmp_P(cmdStr, PSTR("TlSr"))) {
 				
 				sources = word(_packetBuffer[0],_packetBuffer[1]);
-				if (sources<=41) {
+				if (sources<=46) {
 					#if ATEM_debug
 					temp = atemTallyBySourceSources;
 					#endif
@@ -7147,7 +7155,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Tally By Source; Video Source
-			 * sources 	0-41: Number of
+			 * sources 	0-46: Number of
 			 */
 			uint16_t ATEMuni::getTallyBySourceVideoSource(uint16_t sources) {
 				return atemTallyBySourceVideoSource[sources];
@@ -7155,7 +7163,7 @@ void ATEMuni::setCameraControlVideomode(uint8_t input, uint8_t fps, uint8_t reso
 			
 			/**
 			 * Get Tally By Source; Tally Flags
-			 * sources 	0-41: Number of
+			 * sources 	0-46: Number of
 			 */
 			uint8_t ATEMuni::getTallyBySourceTallyFlags(uint16_t sources) {
 				return atemTallyBySourceTallyFlags[sources];

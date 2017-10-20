@@ -158,6 +158,17 @@ private:
 
 
 
+
+
+
+// *********************************
+// **
+// ** Implementations in ATEMstd.h:
+// **
+// *********************************
+
+
+
 private:
 	void _parseGetCommands(const char *cmdStr);
 

@@ -62,6 +62,17 @@ class ATEMuni : public ATEMbase
 
 
 
+
+
+
+// *********************************
+// **
+// ** Implementations in ATEMuni.h:
+// **
+// *********************************
+
+
+
 private:
 	void _parseGetCommands(const char *cmdStr);
 
@@ -255,8 +266,8 @@ private:
 			uint16_t atemAudioMixerTallyAudioSource[25];
 			bool atemAudioMixerTallyIsMixedIn[25];
 			uint16_t atemTallyBySourceSources;
-			uint16_t atemTallyBySourceVideoSource[42];
-			uint8_t atemTallyBySourceTallyFlags[42];
+			uint16_t atemTallyBySourceVideoSource[47];
+			uint8_t atemTallyBySourceTallyFlags[47];
 
 public:
 			// Public Methods in ATEM.h:

@@ -44,6 +44,13 @@ ATEMmin::ATEMmin(){}
 		// **
 		// *********************************
 
+
+		// *********************************
+		// **
+		// ** Implementations in ATEMmin.c:
+		// **
+		// *********************************
+
 		void ATEMmin::_parseGetCommands(const char *cmdStr)	{
 			uint8_t mE,keyer,aUXChannel;
 			uint16_t sources;

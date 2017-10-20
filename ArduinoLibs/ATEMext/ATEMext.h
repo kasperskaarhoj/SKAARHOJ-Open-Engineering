@@ -62,6 +62,16 @@ private:
 
 
 
+
+
+// *********************************
+// **
+// ** Implementations in ATEMext.h:
+// **
+// *********************************
+
+
+
 private:
 	void _parseGetCommands(const char *cmdStr);
 
@@ -320,8 +330,8 @@ private:
 			uint16_t atemTallyByIndexSources;
 			uint8_t atemTallyByIndexTallyFlags[21];
 			uint16_t atemTallyBySourceSources;
-			uint16_t atemTallyBySourceVideoSource[42];
-			uint8_t atemTallyBySourceTallyFlags[42];
+			uint16_t atemTallyBySourceVideoSource[47];
+			uint8_t atemTallyBySourceTallyFlags[47];
 			uint8_t atemLastStateChangeTimeCodeHour;
 			uint8_t atemLastStateChangeTimeCodeMinute;
 			uint8_t atemLastStateChangeTimeCodeSecond;
