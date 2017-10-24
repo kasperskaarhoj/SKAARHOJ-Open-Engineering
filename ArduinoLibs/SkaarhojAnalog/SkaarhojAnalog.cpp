@@ -85,7 +85,7 @@ bool SkaarhojAnalog::joystick_hasMoved(uint8_t index) { // Index is 0 or 1 or 2
         joystickPosition = 0;
 
       if (_joystick_previousPosition[index] != joystickPosition) {
-        _joystick_previousPosition[index] = -joystickPosition;
+        _joystick_previousPosition[index] = joystickPosition;
         return true;
       }
     }
