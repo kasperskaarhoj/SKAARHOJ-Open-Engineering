@@ -41,6 +41,7 @@ with the Panasonic AW-HE library. If not, see http://www.gnu.org/licenses/.
 
 //  #include "SkaarhojPgmspace.h"  - 23/2 2014
 #include <Ethernet.h>
+#include <utility/w5100.h>
 
 class ClientPanaAWHExTCP
 {
