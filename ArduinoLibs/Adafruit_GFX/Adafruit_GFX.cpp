@@ -337,16 +337,15 @@ void Adafruit_GFX::fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, 
   }
 }
 
-void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color) { drawBitmap(x, y, bitmap, w, h, color, false); }
-void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, bool inverted) {
+void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, bool inverted, bool drawAllPixels) {
 
   int16_t i, j, byteWidth = (w + 7) / 8;
 
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
-      uint8_t theBit = pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7));
-      if ((bool)theBit ^ inverted) {
-        drawPixel(x + i, y + j, color);
+      bool theBit = (bool)(pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) ^ inverted;
+      if (drawAllPixels || theBit) {
+        drawPixel(x + i, y + j, color^(!theBit));
       }
     }
   }
