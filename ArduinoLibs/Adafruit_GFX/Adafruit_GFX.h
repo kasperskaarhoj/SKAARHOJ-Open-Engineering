@@ -59,7 +59,7 @@ class Adafruit_GFX : public Print {
     setInvertPixels(bool invPixels) {_invPixels = invPixels;};
 	
     virtual void clearDisplay(void);
-    virtual void display(uint8_t cs);
+    virtual void display(uint8_t cs) = 0;
 
 #if ARDUINO >= 100
   virtual size_t write(uint8_t);

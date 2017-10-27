@@ -449,7 +449,6 @@ void Adafruit_GFX::setRotation(uint8_t x) {
 }
 
 void Adafruit_GFX::clearDisplay(void){}
-void Adafruit_GFX::display(uint8_t cs){}
 
 // Return the size of the display (per current rotation)
 int16_t Adafruit_GFX::width(void) { return _width; }

@@ -37,7 +37,10 @@ public:
 
   void clearDisplay(void);
   void invertDisplay(bool i, uint8_t cs);
-  void display(uint8_t cs, uint8_t x=0, uint8_t y=0, uint16_t w=256, uint8_t h=32); // x and w must be divisible by 8 with no remainder
+  void display(uint8_t cs) {
+    display(cs, 0, 0, 256, 32);
+  }
+  void display(uint8_t cs, uint8_t x, uint8_t y, uint16_t w, uint8_t h); // x and w must be divisible by 8 with no remainder
   void zoom2x(bool enable);
 
 private:
