@@ -254,6 +254,26 @@ var C_coordinates = [
 */
 
 
+// Console from two pieces! (Wings)
+var C_depth = 483-70;
+var C_sideDefaultThickness = 3;
+var C_endsThickness = 3;
+var C_endsMode = -1;
+var C_sideCornerRadius = 0;
+var C_sideColor = elox_natural;
+var C_endsColor = elox_natural;
+//var C_wings = [6,0];	// Side and end thickness values where it's connected must match	[5,1] is bottom plate attachment.
+//var C_rackEarsSideIndex = 2;
+
+var C_coordinates = [
+[0,0,[20]],
+[0,40],
+[88.9, 40,[20]],
+[88.9,25,[],[10,30]],
+];
+
+
+
 // Rack unit 1 (two pcs):
 /*
 var C_depth = 437;
