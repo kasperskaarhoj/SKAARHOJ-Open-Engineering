@@ -1,0 +1,2257 @@
+﻿<header type="text" ver="1.1">
+  <Element type="Folder" name="System Commands" identifier="602a8796-016b-48b9-8899-613941527837">
+    <Properties isdisabled="false" />
+    <ChildElements>
+      <Element type="Macro" name="DSK 1: Perform Auto" identifier="92015a50-6371-47ea-9fbe-4e566780102f" readonly="true">
+        <Properties playspeed="snapshot" isfavorite="true">
+          <gesture type="Keyboard" value="A" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_dsk1_auto" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="DSK 1: Perform Take" identifier="fc5463b3-a05a-428d-8bd0-2793ffc76261" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+A" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_dsk1_take" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="DSK 2: Perform Auto" identifier="75cc495c-eaea-42d5-a858-467418a45a9e" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="S" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_dsk2_auto" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="DSK 2: Perform Take" identifier="5761449e-62d6-4771-b4f3-e1750685efec" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+S" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_dsk2_take" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Pane: Hide" identifier="23d18d48-1fa0-4e9d-b153-b276977973c5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+M" index="0" />
+        </Properties>
+        <Commands>
+          <command key="me_pane_show" value="false" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Pane: Show" identifier="a1de395d-dc28-44e4-a98d-923fd8db1634" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+M" index="0" />
+        </Properties>
+        <Commands>
+          <command key="me_pane_show" value="true" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Pane: Toggle" identifier="e3f69b6e-e41e-4359-9d8d-b3fd193e98a9" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="M" index="0" />
+          <gesture type="Surface" value="net:sktrigger_2" index="2" />
+        </Properties>
+        <Commands>
+          <command key="me_pane_toggle" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Copy M/E to PREVIZ" identifier="cf9796d2-8f6a-495e-8a0c-752c70d12de6" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="copy_me_to_previz" value="true" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Copy PREVIZ to M/E" identifier="7b8081e0-6607-466f-afa4-118e00e2cfd1" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="copy_previz_to_me" value="true" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 1" identifier="6a900f56-a322-4a0d-aa6d-33c8e1743095" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F1" index="0" />
+          <gesture type="Surface" value="net:sktrigger_45" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_v1_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 2" identifier="19de308c-f780-46b2-9d7d-d90279bd3a76" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F2" index="0" />
+          <gesture type="Surface" value="net:sktrigger_46" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_v2_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 3" identifier="6bcfdfd4-9cb3-456b-a069-66cfe4e370e3" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F3" index="0" />
+          <gesture type="Surface" value="net:sktrigger_47" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_v3_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 4" identifier="daf2482f-38a7-496a-bd02-33e5a96a2d8b" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F4" index="0" />
+          <gesture type="Surface" value="net:sktrigger_48" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_v4_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 5" identifier="2059b87a-e3fc-44bd-ae94-1e53a2b2e214" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F5" index="0" />
+        </Properties>
+        <Commands>
+          <command key="show_v5_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 6" identifier="3833ee67-936d-4c15-9dc3-d06da27c3670" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F6" index="0" />
+        </Properties>
+        <Commands>
+          <command key="show_v6_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 7" identifier="54bfed28-b00c-4f6f-bb3e-71f209f2e525" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F7" index="0" />
+        </Properties>
+        <Commands>
+          <command key="show_v7_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="M/E Tab: Set M/E 8" identifier="b8ea70c2-2db7-48f3-865d-7d874347b214" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F8" index="0" />
+        </Properties>
+        <Commands>
+          <command key="show_v8_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="MACROS: Continue Paused Macro" identifier="406ec0b8-2160-4388-912f-0995662bf5bd" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEM3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="continue_pausedmacro" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="MACROS: Stop All" identifier="57ae55bd-97b4-45d5-918c-e125415b9eda" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+CTRL+BACK" index="0" />
+        </Properties>
+        <Commands>
+          <command key="stop_all_macros" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Add Fade to selected items" identifier="3dae4016-f865-4260-a117-fbea31b7a512" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+F" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_set_fade_transition_to_currently_selected_clips" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Clear In and Out points" identifier="871d4147-e92a-44bc-b912-ead3d040ddca" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="G" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_mark_in_out_clear" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Next" identifier="aa205b87-d0fb-4b6e-85cd-0230f3e3173f" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEM1" index="0" />
+          <gesture type="Surface" value="net:sktrigger_35" index="1" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_forward" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Play" identifier="f068c9db-b32b-4a96-bcaa-55338ae09b7f" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="L" index="0" />
+          <gesture type="Surface" value="net:sktrigger_36" index="1" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_play" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Previous" identifier="8e98c68f-d11c-42c9-9ab2-a8d4f7c442e6" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="J" index="0" />
+          <gesture type="Surface" value="net:sktrigger_37" index="1" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_back" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Set In point" identifier="566c26b4-19f4-46d7-b2cd-ec5d0404195b" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="I" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_mark_in" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Set Out point" identifier="35fd606b-2ea1-41aa-90a0-bf7707b86f39" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="O" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_mark_out" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Split" identifier="3e786717-6271-4949-9ddc-3bce09e06b6d" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEM2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_split" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Stop" identifier="a3847417-ce2e-43c6-8c65-255b9f7902c1" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="K" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_stop" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Toggle Autoplay" identifier="e5e0ab15-c1e3-4434-9c3b-87f9b79c7d94" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="U" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_autoplay_mode_toggle" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Toggle Loop" identifier="bde862b2-865d-43b1-bdf9-cd45f3658c18" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEM7" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_loop_mode_toggle" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Media Player: Toggle Single" identifier="b53879a8-146d-4646-a1df-d16c472b4308" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="Q" index="0" />
+        </Properties>
+        <Commands>
+          <command key="focusedddr_single_mode_toggle" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="NewTek Software: Show version" identifier="3528dfec-40ec-4e3e-b7fd-a6e2e765becf" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+B" index="0" />
+        </Properties>
+        <Commands>
+          <command key="display_version" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 01" identifier="708e73e0-01eb-4c4e-91c1-6726e79b9cab" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F1" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="0" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 02" identifier="9ecaffab-759a-401f-8d89-9bb04ef965d5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 03" identifier="4041d6b0-4af0-43ae-8265-3959f6ffbc56" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="2" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 04" identifier="9e924d0b-c062-4c0f-894d-ff10fdc072c8" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="3" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 05" identifier="5f94088f-4610-4512-9343-d330bfac03e0" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F5" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="4" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 06" identifier="c13e72f7-58da-4c53-83bd-c24c8d59b87c" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F6" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="5" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 07" identifier="ba13cd73-eed5-456f-9b5f-c680801a8741" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F7" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="6" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 08" identifier="a50f808b-0dc1-4a1d-8a83-49a9e77af2f4" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F8" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="7" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 09" identifier="3625706f-7e57-420d-a7b1-60ed1420d4f0" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F9" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="8" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 10" identifier="063cd6cf-4980-4880-933a-88657aa12a68" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F10" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="9" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 11" identifier="3073758f-98f9-49ce-afca-bde31cff5453" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F11" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="10" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 12" identifier="824cec46-e08d-487c-8a08-27654d53a817" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="F12" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="11" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 13" identifier="3b8d306e-8b3c-4ecd-8157-697c8a19ed02" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F1" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="12" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 14" identifier="cf062eff-47bd-4f76-9143-191eef7043d5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="13" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 15" identifier="5f7c56d7-77c3-4978-a051-be9908642ea9" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="14" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 16" identifier="57d84e68-1770-49c9-8fd3-08740594a0de" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="15" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 17" identifier="eeab6459-5b52-41c3-bf4f-ad9aed3a1922" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F5" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="16" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 18" identifier="aae190e3-87f3-4659-9c7f-9ba1cef1f6a4" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F6" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="17" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 19" identifier="ae70086a-658b-49e1-9894-af3f77822fb9" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F7" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="18" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 20" identifier="855f0a7d-51e3-4d07-8eea-da3a3843008c" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F8" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="19" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 21" identifier="acd29caf-bca9-4e24-b7d9-0264355203d0" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F9" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="20" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 22" identifier="e7e1bf82-0a1b-4007-8905-e7358be35aa9" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F10" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="21" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 23" identifier="295469be-9372-4dd0-bec4-98f2cd90e63d" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F11" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="22" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PGM Row: Set Index 24" identifier="beaeec85-b057-4be8-9e72-b3e2322c1ba0" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+F12" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_a_row" value="23" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 01" identifier="688c48c9-27e4-41d1-bb31-d8ba44a5335f" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D1" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="0" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 02" identifier="72e447d4-bf75-47af-9df3-12a1b0f8cae4" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 03" identifier="01393ea5-17f6-4f6c-bafc-fb2b791920dc" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="2" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 04" identifier="4801d35e-5167-4c1e-a03a-69688417484c" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="3" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 05" identifier="de548712-7cdb-40fa-8dad-62adf2c94b8f" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D5" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="4" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 06" identifier="ff0bf96b-8f4e-46c1-9730-078819c5c66c" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D6" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="5" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 07" identifier="89c3ad2e-945b-4670-a9b8-91ba4cce8cf6" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D7" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="6" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 08" identifier="ff6e08b3-55ae-4107-9d7a-43af477d087e" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D8" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="7" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 09" identifier="26719d0a-d1dd-4f43-ae85-70643816f7b8" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D9" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="8" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 10" identifier="ae48e9c2-072d-406c-8305-3627e0c5a352" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="D0" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="9" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 11" identifier="d42dd922-7a67-42d1-a050-342aa85ca5e4" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEMMINUS" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="10" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 12" identifier="ffc03842-fd98-4f9a-878f-347357ab7df3" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEMPLUS" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="11" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 13" identifier="162bd9b5-719e-4d2d-9eb5-5772726d5af3" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D1" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="12" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 14" identifier="4dcc6f5e-3ac3-4736-9e02-a5c3bb177747" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="13" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 15" identifier="f7a2ce84-d612-42f2-8567-4816aa35ca14" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="14" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 16" identifier="3052eeec-13ba-424f-8127-953c684aa8f5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="15" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 17" identifier="a589a5b3-2d2d-415e-a006-026306c5c5d5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D5" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="16" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 18" identifier="a3f94422-8592-46a9-87c0-c00002480ec2" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D6" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="17" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 19" identifier="d57546b3-3fb3-4087-ad29-b1615925ccb8" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D7" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="18" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 20" identifier="5ff3dec8-0ad1-4b8b-8106-dfb7b3078a28" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D8" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="19" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 21" identifier="c19aaee6-3c20-4819-97e3-543191610fe9" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D9" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="20" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 22" identifier="4cf242ec-84dc-458f-b65e-ff78e821598b" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+D0" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="21" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 23" identifier="6ad4cb3e-e2bf-4adb-beca-50621ac7d3a0" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+OEMMINUS" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="22" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PRV Row: Set Index 24" identifier="2b3ba0b1-9485-4c15-b052-37efca3d5c49" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+OEMPLUS" index="0" />
+        </Properties>
+        <Commands>
+          <command key="keyboard_bank1_main_b_row" value="23" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Record: Grab still" identifier="124a538c-7a85-4d97-b543-f21c381dd003" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="P" index="0" />
+        </Properties>
+        <Commands>
+          <command key="grab_still" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Record: Start" identifier="e6151de5-fc6c-49ae-afd3-5dafed44f1b7" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="R" index="0" />
+        </Properties>
+        <Commands>
+          <command key="record_start" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Record: Stop" identifier="c3d9fed8-e462-4874-8bd8-e7deb4de5536" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+R" index="0" />
+        </Properties>
+        <Commands>
+          <command key="record_stop" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Replay: Add clip from recorder 1" identifier="55c14ad8-0983-4715-9f9f-445986696a90" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="NUMPAD1" index="0" />
+        </Properties>
+        <Commands>
+          <command key="record_chop_source" value="1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Replay: Add clip from recorder 2" identifier="3093d1eb-79ec-4658-afbb-f8db7aac41a5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="NUMPAD2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="record_chop_source" value="2" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Replay: Add clip from recorder 3" identifier="3371a043-79e8-45fc-87e9-f2298bd106c5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="NUMPAD3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="record_chop_source" value="3" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Replay: Add clip from recorder 4" identifier="1fcf2573-ea9e-4ead-86d7-509fd329a9f7" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="NUMPAD4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="record_chop_source" value="4" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Stream: Start" identifier="c00276fa-ec79-4c5c-a5eb-1d2cefbbbad6" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+OEM2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="streaming_toggle" value="1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Stream: Stop" identifier="aa293070-b837-43ac-b544-644868424e62" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+CTRL+OEM2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="streaming_toggle" value="0" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Switcher Redo" identifier="84ab2947-03b6-440a-891f-dc24ae5e2312" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+Y" index="0" />
+        </Properties>
+        <Commands>
+          <command key="switcher_redo" value="true" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Switcher Undo" identifier="77a12394-2a5a-43a0-8b05-615f8c2b0e46" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+Z" index="0" />
+        </Properties>
+        <Commands>
+          <command key="switcher_undo" value="true" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Switcher: Copy Main to PREVIZ" identifier="13440ea6-fec6-42b1-9141-d7035aabc054" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D1" index="0" />
+          <gesture type="Surface" value="net:sktrigger_34" index="1" />
+        </Properties>
+        <Commands>
+          <command key="copy_main_to_previz" value="true" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Switcher: Copy PREVIZ to Main" identifier="ba801720-e51a-463e-9e25-2233808fb53e" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="copy_previz_to_main" value="true" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show Audio mixer" identifier="c5cd1dd7-2e8d-4f3b-a108-0d9dd503d308" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F5" index="0" />
+          <gesture type="Surface" value="net:sktrigger_50" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_external_audiomixer" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show BUFFERS" identifier="b2ed48e8-afee-4433-aef9-5ff1ad58c09f" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F8" index="0" />
+          <gesture type="Surface" value="net:sktrigger_39" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_buffers_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show DDR1" identifier="02dcddff-0240-46e9-94e9-fc57c266e9b6" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F1" index="0" />
+          <gesture type="Surface" value="net:sktrigger_41" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_ddr1_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show DDR2" identifier="7116ed64-320f-43d2-ad4f-aebcb3de6603" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F6" index="0" />
+          <gesture type="Surface" value="net:sktrigger_42" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_ddr2_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show GFX1" identifier="c3b35452-de51-410c-88a9-7173339375df" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F2" index="0" />
+          <gesture type="Surface" value="net:sktrigger_43" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_gfx1_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show GFX2" identifier="6543018a-4e2f-4324-a0b3-148fad4ad379" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F7" index="0" />
+          <gesture type="Surface" value="net:sktrigger_44" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_gfx2_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show PTZ" identifier="784f887f-c2a2-4c3a-94b3-eeb412847242" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F4" index="0" />
+          <gesture type="Surface" value="net:sktrigger_49" index="1" />
+        </Properties>
+        <Commands>
+          <command key="show_ptz_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tab: Show Sound" identifier="ebc498e5-d4ec-4d8a-96b4-3003b2984584" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="show_sound_tab" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tbar: Down Fast" identifier="e1603031-6df2-4ccd-a505-abfe1fd8b883" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+T" index="0" />
+          <gesture type="Surface" value="net:sktrigger_1" index="1" />
+        </Properties>
+        <Commands>
+          <command key="main_down_fast" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tbar: Go To Top" identifier="8b70c818-e3ea-4269-963c-d1973815a80a" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+RETURN" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_goto_top" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tbar: Nudge Down" identifier="d2467247-61f8-4343-aa8f-64cfc14de7a5" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="T" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_down" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tbar: Nudge Up" identifier="b58e37f9-9282-444f-8c08-11471fc2a0ab" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+T" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_up" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tbar: Set Halfway" identifier="6546c325-ea92-4de9-9905-81b14e0298c7" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="H" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_goto_halfway" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Tbar: Up fast" identifier="fc7e68b6-95a6-4697-a42b-10657b838a74" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+T" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_up_fast" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Delegate: Multiselect BKGD" identifier="2784d60f-cf0b-4cde-9745-c4e6d6f575a1" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+OEM4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_delegate_add_selection" value="main_background" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Delegate: Multiselect DSK 1" identifier="de5eed41-3d6a-4995-9f20-a8e7bc8b9462" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+OEM6" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_delegate_add_selection" value="main_dsk1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Delegate: Multiselect DSK 2" identifier="9dcca561-8c38-47be-a063-6e78885ea305" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+OEM5" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_delegate_add_selection" value="main_dsk2" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Delegate: Select BKGD" identifier="0e826ddc-7875-48d4-9edd-9b1ecae9b62c" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEM4" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_delegate" value="main_background" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Delegate: Select DSK 1" identifier="465799f0-1478-451f-8dab-354daf206817" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEM6" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_delegate" value="main_dsk1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Delegate: Select DSK 2" identifier="3545c956-4333-4ed8-82d8-6cd906ced31f" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEM5" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_delegate" value="main_dsk2" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Speed: Decrease" identifier="0c00fa99-4bf1-4ed1-8234-72abef046b4d" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+C" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_adjust_speed" value="-0.033" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Speed: Fast" identifier="f043d8ff-f533-4119-bae0-9b87411c642e" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="C" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_fast" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Speed: Increase" identifier="1da41589-419a-47ff-8ac4-54694618f6ab" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+Z" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_adjust_speed" value="0.033" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Speed: Medium" identifier="2a1024d1-acc5-49cd-b28a-4b304f97b0a2" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="X" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_medium" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition Speed: Slow" identifier="ba24e20a-44fa-41f7-bf69-defdc3304974" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="Z" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_slow" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Perform Auto" identifier="6e9310f3-7b74-4016-9ffb-00d274720199" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SPACE" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_auto" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Perform Fade To Black" identifier="2037abee-65db-4585-b01d-338d35dbc7ba" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+B" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_ftb_auto" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Perform Reverse Auto" identifier="e4e1e821-23ee-4c66-bf40-7c24bc771828" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="SHIFT+SPACE" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_reversed_auto" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Perform Take" identifier="97f8a1d9-9292-4f77-bfc6-bc9d5a6402ba" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="RETURN" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_take" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Set Fade" identifier="d3e3f4c8-32af-42a0-8a85-c4e6e38302c3" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+F" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_select_fade" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Set last (Non-Fade) effect" identifier="033ad541-8513-4163-9aa1-d399cd79d10d" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+SHIFT+F" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_select_saved_nonfade_transition" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Set Next" identifier="ea4393d1-3d0e-429d-9597-e975dd1c34b8" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEMCOMMA" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_switch_transition" value="-1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Set Previous" identifier="a3dd0550-aba9-4fe6-84bb-b940f7daa970" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="OEMPERIOD" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_switch_transition" value="1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Toggle Ping Pong" identifier="c842aaad-81d9-4d30-a196-cab4d2b368f2" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+E" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_toggle_autoreverse" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition: Toggle reverse" identifier="c732b283-7913-46ec-a534-8e33490983d7" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="E" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_toggle_reverse" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Virtual Set Preset Editor: Zoom in" identifier="170896eb-0f6c-4fac-bcce-843529e150d6" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+OEMPLUS" index="0" />
+        </Properties>
+        <Commands>
+          <command key="liveset_editor_zoom" value="1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Virtual Set Preset Editor: Zoom out" identifier="d46b622c-4c0b-4f2d-af7d-e959dbddd1ff" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+OEMMINUS" index="0" />
+        </Properties>
+        <Commands>
+          <command key="liveset_editor_zoom" value="-1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Interface A" identifier="765f0d5d-aacf-4bfc-bcd2-e9c13fc31efa" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+NUMPAD0" index="0" />
+          <gesture type="Surface" value="net:sktrigger_9" index="1" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="interface_a" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Interface B" identifier="42c91552-458d-435f-8cac-0bc3204fca09" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+NUMPAD1" index="0" />
+          <gesture type="Surface" value="net:sktrigger_10" index="1" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="interface_b" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Interface C" identifier="55392a20-4cd4-44e5-95ad-abd8b73f3781" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+NUMPAD2" index="0" />
+          <gesture type="Surface" value="net:sktrigger_11" index="1" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="interface_c" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Interface D" identifier="a904b20d-79d5-480d-a272-8629f5d6f577" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="ALT+NUMPAD3" index="0" />
+          <gesture type="Surface" value="net:sktrigger_12" index="1" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="interface_d" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Multiview A" identifier="ee9f11e9-5879-40b9-8bb4-e36c763fac53" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+NUMPAD0" index="0" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="multiview_a" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Multiview B" identifier="a8c38ef9-aa7d-42b3-9e60-bddc3f932c24" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+NUMPAD1" index="0" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="multiview_b" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Multiview C" identifier="103fcaee-7ca9-4ce4-ac50-c156b36e6cd0" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+NUMPAD2" index="0" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="multiview_c" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Workspace: Show Multiview D" identifier="59cfd9e8-3fe7-4260-b682-886a22c4f76c" readonly="true">
+        <Properties playspeed="snapshot">
+          <gesture type="Keyboard" value="CTRL+NUMPAD3" index="0" />
+        </Properties>
+        <Commands>
+          <command key="select_workspace" value="multiview_d" />
+        </Commands>
+      </Element>
+    </ChildElements>
+    <Element type="Macro" name="DSK 1: Perform Auto" identifier="ef49dba6-78d7-4e6d-b11c-ee5c540375f0">
+      <Properties playspeed="snapshot" isfavorite="true">
+        <gesture type="Keyboard" value="A" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_dsk1_auto" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="DSK 1: Perform Take" identifier="30f8d8d1-3a37-4bc7-97fa-155d10dda291">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+A" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_dsk1_take" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="DSK 2: Perform Auto" identifier="8fd73416-8e90-487d-8702-482ff86f5715">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="S" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_dsk2_auto" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="DSK 2: Perform Take" identifier="5850f985-3922-465e-9040-e4b31afdcde6">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+S" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_dsk2_take" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Pane: Hide" identifier="6a33312b-3ad6-4a5a-a82d-6ddf444e9b16">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+M" index="0" />
+      </Properties>
+      <Commands>
+        <command key="me_pane_show" value="false" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Pane: Show" identifier="162642bc-62fa-426e-a9d8-734de9dc23f5">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+M" index="0" />
+      </Properties>
+      <Commands>
+        <command key="me_pane_show" value="true" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Pane: Toggle" identifier="7ac19091-cbef-4084-82f7-87fa60ee31ce">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="M" index="0" />
+        <gesture type="Surface" value="net:sktrigger_2" index="2" />
+      </Properties>
+      <Commands>
+        <command key="me_pane_toggle" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Copy M/E to PREVIZ" identifier="d857653f-f3f2-4d7d-96ce-bdb484d1a944">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="copy_me_to_previz" value="true" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Copy PREVIZ to M/E" identifier="8c96fb61-30cb-4a64-81ef-8a716044b02b">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="copy_previz_to_me" value="true" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 1" identifier="08ba2581-c7a5-442d-88e9-cd749d556db7">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F1" index="0" />
+        <gesture type="Surface" value="net:sktrigger_45" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_v1_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 2" identifier="4972ff3f-c8d0-4254-95ee-42932bb6d548">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F2" index="0" />
+        <gesture type="Surface" value="net:sktrigger_46" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_v2_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 3" identifier="687cc072-5f2e-42d0-b587-df943cedb1e6">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F3" index="0" />
+        <gesture type="Surface" value="net:sktrigger_47" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_v3_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 4" identifier="a872b764-bbd0-4a5b-8da1-7774fa7e7b30">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F4" index="0" />
+        <gesture type="Surface" value="net:sktrigger_48" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_v4_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 5" identifier="f9eb8c16-129b-4e41-85af-a067fcb8ac6c">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F5" index="0" />
+      </Properties>
+      <Commands>
+        <command key="show_v5_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 6" identifier="7fc9d474-8205-4478-85b3-e52d3229e7ab">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F6" index="0" />
+      </Properties>
+      <Commands>
+        <command key="show_v6_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 7" identifier="9444892b-e025-41d9-8b95-9edf8b739d38">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F7" index="0" />
+      </Properties>
+      <Commands>
+        <command key="show_v7_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="M/E Tab: Set M/E 8" identifier="6a0de913-29cb-4c74-beec-f36806bd6875">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F8" index="0" />
+      </Properties>
+      <Commands>
+        <command key="show_v8_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="MACROS: Continue Paused Macro" identifier="0a49ad95-94f8-4a7c-9163-39324e69506e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEM3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="continue_pausedmacro" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="MACROS: Stop All" identifier="fed0dd46-0bb0-4116-b93b-257eab5be235">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+CTRL+BACK" index="0" />
+      </Properties>
+      <Commands>
+        <command key="stop_all_macros" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Add Fade to selected items" identifier="2eb35ea3-3827-44bc-9b5f-de8a9eaa4588">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+F" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_set_fade_transition_to_currently_selected_clips" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Clear In and Out points" identifier="b41a4c5e-0fde-47aa-9c2c-2b061fd55281">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="G" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_mark_in_out_clear" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Next" identifier="b6a577c0-a05b-436b-a107-50ee4fe5914d">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEM1" index="0" />
+        <gesture type="Surface" value="net:sktrigger_35" index="1" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_forward" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Play" identifier="3b4d0ef0-c774-4544-a66d-b407d1510624">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="L" index="0" />
+        <gesture type="Surface" value="net:sktrigger_36" index="1" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_play" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Previous" identifier="a0efe4ff-96a6-49d3-a6d8-9c149d915caf">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="J" index="0" />
+        <gesture type="Surface" value="net:sktrigger_37" index="1" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_back" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Set In point" identifier="83a88d76-0d99-44ef-8ab0-7da5340ab4bb">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="I" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_mark_in" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Set Out point" identifier="290f6b88-5631-4cd8-92eb-b6c369dbb107">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="O" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_mark_out" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Split" identifier="9036faca-7649-497b-83dd-a8adcb949729">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEM2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_split" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Stop" identifier="15f6dea3-8745-4f5e-b098-1a6b766db4e1">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="K" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_stop" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Toggle Autoplay" identifier="45540bfd-20a0-471d-af40-462fa5063697">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="U" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_autoplay_mode_toggle" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Toggle Loop" identifier="59d763d4-6d98-4e21-93ce-31a77a8d3c9c">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEM7" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_loop_mode_toggle" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Media Player: Toggle Single" identifier="8eab831e-d844-4921-bddc-8f5b64151047">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="Q" index="0" />
+      </Properties>
+      <Commands>
+        <command key="focusedddr_single_mode_toggle" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="NewTek Software: Show version" identifier="3811b90a-a590-49fc-95ce-0b19fc98115e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+B" index="0" />
+      </Properties>
+      <Commands>
+        <command key="display_version" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 01" identifier="b868dc6d-271d-420c-828f-1ec90399e40f">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F1" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="0" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 02" identifier="60439c1e-aced-4529-b758-1d8bd996266f">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 03" identifier="61ca7ff5-b9fe-4bc3-bae5-dc0a3a0f151a">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="2" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 04" identifier="463d2376-d6c9-4e03-a703-73509779332f">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="3" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 05" identifier="f7417039-2374-4aa4-80d0-c957330e27c5">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F5" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="4" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 06" identifier="d7cbfd5a-c8c4-41e5-96f0-585295e20a69">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F6" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="5" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 07" identifier="51876196-8872-4343-9f47-95d4f3e1fbb3">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F7" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="6" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 08" identifier="3a03de06-3fc7-4b97-8404-aa4b887e88d5">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F8" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="7" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 09" identifier="1182d771-9667-4071-af6e-236fb9901c81">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F9" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="8" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 10" identifier="58e7b98b-16a0-4428-8798-60d4923e1836">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F10" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="9" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 11" identifier="fd3b7ac0-02fe-446f-9a3e-4cffc12916ef">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F11" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="10" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 12" identifier="42fdc090-bdbd-4582-becb-17c7413e38e5">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="F12" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="11" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 13" identifier="d75bea53-6cf1-4a68-adc7-96ebb5a5896f">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F1" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="12" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 14" identifier="e2a135d5-9773-4cb8-ba77-b80aa2c105da">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="13" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 15" identifier="73a82900-8431-4566-b05a-16eb28a7cb84">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="14" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 16" identifier="44e2e7cc-2ad9-4d7c-a944-d4aa17681a41">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="15" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 17" identifier="a040c44a-9b5d-4b24-afe9-e9d2e0a49e6c">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F5" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="16" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 18" identifier="ccde475d-af40-499d-b3fd-d564ef725601">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F6" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="17" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 19" identifier="56b1ee43-d1da-4299-8bd5-ba30d63e0ba0">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F7" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="18" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 20" identifier="0eed2369-ab5f-4ab4-98c8-1a8a4b501c12">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F8" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="19" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 21" identifier="61e3d834-6b12-4a8e-bc7b-a8e9f40e875a">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F9" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="20" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 22" identifier="63f8d6e4-b8b6-4a0a-8df1-09989671cc96">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F10" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="21" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 23" identifier="9977bc3b-0dad-4472-b167-c679eef78656">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F11" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="22" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PGM Row: Set Index 24" identifier="26c51371-d505-4c49-b2c4-e7d2a4f08700">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+F12" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_a_row" value="23" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 01" identifier="682d604f-60ff-4461-8467-1038924477e1">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D1" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="0" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 02" identifier="0edd93e7-64c9-499d-a5c2-2120081fa20e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 03" identifier="51ccd983-1174-4d3b-9338-14dfa3b1211c">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="2" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 04" identifier="44f1dd7b-e6ed-4627-a869-dd0e39873007">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="3" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 05" identifier="3b8d4a00-dd61-40a0-9592-31015d7b3b06">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D5" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="4" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 06" identifier="473939f8-4a56-42f3-8294-2eae70056553">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D6" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="5" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 07" identifier="770ea2d2-f0f7-4fe3-84f2-c77ebab94283">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D7" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="6" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 08" identifier="9f2cb3e4-ed09-465f-861e-2bb2f4f38359">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D8" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="7" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 09" identifier="422f4719-776a-41ad-94e1-96f4a6dc0c0a">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D9" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="8" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 10" identifier="b62852ee-fe29-4395-ad82-290fa52400df">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="D0" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="9" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 11" identifier="f46e0f62-b37f-4b3d-bda6-913038f9ec74">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEMMINUS" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="10" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 12" identifier="65ee3bf4-b927-4742-b766-9245702c6ae3">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEMPLUS" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="11" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 13" identifier="45d7654b-8b6c-434f-b3e0-71ada5ec0ee5">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D1" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="12" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 14" identifier="dc2f7199-57f5-4f59-8050-35e651d39607">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="13" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 15" identifier="0112a869-501d-4752-b39b-35740ddf3694">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="14" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 16" identifier="9563a14a-5eba-44ce-871b-e1c3f08b1211">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="15" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 17" identifier="8eb18910-baac-463a-befc-d0f7b99deb69">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D5" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="16" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 18" identifier="8cc62681-e1d2-4656-ab77-7f034d9445a1">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D6" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="17" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 19" identifier="bc294a84-4f4c-4c91-9d47-e8c44df295c3">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D7" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="18" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 20" identifier="78d09137-7697-45fd-ac85-ba57e702b072">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D8" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="19" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 21" identifier="f295eb40-d62a-4e44-80f5-a1b131404f06">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D9" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="20" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 22" identifier="ede4621c-3dc0-4c91-a71a-53573a9c7e63">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+D0" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="21" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 23" identifier="e8f7dbec-51c9-4305-821a-ce282adbb94c">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+OEMMINUS" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="22" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PRV Row: Set Index 24" identifier="231a62f7-e53f-42c2-8bf3-9cc82bce1305">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+OEMPLUS" index="0" />
+      </Properties>
+      <Commands>
+        <command key="keyboard_bank1_main_b_row" value="23" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Record: Grab still" identifier="fd94c80a-d4cf-4812-8116-816cd3b906f5">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="P" index="0" />
+      </Properties>
+      <Commands>
+        <command key="grab_still" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Record: Start" identifier="0a7b2174-cdcc-4019-8b2c-85a7de193246">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="R" index="0" />
+      </Properties>
+      <Commands>
+        <command key="record_start" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Record: Stop" identifier="3ffdea6d-4393-4b73-b84e-7090e1278074">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+R" index="0" />
+      </Properties>
+      <Commands>
+        <command key="record_stop" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Replay: Add clip from recorder 1" identifier="4e11b2fb-9061-4641-b575-adb0d09ffb86">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="NUMPAD1" index="0" />
+      </Properties>
+      <Commands>
+        <command key="record_chop_source" value="1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Replay: Add clip from recorder 2" identifier="008c7599-8d14-49eb-bd5a-19a99655e351">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="NUMPAD2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="record_chop_source" value="2" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Replay: Add clip from recorder 3" identifier="cb708e1a-6572-4b33-92fa-cdcc67da95e7">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="NUMPAD3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="record_chop_source" value="3" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Replay: Add clip from recorder 4" identifier="84bb3f02-b271-4089-9013-1d70ef543ce6">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="NUMPAD4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="record_chop_source" value="4" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Stream: Start" identifier="7c9cf184-ee69-43f6-bd90-db455e0e2604">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+OEM2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="streaming_toggle" value="1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Stream: Stop" identifier="f65adc86-df33-43d4-819d-5e2265c51775">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+CTRL+OEM2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="streaming_toggle" value="0" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Switcher Redo" identifier="72365700-a6a1-4a29-9125-b3d6539fc8e7">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+Y" index="0" />
+      </Properties>
+      <Commands>
+        <command key="switcher_redo" value="true" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Switcher Undo" identifier="51a471b8-3ea3-4a24-8ac7-c30957710f44">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+Z" index="0" />
+      </Properties>
+      <Commands>
+        <command key="switcher_undo" value="true" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Switcher: Copy Main to PREVIZ" identifier="93f420de-4642-4065-82eb-77a58009e82d">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D1" index="0" />
+        <gesture type="Surface" value="net:sktrigger_34" index="1" />
+      </Properties>
+      <Commands>
+        <command key="copy_main_to_previz" value="true" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Switcher: Copy PREVIZ to Main" identifier="04a661d4-5780-47f6-b97a-ec36d8a73f92">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+CTRL+SHIFT+D2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="copy_previz_to_main" value="true" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show Audio mixer" identifier="2e94aa8b-7971-487a-aaa8-6123f36282d7">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F5" index="0" />
+        <gesture type="Surface" value="net:sktrigger_50" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_external_audiomixer" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show BUFFERS" identifier="9a225189-5263-4c2b-a4e1-d3147bf0e973">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F8" index="0" />
+        <gesture type="Surface" value="net:sktrigger_39" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_buffers_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show DDR1" identifier="b8c86028-b9f7-4453-ae0c-3071b84a7e5e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F1" index="0" />
+        <gesture type="Surface" value="net:sktrigger_41" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_ddr1_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show DDR2" identifier="79539645-6e63-4b1a-ac2f-d0319a835b8e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F6" index="0" />
+        <gesture type="Surface" value="net:sktrigger_42" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_ddr2_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show GFX1" identifier="7a699669-8faa-4b78-9968-544a00f9acfc">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F2" index="0" />
+        <gesture type="Surface" value="net:sktrigger_43" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_gfx1_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show GFX2" identifier="3eff3239-9871-4cca-97a3-90f9f0f05838">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F7" index="0" />
+        <gesture type="Surface" value="net:sktrigger_44" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_gfx2_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show PTZ" identifier="01eaf0b8-f993-40af-a407-a7d0650d7ac9">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F4" index="0" />
+        <gesture type="Surface" value="net:sktrigger_49" index="1" />
+      </Properties>
+      <Commands>
+        <command key="show_ptz_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tab: Show Sound" identifier="0f19d7f6-1497-4e60-b940-894d008a178e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="show_sound_tab" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tbar: Down Fast" identifier="1ff0ae9f-93ef-4deb-b89c-3bdeaee86bf9">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+T" index="0" />
+        <gesture type="Surface" value="net:sktrigger_1" index="1" />
+      </Properties>
+      <Commands>
+        <command key="main_down_fast" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tbar: Go To Top" identifier="6a459ed7-5a83-4997-b7ba-6dada2660e42">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+RETURN" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_goto_top" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tbar: Nudge Down" identifier="a1709571-7579-4851-95e1-89c4bad12e92">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="T" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_down" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tbar: Nudge Up" identifier="014bac52-b525-4925-9223-d3e5e7705e87">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+T" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_up" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tbar: Set Halfway" identifier="0932ccac-5918-49ca-a322-a17271c84228">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="H" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_goto_halfway" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Tbar: Up fast" identifier="26fc9d5c-3eda-455e-b820-dc16a0bd6c5a">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+T" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_up_fast" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Delegate: Multiselect BKGD" identifier="300084bd-f4f1-4887-9a53-76a851926691">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+OEM4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_delegate_add_selection" value="main_background" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Delegate: Multiselect DSK 1" identifier="e5bdfd63-727a-4a26-80d3-82a68970b40e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+OEM6" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_delegate_add_selection" value="main_dsk1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Delegate: Multiselect DSK 2" identifier="b3d77941-8c44-43b6-8955-94948cf6c23c">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+OEM5" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_delegate_add_selection" value="main_dsk2" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Delegate: Select BKGD" identifier="057f6119-5ef6-4c3a-a3bb-2ac861f29a52">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEM4" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_delegate" value="main_background" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Delegate: Select DSK 1" identifier="b20924e2-370c-4823-8cce-3f0afe9f0ded">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEM6" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_delegate" value="main_dsk1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Delegate: Select DSK 2" identifier="1d3a6397-f315-44e0-9ae7-b4652984a054">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEM5" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_delegate" value="main_dsk2" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Speed: Decrease" identifier="7cb47329-0e76-44f6-8d0c-f1dda2f9f412">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+C" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_adjust_speed" value="-0.033" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Speed: Fast" identifier="8ce5f6af-670d-4df6-8310-15c71be1a9ea">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="C" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_fast" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Speed: Increase" identifier="88c1d9be-af35-4c88-b10f-f697b3ab33d4">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+Z" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_adjust_speed" value="0.033" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Speed: Medium" identifier="3d74b394-27d7-4993-8e30-20e36cf51be3">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="X" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_medium" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition Speed: Slow" identifier="aa148af5-6a87-4188-a021-101c8320b881">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="Z" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_slow" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Perform Auto" identifier="9c7f3cdb-8da0-46f4-945d-c6cc66a367c0">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SPACE" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_auto" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Perform Fade To Black" identifier="3b2cf410-61ab-413b-b2f7-f6c39088b242">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+B" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_ftb_auto" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Perform Reverse Auto" identifier="c88cba5a-935b-4914-af7d-a6e81a35a300">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="SHIFT+SPACE" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_reversed_auto" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Perform Take" identifier="903abea0-190f-4f38-8ca9-4e1ce92a34b2">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="RETURN" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_take" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Set Fade" identifier="88b9425d-c96e-4f57-8ff3-9da97942f4a9">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+F" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_select_fade" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Set last (Non-Fade) effect" identifier="feebe393-5811-4951-b284-45c745d28b29">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+SHIFT+F" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_select_saved_nonfade_transition" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Set Next" identifier="53544c28-7b07-42e5-9b6a-4cd5d633c3a0">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEMCOMMA" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_switch_transition" value="-1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Set Previous" identifier="942a85cb-14e1-4f9d-97a5-63671518b21b">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="OEMPERIOD" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_switch_transition" value="1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Toggle Ping Pong" identifier="d549dc3a-2299-4ff8-a1e3-e1a03035e4b3">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+E" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_toggle_autoreverse" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition: Toggle reverse" identifier="9fe07a4b-5681-4573-b9c0-1ea794c5d941">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="E" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_toggle_reverse" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Virtual Set Preset Editor: Zoom in" identifier="cb46b23a-98ea-42a3-b1e9-4b56d9f3da6a">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+OEMPLUS" index="0" />
+      </Properties>
+      <Commands>
+        <command key="liveset_editor_zoom" value="1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Virtual Set Preset Editor: Zoom out" identifier="67fb83be-e976-4676-b00c-47c46a722b7f">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+OEMMINUS" index="0" />
+      </Properties>
+      <Commands>
+        <command key="liveset_editor_zoom" value="-1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Interface A" identifier="676c8cb1-9a1a-4d7c-9404-6ee0c120229e">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+NUMPAD0" index="0" />
+        <gesture type="Surface" value="net:sktrigger_9" index="1" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="interface_a" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Interface B" identifier="39c75660-989b-4e84-88ed-1c0618dac693">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+NUMPAD1" index="0" />
+        <gesture type="Surface" value="net:sktrigger_10" index="1" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="interface_b" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Interface C" identifier="506aed9f-a028-4d66-9c83-1c0872bd1e0b">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+NUMPAD2" index="0" />
+        <gesture type="Surface" value="net:sktrigger_11" index="1" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="interface_c" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Interface D" identifier="74e49ff7-d3e8-42da-a0c9-3a24f88fbcd3">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="ALT+NUMPAD3" index="0" />
+        <gesture type="Surface" value="net:sktrigger_12" index="1" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="interface_d" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Multiview A" identifier="1e24dfb5-288a-4840-b6ef-44624a143850">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+NUMPAD0" index="0" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="multiview_a" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Multiview B" identifier="ad4aa367-973c-49bd-9447-565d0b342f62">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+NUMPAD1" index="0" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="multiview_b" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Multiview C" identifier="7a7be5b4-5d62-4948-8d03-ff92c6c085f7">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+NUMPAD2" index="0" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="multiview_c" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Workspace: Show Multiview D" identifier="830ee3dc-9caa-4257-be7e-5d47b3b3b263">
+      <Properties playspeed="snapshot">
+        <gesture type="Keyboard" value="CTRL+NUMPAD3" index="0" />
+      </Properties>
+      <Commands>
+        <command key="select_workspace" value="multiview_d" />
+      </Commands>
+    </Element>
+  </Element>
+</header>
