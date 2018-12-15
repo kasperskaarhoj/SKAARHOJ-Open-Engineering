@@ -1,0 +1,111 @@
+﻿<header type="text" ver="1.1">
+  <Element type="Folder" name="Session Macros" identifier="24b1fe85-11c8-44a7-a69c-f67c9dc4712a">
+    <Properties isdisabled="false" />
+    <ChildElements>
+      <Element type="Macro" name="PiP Left" identifier="1330e8fc-833e-40cb-998e-dcfa3ddb4ce8">
+        <Properties playspeed="100.00%">
+          <gesture type="Surface" value="net:sktrigger_21" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_dsk2_positioning_enable" value="true" />
+          <command key="main_dsk2_position_x" value="-1.1" />
+          <command key="main_dsk2_position_y" value="0.6" />
+          <command key="main_dsk2_scale_all">
+            <entry key="x" value="0.3" />
+            <entry key="y" value="0.3" />
+          </command>
+        </Commands>
+      </Element>
+      <Element type="Macro" name="PiP Right" identifier="3c17c1a4-9a9f-43cf-82f6-3f90cf89ef26">
+        <Properties playspeed="100.00%">
+          <gesture type="Surface" value="net:sktrigger_22" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_dsk2_positioning_enable" value="true" />
+          <command key="main_dsk2_position_x" value="1.1" />
+          <command key="main_dsk2_position_y" value="0.6" />
+          <command key="main_dsk2_scale_all">
+            <entry key="x" value="0.3" />
+            <entry key="y" value="0.3" />
+          </command>
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition number 1" identifier="480e2806-700a-4edb-a8c1-f31b2b2bb3ab">
+        <Properties playspeed="100.00%">
+          <gesture type="Surface" value="net:sktrigger_31" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_background_select_fade" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition number 2" identifier="a2af6696-50c0-41b5-b97c-3cd07b133744">
+        <Properties playspeed="100.00%">
+          <gesture type="Surface" value="net:sktrigger_32" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_background_select_index" value="1" />
+        </Commands>
+      </Element>
+      <Element type="Macro" name="Transition number 3" identifier="6a7deca9-9e67-49b7-b473-f5fa27938a2d">
+        <Properties playspeed="100.00%">
+          <gesture type="Surface" value="net:sktrigger_33" index="0" />
+        </Properties>
+        <Commands>
+          <command key="main_background_select_index" value="2" />
+        </Commands>
+      </Element>
+    </ChildElements>
+    <Element type="Macro" name="PiP Left" identifier="345c5354-f916-4e1a-8bc6-665f95407bad">
+      <Properties playspeed="100.00%">
+        <gesture type="Surface" value="net:sktrigger_21" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_dsk2_positioning_enable" value="true" />
+        <command key="main_dsk2_position_x" value="-1.1" />
+        <command key="main_dsk2_position_y" value="0.6" />
+        <command key="main_dsk2_scale_all">
+          <entry key="x" value="0.3" />
+          <entry key="y" value="0.3" />
+        </command>
+      </Commands>
+    </Element>
+    <Element type="Macro" name="PiP Right" identifier="3ee29a49-610c-4df2-9f5c-3284d1254ce7">
+      <Properties playspeed="100.00%">
+        <gesture type="Surface" value="net:sktrigger_22" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_dsk2_positioning_enable" value="true" />
+        <command key="main_dsk2_position_x" value="1.1" />
+        <command key="main_dsk2_position_y" value="0.6" />
+        <command key="main_dsk2_scale_all">
+          <entry key="x" value="0.3" />
+          <entry key="y" value="0.3" />
+        </command>
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition number 1" identifier="f745271b-cafd-451a-8714-ae76835eaa84">
+      <Properties playspeed="100.00%">
+        <gesture type="Surface" value="net:sktrigger_31" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_background_select_fade" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition number 2" identifier="f2d4484b-0965-4de6-a0f8-0d4ce8304651">
+      <Properties playspeed="100.00%">
+        <gesture type="Surface" value="net:sktrigger_32" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_background_select_index" value="1" />
+      </Commands>
+    </Element>
+    <Element type="Macro" name="Transition number 3" identifier="873ac652-922c-49fb-9efd-77ac5a843fae">
+      <Properties playspeed="100.00%">
+        <gesture type="Surface" value="net:sktrigger_33" index="0" />
+      </Properties>
+      <Commands>
+        <command key="main_background_select_index" value="2" />
+      </Commands>
+    </Element>
+  </Element>
+</header>
