@@ -37,6 +37,8 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 			'HWCt#{}=9999|6||Kelvin',		# Kelvin
 			'HWCt#{}=9999|7||[Empty!]',	# format 7 = empty!
 			'HWCt#{}=-3276|8||Float3',	# Float with 3 decimal points, optimized for 5 char wide space. Op to +/-9999
+			'HWCt#{}=-3276|9||Float2',	# Float with 3 decimal points, optimized for 5 char wide space. Op to +/-9999
+			'HWCt#{}=-276|9||Float2',	# Float with 3 decimal points, optimized for 5 char wide space. Op to +/-9999
 			'HWCt#{}=||1|[Fine]|1',	# Fine marker set, title as "label"
 			'HWCt#{}=||1|Title String', # no value, just title string (and with "fine" indicator)
 			'HWCt#{}=|||Title String|1',	# Title string as label (no "bar" in title)
@@ -45,6 +47,14 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 			'HWCt#{}=|||Title string|1|Text1Label|Text2Label',	# Printing two labels - automatically the size is reduced
 			'HWCt#{}=|||Title string|1||Text2Label',	# Printing only the second line - automatically the size is reduced
 			'HWCt#{}=123|||Title string|1|Val1:|Val2:|456',	# First and second value is printed in small characters with prefix labels Val1 and Val2
+
+			'HWCt#{}=1|11||||TextLabel1|TextLabel2',	# Printing two labels - automatically the size is reduced
+			'HWCt#{}=2|11||||Text1|Text2',	# Printing two labels - automatically the size is reduced
+			'HWCt#{}=1|10||ABCDEFGHIJ',	# Printing only the second line - automatically the size is reduced
+			'HWCt#{}=2|10||ABCDE',	# Printing only the second line - automatically the size is reduced
+			'HWCt#{}=3|10||ABC',	# Printing only the second line - automatically the size is reduced
+			'HWCt#{}=4|10||AB',	# Printing only the second line - automatically the size is reduced
+			'HWCt#{}=4|10||99',	# Printing only the second line - automatically the size is reduced
 
 			'HWCt#{}=-1234|1||Coords:||x:|y:|4567|2',	# box type 2
 			'HWCt#{}=-1234|1||Coords:||x:|y:|4567|3',	# box type 3
@@ -354,7 +364,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 
 						# just send back the same data, but upper-cased
 						if line == b"list":
-							self.request.sendall(b"ActivePanel=1\n")
+							self.request.sendall(b"\nActivePanel=1\nlist\n")
 							self.panelInitialized = True
 							busy = False
 							print("- Returned state and assumes panel is now ready")
