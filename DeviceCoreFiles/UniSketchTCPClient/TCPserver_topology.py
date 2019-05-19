@@ -40,7 +40,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 		while True:
 			try:
 				# self.request is the TCP socket connected to the client
-				self.data = self.request.recv(1024).strip()
+				self.data = self.request.recv(1024)
 			except socket.timeout:
 				pass
 			else:
