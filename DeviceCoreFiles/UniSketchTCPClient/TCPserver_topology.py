@@ -90,6 +90,13 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 							if match:
 								busyReadingSVGdata = True
 								SVGdata = match.group(1);
+
+								match = re.search(r"</svg>$", match.group(1))
+								if match:
+									busyReadingSVGdata = False
+									
+									print("Received SVG data...")
+									#print("SVG data: {}".format(SVGdata))
 						else:
 							SVGdata = SVGdata + line.decode('ascii');
 							match = re.search(r"</svg>$", line.decode('ascii'))

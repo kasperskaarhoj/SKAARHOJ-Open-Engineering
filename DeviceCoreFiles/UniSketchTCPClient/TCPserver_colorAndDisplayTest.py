@@ -387,6 +387,15 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 							HWcServer = int(match.group(2));	# Extract the HWc number of the keypress from the match
 							HWcClient = int(match.group(1));	# Extract the HWc number of the keypress from the match
 							HWCtracker[HWcClient] = HWcServer;
+
+						match = re.search(r"^HWC#([0-9]+)=(.+)$", line.decode('ascii'))
+						if match:
+							HWcActivated = match.group(1)
+							Command = match.group(2)
+							for a in range (0, 128):
+								if HWCtracker[a] > 0:
+									self.request.sendall('HWCt#{}=1|11||||{}|{}'.format(HWCtracker[a],HWcActivated,Command).encode('ascii')+b"\n")
+
 				else:
 					print("{} closed".format(self.client_address[0]))
 					break
