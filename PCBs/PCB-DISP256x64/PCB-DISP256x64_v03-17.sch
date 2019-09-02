@@ -109,6 +109,7 @@
 <layer number="130" name="SMDSTROOK" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="131" name="tAdjust" color="7" fill="1" visible="no" active="yes"/>
 <layer number="132" name="bAdjust" color="7" fill="1" visible="no" active="yes"/>
+<layer number="133" name="bottom_silk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="no" active="yes"/>
 <layer number="150" name="Notes" color="7" fill="1" visible="no" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="no" active="yes"/>
@@ -652,6 +653,173 @@ MAX3223-MAX3243.pdf</description>
 <text x="-7.5565" y="-1.8815" size="0.4064" layer="51">30</text>
 <text x="-6.2865" y="-1.8815" size="0.4064" layer="51">Bot</text>
 </package>
+<package name="FPC_MOLEX_501951-3019">
+<wire x1="-9.25" y1="2.27" x2="-9.25" y2="-2.63" width="0.127" layer="51"/>
+<wire x1="9.25" y1="2.27" x2="9.25" y2="-2.63" width="0.127" layer="51"/>
+<wire x1="9.25" y1="0.27" x2="9.25" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="-9.25" y1="0.27" x2="-9.25" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="7.5" y1="2.57" x2="-7.5" y2="2.57" width="0.2032" layer="21"/>
+<wire x1="9.25" y1="2.27" x2="-9.25" y2="2.27" width="0.2032" layer="51"/>
+<wire x1="8" y1="-1.83" x2="9.25" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="-8" y1="-1.83" x2="-9.25" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="9.25" y1="-2.63" x2="-9.25" y2="-2.63" width="0.2032" layer="51"/>
+<smd name="SUPPORT1" x="8.25" y="1.35" dx="0.8" dy="1.4" layer="1" rot="R180"/>
+<smd name="SUPPORT2" x="-8.25" y="1.35" dx="0.8" dy="1.4" layer="1" rot="R180"/>
+<smd name="P$1" x="-7.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<text x="-9" y="2.695" size="0.7112" layer="25" ratio="18">&gt;NAME</text>
+<text x="-7.5645" y="-0.4215" size="0.4064" layer="51">1</text>
+<smd name="P$2" x="-6.75" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$3" x="-6.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$4" x="-5.75" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$5" x="-5.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$6" x="-4.75" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$7" x="-4.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$8" x="-3.75" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$9" x="-3.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$10" x="-2.75" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$11" x="-2.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$12" x="-1.75" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$13" x="-1.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$14" x="-0.75" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$15" x="-0.25" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$16" x="0.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$17" x="0.75" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$18" x="1.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$19" x="1.75" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$20" x="2.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$21" x="2.75" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$22" x="3.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$23" x="3.75" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$24" x="4.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$25" x="4.75" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$26" x="5.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$27" x="5.75" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$28" x="6.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$29" x="6.75" y="-1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="P$30" x="7.25" y="1.45" dx="0.6" dy="1.2" layer="1" rot="R180"/>
+<smd name="SUPPORT3" x="-8.25" y="-1.35" dx="0.8" dy="1.4" layer="1" rot="R180"/>
+<smd name="SUPPORT4" x="8.25" y="-1.35" dx="0.8" dy="1.4" layer="1" rot="R180"/>
+<circle x="-7.2" y="-2.6" radius="0.353553125" width="0.127" layer="21"/>
+<wire x1="7.5" y1="-1.43" x2="-7.5" y2="-1.43" width="0.127" layer="21"/>
+</package>
+<package name="3.2MMPAD6MM_2">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="3.7"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="21"/>
+<circle x="0" y="0" radius="2.25" width="1.5" layer="21"/>
+</package>
+<package name="3.2MMPAD6MM_3">
+<pad name="P$1" x="0" y="0" drill="3.2" diameter="3.7" stop="no"/>
+<circle x="0" y="0" radius="3.5" width="0.127" layer="22"/>
+<smd name="P$2" x="0" y="0" dx="6" dy="6" layer="16" roundness="100" cream="no"/>
+</package>
+<package name="M2X4SMD">
+<wire x1="-1.905" y1="5.08" x2="-2.54" y2="4.445" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="3.175" x2="-1.905" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="2.54" x2="-2.54" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="0.635" x2="-1.905" y2="0" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="0" x2="-2.54" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-1.905" x2="-1.905" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="-2.54" x2="-2.54" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-4.445" x2="-1.905" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="5.08" x2="1.905" y2="5.08" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="5.08" x2="2.54" y2="4.445" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="4.445" x2="2.54" y2="3.175" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="3.175" x2="1.905" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="2.54" x2="2.54" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="1.905" x2="2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="0.635" x2="1.905" y2="0" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="0" x2="2.54" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-0.635" x2="2.54" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-1.905" x2="1.905" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-2.54" x2="2.54" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-3.175" x2="2.54" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-4.445" x2="1.905" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="2.54" x2="-1.905" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="0" x2="-1.905" y2="0" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-2.54" x2="-1.905" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-5.08" x2="-1.905" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-3.175" x2="-2.54" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-0.635" x2="-2.54" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="1.905" x2="-2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="4.445" x2="-2.54" y2="3.175" width="0.1524" layer="21"/>
+<text x="-2.032" y="5.969" size="0.7112" layer="25">&gt;NAME</text>
+<rectangle x1="-3.175" y1="2.54" x2="0" y2="5.715" layer="21"/>
+<smd name="P$1" x="-2.7305" y="3.81" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+<smd name="P$2" x="2.7305" y="3.81" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+<smd name="P$3" x="-2.7305" y="1.27" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+<smd name="P$4" x="2.7305" y="1.27" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+<smd name="P$5" x="-2.7305" y="-1.27" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+<smd name="P$6" x="2.7305" y="-1.27" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+<smd name="P$7" x="-2.7305" y="-3.81" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+<smd name="P$8" x="2.7305" y="-3.81" dx="1.27" dy="3.175" layer="1" rot="R90"/>
+</package>
+<package name="M2X4SMD_SLIM">
+<wire x1="-1.905" y1="5.08" x2="-2.54" y2="4.445" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="3.175" x2="-1.905" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="2.54" x2="-2.54" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="0.635" x2="-1.905" y2="0" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="0" x2="-2.54" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-1.905" x2="-1.905" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="-2.54" x2="-2.54" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-4.445" x2="-1.905" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="-1.905" y1="5.08" x2="1.905" y2="5.08" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="5.08" x2="2.54" y2="4.445" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="4.445" x2="2.54" y2="3.175" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="3.175" x2="1.905" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="2.54" x2="2.54" y2="1.905" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="1.905" x2="2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="0.635" x2="1.905" y2="0" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="0" x2="2.54" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-0.635" x2="2.54" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-1.905" x2="1.905" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-2.54" x2="2.54" y2="-3.175" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-3.175" x2="2.54" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="2.54" y1="-4.445" x2="1.905" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="2.54" x2="-1.905" y2="2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="0" x2="-1.905" y2="0" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-2.54" x2="-1.905" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="1.905" y1="-5.08" x2="-1.905" y2="-5.08" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-3.175" x2="-2.54" y2="-4.445" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="-0.635" x2="-2.54" y2="-1.905" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="1.905" x2="-2.54" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="-2.54" y1="4.445" x2="-2.54" y2="3.175" width="0.1524" layer="21"/>
+<text x="-2.032" y="5.969" size="0.7112" layer="25">&gt;NAME</text>
+<rectangle x1="-3.175" y1="2.54" x2="0" y2="5.715" layer="21"/>
+<smd name="P$1" x="-2.54" y="3.81" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+<smd name="P$2" x="2.54" y="3.81" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+<smd name="P$3" x="-2.54" y="1.27" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+<smd name="P$4" x="2.54" y="1.27" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+<smd name="P$5" x="-2.54" y="-1.27" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+<smd name="P$6" x="2.54" y="-1.27" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+<smd name="P$7" x="-2.54" y="-3.81" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+<smd name="P$8" x="2.54" y="-3.81" dx="1.27" dy="2.794" layer="1" rot="R90"/>
+</package>
+<package name="FPC-MOLEX-52559-0853">
+<wire x1="-4.68" y1="2.27" x2="-4.68" y2="-2.63" width="0.127" layer="51"/>
+<wire x1="4.68" y1="2.27" x2="4.68" y2="-2.63" width="0.127" layer="51"/>
+<wire x1="3.75" y1="0.27" x2="3.75" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="-3.75" y1="0.27" x2="-3.75" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="2" y1="2.57" x2="-2" y2="2.57" width="0.2032" layer="21"/>
+<wire x1="4.68" y1="2.27" x2="-4.68" y2="2.27" width="0.2032" layer="51"/>
+<wire x1="2.5" y1="-1.83" x2="3.75" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="-2.5" y1="-1.83" x2="-3.75" y2="-1.83" width="0.2032" layer="21"/>
+<wire x1="4.68" y1="-2.63" x2="-4.68" y2="-2.63" width="0.2032" layer="51"/>
+<smd name="SUPPORT1" x="2.75" y="1.4" dx="0.8" dy="1.5" layer="1" rot="R180"/>
+<smd name="SUPPORT2" x="-2.75" y="1.4" dx="0.8" dy="1.5" layer="1" rot="R180"/>
+<smd name="P$1" x="-1.75" y="-1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<text x="-3.5" y="2.695" size="0.7112" layer="25" ratio="18">&gt;NAME</text>
+<text x="-2.0645" y="-0.4215" size="0.4064" layer="51">1</text>
+<smd name="P$2" x="-1.25" y="1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<smd name="P$3" x="-0.75" y="-1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<smd name="P$4" x="-0.25" y="1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<smd name="P$5" x="0.25" y="-1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<smd name="P$6" x="0.75" y="1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<smd name="P$7" x="1.25" y="-1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<smd name="P$8" x="1.75" y="1.4" dx="0.6" dy="1.5" layer="1" rot="R180"/>
+<smd name="SUPPORT3" x="-2.75" y="-1.4" dx="0.8" dy="1.5" layer="1" rot="R180"/>
+<smd name="SUPPORT4" x="2.75" y="-1.4" dx="0.8" dy="1.5" layer="1" rot="R180"/>
+<circle x="-1.7" y="-2.6" radius="0.353553125" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="3BITADDR">
@@ -899,7 +1067,7 @@ MAX3223-MAX3243.pdf</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="PCA9671">
+<deviceset name="PCA9671" prefix="IC">
 <gates>
 <gate name="G$1" symbol="PCA9671" x="0" y="0"/>
 </gates>
@@ -937,7 +1105,7 @@ MAX3223-MAX3243.pdf</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="ER_OLED032-1" prefix="U" uservalue="yes">
+<deviceset name="ER_OLED032-1" prefix="DISP" uservalue="yes">
 <description>&lt;b&gt;128x128 1.5" RGB OLED&lt;/b&gt; - UG-2828GDEDF11
 &lt;p&gt;30-Pin 0.5mm Pitch FPC Cable (Top+Bottom Contacts) - OMRON XF2M-3015-1A (Digikey: OR723TR-ND)&lt;/p&gt;
 &lt;p&gt;This FPC connector has contacts on the top and bottom, but the appropriate pin needs to be selected depending on whether the OLED will be inserted right-side up (use the TOP pinout) or upside-down (use the BOTTOM pinout).&lt;/p&gt;</description>
@@ -1056,6 +1224,43 @@ MAX3223-MAX3243.pdf</description>
 <technology name=""/>
 </technologies>
 </device>
+<device name="MOLEX_501951-3019" package="FPC_MOLEX_501951-3019">
+<connects>
+<connect gate="G$1" pin="BS0" pad="P$16"/>
+<connect gate="G$1" pin="BS1" pad="P$17"/>
+<connect gate="G$1" pin="CS#" pad="P$19"/>
+<connect gate="G$1" pin="D0" pad="P$13"/>
+<connect gate="G$1" pin="D1" pad="P$12"/>
+<connect gate="G$1" pin="D2" pad="P$11"/>
+<connect gate="G$1" pin="D3" pad="P$10"/>
+<connect gate="G$1" pin="D4" pad="P$9"/>
+<connect gate="G$1" pin="D5" pad="P$8"/>
+<connect gate="G$1" pin="D6" pad="P$7"/>
+<connect gate="G$1" pin="D7" pad="P$6"/>
+<connect gate="G$1" pin="DC#" pad="P$18"/>
+<connect gate="G$1" pin="E/RD#" pad="P$14"/>
+<connect gate="G$1" pin="FR" pad="P$21"/>
+<connect gate="G$1" pin="IREF" pad="P$22"/>
+<connect gate="G$1" pin="NC" pad="P$23"/>
+<connect gate="G$1" pin="NC(GND)@1" pad="P$1"/>
+<connect gate="G$1" pin="NC(GND)@2" pad="P$30"/>
+<connect gate="G$1" pin="R/W#" pad="P$15"/>
+<connect gate="G$1" pin="RES#" pad="P$20"/>
+<connect gate="G$1" pin="VCC" pad="P$3"/>
+<connect gate="G$1" pin="VCC@2" pad="P$29"/>
+<connect gate="G$1" pin="VCI" pad="P$26"/>
+<connect gate="G$1" pin="VCOMH" pad="P$4"/>
+<connect gate="G$1" pin="VDD" pad="P$25"/>
+<connect gate="G$1" pin="VDDIO" pad="P$24"/>
+<connect gate="G$1" pin="VLSS" pad="P$5"/>
+<connect gate="G$1" pin="VLSS@2" pad="P$28"/>
+<connect gate="G$1" pin="VSL" pad="P$27"/>
+<connect gate="G$1" pin="VSS" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
 </devices>
 </deviceset>
 <deviceset name="GNDPAD" prefix="P">
@@ -1082,6 +1287,22 @@ MAX3223-MAX3243.pdf</description>
 <device name="4.5MM" package="4.5MMPAD6MM">
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="V2" package="3.2MMPAD6MM_2">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="V3" package="3.2MMPAD6MM_3">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1 P$2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -1145,7 +1366,7 @@ MAX3223-MAX3243.pdf</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="POWERINDUCTOR">
+<deviceset name="POWERINDUCTOR" prefix="L">
 <gates>
 <gate name="G$1" symbol="INDUCTOR" x="0" y="0"/>
 </gates>
@@ -1212,6 +1433,51 @@ MAX3223-MAX3243.pdf</description>
 </technologies>
 </device>
 <device name="ZIF-0.5" package="ZIP-8-0.5">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMD2" package="M2X4SMD">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMD2_SLIM" package="M2X4SMD_SLIM">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
+<connect gate="G$1" pin="2" pad="P$2"/>
+<connect gate="G$1" pin="3" pad="P$3"/>
+<connect gate="G$1" pin="4" pad="P$4"/>
+<connect gate="G$1" pin="5" pad="P$5"/>
+<connect gate="G$1" pin="6" pad="P$6"/>
+<connect gate="G$1" pin="7" pad="P$7"/>
+<connect gate="G$1" pin="8" pad="P$8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="0853" package="FPC-MOLEX-52559-0853">
 <connects>
 <connect gate="G$1" pin="1" pad="P$1"/>
 <connect gate="G$1" pin="2" pad="P$2"/>
